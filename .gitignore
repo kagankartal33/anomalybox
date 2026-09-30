@@ -1,0 +1,7 @@
+node_modules/
+.next/
+.env*
+!.env.example
+production_exports/
+generated_batches/
+*.log

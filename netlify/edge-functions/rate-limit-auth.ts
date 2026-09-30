@@ -1,0 +1,2 @@
+export default async (_request: Request, context: { next: () => Promise<Response> }) => context.next();
+export const config = { path: ["/login", "/forgot-password"], method: "POST", rateLimit: { windowLimit: 5, windowSize: 180, aggregateBy: ["ip"] } };

@@ -1,0 +1,5 @@
+Contact: mailto:support@anomalybox.com
+Canonical: https://anomalybox.com/.well-known/security.txt
+Preferred-Languages: en, tr
+Policy: https://anomalybox.com/legal
+Expires: 2027-07-29T00:00:00.000Z

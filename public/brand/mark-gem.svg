@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+  <title id="title">Anomaly Box monogram</title>
+  <rect x="17" y="17" width="86" height="86" rx="23" transform="rotate(45 60 60)" fill="#725F7B"/>
+  <path d="M39 80 58.5 37.5c.6-1.4 2.6-1.4 3.2 0L81 80" fill="none" stroke="#F7F3EB" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M47 66.5h26" fill="none" stroke="#F7F3EB" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="60" cy="27" r="3" fill="#B5A8BB"/>
+</svg>
