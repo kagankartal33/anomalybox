@@ -7,14 +7,12 @@ import { checkInventoryForBox } from "@/lib/inventory";
 import { siteUrl } from "@/lib/env";
 import { storeSelectionPath } from "@/lib/navigation";
 import { stripe } from "@/lib/stripe";
-import { verifyRecaptcha } from "@/lib/bot-protection";
 
 const CheckoutInput = z.object({
   box_product_slug: z.string().min(1).max(100),
   category_slug: z.string().min(1).max(100),
   persona_slug: z.string().min(1).max(100),
   context_detail: z.string().trim().max(160).optional(),
-  recaptcha_token: z.string().max(4096).optional(),
 });
 
 export async function POST(request: Request) {
@@ -23,9 +21,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_checkout_request" }, { status: 400 });
   }
   const input = parsed.data;
-  if (!(await verifyRecaptcha(input.recaptcha_token, "begin_checkout"))) {
-    return NextResponse.json({ error: "security_verification_failed" }, { status: 403 });
-  }
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -49,12 +44,7 @@ export async function POST(request: Request) {
   }
 
   const [{ data: product }, { data: category }, { data: persona }] = await Promise.all([
-    admin
-      .from("box_products")
-      .select("id,slug,name,price_usd_cents,idea_count,metadata")
-      .eq("slug", input.box_product_slug)
-      .eq("enabled", true)
-      .single(),
+    admin.from("box_products").select("id,slug,name,price_usd_cents,idea_count").eq("slug", input.box_product_slug).eq("enabled", true).single(),
     admin.from("categories").select("id,slug,name").eq("slug", input.category_slug).eq("enabled", true).single(),
     admin.from("creator_personas").select("id,slug,name").eq("slug", input.persona_slug).eq("enabled", true).single(),
   ]);
@@ -62,21 +52,6 @@ export async function POST(request: Request) {
   if (!product || !category || !persona) {
     return NextResponse.json({ error: "invalid_product_scope" }, { status: 400 });
   }
-
-  const stripeMode = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_") ? "live" : "test";
-  const stripeCatalog =
-    product.metadata &&
-    typeof product.metadata === "object" &&
-    product.metadata.stripe &&
-    typeof product.metadata.stripe === "object"
-      ? (product.metadata.stripe as Record<string, { price_id?: string; product_id?: string; unit_amount?: number }>)
-      : null;
-  const stripePriceId = stripeCatalog?.[stripeMode]?.price_id;
-  const stripePriceAmount = stripeCatalog?.[stripeMode]?.unit_amount;
-  const canUseStripePrice =
-    typeof stripePriceId === "string" &&
-    stripePriceId.startsWith("price_") &&
-    (typeof stripePriceAmount !== "number" || stripePriceAmount === product.price_usd_cents);
 
   const expiresAt = new Date(Date.now() + 31 * 60 * 1000);
   const checkoutMetadata = {
@@ -129,28 +104,24 @@ export async function POST(request: Request) {
     session = await stripe().checkout.sessions.create(
       {
         mode: "payment",
+        payment_method_types: ["card"],
+        customer_email: user.email ?? undefined,
         client_reference_id: checkout.id,
         expires_at: Math.floor(expiresAt.getTime() / 1000),
         success_url: `${siteUrl()}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${siteUrl()}/store?checkout=canceled`,
-        ...(user.email ? { customer_email: user.email } : {}),
         line_items: [
-          canUseStripePrice
-            ? {
-                quantity: 1,
-                price: stripePriceId,
-              }
-            : {
-                quantity: 1,
-                price_data: {
-                  currency: "usd",
-                  unit_amount: product.price_usd_cents,
-                  product_data: {
-                    name: product.name,
-                    description: `${product.idea_count} private creator briefs for ${category.name} / ${persona.name}`,
-                  },
-                },
+          {
+            quantity: 1,
+            price_data: {
+              currency: "usd",
+              unit_amount: product.price_usd_cents,
+              product_data: {
+                name: product.name,
+                description: `${product.idea_count} private creator briefs for ${category.name} / ${persona.name}`,
               },
+            },
+          },
         ],
         metadata: {
           checkout_id: checkout.id,
@@ -159,8 +130,6 @@ export async function POST(request: Request) {
           category_slug: category.slug,
           persona_slug: persona.slug,
           context_detail: input.context_detail ?? "",
-          stripe_price_id: canUseStripePrice ? stripePriceId : "",
-          stripe_product_id: canUseStripePrice ? stripeCatalog?.[stripeMode]?.product_id ?? "" : "",
         },
       },
       { idempotencyKey: `anomaly-box-checkout:${checkout.id}` },

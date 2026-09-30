@@ -1,273 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Clock, MessageSquare, Mic2, MonitorPlay, Sparkles, Video } from "lucide-react";
+import { AlertTriangle, ChevronDown, Clock3, MessageSquareText, ShieldCheck } from "lucide-react";
 import type { CardSection, CardSectionBlock } from "@/lib/card-sections";
-import { compactText } from "@/lib/format";
 
-type SceneFlowEvent = {
-  start: number;
-  end: number;
-  title: string;
-  action?: string;
-  overlay?: string;
-  voice?: string;
-  onscreen?: string;
-};
-
-function asRecord(value: unknown) {
-  return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
-}
-
-function asArray(value: unknown) {
-  return Array.isArray(value) ? value : [];
-}
-
-function cleanText(value: unknown) {
-  return compactText(value, "").trim();
-}
-
-function parseTimeRange(value: unknown, fallbackDuration: number) {
-  const text = String(value ?? "")
-    .replace(/\u2013|\u2014/g, "-")
-    .replace(/\s+/g, "")
-    .toLowerCase();
-  const [startText, endText] = text.split(/-|to/);
-  const start = Number.parseInt(startText || "0", 10);
-  let end = endText ? Number.parseInt(endText, 10) : start + fallbackDuration;
-
-  if (Number.isNaN(end) || end <= start) end = start + fallbackDuration;
-  return {
-    start: Math.max(0, Number.isNaN(start) ? 0 : start),
-    end,
-  };
-}
-
-// Helper: build second-by-second events from scene_flow source payload.
-// Text details are displayed in separate event cards, so the time rail itself never overlaps.
-function buildSceneFlowEvents(section: CardSection) {
-  const events: SceneFlowEvent[] = [];
-  const payload = section.source_payload || {};
-
-  asArray(payload.shot_list).forEach((item) => {
-    const shot = asRecord(item);
-    if (!shot) return;
-    const range = parseTimeRange(shot.second ?? shot.time, 4);
-    events.push({
-      ...range,
-      title: cleanText(shot.shot ?? shot.type ?? shot.title) || "Action",
-      action: cleanText(shot.action) || undefined,
-      overlay: cleanText(shot.overlay ?? shot.on_screen_text) || undefined,
-    });
-  });
-
-  asArray(payload.scene_script).forEach((item) => {
-    const scene = asRecord(item);
-    if (!scene) return;
-    const range = parseTimeRange(scene.second ?? scene.time, 5);
-    const voice = cleanText(scene.voiceover ?? (Array.isArray(scene.spoken_lines) ? scene.spoken_lines.join(" ") : ""));
-    events.push({
-      ...range,
-      title: cleanText(scene.purpose ?? scene.beat ?? scene.title) || "Beat",
-      action: cleanText(scene.purpose ?? scene.action) || undefined,
-      voice: voice || undefined,
-      onscreen: cleanText(scene.on_screen_text ?? scene.overlay) || undefined,
-    });
-  });
-
-  events.sort((a, b) => a.start - b.start || a.end - b.end);
-  const merged: SceneFlowEvent[] = [];
-  events.forEach((event) => {
-    const last = merged[merged.length - 1];
-    if (last && Math.abs(last.start - event.start) < 2 && Math.abs(last.end - event.end) < 3) {
-      last.title = last.title || event.title;
-      last.action = last.action || event.action;
-      last.overlay = last.overlay || event.overlay;
-      last.voice = last.voice || event.voice;
-      last.onscreen = last.onscreen || event.onscreen;
-    } else {
-      merged.push(event);
-    }
-  });
-
-  const blueprint = asRecord(payload.video_blueprint);
-  const blueprintDuration = Number(blueprint?.duration_seconds);
-  const duration = Number.isFinite(blueprintDuration) && blueprintDuration > 0
-    ? blueprintDuration
-    : merged.length
-      ? merged[merged.length - 1].end
-      : 38;
-
-  return { events: merged, duration: Math.max(15, duration) };
-}
-
-function formatTime(value: number) {
-  return `${value}s`;
-}
-
-function timelineTicks(duration: number) {
-  const step = duration > 45 ? 10 : 5;
-  return Array.from({ length: Math.floor(duration / step) + 1 }, (_, index) => index * step);
-}
-
-function EventDetail({ icon: Icon, label, value }: { icon: typeof Clock; label: string; value?: string }) {
-  if (!value) return null;
-  return (
-    <div className="rounded-md border border-ink/10 bg-white px-3 py-2">
-      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink/38">
-        <Icon className="h-3.5 w-3.5 text-teal" />
-        {label}
-      </div>
-      <p className="mt-1 text-sm leading-6 text-ink/72">{value}</p>
-    </div>
-  );
-}
-
-function ExecutionTimelineBoard({ events, duration }: { events: SceneFlowEvent[]; duration: number }) {
-  if (!events.length) {
-    return (
-      <div className="timeline-board rounded-md border border-ink/10 bg-paper p-5 text-sm text-ink/60">
-        No timed scene data on this card.
-      </div>
-    );
-  }
-
-  return (
-    <div className="timeline-board rounded-md border border-ink/10 bg-paper p-4 shadow-sm">
-      <div className="flex flex-col justify-between gap-3 border-b border-ink/10 pb-4 md:flex-row md:items-end">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-teal shadow-sm">
-            <Sparkles className="h-3.5 w-3.5" />
-            Execution Timeline
-          </div>
-          <h3 className="mt-3 text-xl font-semibold">Second-by-second board</h3>
-          <p className="mt-1 text-sm leading-6 text-ink/60">Use the rail for rhythm, then follow each beat card for what to do on camera.</p>
-        </div>
-        <div className="rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-semibold text-ink/62">
-          Total rhythm: {formatTime(duration)}
-        </div>
-      </div>
-
-      <div className="mt-5 overflow-x-auto pb-2">
-        <div className="timeline-ruler relative min-w-[640px] px-1 pb-7 pt-1">
-          <div className="absolute left-1 right-1 top-7 h-px bg-ink/15" />
-          {timelineTicks(duration).map((tick) => {
-            const left = Math.min(100, (tick / duration) * 100);
-            return (
-              <div key={tick} className="timeline-marker absolute top-1" style={{ left: `${left}%` }}>
-                <div className="mx-auto h-3 w-px bg-ink/25" />
-                <div className="-translate-x-1/2 pt-1 text-[10px] font-semibold text-ink/45">{formatTime(tick)}</div>
-              </div>
-            );
-          })}
-
-          <div className="relative mt-12 h-7 rounded-full border border-ink/10 bg-white shadow-sm">
-            {events.map((event, index) => {
-              const left = Math.max(0, (event.start / duration) * 100);
-              const width = Math.max(2.5, ((event.end - event.start) / duration) * 100);
-              return (
-                <div
-                  key={`${event.start}-${event.end}-${index}`}
-                  aria-label={`${event.start}-${event.end}s ${event.title}`}
-                  className="absolute top-1 h-5 rounded-full border border-teal/35 bg-teal/15"
-                  style={{ left: `${left}%`, width: `${width}%` }}
-                  title={`${event.start}-${event.end}s: ${event.title}`}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      <div className="timeline-events mt-5 grid gap-3 md:grid-cols-2">
-        {events.map((event, index) => (
-          <article key={`${event.start}-${event.end}-${index}`} className="timeline-event-card rounded-md border border-ink/10 bg-white p-4 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-teal/10 px-2.5 py-1 text-xs font-semibold text-teal">
-                  <Clock className="h-3.5 w-3.5" />
-                  {event.start}-{event.end}s
-                </div>
-                <h4 className="mt-3 text-base font-semibold leading-6">{event.title}</h4>
-              </div>
-              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-ink/10 bg-paper text-xs font-semibold text-ink/45">
-                {String(index + 1).padStart(2, "0")}
-              </div>
-            </div>
-
-            <div className="mt-4 grid gap-2">
-              <EventDetail icon={MonitorPlay} label="Action" value={event.action} />
-              <EventDetail icon={MessageSquare} label="Overlay" value={event.overlay} />
-              <EventDetail icon={Mic2} label="Voiceover" value={event.voice} />
-              <EventDetail icon={Video} label="On screen" value={event.onscreen} />
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function renderBlock(block: CardSectionBlock, index: number) {
-  return (
-    <div key={index} className="rounded-md border border-ink/10 bg-white p-3 text-xs shadow-sm">
-      <div className="mb-2 font-semibold">{block.title}</div>
-      {block.type === "timeline" && block.items ? (
-        <ul className="space-y-1 text-ink/80">
-          {block.items.map((item, itemIndex) => (
-            <li key={itemIndex}>
-              {item.time ? `${item.time}: ` : ""}
-              {item.title}
-              {item.body ? ` - ${item.body}` : ""}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {block.type === "shot_list" && block.items ? (
-        <ul className="space-y-1 text-ink/80">
-          {block.items.map((item, itemIndex) => (
-            <li key={itemIndex}>
-              {item.time ? `${item.time} ` : ""}
-              {item.title}
-              {item.action ? `: ${item.action}` : ""}
-              {item.overlay ? ` / ${item.overlay}` : ""}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {block.type === "key_value" && block.rows ? (
-        <div className="grid grid-cols-1 gap-y-1">
-          {block.rows.map((row, rowIndex) => (
-            <div key={rowIndex}>
-              <span className="text-ink/60">{row.label}:</span> {row.value}
-            </div>
-          ))}
-        </div>
-      ) : null}
-      {block.type === "text" ? <div className="text-ink/80">{block.body}</div> : null}
-      {block.type === "list" ? (
-        <ul className="list-disc pl-4 text-ink/80">
-          {block.items.map((item, itemIndex) => <li key={itemIndex}>{item}</li>)}
-        </ul>
-      ) : null}
-      {block.type === "caption_pack" ? (
-        <div className="text-ink/70">Caption and comment prompts are included in this card.</div>
-      ) : null}
-      {block.type === "safety" ? (
-        <div className="text-ink/70">Safety boundaries and disclosure notes are included.</div>
-      ) : null}
-    </div>
-  );
-}
-
-export function CardSections({ sections, cardId }: { sections: CardSection[]; cardId?: string }) {
+export function CardSections({ sections }: { sections: CardSection[] }) {
   const [open, setOpen] = useState(sections[0]?.key ?? "");
 
   return (
     <div className="space-y-3">
       {sections.map((section) => {
         const active = open === section.key;
-        const sceneFlow = section.key === "scene_flow" ? buildSceneFlowEvents(section) : null;
         return (
           <div key={section.key} className="overflow-hidden rounded-md border border-ink/10 bg-white shadow-sm">
             <button
@@ -284,40 +27,173 @@ export function CardSections({ sections, cardId }: { sections: CardSection[]; ca
             </button>
             {active ? (
               <div className="space-y-5 border-t border-ink/10 px-4 py-4 text-sm leading-6">
-                {section.key === "scene_flow" && sceneFlow ? (
-                  <>
-                    <div className="mt-1">
-                      <div className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Watch the Flow (Custom 3-6s)</div>
-                      <video
-                        className="w-full max-w-md rounded-md border border-ink/10 bg-paper shadow-sm"
-                        controls
-                        muted
-                        loop
-                        playsInline
-                        src={cardId ? `/card-videos/${cardId}-scene_flow.mp4` : "/card-videos/scene-flow-demo.mp4"}
-                      />
-                      <p className="mt-2 text-[11px] leading-5 text-ink/55">Exact sequence for this card. Play to see the second-by-second execution.</p>
-                    </div>
+                <div className="grid gap-3 md:grid-cols-3">
+                  <InfoCard label="What this means" value={section.short_summary} />
+                  <InfoCard label="How to execute" value={section.how_to_do_it} />
+                  <InfoCard label="What good looks like" value={section.what_good_looks_like} />
+                </div>
 
-                    <ExecutionTimelineBoard events={sceneFlow.events} duration={sceneFlow.duration} />
-                  </>
-                ) : null}
+                {section.blocks.map((block, index) => <BlockRenderer block={block} key={`${block.type}-${block.title}-${index}`} />)}
 
-                {section.blocks.length > 0 ? (
-                  <div className={section.key === "scene_flow" ? "mt-1" : ""}>
-                    {section.key === "scene_flow" ? (
-                      <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Full Scene Details</div>
-                    ) : null}
-                    <div className="space-y-3">
-                      {section.blocks.map(renderBlock)}
+                <div className="grid gap-3 md:grid-cols-2">
+                  <InfoCard label="Example execution" value={section.example_execution} />
+                  {section.common_mistakes.length ? (
+                    <div className="rounded-md border border-coral/15 bg-coral/5 p-3">
+                      <div className="flex items-center gap-2 font-semibold text-coral">
+                        <AlertTriangle className="h-4 w-4" />
+                        Common mistakes
+                      </div>
+                      <ul className="mt-2 space-y-1 text-ink/70">
+                        {section.common_mistakes.map((item) => <li key={item}>- {item}</li>)}
+                      </ul>
                     </div>
-                  </div>
-                ) : null}
+                  ) : null}
+                </div>
               </div>
             ) : null}
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function InfoCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-ink/10 bg-paper/70 p-3">
+      <div className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">{label}</div>
+      <p className="mt-2 text-ink/70">{value}</p>
+    </div>
+  );
+}
+
+function BlockRenderer({ block }: { block: CardSectionBlock }) {
+  if (block.type === "text") {
+    return (
+      <BlockShell title={block.title}>
+        <p className="text-ink/70">{block.body}</p>
+      </BlockShell>
+    );
+  }
+
+  if (block.type === "list") {
+    return (
+      <BlockShell title={block.title}>
+        <ul className="space-y-2">
+          {block.items.map((item) => <li className="rounded-md bg-mist/50 px-3 py-2 text-ink/75" key={item}>{item}</li>)}
+        </ul>
+      </BlockShell>
+    );
+  }
+
+  if (block.type === "key_value") {
+    return (
+      <BlockShell title={block.title}>
+        <div className="divide-y divide-ink/10 overflow-hidden rounded-md border border-ink/10">
+          {block.rows.map((row) => (
+            <div className="grid gap-2 bg-white px-3 py-3 md:grid-cols-[180px_1fr]" key={`${row.label}-${row.value}`}>
+              <div className="text-xs font-semibold uppercase tracking-[0.12em] text-ink/40">{row.label}</div>
+              <div className="text-ink/75">{row.value}</div>
+            </div>
+          ))}
+        </div>
+      </BlockShell>
+    );
+  }
+
+  if (block.type === "timeline") {
+    return (
+      <BlockShell icon={<Clock3 className="h-4 w-4" />} title={block.title}>
+        <div className="space-y-3">
+          {block.items.map((item, index) => (
+            <div className="grid gap-3 rounded-md border border-ink/10 bg-white p-3 md:grid-cols-[90px_1fr]" key={`${item.time}-${item.title}-${index}`}>
+              <div className="text-xs font-semibold uppercase tracking-[0.14em] text-teal">{item.time ?? `Beat ${index + 1}`}</div>
+              <div>
+                <div className="font-semibold">{item.title}</div>
+                {item.body ? <p className="mt-1 text-ink/70">{item.body}</p> : null}
+                {item.meta?.length ? (
+                  <ul className="mt-2 space-y-1 text-ink/60">
+                    {item.meta.map((meta) => <li key={meta}>- {meta}</li>)}
+                  </ul>
+                ) : null}
+              </div>
+            </div>
+          ))}
+        </div>
+      </BlockShell>
+    );
+  }
+
+  if (block.type === "shot_list") {
+    return (
+      <BlockShell title={block.title}>
+        <div className="grid gap-3 md:grid-cols-2">
+          {block.items.map((item, index) => (
+            <div className="rounded-md border border-ink/10 bg-white p-3" key={`${item.title}-${index}`}>
+              <div className="flex items-center justify-between gap-3">
+                <div className="font-semibold">{item.title}</div>
+                {item.time ? <div className="rounded-full bg-teal/10 px-2 py-1 text-xs font-semibold text-teal">{item.time}</div> : null}
+              </div>
+              {item.action ? <p className="mt-2 text-ink/70">{item.action}</p> : null}
+              {item.overlay ? <p className="mt-2 rounded-md bg-mist/60 px-3 py-2 text-ink/65">On-screen: {item.overlay}</p> : null}
+              {item.note ? <p className="mt-2 text-ink/55">{item.note}</p> : null}
+            </div>
+          ))}
+        </div>
+      </BlockShell>
+    );
+  }
+
+  if (block.type === "caption_pack") {
+    return (
+      <BlockShell icon={<MessageSquareText className="h-4 w-4" />} title={block.title}>
+        <div className="grid gap-3 lg:grid-cols-2">
+          <ListPanel items={block.captions} title="Caption options" />
+          <ListPanel items={block.onScreenText} title="On-screen text" />
+          {block.cta ? <InfoCard label="CTA" value={block.cta} /> : null}
+          {block.pinnedComment ? <InfoCard label="Pinned comment" value={block.pinnedComment} /> : null}
+          {block.audienceQuestion ? <InfoCard label="Audience question" value={block.audienceQuestion} /> : null}
+          {block.storyPoll ? <InfoCard label="Story poll" value={block.storyPoll} /> : null}
+          {block.storyOptions?.length ? <ListPanel items={block.storyOptions} title="Story poll options" /> : null}
+          {block.followupFrame ? <InfoCard label="Follow-up frame" value={block.followupFrame} /> : null}
+        </div>
+      </BlockShell>
+    );
+  }
+
+  return (
+    <BlockShell icon={<ShieldCheck className="h-4 w-4" />} title={block.title}>
+      <div className="grid gap-3 lg:grid-cols-2">
+        {block.disclosure ? <InfoCard label="Disclosure" value={block.disclosure} /> : null}
+        {block.claimBoundary ? <InfoCard label="Claim boundary" value={block.claimBoundary} /> : null}
+        {block.evidenceNote ? <InfoCard label="Evidence note" value={block.evidenceNote} /> : null}
+        {block.saferAlternative ? <InfoCard label="Safer alternative" value={block.saferAlternative} /> : null}
+        {block.doNotSay.length ? <ListPanel danger items={block.doNotSay} title="Do not say" /> : null}
+      </div>
+    </BlockShell>
+  );
+}
+
+function BlockShell({ children, icon, title }: { children: React.ReactNode; icon?: React.ReactNode; title: string }) {
+  return (
+    <section className="rounded-md border border-ink/10 bg-white p-4 shadow-sm">
+      <div className="mb-3 flex items-center gap-2 font-semibold">
+        {icon}
+        {title}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function ListPanel({ danger = false, items, title }: { danger?: boolean; items: string[]; title: string }) {
+  if (!items.length) return null;
+  return (
+    <div className={`rounded-md border p-3 ${danger ? "border-coral/20 bg-coral/5" : "border-ink/10 bg-paper/70"}`}>
+      <div className={`text-xs font-semibold uppercase tracking-[0.14em] ${danger ? "text-coral" : "text-ink/40"}`}>{title}</div>
+      <ul className="mt-2 space-y-2 text-ink/70">
+        {items.map((item) => <li key={item}>- {item}</li>)}
+      </ul>
     </div>
   );
 }

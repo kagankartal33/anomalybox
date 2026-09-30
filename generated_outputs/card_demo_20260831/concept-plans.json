@@ -1,0 +1,58 @@
+{
+  "concepts": [
+    {
+      "conceptId": "travel-bag-access-test",
+      "title": "Your Bag Closes. Your Headphones Are Buried.",
+      "premise": "A neatly zipped travel bag still forces its owner to unpack clothing to retrieve headphones; changing one pocket resolves the mismatch.",
+      "hookId": "side_by_side_proof",
+      "shootFormat": "hands_only",
+      "proofPlan": "Film a normal-speed retrieval under a jumper, visibly repack the same contents, then film a front-pocket retrieval with the main compartment closed.",
+      "viewerTakeaway": "Check access to the item you expect to reach for during a trip, not only whether the bag closes.",
+      "mechanismIds": ["controlled_comparison", "visible_consequence"],
+      "riskNotes": ["Stage the demonstration at home; keep personal details out of view.", "Show the actual access result, without an invented timer or speed claim."],
+      "runtimeProfile": "story_proof",
+      "proofBeatCount": 2,
+      "spokenWordTarget": 42,
+      "shotCount": 5,
+      "locationCount": 1,
+      "cameraSetupCount": 1,
+      "resetCount": 0
+    },
+    {
+      "conceptId": "travel-room-charger-callback",
+      "title": "The Checkout Photo Missed One Thing",
+      "premise": "An apparently cleared bedside table is revealed to have a charging cable trailing behind it; a final empty-socket shot completes a small departure story.",
+      "hookId": "visual_callback",
+      "shootFormat": "pov",
+      "proofPlan": "Use a staged room departure: show the empty table, follow the cable to a visible plug, unplug normally, then repeat the original frame with the socket included.",
+      "viewerTakeaway": "Include the charging point in a final room check, not just the tabletop.",
+      "mechanismIds": ["frame_reveal", "visual_callback"],
+      "riskNotes": ["Use an intact, accessible plug and pull by its body with dry hands.", "Stage at home or in a room you may film; do not claim an actual hotel incident."],
+      "runtimeProfile": "story_proof",
+      "proofBeatCount": 1,
+      "spokenWordTarget": 30,
+      "shotCount": 5,
+      "locationCount": 1,
+      "cameraSetupCount": 2,
+      "resetCount": 0
+    },
+    {
+      "conceptId": "travel-postcard-frame-context",
+      "title": "The Pretty Frame and the Place Around It",
+      "premise": "One scenic travel composition widens in an uninterrupted camera move to show the ordinary surroundings excluded by the first frame.",
+      "hookId": "context_reveal",
+      "shootFormat": "pov",
+      "proofPlan": "At a place with filming access, record an attractive close frame, widen continuously, then show the full accessible viewpoint without claiming anything about typical crowds.",
+      "viewerTakeaway": "Treat a tightly framed travel photo as one view, not a complete picture of a destination.",
+      "mechanismIds": ["expectation_reversal", "context_expansion"],
+      "riskNotes": ["Requires a real location and permission where needed; no invented destination claims.", "Keep identifiable bystanders and private areas out of frame; film from stable ground."],
+      "runtimeProfile": "story_proof",
+      "proofBeatCount": 1,
+      "spokenWordTarget": 32,
+      "shotCount": 5,
+      "locationCount": 1,
+      "cameraSetupCount": 2,
+      "resetCount": 0
+    }
+  ]
+}

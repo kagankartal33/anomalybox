@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-const chrome = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+const chrome = "C:\Program Files\Google\Chrome\Application\chrome.exe";
 const outputRoot = path.resolve("tmp", "visual-qa-20260729");
 const profileRoot = path.resolve("tmp", "chrome-cdp-profile-20260729");
 const port = 9337;

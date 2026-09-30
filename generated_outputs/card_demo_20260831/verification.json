@@ -1,0 +1,54 @@
+{
+  "origin": "assistant_authored_local_demo",
+  "card_file": "travel-bag-access-test.card.json",
+  "card_file_sha256": "6858c71ca9b1036a55f1538c46279cea4ce4c60f1a0839f9b1db51450f06d4b0",
+  "provider_generation_run": false,
+  "curriculum_version_reference": "card-curriculum-v1",
+  "prompt_version_reference": "idea-card-premium-v2.4.0-automatic",
+  "schema_valid": true,
+  "generated_contract_valid": true,
+  "concept_set_valid": true,
+  "selected_concept_id": "travel-bag-access-test",
+  "duration_plan": {
+    "runtimeProfile": "story_proof",
+    "targetSeconds": 28,
+    "plannerVersion": "duration-planner-v1"
+  },
+  "max_spoken_words_per_second": 1.5,
+  "production_estimate": {
+    "captureMinutesLow": 15,
+    "captureMinutesHigh": 30,
+    "editMinutesLow": 20,
+    "editMinutesHigh": 45,
+    "confidence": "low",
+    "version": "production-estimate-v1-uncalibrated"
+  },
+  "deterministic_gate": {
+    "version": "quality-gate-v2.3.1-automatic",
+    "craftScore": 100,
+    "adjustedScore": 100,
+    "dimensions": {
+      "filmability": 25,
+      "narrativeIntegrity": 20,
+      "laneSpecificity": 15,
+      "naturalLanguage": 15,
+      "originality": 10,
+      "safetyAndEvidence": 10,
+      "productionPracticality": 5
+    },
+    "decision": "approve",
+    "hardGateCodes": [],
+    "issueCodes": [],
+    "humanReviewReasons": [],
+    "fingerprintScore": null,
+    "semanticScore": null,
+    "embeddingModel": null,
+    "embeddingModelVersion": null
+  },
+  "score_limitation": "The unmodified deterministic gate awards full originality points when similarity evidence is absent. This score is not an independently measured quality or originality rating and cannot authorize publication.",
+  "independent_critic": "not_run",
+  "semantic_inventory_comparison": "not_run",
+  "model_qualified": false,
+  "publication_allowed": false,
+  "inventory_mutated": false
+}

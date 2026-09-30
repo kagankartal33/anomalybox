@@ -1,63 +1,46 @@
 # Local Supabase Setup
 
-## Requirements
+## Gereksinimler
 
-- Docker Desktop
 - Supabase CLI
+- Docker Desktop
 
-Check CLI:
+CLI kontrol:
 
 ```powershell
 supabase --version
 supabase --help
 ```
 
-## Run
+## Çalıştırma
 
 ```powershell
 supabase start
 supabase db reset
 ```
 
+## Doğrulama
+
 Studio:
 
 ```text
-http://127.0.0.1:55323
+http://127.0.0.1:54323
 ```
 
-API:
-
-```text
-http://127.0.0.1:55321
-```
-
-## Edge Function Secrets
-
-Admin/internal functions require a token. Locally:
-
-```powershell
-supabase secrets set ADMIN_API_TOKEN="local-admin-token"
-supabase secrets set INTERNAL_API_TOKEN="local-internal-token"
-```
-
-Then call with either:
-
-```http
-x-admin-token: local-admin-token
-```
-
-or:
-
-```http
-Authorization: Bearer local-admin-token
-```
-
-## Verify
+Tablo kontrolü:
 
 ```powershell
 supabase status
-supabase migration list --local
-supabase db lint --local
 ```
 
-Public schema is exposed through the Data API, so RLS must stay enabled. Sensitive creator-hidden fields use column-level grants in addition to RLS.
+Migration listesi:
+
+```powershell
+supabase migration list --local
+```
+
+## Notlar
+
+Bu makinede görülen CLI sürümü `2.75.0`; CLI daha yeni sürüm öneriyor. Büyük şema değişikliklerinden önce Supabase CLI güncellemek iyi olur.
+
+Public şema API'ye açık olduğu için RLS kapatılmamalıdır.

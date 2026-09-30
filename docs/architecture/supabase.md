@@ -1,96 +1,59 @@
 # Supabase Architecture
 
-## Amac
+## Amaç
 
-Supabase/Postgres ViralBox'un ana uygulama database'idir. Generator internal/admin aractir; influencer uygulamasi dosyadan fikir okumaz. Uygulama sadece Postgres'teki publish edilmis stoktan kendisine teslim edilen fikir kartlarini okur.
+Supabase, ViralBox için hızlı MVP veri katmanıdır:
 
-## Ana Akis
+- Auth: creator hesapları ve workspace sahipliği.
+- Postgres: fikir adayları, skorlar, insan farkındalığı değerlendirmeleri, deneyler ve performans verisi.
+- RLS: kullanıcı verisinin satır bazında korunması.
+- Edge Functions: fikir üretimi, skor hesaplama, webhook ve platform bağlantıları.
+- Storage: ileride görsel/video taslakları ve export dosyaları.
 
-```text
-admin selects category + persona
--> generator creates batch ideas
--> JSON/direct import validation
--> idea_candidates + idea_cards
--> score pipeline writes idea_scores
--> publish-inventory writes idea_inventory
--> influencer buys a box
--> deliver_idea_box assigns inventory ideas
--> influencer reads only assigned idea_cards
-```
-
-## Core Tables
+## Çekirdek Tablolar
 
 | Tablo | Rol |
 |---|---|
-| `profiles` | Auth kullanicisinin uygulama profili |
-| `creator_profiles` | Creator handle, niche, kapasite ve sinirlar |
-| `categories` | Beauty, Fashion, Travel gibi satin alma/generator kategorileri |
-| `creator_personas` | `luxury_editor`, `relatable_lifestyle`, `expert_guide` gibi algoritmik persona tipleri |
-| `creator_category_preferences` | Influencer'in uygulamada sectigi kategori/persona/layer tercihleri |
-| `box_products` | `$500` ve `$1000` kutu urunleri |
-| `purchases` / `checkout_sessions` | Odeme ve checkout kayitlari |
-| `algorithm_definitions` | `VIA-*` operator kutuphanesi |
-| `admin_configs` | Scoring, inventory ve generator ayarlari |
-| `idea_generation_batches` | Admin generation/import batch metadata |
-| `idea_import_errors` | Hatali JSONL/direct payload satirlari |
-| `idea_candidates` | Valid fikir adaylari; admin stok fikirlerinde `user_id = null` |
-| `idea_scores` | Internal skorlar |
-| `idea_cards` | Influencer'a gosterilecek final kart payload'i |
-| `idea_inventory` | Publish edilmis stok havuzu; internal `score_band`, reuse ve rank alanlari |
-| `idea_box_deliveries` | Satin alinan kutunun kullaniciya teslim kaydi |
-| `idea_box_items` | Teslimdeki fikirler; internal band assignment kolon grant'i yok |
+| `profiles` | `auth.users` için uygulama profili |
+| `creator_profiles` | creator kapasitesi, niş, ses ve üretim sınırları |
+| `brands` | marka tonu, güvenlik kuralları, ticari hedefler |
+| `audience_profiles` | hedef kitle ihtiyaçları, gerilimleri, paylaşma motivasyonları |
+| `algorithm_definitions` | `VIA-*` operatör kütüphanesi |
+| `admin_configs` | dışarıdan değiştirilebilir ağırlıklar ve kalite eşikleri |
+| `trend_signals` | trend/freshness sinyalleri |
+| `idea_candidates` | üretilen fikir adayları |
+| `idea_scores` | VPS, feasibility, novelty, comedy/remix vb. skorlar |
+| `human_awareness_assessments` | HAS ve perspektif prizması kayıtları |
+| `idea_cards` | kullanıcıya gösterilecek final fikir kartı |
+| `experiments` / `experiment_variants` | A/B test kayıtları |
+| `performance_events` | yayın sonrası metrikler |
+| `audit_logs` | karar ve işlem izleri |
 
-## Inventory Rules
+## RLS Modeli
 
-Stok scope'u `category + persona` olarak calisir.
-
-| Band | Minimum stok | Reorder threshold |
-|---|---:|---:|
-| `low` | 200 | 60 |
-| `mid` | 100 | 30 |
-| `high` | 100 | 30 |
-
-Box allocation:
-
-| Urun | Allocation |
-|---|---|
-| `viral_box_500` | `low:1`, `high:1` |
-| `premium_viral_box_1000` | `low:2`, `mid:1`, `high:2` |
-
-Band ve skorlar creator-facing UI'da gosterilmez.
-
-## RLS and Grants
-
-Public schema API'ye acik oldugu icin tum tablolarda RLS aciktir. User-owned tablolarda temel kural:
+Kullanıcıya ait tablolarda temel kural:
 
 ```sql
 using ((select auth.uid()) = user_id)
 with check ((select auth.uid()) = user_id)
 ```
 
-Admin/internal tablolar (`idea_generation_batches`, `idea_import_errors`, `idea_inventory`) icin authenticated policy yoktur; Edge Functions service role ile calisir.
+`algorithm_definitions` yalnızca `enabled = true` kayıtları için okunabilir. Admin yazma işlemleri servis rolü veya ileride ayrı admin paneli üzerinden yapılmalıdır.
 
-Column-level grant kullanilan hassas alanlar:
-
-- `box_products.allocation` creator'a acilmaz.
-- `idea_box_items.assigned_band` creator'a acilmaz.
-- `idea_box_deliveries.allocation` creator'a acilmaz.
-- `purchases.raw_event` ve provider internal alanlari creator'a acilmaz.
-
-`profiles.role` client tarafindan degistirilemez; migration trigger'i role self-promotion riskini engeller.
-
-## File Import
-
-Dosyalar kalici urun verisi degildir. JSONL sadece import ara formatidir:
+## MVP Veri Akışı
 
 ```text
-generated_batches/
-  batch_2026_06_28_beauty_luxury_editor/
-    manifest.json
-    ideas_0001.jsonl
-    ideas_0002.jsonl
-    scores.jsonl
-    rejected.jsonl
+brief
+→ creator/audience/brand context
+→ algorithm_definitions + admin_configs
+→ idea_candidates
+→ idea_scores + human_awareness_assessments
+→ idea_cards
+→ experiments
+→ performance_events
+→ creator learning loop
 ```
 
-Import sonrasi kalici kaynak Postgres tablolaridir.
+## Tasarım Kararı
+
+Bu ilk migration, devasa spesifikasyondaki tüm tabloları birebir açmaz. Önce ürünün hızlı çalışması için gerekli çekirdek yüzeyi kurar; diğer katmanlar `jsonb` alanlarda güvenli şekilde taşınır ve stabil hale geldikçe normalize edilir.

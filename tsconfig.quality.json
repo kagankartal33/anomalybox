@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": [
+    "types/deno-edge.d.ts",
+    "supabase/functions/admin-generation-batches/index.ts",
+    "tools/audit-card-stock-v2-2.ts",
+    "tools/restock-pilot-v2-2.ts",
+    "tools/qualify-model-profile-v2-2.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

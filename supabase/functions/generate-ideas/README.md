@@ -1,12 +1,14 @@
-# `generate-ideas`
+# `generate-ideas` Edge Function
 
-Legacy placeholder. Yeni urun modelinde fikirler influencer satin aldigi anda uretilmez.
+Bu klasör henüz çalıştırılabilir function kodu değil, function sözleşmesidir.
 
-Generator internal/admin arac olarak calisir:
+Görev:
 
-1. Admin kategori + persona + hedef adet secer.
-2. Generator fikirleri `admin_direct` payload veya `jsonl_import` dosyalari olarak uretir.
-3. `admin-generation-batches` function import/score/publish akisini calistirir.
-4. Publish edilen fikirler `idea_inventory` stok havuzuna girer.
+1. Kullanıcı session'ını doğrula.
+2. Creator, brand ve audience context'ini oku.
+3. `algorithm_definitions` ve aktif `admin_configs` kayıtlarını al.
+4. LLM veya yerel generator ile aday fikirleri üret.
+5. `idea_candidates` kayıtlarını oluştur.
+6. `score-idea` akışını tetikle veya aynı transaction sonrası skor yaz.
 
-Creator-facing app runtime'da bu function'i cagirmaz.
+Gizli anahtarlar sadece Edge Function environment içinde tutulmalıdır. Frontend `service_role` kullanmaz.

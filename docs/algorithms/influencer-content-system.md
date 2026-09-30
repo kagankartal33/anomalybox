@@ -1,6 +1,6 @@
 # Influencer Content System
 
-ViralBox'un ana kullanicisi Instagram'daki high-profile influencer ve creator ekipleridir. Generator baska bir unlu/influencer tarzini taklit etmez; creator'a uygun fikir uretmek icin kategori, persona, izinli creator DNA ve platform-fit sinyallerini kullanir.
+ViralBox'un ana kullanıcısı Instagram'daki high-profile influencer ve creator ekipleridir. Generator, başka influencer'ların tarzını taklit etmez; kullanıcının kendi verilerinden ve brief'inden soyutlanan Creator DNA ile çalışır.
 
 ## Creator DNA
 
@@ -13,74 +13,46 @@ audience_contract
 humor_boundary
 commercial_boundary
 privacy_boundary
-production_capacity
-brand_safety_boundary
 ```
 
-## Content Style Layers
+## İçerik Tarzı Layerları
 
-| Kod | Layer | Ne uretir? |
+| Kod | Layer | Ne üretir? |
 |---|---|---|
-| T01 | Signature Ritual | Creator'in kendi tekrar eden format mantigina uygun ozgun fikir |
-| T02 | Behind-the-Scenes Truth | Parlak sonucun arkasindaki emek, surtunme ve gerceklik |
-| T03 | Product Proof / Honest Use | Sponsor/urun icin durust kullanim ve kanit akisi |
-| T04 | Bureaucratic Everyday Comedy | Gunu form, onay, sira ve prosedur komedisine cevirir |
-| T05 | Community Prompt / Comment Engine | Yorum, DM ve story anketinden guvenli fikir cikarir |
-| T06 | Before-After Without Harm | Fiziksel vaat yerine karar/baglam donusumu gosterir |
-| T07 | Decision Support / Saveable Utility | Kaydedilebilir karar agaci, checklist ve karsilastirma uretir |
-| T08 | Aspirational-to-Practical Translation | Estetik/luks icerigi gercek hayata cevrilebilir yapar |
-| T09 | Mini-Series Universe | Tek fikri tekrar edilebilir seri IP'sine donusturur |
-| T10 | Correction / Trust Repair | Yanlis anlasilma veya eksik bilgiyi sakin duzeltir |
-| T11 | Commercial Integration | Sponsorlu icerigi acik, guvenli ve donusum odakli yapar |
-| T12 | High-Profile Reputation Guard | Gorunurluk, mahremiyet ve itibar riskini yonetir |
+| T01 | Signature Ritual | Creator'ın tekrar eden formatına uygun özgün fikir |
+| T02 | Behind-the-Scenes Truth | Parlak sonucun arkasındaki gerçek üretim/sürtünme |
+| T03 | Product Proof / Honest Use | Sponsor/ürün için dürüst kullanım ve kanıt akışı |
+| T04 | Bureaucratic Everyday Comedy | Gündelik hayatı form, onay, sıra, prosedür komedisine çevirir |
+| T05 | Community Prompt / Comment Engine | Yorum, DM ve story anketinden fikir çıkarır |
+| T06 | Before-After Without Harm | Fiziksel sonuç vaadi yerine bağlam/karar dönüşümü gösterir |
+| T07 | Decision Support / Saveable Utility | Kaydedilebilir karar ağacı, kontrol listesi, kıyas üretir |
+| T08 | Aspirational-to-Practical Translation | Lüks/estetik içeriği gerçek hayata çevrilebilir yapar |
+| T09 | Mini-Series Universe | Tek fikri tekrar edilebilir seri IP'sine dönüştürür |
+| T10 | Correction / Trust Repair | Yanlış anlaşılma veya eksik bilgiyi sakin düzeltir |
+| T11 | Commercial Integration | Sponsorlu içeriği açık, güvenli ve dönüşüm odaklı yapar |
+| T12 | High-Profile Reputation Guard | Ünlü görünürlük, mahremiyet ve itibar riskini yönetir |
 
-## Persona Tipleri
+## Yeni Operatör Aileleri
 
-| Persona | En iyi calistigi alan |
-|---|---|
-| `luxury_editor` | Beauty, fashion, travel, luxury |
-| `relatable_lifestyle` | Lifestyle, food, family, daily reality |
-| `expert_guide` | Education, wellness-safe, thought leadership |
-| `beauty_tester` | Beauty proof, routine, product testing |
-| `travel_curator` | Travel itinerary, place truth, premium/practical contrast |
-| `comedy_observer` | Safe everyday comedy and recognition loops |
-| `product_reviewer` | Commerce, affiliate, proof-led recommendation |
-| `creator_teacher` | Creator education, systems, frameworks |
+| Aralık | Aile | Örnek |
+|---|---|---|
+| `VIA-121–130` | Bureaucratic everyday reality | Form Gibi Hayat, Onay Bekleyen Duygu |
+| `VIA-131–150` | Influencer content personalization | Creator Signature Remix, DM'den Fikre, Marka Uyumlu Cesaret |
 
-## Batch Generation Model
+## Fikir Kutusu Dağılımı
 
-Generator iki modda calisir:
+```text
+40% signature-safe ideas
+20% growth / new audience ideas
+15% commercial-ready ideas
+10% community/DM ideas
+10% series/IP ideas
+5% experimental ideas
+```
 
-1. `admin_direct`: Admin panel "Fikir uret" der; Edge Function/worker fikirleri dogrudan database'e import eder.
-2. `jsonl_import`: Generator `manifest.json` ve `ideas_*.jsonl` dosyalari uretir; admin import ekrani veya CLI importer bunlari database'e yukler.
+## Zorunlu Güvenlik
 
-Her fikir su gate'lerden gecer:
-
-- JSON schema
-- category/persona fit
-- safety
-- originality
-- creator-fit
-- platform-fit
-- score pipeline
-
-Valid fikirler once `idea_candidates`, `idea_scores`, `idea_cards` tablolarina yazilir. Kalite tabanini gecenler `idea_inventory` stok havuzuna alinir.
-
-## Paid Box Allocation
-
-Stok fikirleri internal `low`, `mid`, `high` bandlerine ayrilir. Bu bandler influencer'a gosterilmez.
-
-| Kutu | Fiyat | Teslim |
-|---|---:|---|
-| `viral_box_500` | `$500` | 2 fikir: `low:1`, `high:1` |
-| `premium_viral_box_1000` | `$1000` | 5 fikir: `low:2`, `mid:1`, `high:2` |
-
-Influencer satin alma sonrasi sadece kendi `idea_box_deliveries` ve `idea_cards` kayitlarini gorur. `idea_scores`, `idea_inventory`, `score_band`, `internal_rank_score` ve reuse alanlari sakli kalir.
-
-## Zorunlu Guvenlik
-
-- Sponsorlu icerikte disclosure alani gerekir.
-- Saglik, cilt, finans, hukuki ve travel iddialari sinirlandirilir ve kanit ihtiyaci belirtilir.
-- Cocuk, partner, ozel mesaj, takipci kimligi ve mahrem alanlar korunur.
-- Generator kisi taklidi yapmaz; persona yerine prensip ve format mantigi cikarir.
-- Yuksek profilli creator'larda itibar, context collapse ve parasocial boundary kontrol edilir.
+- Sponsorlu içerikte açıklama/disclosure alanı gerekir.
+- Sağlık, cilt, finans, hukuki ve travel bilgileri iddia türüne göre doğrulanır.
+- Çocuk, partner, özel mesaj, takipçi kimliği ve mahrem alanlar korunur.
+- Generator kişi taklidi yapmaz; persona yerine prensip çıkarır.
