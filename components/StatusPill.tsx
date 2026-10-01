@@ -19,6 +19,10 @@ const colors: Record<string, string> = {
   creator: "bg-white text-ink/70",
   admin: "bg-ink text-white",
   read: "bg-white text-ink/50",
+  accepted: "bg-teal/10 text-teal",
+  rejected: "bg-coral/10 text-coral",
+  replaced: "bg-[#5B2A86]/10 text-[#5B2A86]",
+  closed: "bg-white text-ink/50",
 };
 
 const labels: Record<string, string> = {

@@ -55,9 +55,9 @@ export function ProductBoxVisual({
 
   return (
     <div className={`viralbox-art relative mx-auto h-56 w-full max-w-[330px] ${opened ? "is-open" : "is-sealed"} ${className}`}>
-      <div className={`absolute left-1/2 top-7 h-40 w-40 -translate-x-1/2 rounded-full blur-3xl transition-opacity duration-500 ${theme.glow} ${opened ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`} />
+      <div className={`absolute left-1/2 top-10 h-24 w-52 -translate-x-1/2 rounded-[28px] blur-2xl transition-opacity duration-500 ${theme.glow} ${opened ? "opacity-90" : "opacity-55 group-hover:opacity-85"}`} />
       {variant === "black" ? (
-        <div className="absolute left-1/2 top-8 h-36 w-36 -translate-x-1/2 rotate-45 rounded-[20px] border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.18),rgba(255,255,255,0.02)_42%,rgba(148,163,184,0.16)_68%,rgba(0,0,0,0))]" />
+        <div className="absolute left-1/2 top-8 h-36 w-36 -translate-x-1/2 rotate-45 rounded-[18px] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.025)_38%,rgba(115,130,156,0.18)_64%,rgba(0,0,0,0.02))] shadow-[0_28px_70px_-44px_rgba(255,255,255,0.7)]" />
       ) : null}
       <div className={`absolute inset-x-8 bottom-4 h-28 rounded-[10px] border border-white/25 ${theme.shell} shadow-soft`} />
       <div className={`viralbox-lid absolute inset-x-5 bottom-[126px] h-12 origin-bottom rounded-[10px] border border-white/30 ${theme.lid} shadow-soft transition-transform duration-500`} />

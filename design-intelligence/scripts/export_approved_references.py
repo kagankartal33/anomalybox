@@ -34,7 +34,8 @@ def main() -> int:
     args = parser.parse_args()
 
     DESKTOP.mkdir(parents=True, exist_ok=True)
-    records = load_jsonl(APPROVED)[: args.max_downloads]
+    all_records = load_jsonl(APPROVED)
+    records = all_records[: args.max_downloads]
     downloaded = 0
     for record in records:
         src = record.get("image_src")
@@ -44,13 +45,14 @@ def main() -> int:
         if not target.exists():
             download(src, target)
             time.sleep(0.4)
-        record["desktop_file"] = str(target.relative_to(ROOT)).replace("\\", "/")
+        record["desktop_file"] = str(target.relative_to(ROOT)).replace("", "/")
         downloaded += 1
 
+    by_id = {record["reference_id"]: record for record in records}
     with APPROVED.open("w", encoding="utf-8") as fh:
-        for record in load_jsonl(APPROVED):
-            match = next((item for item in records if item["reference_id"] == record["reference_id"]), None)
-            fh.write(json.dumps(match or record, ensure_ascii=False) + "\n")
+        for record in all_records:
+            match = by_id.get(record["reference_id"])
+            fh.write(json.dumps(match or record, ensure_ascii=False) + "\
 
     print(f"Downloaded or verified {downloaded} approved desktop screenshots.")
     return 0

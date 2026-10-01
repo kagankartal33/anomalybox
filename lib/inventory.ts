@@ -31,7 +31,9 @@ export async function checkInventoryForBox(boxProductSlug: string, categorySlug:
       .eq("category_id", category.id)
       .eq("persona_id", persona.id)
       .eq("score_band", band)
-      .eq("status", "available");
+      .eq("status", "available")
+      .eq("reuse_count", 0)
+      .eq("max_reuse_count", 1);
     counts[band] = count ?? 0;
     if ((count ?? 0) < needed) missing.push(`${band}: needed ${needed}, available ${count ?? 0}`);
   }

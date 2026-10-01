@@ -15,6 +15,14 @@ type Run = { id: string; status: string; stage: string | null; provider: string;
 function object(value: unknown): Json {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Json : {};
 }
+function weightedCount(rows: Json[]) {
+  const result = new Map<string, number>();
+  for (const row of rows) for (const [code, raw] of Object.entries(row)) {
+    const value = Number(raw);
+    if (Number.isFinite(value) && value > 0) result.set(code, (result.get(code) ?? 0) + value);
+  }
+  return [...result.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
+}
 function count(values: string[]) {
   const result = new Map<string, number>();
   for (const value of values.filter(Boolean)) result.set(value, (result.get(value) ?? 0) + 1);
@@ -49,8 +57,12 @@ export default async function CardQualityPage() {
     const parsed = creativeRecipeSchema.safeParse(object(object(candidate.decision_trace).generation).creative_recipe);
     return parsed.success ? [parsed.data] : [];
   });
-  const issueRows = count(runs.flatMap((run) => Object.entries(object(run.issue_counts)).flatMap(([code, value]) => Array(Math.max(0, Number(value) || 0)).fill(code))));
-  const latencies = runs.map((run) => Number(run.latency_ms)).filter((value) => Number.isFinite(value) && value >= 0);
+  const issueRows = weightedCount(runs.map((run) => object(run.issue_counts)));
+  const latencies = runs.flatMap((run) => {
+    if (run.latency_ms === null || run.latency_ms === undefined) return [];
+    const value = Number(run.latency_ms);
+    return Number.isFinite(value) && value >= 0 ? [value] : [];
+  });
   const inputTokens = runs.reduce((sum, run) => sum + Number(object(run.token_usage).inputTokens ?? 0), 0);
   const outputTokens = runs.reduce((sum, run) => sum + Number(object(run.token_usage).outputTokens ?? 0), 0);
   const reportedCost = runs.reduce((sum, run) => sum + Number(object(run.metadata).estimated_cost_usd ?? object(run.gate_results).estimated_cost_usd ?? 0), 0);

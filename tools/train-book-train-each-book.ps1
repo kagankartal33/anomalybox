@@ -1,6 +1,6 @@
 param(
-  [string]$InputDir = ".\Book-Train",
-  [string]$OutDir = ".\dataset\book_train\prepared\individual",
+  [string]$InputDir = ".\\Book-Train",
+  [string]$OutDir = ".\\dataset\\book_train\\prepared\\individual",
   [int]$MaxChunksPerBook = 12000,
   [int]$MinChunkChars = 300,
   [int]$MaxChunkChars = 1800,
@@ -31,14 +31,15 @@ for ($i = 0; $i -lt $books.Count; $i++) {
   $sourceSlug = "book_train_cinema_${bookCode}_v1"
   $compileVersion = "2026-v7-book-train-cinema-${bookCode}"
   $outputName = "book_train_cinema_${bookCode}_v1.jsonl"
+  $bookOutDir = Join-Path $OutDir $bookCode
 
   Write-Host "Preparing/training $bookCode as $sourceSlug ($sourceRef)"
 
   $argsList = @(
     "-ExecutionPolicy", "Bypass",
-    "-File", ".\tools\prepare-and-train-book-train.ps1",
+    "-File", ".\\tools\\prepare-and-train-book-train.ps1",
     "-InputDir", $InputDir,
-    "-OutDir", $OutDir,
+    "-OutDir", $bookOutDir,
     "-MaxChunksPerBook", "$MaxChunksPerBook",
     "-MinChunkChars", "$MinChunkChars",
     "-MaxChunkChars", "$MaxChunkChars",
@@ -65,7 +66,7 @@ for ($i = 0; $i -lt $books.Count; $i++) {
     throw "$bookCode training failed with exit code $LASTEXITCODE"
   }
 
-  $manifestPath = Join-Path $OutDir ($outputName.Replace(".jsonl", ".manifest.json"))
+  $manifestPath = Join-Path $bookOutDir ($outputName.Replace(".jsonl", ".manifest.json"))
   $rowCount = $null
   if (Test-Path -LiteralPath $manifestPath) {
     $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
@@ -77,7 +78,7 @@ for ($i = 0; $i -lt $books.Count; $i++) {
     source_ref = $sourceRef
     source_slug = $sourceSlug
     compile_version = $compileVersion
-    output_file = $outputName
+    output_file = (Join-Path $bookOutDir $outputName)
     prepared_rows = $rowCount
   }
 }

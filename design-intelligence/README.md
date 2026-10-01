@@ -7,10 +7,11 @@ It does not fine-tune a model, clone datasets, or store third-party HTML/CSS/JS 
 ## Refresh Workflow
 
 ```powershell
-python .\design-intelligence\scripts\discover_webui_candidates.py --max-records 120 --offsets 0 500 1500 3000
-python .\design-intelligence\scripts\score_reference_candidates.py --approve-limit 40
-python .\design-intelligence\scripts\export_approved_references.py --max-downloads 20
-python .\design-intelligence\scripts\build_design_playbook.py
+python .\\design-intelligence\\scripts\\discover_webui_candidates.py --max-records 120 --offsets 0 500 1500 3000
+python .\\design-intelligence\\scripts\\discover_websight_patterns.py --max-records 60
+python .\\design-intelligence\\scripts\\score_reference_candidates.py --approve-limit 40
+python .\\design-intelligence\\scripts\\export_approved_references.py --max-downloads 20
+python .\\design-intelligence\\scripts\\build_design_playbook.py
 ```
 
 Use larger limits only when needed. Do not run `snapshot_download`, `git clone`, `git lfs`, or bulk Parquet downloads for this pack.
@@ -19,6 +20,7 @@ Use larger limits only when needed. Do not run `snapshot_download`, `git clone`,
 
 - `manifests/candidate_manifest.jsonl`: bounded metadata candidates.
 - `manifests/approved_manifest.jsonl`: approved references with scores and provenance.
+- `manifests/websight_pattern_notes.jsonl`: compact structure notes from WebSight v0.2, with no raw HTML retained.
 - `references/approved/`: selected screenshots only.
 - `derived/`: original ViralBox design, marketing, accessibility, responsive, and SEO rules.
 

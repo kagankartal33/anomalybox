@@ -3,8 +3,10 @@ import { createClient } from "@supabase/supabase-js";
 import { PROMPT_VERSION } from "../lib/generation/contracts";
 import { QUALITY_GATE_VERSION } from "../lib/idea-card/quality-v2-2";
 import { AUTOMATIC_QUALIFICATION_MODE, cardContentHash, modelContract, objectRecord, semanticDocument, sha256, stableJson } from "../lib/generation/automatic-policy";
-import { automaticQualificationPass, PILOT_CATEGORIES } from "../lib/generation/qualification";
-import { analyzeDurationDistribution, timingFingerprint } from "../lib/idea-card/duration-planner";
+import { automaticQualificationPass, QUALIFICATION_CATEGORIES } from "../lib/generation/qualification";
+import { DURATION_PLANNER_VERSION, analyzeDurationDistribution, timingFingerprint } from "../lib/idea-card/duration-planner";
+import { CREATIVE_SCHEDULER_VERSION, CREATIVE_TAXONOMY_VERSION, analyzeCreativeDistribution, creativeRecipeSchema, recipeMatchesConcept, type CreativeRecipe } from "../lib/generation/creative-taxonomy";
+import { CONCEPT_RANKER_VERSION } from "../lib/generation/concept-ranking";
 import { runAutomaticQualityRegression } from "./automatic-quality-regression";
 import type { IdeaCard } from "../lib/idea-card/types";
 

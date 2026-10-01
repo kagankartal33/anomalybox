@@ -1,14 +1,12 @@
-# `generate-ideas` Edge Function
+# `generate-ideas`
 
-Bu klasör henüz çalıştırılabilir function kodu değil, function sözleşmesidir.
+Legacy placeholder. In the current product model, ideas are not generated at the moment an influencer purchases a box.
 
-Görev:
+The generator runs as an internal/admin tool:
 
-1. Kullanıcı session'ını doğrula.
-2. Creator, brand ve audience context'ini oku.
-3. `algorithm_definitions` ve aktif `admin_configs` kayıtlarını al.
-4. LLM veya yerel generator ile aday fikirleri üret.
-5. `idea_candidates` kayıtlarını oluştur.
-6. `score-idea` akışını tetikle veya aynı transaction sonrası skor yaz.
+1. Admin selects category, creator mode, and target count.
+2. The generator produces ideas as either `admin_direct` payloads or `jsonl_import` files.
+3. The `admin-generation-batches` function runs import, scoring, and publishing.
+4. Published ideas enter the `idea_inventory` stock pool.
 
-Gizli anahtarlar sadece Edge Function environment içinde tutulmalıdır. Frontend `service_role` kullanmaz.
+The creator-facing app runtime does not call this function.

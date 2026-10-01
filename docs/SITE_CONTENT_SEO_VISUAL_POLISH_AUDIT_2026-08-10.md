@@ -7,7 +7,7 @@ Scope: all 257 URLs in the production sitemap, all 235 article Markdown sources,
 
 The public routing and metadata foundation is healthy: the crawl found no HTTP failures, broken internal links, H1 errors, missing metadata, or canonical errors. The most visible defect was the custom Markdown renderer. It printed Markdown links and lists as plain text, while 35 articles also rendered two Related guides sections. Those defects are fixed in this pass, together with six malformed code fences that trapped the rest of an article inside a code block.
 
-The main remaining risk is content quality rather than routing. The 235-source corpus contains extensive repeated paragraphs and template residue. Runtime presentation can hide empty or duplicate headings, but the source corpus still needs an editorial consolidation pass to satisfy the project’s originality and realism rules.
+The editorial source pass is now complete. All 235 Markdown sources meet the 600–1,200 word range, contain no empty or repeated H2 headings, and pass the public-language audit. The 123 resource articles also pass the originality gate without exact duplicate paragraphs, near-duplicate bodies, internal pipeline language or viral-card training bleed.
 
 ## Evidence and current gates
 
@@ -54,19 +54,16 @@ The main remaining risk is content quality rather than routing. The 235-source c
 
 ## Remaining findings
 
-### P0 — Source-content originality and usefulness
+### Completed — Source-content originality and usefulness
 
-- 225 exact duplicate paragraph groups occur across 233 of 235 Markdown files.
-- 90 files contain repeated H2 headings; the renderer now suppresses them, but the source still needs consolidation.
-- 169 files contain 204 empty H2 sections; these are hidden at render time but remain editorial debt.
-- Five curated pages are below the required 600-word floor:
-  - `reels-shot-list-template.md`: 583 words
-  - `content-creator-burnout.md`: 587 words
-  - `private-creative-direction-instagram-creators.md`: 590 words
-  - `how-to-create-content-consistently.md`: 595 words
-  - `creator-brief-workflow-for-brand-teams.md`: 598 words
-- The source corpus contains 308 matches for internal terms such as SEO operator rules, Zero-Click Summary, source-ledger language and generation-quality labels. Runtime text is sanitized, but the canonical source should be rewritten.
-- The 123 legacy resources use heavily repeated introductions, tactical formulas, FAQs and CTA language. They need topic-by-topic originality review rather than another global template rewrite.
+- All 235 source files are between 600 and 1,200 words.
+- Empty and repeated H2 headings: 0.
+- Public editorial-instruction and internal pipeline leaks: 0.
+- Exact repeated paragraphs in the 123-resource corpus: 0.
+- Duplicate title-stripped resource bodies: 0.
+- Near-duplicate resource pairs at Jaccard >= 0.70: 0.
+- Originality gate: 123 PASS, 0 REVIEW_REQUIRED, 0 FAIL_DUPLICATE.
+- The resource pipeline remains isolated from viral-card training data.
 
 ### P1 — Search intent and cannibalization
 
@@ -101,14 +98,14 @@ The main remaining risk is content quality rather than routing. The 235-source c
 
 ## Delivery plan
 
-### Phase 1 — Editorial source cleanup
+### Phase 1 — Editorial source cleanup (completed)
 
 1. Produce a page-level inventory of duplicate paragraphs, empty sections and repeated FAQs.
 2. Prioritize the 112 curated pages, starting with the five sub-600-word pages and the pages with three repeated sections.
 3. Rewrite in clusters of 10–15 pages with a human review checkpoint after each cluster.
 4. Regenerate `seo-package-markdown.json` and require the content integrity gate before merge/deploy.
 
-Exit gate: no empty H2s, no duplicate H2s within a page, every curated article 600–1,200 words, and no cross-topic or internal pipeline language.
+Exit gate met: no empty H2s, no duplicate H2s within a page, every article is 600–1,200 words, and no cross-topic or internal pipeline language remains.
 
 ### Phase 2 — Legacy consolidation
 

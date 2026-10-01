@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$args = @(".\scripts\cleanup-review-videos.mjs", "--limit", "$Limit")
+$args = @(".\\scripts\\cleanup-review-videos.mjs", "--limit", "$Limit")
 if ($Apply) {
   $args += "--apply"
 }

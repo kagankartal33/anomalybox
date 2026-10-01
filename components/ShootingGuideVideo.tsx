@@ -17,7 +17,7 @@ export function ShootingGuideVideo({ ideaId }: { ideaId: string }) {
           </div>
           <h2 className="mt-3 text-2xl font-semibold">A visual shooting guide for this card</h2>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-ink/60">
-            Follow the setup, hook, camera angle, B-roll, edit rhythm, caption, and safety steps before filming your draft.
+            Follow the setup, hook, camera angle, B-roll, and edit rhythm before filming your draft.
           </p>
         </div>
       </div>
@@ -26,8 +26,8 @@ export function ShootingGuideVideo({ ideaId }: { ideaId: string }) {
         <div className="grid aspect-video place-items-center rounded-md border border-ink/10 bg-paper p-6 text-center">
           <div>
             <MonitorPlay className="mx-auto h-7 w-7 text-teal" />
-            <p className="mt-3 font-semibold">No shooting guide video has been created for this card yet.</p>
-            <p className="mt-1 text-sm leading-6 text-ink/55">Use the written Shoot Plan and checklist below.</p>
+            <p className="mt-3 font-semibold">Use the execution board below for this card.</p>
+            <p className="mt-1 text-sm leading-6 text-ink/55">The written process diagram gives the same shoot order, camera cues, and edit rhythm.</p>
           </div>
         </div>
       ) : (

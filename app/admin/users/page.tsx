@@ -18,11 +18,11 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
     <AppShell>
       <section className="mb-6 rounded-md border border-ink/10 bg-white p-6 shadow-soft">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Admin users</p>
-        <h1 className="mt-2 text-4xl font-semibold">Users & gift boxes</h1>
-        <p className="mt-2 text-ink/60">Create creator accounts and send complimentary ViralBoxes from available inventory.</p>
+        <h1 className="mt-2 text-4xl font-semibold">Users & complimentary dossiers</h1>
+        <p className="mt-2 text-ink/60">Create creator accounts and send complimentary private dossiers from approved inventory.</p>
       </section>
       {params.error ? <div className="mb-4 rounded-md bg-coral/10 p-3 text-sm text-coral">{params.error}</div> : null}
-      {params.gift ? <div className="mb-4 rounded-md bg-teal/10 p-3 text-sm text-teal">Gift box sent.</div> : null}
+      {params.gift ? <div className="mb-4 rounded-md bg-teal/10 p-3 text-sm text-teal">Complimentary dossier sent.</div> : null}
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
           <h2 className="text-2xl font-semibold">Create creator</h2>
@@ -36,7 +36,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
           </form>
         </section>
         <section className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
-          <h2 className="text-2xl font-semibold">Send gift box</h2>
+          <h2 className="text-2xl font-semibold">Send complimentary dossier</h2>
           <form action={sendGiftBox} className="mt-4 grid gap-3">
             <select className="focus-ring rounded-md border border-ink/15 px-3 py-3" name="user_id" required>
               <option value="">Choose user</option>
@@ -51,7 +51,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
             <select className="focus-ring rounded-md border border-ink/15 px-3 py-3" name="persona_slug" required>
               {personas?.map((persona) => <option key={persona.slug} value={persona.slug}>{persona.name}</option>)}
             </select>
-            <button className="focus-ring rounded-md bg-teal px-4 py-3 font-semibold text-white">Send gift from inventory</button>
+            <button className="focus-ring rounded-md bg-teal px-4 py-3 font-semibold text-white">Send private box from inventory</button>
           </form>
         </section>
       </div>

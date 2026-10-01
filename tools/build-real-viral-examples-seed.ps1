@@ -1,17 +1,26 @@
 param(
   [int]$TargetCount = 1000,
-  [string]$OutputSql = ".\supabase\seeds\real_viral_examples.sql"
+  [string]$OutputSql = ".\\supabase\\seeds\
+eal_viral_examples.sql"
 )
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
 function SqlQuote([string]$Value) {
-  return "'" + (($Value ?? "") -replace "'", "''") + "'"
+  if ($null -eq $Value) {
+    $Value = ""
+  }
+  return "'" + ($Value -replace "'", "''") + "'"
 }
 
 function JsonSql([object]$Value) {
   return (SqlQuote ($Value | ConvertTo-Json -Depth 12 -Compress)) + "::jsonb"
+}
+
+function SqlTextArray([object[]]$Values) {
+  $clean = @($Values | Where-Object { $null -ne $_ -and "$_".Trim() -ne "" } | ForEach-Object { SqlQuote "$_" })
+  return "array[" + ($clean -join ",") + "]"
 }
 
 function Normalize-Slug([string]$Value) {
@@ -81,7 +90,7 @@ function TriggersFor([string]$Name, [string]$Type) {
 }
 
 function Add-Example($Map, [string]$Name, [string]$Source, [string]$Url, [string]$ClassLabel, [Nullable[int]]$Year) {
-  $clean = (($Name -replace "\s+", " ").Trim())
+  $clean = (($Name -replace "\\s+", " ").Trim())
   if (-not $clean -or $clean.Length -lt 2) { return }
   if ($clean -match "^Category:|^Template:|^File:|^List of|^Timeline of") { return }
   $slugBase = Normalize-Slug $clean
@@ -119,14 +128,14 @@ function Invoke-WikidataSparql([string]$Query) {
   $encoded = [uri]::EscapeDataString($Query)
   $uri = "https://query.wikidata.org/sparql?query=$encoded&format=json"
   $headers = @{ "User-Agent" = "ViralBoxTrainingBuilder/1.0 (local research corpus builder)" }
-  return Invoke-RestMethod -Uri $uri -Headers $headers -TimeoutSec 60
+  return Invoke-RestMethod -Uri $uri -Headers $headers -TimeoutSec 45
 }
 
-function Get-WikipediaCategoryMembers([string]$Category, [int]$Limit) {
+function Get-WikipediaCategoryMembers([string]$Category, [int]$Limit, [int]$Namespace = 0) {
   $results = [System.Collections.Generic.List[object]]::new()
   $continue = $null
   while ($results.Count -lt $Limit) {
-    $uri = "https://en.wikipedia.org/w/api.php?action=query&format=json&list=categorymembers&cmtitle=Category:$([uri]::EscapeDataString($Category))&cmlimit=500&cmnamespace=0"
+    $uri = "https://en.wikipedia.org/w/api.php?action=query&format=json&list=categorymembers&cmtitle=Category:$([uri]::EscapeDataString($Category))&cmlimit=500&cmnamespace=$Namespace"
     if ($continue) { $uri += "&cmcontinue=$([uri]::EscapeDataString($continue))" }
     $r = Invoke-RestMethod -Uri $uri -TimeoutSec 30 -Headers @{ "User-Agent" = "ViralBoxTrainingBuilder/1.0" }
     foreach ($m in $r.query.categorymembers) { $results.Add($m) }
@@ -136,40 +145,67 @@ function Get-WikipediaCategoryMembers([string]$Category, [int]$Limit) {
   return @($results | Select-Object -First $Limit)
 }
 
+function Get-WikipediaCategoryTreeMembers([string[]]$RootCategories, [int]$PerCategoryLimit = 500, [int]$MaxCategories = 180) {
+  $seenCats = @{}
+  $queue = [System.Collections.Queue]::new()
+  foreach ($cat in $RootCategories) { $queue.Enqueue($cat) }
+  $all = [System.Collections.Generic.List[object]]::new()
+  while ($queue.Count -gt 0 -and $seenCats.Count -lt $MaxCategories) {
+    $cat = [string]$queue.Dequeue()
+    if ($seenCats.ContainsKey($cat)) { continue }
+    $seenCats[$cat] = $true
+    try {
+      foreach ($m in (Get-WikipediaCategoryMembers $cat $PerCategoryLimit 0)) {
+        $all.Add([pscustomobject]@{ title = $m.title; pageid = $m.pageid; category = $cat })
+      }
+      foreach ($sub in (Get-WikipediaCategoryMembers $cat 200 14)) {
+        $subTitle = $sub.title -replace "^Category:", ""
+        if (-not $seenCats.ContainsKey($subTitle)) { $queue.Enqueue($subTitle) }
+      }
+    } catch {
+      Write-Warning "Could not fetch category tree node $cat`: $($_.Exception.Message)"
+    }
+  }
+  return @($all)
+}
+
 $examples = [ordered]@{}
 
-$queries = @(
-@"
-SELECT ?item ?itemLabel ?classLabel ?date WHERE {
-  VALUES ?root { wd:Q2927074 wd:Q1030329 wd:Q60714051 wd:Q6056014 }
-  ?item wdt:P31/wdt:P279* ?root .
-  OPTIONAL { ?item wdt:P31 ?class . }
-  OPTIONAL { ?item wdt:P571|wdt:P577|wdt:P585 ?date . }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-}
-LIMIT 2500
-"@,
-@"
-SELECT ?item ?itemLabel ?classLabel ?date WHERE {
-  VALUES ?root { wd:Q278485 wd:Q17442446 wd:Q63412991 }
-  ?item wdt:P31/wdt:P279* ?root .
-  OPTIONAL { ?item wdt:P31 ?class . }
-  OPTIONAL { ?item wdt:P571|wdt:P577|wdt:P585 ?date . }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-}
-LIMIT 1500
-"@
+$wikidataRoots = @(
+  @{ id = "wd:Q2927074"; label = "internet meme" },
+  @{ id = "wd:Q1030329"; label = "viral video" },
+  @{ id = "wd:Q60714051"; label = "Internet challenge" },
+  @{ id = "wd:Q6056014"; label = "Internet phenomenon" },
+  @{ id = "wd:Q278485"; label = "hashtag" }
 )
 
-foreach ($query in $queries) {
-  $data = Invoke-WikidataSparql $query
-  foreach ($row in $data.results.bindings) {
-    $name = $row.itemLabel.value
-    $url = $row.item.value
-    $class = if ($row.classLabel) { $row.classLabel.value } else { "internet phenomenon" }
-    $year = $null
-    if ($row.date -and $row.date.value -match "^(\d{4})") { $year = [int]$Matches[1] }
-    Add-Example $examples $name "wikidata_sparql" $url $class $year
+foreach ($root in $wikidataRoots) {
+  foreach ($offset in @(0, 250, 500, 750, 1000)) {
+    $query = @"
+SELECT ?item ?itemLabel ?classLabel ?date WHERE {
+  ?item wdt:P31/wdt:P279* $($root.id) .
+  OPTIONAL { ?item wdt:P31 ?class . }
+  OPTIONAL { ?item wdt:P571|wdt:P577|wdt:P585 ?date . }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+LIMIT 250
+OFFSET $offset
+"@
+    try {
+      $data = Invoke-WikidataSparql $query
+      if ($data.results.bindings.Count -eq 0) { break }
+      foreach ($row in $data.results.bindings) {
+        $name = $row.itemLabel.value
+        $url = $row.item.value
+        $class = if ($row.classLabel) { $row.classLabel.value } else { $root.label }
+        $year = $null
+        if ($row.date -and $row.date.value -match "^(\\d{4})") { $year = [int]$Matches[1] }
+        Add-Example $examples $name "wikidata_sparql:$($root.label)" $url $class $year
+      }
+    } catch {
+      Write-Warning "Wikidata query failed for $($root.label) offset $offset`: $($_.Exception.Message)"
+      break
+    }
   }
 }
 
@@ -191,16 +227,9 @@ $categories = @(
   "TikTok trends",
   "Hashtags"
 )
-foreach ($cat in $categories) {
-  try {
-    $members = Get-WikipediaCategoryMembers $cat 500
-    foreach ($m in $members) {
-      $url = "https://en.wikipedia.org/?curid=$($m.pageid)"
-      Add-Example $examples $m.title "wikipedia_category:$cat" $url $cat $null
-    }
-  } catch {
-    Write-Warning "Could not fetch category $cat`: $($_.Exception.Message)"
-  }
+foreach ($m in (Get-WikipediaCategoryTreeMembers $categories 500 220)) {
+  $url = "https://en.wikipedia.org/?curid=$($m.pageid)"
+  Add-Example $examples $m.title "wikipedia_category:$($m.category)" $url $m.category $null
 }
 
 $selected = @($examples.Values | Sort-Object title | Select-Object -First $TargetCount)
@@ -230,7 +259,6 @@ foreach ($item in $selected) {
     training_instruction = "Extract mechanism only; do not copy title, media, catchphrase, person, soundtrack or exact execution."
   }
   $rows += "(" + (@(
-    "source.id",
     (SqlQuote $externalRef),
     $item.year,
     (SqlQuote $item.platform),
@@ -240,9 +268,9 @@ foreach ($item in $selected) {
     (SqlQuote ("Documented real internet example from " + (($item.sources | Select-Object -First 1)) + "; use only as abstract viral behavior evidence.")),
     (SqlQuote $item.reusable_pattern),
     (SqlQuote "real-world documented spread"),
-    "array[" + (($item.triggers | ForEach-Object { SqlQuote $_ }) -join ",") + "]",
-    "array[" + ((@("documented_real_example","anti_copy_required","source_backed") | ForEach-Object { SqlQuote $_ }) -join ",") + "]",
-    "array[" + ((@("copy_risk","context_collapse","rights_check") | ForEach-Object { SqlQuote $_ }) -join ",") + "]",
+    (SqlTextArray @($item.triggers)),
+    (SqlTextArray @("documented_real_example","anti_copy_required","source_backed")),
+    (SqlTextArray @("copy_risk","context_collapse","rights_check")),
     (SqlQuote "high"),
     (SqlQuote "pattern_only"),
     "'medium'::public.viral_training_risk_level",
@@ -283,11 +311,12 @@ $sql += ")"
 $sql += "insert into public.viral_training_examples ("
 $sql += "  source_id, external_ref, year, platform, category_slug, title, phenomenon_type, abstracted_mechanism, reusable_pattern, participation_mode, emotional_triggers, format_signals, safety_risks, copy_risk, training_use, risk_level, metadata"
 $sql += ")"
-$sql += "select source_id, external_ref, year, platform, category_slug, title, phenomenon_type, abstracted_mechanism, reusable_pattern, participation_mode, emotional_triggers, format_signals, safety_risks, copy_risk, training_use, risk_level, metadata"
-$sql += "from ("
+$sql += "select source.id, v.external_ref, v.year, v.platform, v.category_slug, v.title, v.phenomenon_type, v.abstracted_mechanism, v.reusable_pattern, v.participation_mode, v.emotional_triggers, v.format_signals, v.safety_risks, v.copy_risk, v.training_use, v.risk_level, v.metadata"
+$sql += "from source"
+$sql += "cross join ("
 $sql += "  values"
 $sql += ($rows -join ",`r`n")
-$sql += ") as v(source_id, external_ref, year, platform, category_slug, title, phenomenon_type, abstracted_mechanism, reusable_pattern, participation_mode, emotional_triggers, format_signals, safety_risks, copy_risk, training_use, risk_level, metadata)"
+$sql += ") as v(external_ref, year, platform, category_slug, title, phenomenon_type, abstracted_mechanism, reusable_pattern, participation_mode, emotional_triggers, format_signals, safety_risks, copy_risk, training_use, risk_level, metadata)"
 $sql += "on conflict (source_id, external_ref) do update set"
 $sql += "  year = excluded.year,"
 $sql += "  platform = excluded.platform,"

@@ -11,6 +11,10 @@ paths = [
     "/content-ideas/instagram-content-ideas",
     "/dossiers/classic-red",
     "/login",
+    "/forgot-password",
+    "/reset-password",
+    "/checkout/success",
+    "/profile",
 ]
 
 for path in paths:
@@ -18,7 +22,7 @@ for path in paths:
     with urllib.request.urlopen(request, timeout=15) as response:
         html = response.read().decode("utf-8", "ignore")
         status = response.status
-    blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
+    blocks = re.findall(r'<script type="application/ld\\\\+json">(.*?)</script>', html, re.S)
     parsed = []
     for block in blocks:
         try:
@@ -36,6 +40,6 @@ for path in paths:
         f"FAQPage={'FAQPage' in flattened}",
         f"HowTo={'HowTo' in flattened}",
         f"Breadcrumb={'BreadcrumbList' in flattened}",
-        f"canonical={'rel=\"canonical\"' in html}",
+        f"canonical={'rel="canonical"' in html}",
         f"noindex={'noindex' in html.lower()}",
     )

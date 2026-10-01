@@ -14,6 +14,13 @@ function record(value: unknown): Record<string, unknown> {
     : {};
 }
 
+function optionalUuid(value: unknown): string | null {
+  const candidate = optionalString(value);
+  return candidate && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)
+    ? candidate
+    : null;
+}
+
 function optionalString(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
@@ -21,9 +28,9 @@ function optionalString(value: unknown): string | null {
 export function generationProvenance(decisionTrace: unknown): GenerationProvenance {
   const generation = record(record(decisionTrace).generation);
   const promptVersion = optionalString(generation.prompt_version ?? generation.promptVersion);
-  const runId = optionalString(generation.run_id ?? generation.runId);
+  const runId = optionalUuid(generation.run_id ?? generation.runId);
   return {
-    isV22Generated: promptVersion === PROMPT_VERSION && Boolean(runId),
+    isV22Generated: [PROMPT_VERSION, "idea-card-premium-v2.3.1-automatic", "idea-card-premium-v2.3-automatic", "idea-card-premium-v2.2.0"].includes(promptVersion ?? "") && Boolean(runId),
     runId,
     provider: optionalString(generation.provider),
     model: optionalString(generation.model),

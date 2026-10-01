@@ -2,8 +2,8 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { env } from "@/lib/env";
-import { fulfillStripeCheckout } from "@/lib/stripe-fulfillment";
+import { env, siteUrl } from "@/lib/env";
+import { notifyUser } from "@/lib/notifications";
 import { stripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -16,117 +16,99 @@ export async function POST(request: Request) {
   let event: Stripe.Event;
   try {
     event = stripe().webhooks.constructEvent(body, signature, env.stripeWebhookSecret());
-  } catch {
-    return NextResponse.json({ error: "invalid_signature" }, { status: 400 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "invalid_signature" }, { status: 400 });
   }
 
-  const admin = createSupabaseAdminClient();
-  const { data: claim, error: claimError } = await admin.rpc("claim_stripe_webhook_event", {
-    p_event_id: event.id,
-    p_event_type: event.type,
-    p_payload: event as unknown as Record<string, unknown>,
+  const supabase = createSupabaseAdminClient();
+  const { error: insertEventError } = await supabase.from("stripe_webhook_events").insert({
+    id: event.id,
+    event_type: event.type,
+    payload: event as unknown as Record<string, unknown>,
   });
-
-  if (claimError) {
-    console.error("Stripe event could not be claimed.", { eventId: event.id, code: claimError.code });
-    return NextResponse.json({ error: "event_claim_failed" }, { status: 500 });
-  }
-  if (claim === "processed" || claim === "busy") {
-    return NextResponse.json({ ok: true, duplicate: true });
-  }
+  if (insertEventError?.code === "23505") return NextResponse.json({ ok: true, duplicate: true });
 
   try {
-    switch (event.type) {
-      case "checkout.session.completed":
-      case "checkout.session.async_payment_succeeded": {
-        const session = event.data.object as Stripe.Checkout.Session;
-        const result = await fulfillStripeCheckout(session.id);
-        if (result.state === "attention") {
-          throw new Error(result.message ?? "Paid checkout requires fulfillment attention.");
-        }
-        break;
-      }
-      case "checkout.session.async_payment_failed":
-      case "checkout.session.expired": {
-        await closeUnpaidCheckout(event.data.object as Stripe.Checkout.Session, event.type);
-        break;
-      }
-      case "charge.refunded": {
-        await markRefunded(event.data.object as Stripe.Charge);
-        break;
-      }
-      default:
-        break;
+    if (event.type === "checkout.session.completed") {
+      await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
     }
-
-    const { error: processedError } = await admin
-      .from("stripe_webhook_events")
-      .update({
-        processing_status: "processed",
-        processed_at: new Date().toISOString(),
-        error_message: null,
-      })
-      .eq("id", event.id);
-
-    if (processedError) throw new Error(processedError.message);
+    await supabase.from("stripe_webhook_events").update({ processing_status: "processed", processed_at: new Date().toISOString() }).eq("id", event.id);
     return NextResponse.json({ ok: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Stripe event processing failed";
-    await admin
-      .from("stripe_webhook_events")
-      .update({ processing_status: "failed", error_message: message })
-      .eq("id", event.id);
-    console.error("Stripe event processing failed.", { eventId: event.id, eventType: event.type, message });
-    return NextResponse.json({ error: "event_processing_failed" }, { status: 500 });
+    await supabase.from("stripe_webhook_events").update({
+      processing_status: "failed",
+      error_message: error instanceof Error ? error.message : String(error),
+    }).eq("id", event.id);
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
 
-async function closeUnpaidCheckout(session: Stripe.Checkout.Session, eventType: string) {
-  if (session.payment_status === "paid") return;
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  const supabase = createSupabaseAdminClient();
+  const metadata = session.metadata ?? {};
+  const userId = metadata.user_id;
+  const boxProductSlug = metadata.box_product_slug;
+  const categorySlug = metadata.category_slug;
+  const personaSlug = metadata.persona_slug;
+  if (!userId || !boxProductSlug || !categorySlug || !personaSlug) throw new Error("Missing checkout metadata");
 
-  const admin = createSupabaseAdminClient();
-  const { data: checkout } = await admin
-    .from("checkout_sessions")
-    .select("id")
-    .eq("provider_session_id", session.id)
-    .maybeSingle();
-
-  if (!checkout) return;
-  const status = eventType === "checkout.session.expired" ? "expired" : "canceled";
-  const [{ error: releaseError }, { error: updateError }] = await Promise.all([
-    admin.rpc("release_checkout_inventory", { p_checkout_session_id: checkout.id }),
-    admin.from("checkout_sessions").update({ status }).eq("id", checkout.id),
+  const [{ data: product }, { data: category }, { data: persona }] = await Promise.all([
+    supabase.from("box_products").select("id,price_usd_cents,name").eq("slug", boxProductSlug).single(),
+    supabase.from("categories").select("id,name").eq("slug", categorySlug).single(),
+    supabase.from("creator_personas").select("id,name").eq("slug", personaSlug).single(),
   ]);
+  if (!product || !category || !persona) throw new Error("Invalid product/category/persona metadata");
 
-  if (releaseError || updateError) {
-    throw new Error(releaseError?.message ?? updateError?.message ?? "Checkout could not be closed.");
-  }
-}
-
-async function markRefunded(charge: Stripe.Charge) {
-  if (!charge.refunded) return;
-  const paymentIntentId =
-    typeof charge.payment_intent === "string"
-      ? charge.payment_intent
-      : charge.payment_intent?.id;
-  if (!paymentIntentId) return;
-
-  const admin = createSupabaseAdminClient();
-  const { data: purchase, error: purchaseError } = await admin
+  const { data: existingPurchase } = await supabase
     .from("purchases")
     .select("id")
-    .eq("provider_payment_intent_id", paymentIntentId)
+    .eq("provider_checkout_session_id", session.id)
     .maybeSingle();
 
-  if (purchaseError) throw new Error(purchaseError.message);
-  if (!purchase) return;
+  const purchasePayload = {
+    user_id: userId,
+    box_product_id: product.id,
+    provider: "stripe",
+    provider_checkout_session_id: session.id,
+    provider_payment_intent_id: typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id ?? null,
+    amount_usd_cents: session.amount_total ?? product.price_usd_cents,
+    currency: session.currency ?? "usd",
+    status: "paid",
+    category_id: category.id,
+    persona_id: persona.id,
+    fulfillment_source: "stripe",
+    completed_at: new Date().toISOString(),
+    metadata: { box_product_slug: boxProductSlug, category_slug: categorySlug, persona_slug: personaSlug },
+    raw_event: session as unknown as Record<string, unknown>,
+  };
 
-  const [{ error: purchaseUpdateError }, { error: deliveryUpdateError }] = await Promise.all([
-    admin.from("purchases").update({ status: "refunded" }).eq("id", purchase.id),
-    admin.from("idea_box_deliveries").update({ status: "refunded" }).eq("purchase_id", purchase.id),
-  ]);
+  const { data: purchase, error: purchaseError } = existingPurchase
+    ? await supabase.from("purchases").update(purchasePayload).eq("id", existingPurchase.id).select("id").single()
+    : await supabase.from("purchases").insert(purchasePayload).select("id").single();
+  if (purchaseError || !purchase) throw new Error(purchaseError?.message ?? "Purchase write failed");
 
-  if (purchaseUpdateError || deliveryUpdateError) {
-    throw new Error(purchaseUpdateError?.message ?? deliveryUpdateError?.message ?? "Refund state could not be recorded.");
-  }
+  await supabase.from("checkout_sessions").update({
+    purchase_id: purchase.id,
+    status: "paid",
+  }).eq("provider_session_id", session.id);
+
+  const { data: deliveryId, error: deliveryError } = await supabase.rpc("deliver_idea_box", {
+    p_user_id: userId,
+    p_box_product_slug: boxProductSlug,
+    p_category_slug: categorySlug,
+    p_persona_slug: personaSlug,
+    p_purchase_id: purchase.id,
+  });
+  if (deliveryError) throw new Error(deliveryError.message);
+
+  const { data: authUser } = await supabase.auth.admin.getUserById(userId);
+  await notifyUser({
+    userId,
+    email: authUser.user?.email,
+    type: "box_delivered",
+    title: "Your Anomaly Box dossier is waiting",
+    body: `${product.name} Creator Vault sayfanda kapalı kutu olarak hazır. Hazır olduğunda açıp kartlarını inceleyebilirsin.`,
+    href: `${siteUrl()}/boxes`,
+    metadata: { delivery_id: deliveryId, purchase_id: purchase.id },
+  });
 }

@@ -34,7 +34,7 @@ export async function notifyUser(input: NotifyInput) {
       from: env.emailFrom(),
       to: input.email,
       subject: input.title,
-      text: `${input.body}${input.href ? `\n\n${input.href}` : ""}`,
+      text: `${input.body}${input.href ? `\
     });
   }
 }

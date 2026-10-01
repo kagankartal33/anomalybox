@@ -10,6 +10,19 @@ export type ModelProviderProfile = {
   features?: Record<string, unknown>;
 };
 
+export type ModelTokenUsage = { inputTokens: number | null; outputTokens: number | null; totalTokens: number | null };
+
+const PROVIDER_CREDENTIAL_ENV_PATTERN = /^VIRALBOX_MODEL_PROVIDER_[A-Z0-9_]{2,96}$/;
+
+function assertProviderCredentialEnvVar(name: string) {
+  if (!PROVIDER_CREDENTIAL_ENV_PATTERN.test(name)) {
+    throw new ModelProviderError(
+      "configuration",
+      "Provider credential environment variables must use the VIRALBOX_MODEL_PROVIDER_ prefix",
+    );
+  }
+}
+
 export type StructuredGenerationRequest<T> = {
   schemaName: string;
   jsonSchema: Record<string, unknown>;
@@ -20,13 +33,14 @@ export type StructuredGenerationRequest<T> = {
 
 export type StructuredGenerationResult<T> = {
   value: T;
-  usage: { inputTokens: number | null; outputTokens: number | null; totalTokens: number | null };
+  usage: ModelTokenUsage;
   latencyMs: number;
   repaired: boolean;
   providerRequestId: string | null;
 };
 
 export class ModelProviderError extends Error {
+  usage?: ModelTokenUsage;
   constructor(
     public readonly code: "configuration" | "timeout" | "rate_limit" | "refusal" | "invalid_output" | "provider_error",
     message: string,
@@ -42,11 +56,33 @@ type AdapterOptions = {
 };
 
 function endpoint(baseUrl: string, suffix: string): string {
-  return `${baseUrl.replace(/\/$/, "")}${suffix}`;
+  return `${baseUrl.replace(/\\\\/$/, "")}${suffix}`;
+}
+
+function safeProviderUrl(value: string): string {
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    throw new ModelProviderError("configuration", "Provider base URL is invalid");
+  }
+  const local = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1" || parsed.hostname === "[::1]";
+  if (parsed.protocol !== "https:" && !(local && parsed.protocol === "http:")) {
+    throw new ModelProviderError("configuration", "Provider base URL must use HTTPS, except for localhost runtimes");
+  }
+  if (parsed.username || parsed.password) {
+    throw new ModelProviderError("configuration", "Provider credentials must not be embedded in base_url");
+  }
+  for (const name of parsed.searchParams.keys()) {
+    if (/key|token|secret|password|authorization/i.test(name)) {
+      throw new ModelProviderError("configuration", "Provider credentials must be supplied through an environment variable");
+    }
+  }
+  return parsed.toString().replace(/\\\\/$/, "");
 }
 
 function stripJsonFence(value: string): string {
-  const trimmed = value.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  const trimmed = value.trim().replace(/^```(?:json)?\\\\s*/i, "").replace(/\\\\s*```$/, "");
   const firstObject = trimmed.indexOf("{");
   const firstArray = trimmed.indexOf("[");
   const start = [firstObject, firstArray].filter((index) => index >= 0).sort((a, b) => a - b)[0] ?? -1;
@@ -71,21 +107,40 @@ function parseJson(value: unknown): unknown {
 
 function usageFrom(payload: Record<string, unknown>) {
   const usage = (payload.usage ?? payload.usageMetadata ?? {}) as Record<string, unknown>;
-  const input = Number(usage.input_tokens ?? usage.prompt_tokens ?? usage.promptTokenCount);
-  const output = Number(usage.output_tokens ?? usage.completion_tokens ?? usage.candidatesTokenCount);
-  const total = Number(usage.total_tokens ?? usage.totalTokenCount);
+  const tokenCount = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
+  const input = tokenCount(usage.input_tokens ?? usage.prompt_tokens ?? usage.promptTokenCount);
+  const output = tokenCount(usage.output_tokens ?? usage.completion_tokens ?? usage.candidatesTokenCount);
+  const total = tokenCount(usage.total_tokens ?? usage.totalTokenCount);
   return {
-    inputTokens: Number.isFinite(input) ? input : null,
-    outputTokens: Number.isFinite(output) ? output : null,
-    totalTokens: Number.isFinite(total) ? total : Number.isFinite(input + output) ? input + output : null,
+    inputTokens: input,
+    outputTokens: output,
+    totalTokens: total ?? (input !== null && output !== null ? input + output : null),
   };
+}
+
+function addTokenUsage(total: ModelTokenUsage, current: ModelTokenUsage): ModelTokenUsage {
+  const sum = (a: number | null, b: number | null) => a === null || b === null ? null : a + b;
+  return { inputTokens: sum(total.inputTokens, current.inputTokens), outputTokens: sum(total.outputTokens, current.outputTokens), totalTokens: sum(total.totalTokens, current.totalTokens) };
+}
+
+function validationFeedback(error: unknown): string {
+  // Do not forward arbitrary error messages: validators may include private input values.
+  const issues = error && typeof error === "object" && "issues" in error ? error.issues : undefined;
+  if (Array.isArray(issues)) return JSON.stringify(issues.slice(0, 20).map(issue => ({
+    path: Array.isArray(issue.path) ? issue.path.slice(0, 8) : [], code: issue.code,
+  })));
+  return error instanceof ModelProviderError ? error.code : "local_schema_validation_failed";
 }
 
 function responseText(payload: Record<string, unknown>, protocol: ProviderProtocol): unknown {
   if (protocol === "openai_compatible") {
     if (typeof payload.output_text === "string") return payload.output_text;
     const choices = payload.choices as Array<Record<string, unknown>> | undefined;
-    if (choices?.length) return (choices[0].message as Record<string, unknown> | undefined)?.content;
+    if (choices?.length) {
+      const message = choices[0].message as Record<string, unknown> | undefined;
+      if (message?.refusal) throw new ModelProviderError("refusal", "Provider refused the structured request");
+      return message?.content;
+    }
     const output = payload.output as Array<Record<string, unknown>> | undefined;
     const content = output?.flatMap((item) => item.content as Array<Record<string, unknown>> ?? []);
     const refusal = content?.find((item) => item.type === "refusal");
@@ -94,6 +149,11 @@ function responseText(payload: Record<string, unknown>, protocol: ProviderProtoc
   }
   if (protocol === "gemini") {
     const candidates = payload.candidates as Array<Record<string, unknown>> | undefined;
+    const promptFeedback = payload.promptFeedback as Record<string, unknown> | undefined;
+    const finishReason = String(candidates?.[0]?.finishReason ?? "");
+    if (promptFeedback?.blockReason || ["SAFETY", "BLOCKLIST", "PROHIBITED_CONTENT", "SPII"].includes(finishReason)) {
+      throw new ModelProviderError("refusal", "Provider refused the structured request");
+    }
     const content = candidates?.[0]?.content as Record<string, unknown> | undefined;
     const parts = content?.parts as Array<Record<string, unknown>> | undefined;
     return parts?.map((part) => part.text).filter(Boolean).join("");
@@ -108,13 +168,13 @@ function responseText(payload: Record<string, unknown>, protocol: ProviderProtoc
   return payload.output ?? payload.text ?? payload.content ?? payload.response;
 }
 
-function requestFor(profile: ModelProviderProfile, request: StructuredGenerationRequest<unknown>, key: string, repairText?: string) {
+function requestFor(profile: ModelProviderProfile, request: StructuredGenerationRequest<unknown>, key: string, repair?: { text: string; issues: string }) {
   const protocol = profile.protocol;
-  const repairPrompt = repairText
-    ? `${request.prompt}\
+  const repairPrompt = repair
+    ? `${request.prompt}
     : request.prompt;
   if (protocol === "openai_compatible") {
-    const base = profile.baseUrl ?? "https://api.openai.com/v1";
+    const base = safeProviderUrl(profile.baseUrl ?? "https://api.openai.com/v1");
     const useResponses = profile.features?.api !== "chat_completions";
     if (useResponses) {
       return {
@@ -139,10 +199,10 @@ function requestFor(profile: ModelProviderProfile, request: StructuredGeneration
     };
   }
   if (protocol === "gemini") {
-    const base = profile.baseUrl ?? "https://generativelanguage.googleapis.com/v1beta";
+    const base = safeProviderUrl(profile.baseUrl ?? "https://generativelanguage.googleapis.com/v1beta");
     return {
-      url: `${endpoint(base, `/models/${encodeURIComponent(profile.model)}:generateContent`)}?key=${encodeURIComponent(key)}`,
-      headers: {},
+      url: endpoint(base, `/models/${encodeURIComponent(profile.model)}:generateContent`),
+      headers: { "x-goog-api-key": key },
       body: {
         systemInstruction: { parts: [{ text: request.system }] },
         contents: [{ role: "user", parts: [{ text: repairPrompt }] }],
@@ -151,7 +211,7 @@ function requestFor(profile: ModelProviderProfile, request: StructuredGeneration
     };
   }
   if (protocol === "anthropic") {
-    const base = profile.baseUrl ?? "https://api.anthropic.com/v1";
+    const base = safeProviderUrl(profile.baseUrl ?? "https://api.anthropic.com/v1");
     return {
       url: endpoint(base, "/messages"),
       headers: { "x-api-key": key, "anthropic-version": "2023-06-01" },
@@ -168,9 +228,9 @@ function requestFor(profile: ModelProviderProfile, request: StructuredGeneration
   const base = profile.baseUrl;
   if (!base) throw new ModelProviderError("configuration", "json_text profiles require base_url");
   return {
-    url: base,
+    url: safeProviderUrl(base),
     headers: { Authorization: `Bearer ${key}` },
-    body: { model: profile.model, system: request.system, prompt: repairPrompt, response_format: "json" },
+    body: { model: profile.model, system: request.system, prompt: `${repairPrompt}
   };
 }
 
@@ -179,6 +239,7 @@ export async function generateStructured<T>(
   request: StructuredGenerationRequest<T>,
   options: AdapterOptions = {},
 ): Promise<StructuredGenerationResult<T>> {
+  assertProviderCredentialEnvVar(profile.apiKeyEnvVar);
   const fetchImpl = options.fetchImpl ?? fetch;
   const env = options.env ?? ((name: string) => {
     const deno = (globalThis as unknown as { Deno?: { env: { get: (key: string) => string | undefined } } }).Deno;
@@ -187,17 +248,28 @@ export async function generateStructured<T>(
   const key = env(profile.apiKeyEnvVar);
   if (!key) throw new ModelProviderError("configuration", `Missing provider credential environment variable: ${profile.apiKeyEnvVar}`);
   const started = Date.now();
+  const budget = profile.timeoutMs ?? 45000;
+  if (!Number.isFinite(budget) || budget <= 0) throw new ModelProviderError("configuration", "Provider timeout must be a positive finite number");
   const maxAttempts = profile.protocol === "json_text" ? 2 : 1;
-  let repairText: string | undefined;
+  let repair: { text: string; issues: string } | undefined;
+  let usage: ModelTokenUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
+  let unreportedAttempt = false;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), budget);
+  const assertWithinBudget = () => {
+    if (controller.signal.aborted || Date.now() - started >= budget) throw new ModelProviderError("timeout", "Provider request timed out");
+  };
 
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), profile.timeoutMs ?? 45000);
-    try {
-      const built = requestFor(profile, request, key, repairText);
+  try {
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+      assertWithinBudget();
+      const built = requestFor(profile, request, key, repair);
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      Object.assign(headers, built.headers);
+      unreportedAttempt = true;
       const response = await fetchImpl(built.url, {
         method: "POST",
-        headers: { "Content-Type": "application/json", ...built.headers },
+        headers,
         body: JSON.stringify(built.body),
         signal: controller.signal,
       });
@@ -207,32 +279,40 @@ export async function generateStructured<T>(
       let payload: Record<string, unknown>;
       try { payload = JSON.parse(raw) as Record<string, unknown>; }
       catch { payload = { text: raw }; }
+      usage = addTokenUsage(usage, usageFrom(payload));
+      unreportedAttempt = false;
+      assertWithinBudget();
       const output = responseText(payload, profile.protocol);
+      if (JSON.stringify(output)?.includes(key)) throw new ModelProviderError("invalid_output", "Provider output contained a credential");
       try {
         const value = request.validate(parseJson(output));
+        assertWithinBudget();
         return {
           value,
-          usage: usageFrom(payload),
+          usage,
           latencyMs: Date.now() - started,
           repaired: attempt === 1,
           providerRequestId: response.headers.get("x-request-id"),
         };
       } catch (error) {
+        if (error instanceof ModelProviderError && error.code === "timeout") throw error;
         if (attempt + 1 >= maxAttempts) {
           if (error instanceof ModelProviderError) throw error;
           throw new ModelProviderError("invalid_output", "Provider output failed local schema validation");
         }
-        repairText = typeof output === "string" ? output : JSON.stringify(output);
+        repair = { text: typeof output === "string" ? output : JSON.stringify(output) ?? "", issues: validationFeedback(error).replaceAll(key, "[redacted]") };
       }
-    } catch (error) {
-      if (error instanceof ModelProviderError) throw error;
-      if (error instanceof DOMException && error.name === "AbortError") {
-        throw new ModelProviderError("timeout", "Provider request timed out");
-      }
-      throw new ModelProviderError("provider_error", "Provider request failed");
-    } finally {
-      clearTimeout(timeout);
     }
+    throw new ModelProviderError("invalid_output", "Provider output failed local schema validation");
+  } catch (error) {
+    const failure = error instanceof ModelProviderError ? error
+      : controller.signal.aborted || (error instanceof Error && error.name === "AbortError")
+        ? new ModelProviderError("timeout", "Provider request timed out")
+        : new ModelProviderError("provider_error", "Provider request failed");
+    // A timed-out/lost response may still have incurred tokens at the provider.
+    failure.usage = unreportedAttempt ? { inputTokens: null, outputTokens: null, totalTokens: null } : usage;
+    throw failure;
+  } finally {
+    clearTimeout(timeout);
   }
-  throw new ModelProviderError("invalid_output", "Provider output failed local schema validation");
 }

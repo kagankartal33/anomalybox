@@ -5,6 +5,7 @@ import { checklistFromIdeaCard } from "@/lib/admin-review";
 import { normalizeCardSections } from "@/lib/card-sections";
 import { requireAdmin } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { displayCardTitle } from "@/lib/card-display";
 import { saveManualReview } from "../../actions";
 
 export default async function AdminReviewDetailPage({ params, searchParams }: { params: Promise<{ reviewId: string }>; searchParams: Promise<{ error?: string; saved?: string }> }) {
@@ -29,6 +30,7 @@ export default async function AdminReviewDetailPage({ params, searchParams }: { 
   const sections = normalizeCardSections(cardJson);
   const checklist = checklistFromIdeaCard(cardJson);
   const existingByKey = new Map(existingChecks?.filter((check) => check.attempt_id === currentAttempt?.id).map((check) => [check.check_key, check]) ?? []);
+  const cardTitle = displayCardTitle(cardJson, card?.title);
 
   return (
     <AppShell>
@@ -36,7 +38,7 @@ export default async function AdminReviewDetailPage({ params, searchParams }: { 
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Manual review</p>
           <h1 className="mt-2 text-4xl font-semibold">Creator video checklist</h1>
-          <p className="mt-2 text-ink/60">{card?.title}</p>
+          <p className="mt-2 text-ink/60">{cardTitle}</p>
         </div>
         <StatusPill value={review.status} />
       </div>

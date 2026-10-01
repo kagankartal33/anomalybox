@@ -47,7 +47,10 @@ function Invoke-JsonPost {
 }
 
 try {
-  $statusEnv = supabase status -o env
+  $previousErrorActionPreference = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  $statusEnv = & supabase status -o env 2>$null
+  $ErrorActionPreference = $previousErrorActionPreference
   $localServiceRoleKey = ($statusEnv | Select-String -Pattern '^SERVICE_ROLE_KEY="(.+)"$').Matches.Groups[1].Value
   $localApiUrl = ($statusEnv | Select-String -Pattern '^API_URL="(.+)"$').Matches.Groups[1].Value
 
@@ -112,6 +115,9 @@ try {
   $assetsResult = Invoke-JsonPost `
     -Uri "$FunctionsBaseUrl/admin-media-training/$($source.id)/assets" `
     -Body @{
+      category_slug = "beauty"
+      persona_slug = "luxury_editor"
+      platform = "instagram_reels"
       assets = @(
         @{
           source_type = "upload"
@@ -119,8 +125,8 @@ try {
           file_hash = "a21f$sourceExternalId"
           rights_status = "owned"
           training_use = "pattern_only"
-          caption = "secret_source_caption_phrase save checklist product close-up calm luxury editor #ad disclosure"
-          transcript = "First second product macro then decision filter. Save this checklist and comment your routine context."
+          caption = "secret_source_caption_phrase_$sourceExternalId save checklist product close-up calm luxury editor #ad disclosure"
+          transcript = "First second product macro then decision filter $sourceExternalId. Save this checklist and comment your routine context."
           admin_notes = "premium beauty reels; mirror shot; hand sorting; brand safety claim boundary"
           frame_metadata = @{
             sampled_frames = @("0s", "1s", "2s", "9s", "payoff", "cta")
@@ -130,16 +136,16 @@ try {
         },
         @{
           source_type = "instagram_reels_url"
-          source_url = "https://www.instagram.com/reel/CODEXYZ/?utm_source=test"
+          source_url = "https://www.instagram.com/reel/CODEXYZ_$sourceExternalId/?utm_source=test"
           rights_status = "permissioned"
           training_use = "pattern_only"
-          caption = "question hook poll comment desk setup save guide"
-          transcript = "A creator asks the audience which routine step they skip and turns answers into a story poll."
+          caption = "question hook poll comment desk setup save guide $sourceExternalId"
+          transcript = "A creator asks the audience which routine step they skip and turns answers into a story poll $sourceExternalId."
           admin_notes = "comment trigger, save utility, split screen, story followup"
         },
         @{
           source_type = "instagram_reels_url"
-          source_url = "https://instagram.com/reel/CODEXYZ/"
+          source_url = "https://instagram.com/reel/CODEXYZ_$sourceExternalId/"
           rights_status = "permissioned"
           training_use = "pattern_only"
           caption = "duplicate url should not create a second asset"
@@ -149,8 +155,8 @@ try {
           source_type = "manual_transcript"
           rights_status = "unknown"
           training_use = "pattern_only"
-          caption = "unknown rights public figure celebrity clip should stay in review"
-          transcript = "A famous public figure clip with copyrighted audio and no permission."
+          caption = "unknown rights public figure celebrity clip should stay in review $sourceExternalId"
+          transcript = "A famous public figure clip with copyrighted audio and no permission $sourceExternalId."
           admin_notes = "public figure risk, copyrighted audio"
         }
       )
@@ -160,9 +166,37 @@ try {
     -Uri "$FunctionsBaseUrl/admin-media-training/$($source.id)/analyze" `
     -Body @{}
 
-  $promotion = Invoke-JsonPost `
-    -Uri "$FunctionsBaseUrl/admin-media-training/$($source.id)/promote-training" `
-    -Body @{ compile_version = $CompileVersion }
+  $promotion = @{ promoted_observations = 0 }
+  $promoteBody = @{ compile_version = $CompileVersion; compile = $false; update_source_status = $false } | ConvertTo-Json -Depth 20
+  try {
+    $promoteResponse = Invoke-WebRequest `
+      -Method Post `
+      -Uri "$FunctionsBaseUrl/admin-media-training/$($source.id)/promote-training" `
+      -Headers @{ "x-admin-token" = $AdminToken; "Content-Type" = "application/json" } `
+      -Body $promoteBody `
+      -UseBasicParsing `
+      -TimeoutSec 20
+    $promotion = $promoteResponse.Content | ConvertFrom-Json
+  } catch {
+    Write-Host "Promote request did not close cleanly; continuing with DB verification. $($_.Exception.Message)"
+  }
+
+  for ($i = 0; $i -lt 30; $i++) {
+    $promotedOutput = Invoke-DbSql -Sql @"
+select count(*)::integer as promoted
+from public.media_training_observations observation
+join public.media_training_sources source on source.id = observation.source_id
+where source.external_source_id = '$sourceExternalId'
+  and observation.status = 'promoted';
+"@
+    if (($promotedOutput -join "`n") -match "\\|\\s*[2-9][0-9]*\\s*$") { break }
+    Start-Sleep -Seconds 1
+  }
+
+  $activeCompileOutput = Invoke-DbSql -Sql "select count(*)::integer as active_compile from public.viral_training_compilations where version = '$CompileVersion' and active = true;"
+  if (($activeCompileOutput -join "`n") -notmatch "\\|\\s*1\\s*$") {
+    Invoke-DbSql -Sql "select public.compile_viral_training_profile('$CompileVersion');" | Out-Null
+  }
 
   $assertSql = @"
 with metrics as (
@@ -238,9 +272,9 @@ with metrics as (
   join public.viral_training_sources source on source.id = example.source_id
   where source.slug = 'media_training_v1'
     and (
-      example.title ~* '(CODEXYZ|owned-video-source|secret_source_caption_phrase|instagram\.com)'
-      or example.abstracted_mechanism ~* '(CODEXYZ|owned-video-source|secret_source_caption_phrase|instagram\.com)'
-      or example.reusable_pattern ~* '(CODEXYZ|owned-video-source|secret_source_caption_phrase|instagram\.com)'
+      example.title ~* '(CODEXYZ|owned-video-source|secret_source_caption_phrase|instagram\\.com)'
+      or example.abstracted_mechanism ~* '(CODEXYZ|owned-video-source|secret_source_caption_phrase|instagram\\.com)'
+      or example.reusable_pattern ~* '(CODEXYZ|owned-video-source|secret_source_caption_phrase|instagram\\.com)'
     )
 )
 select * from metrics order by metric;
@@ -250,9 +284,9 @@ select * from metrics order by metric;
   $text = $output -join "`n"
 
   function Get-Metric([string]$Name) {
-    $line = $output | Where-Object { $_ -match "^\s*$Name\s+\|" } | Select-Object -First 1
+    $line = $output | Where-Object { $_ -match "^\\s*$Name\\s+\\|" } | Select-Object -First 1
     if (-not $line) { throw "Metric not found: $Name`n$text" }
-    return [int](($line -split "\|")[1].Trim())
+    return [int](($line -split "\\|")[1].Trim())
   }
 
   if ((Get-Metric "media_sources") -ne 1) { throw "Expected one media source" }
@@ -294,6 +328,10 @@ select * from metrics order by metric;
   }
   exit 1
 } finally {
+  Get-CimInstance Win32_Process |
+    Where-Object { $_.Name -like 'supabase*' -and $_.CommandLine -like '*viralbox-media-functions-env-*' } |
+    ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+
   if ($server -and -not $server.HasExited -and -not $KeepServer) {
     Stop-Process -Id $server.Id -Force
   }

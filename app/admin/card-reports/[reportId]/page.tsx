@@ -7,7 +7,7 @@ import { saveCardReportDecision } from "@/app/admin/actions";
 import { requireAdmin } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { displayCardTitle } from "@/lib/card-display";
-import { normalizeCardExecution, normalizeCardSections } from "@/lib/card-sections";
+import { normalizeAdminCardSections, normalizeCardExecution } from "@/lib/card-sections";
 import { dateTime } from "@/lib/format";
 
 export default async function AdminCardReportPage({
@@ -47,6 +47,8 @@ export default async function AdminCardReportPage({
     .eq("category_id", delivery?.category_id)
     .eq("persona_id", delivery?.persona_id)
     .eq("status", "available")
+    .eq("reuse_count", 0)
+    .eq("max_reuse_count", 1)
     .eq("quality_floor_passed", true)
     .order("internal_rank_score", { ascending: false })
     .limit(40);
@@ -64,7 +66,7 @@ export default async function AdminCardReportPage({
     .filter(Boolean) as Array<{ inventory: { id: string; idea_id: string }; card: { idea_id: string; title: string | null; card: unknown }; title: string }>;
 
   const rawCard = reportedCard?.card as Record<string, unknown> | undefined;
-  const sections = normalizeCardSections(rawCard ?? {});
+  const sections = normalizeAdminCardSections(rawCard ?? {});
   const execution = normalizeCardExecution(rawCard ?? {});
   const title = reportedCard ? displayCardTitle(reportedCard.card, reportedCard.title) : "Reported card";
   const error = typeof query.error === "string" ? query.error : "";
@@ -159,7 +161,7 @@ export default async function AdminCardReportPage({
                 ))}
               </select>
               <p className="mt-2 text-xs leading-5 text-ink/50">
-                Replacement is only used for “Accept - replace this slot.” Candidates are filtered to this box lane and creator mode.
+                Replacement is only used for &quot;Accept - replace this slot.&quot; Candidates are filtered to this box lane and creator mode.
               </p>
             </label>
 

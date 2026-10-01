@@ -2,6 +2,13 @@ param(
   [int]$QualityGateIdeaCount = 1000,
   [int]$QualityGateScoreChunkSize = 25,
   [int]$QualityGatePublishChunkSize = 100,
+  [string]$DatasetCompileVersion = "2026-v8-book-train-extended",
+  [string]$DatasetSourceSlug = "book_train_extended_v1",
+  [string]$DatasetTrendSource = "book_train_extended_v1",
+  [string]$DatasetEvalPrefix = "book_train_extended_eval",
+  [string[]]$DatasetProfileCategories = @("entertainment_comedy", "creator_education", "lifestyle", "product_reviews"),
+  [int]$DatasetMinObservations = 1,
+  [int]$DatasetMinExamples = 1,
   [switch]$SkipQualityGate,
   [switch]$SkipDatasetTraining
 )
@@ -57,13 +64,13 @@ try {
   if (-not $SkipDatasetTraining) {
     Invoke-Step "test active dataset training profile" {
       & (Join-Path $toolRoot "test-dataset-training.ps1") `
-        -CompileVersion "2026-v3-book-dataset" `
-        -SourceSlug "book_full_training_v1" `
-        -TrendSource "book_training_v1" `
-        -EvalPrefix "book_eval" `
-        -ProfileCategories @("entertainment_comedy", "book_launch_content") `
-        -MinObservations 1 `
-        -MinDatasetExamples 1
+        -CompileVersion $DatasetCompileVersion `
+        -SourceSlug $DatasetSourceSlug `
+        -TrendSource $DatasetTrendSource `
+        -EvalPrefix $DatasetEvalPrefix `
+        -ProfileCategories $DatasetProfileCategories `
+        -MinObservations $DatasetMinObservations `
+        -MinDatasetExamples $DatasetMinExamples
     }
   }
 } finally {

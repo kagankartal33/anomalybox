@@ -2,7 +2,9 @@ param(
   [string]$FinalistExportPath = "",
   [switch]$SkipBuild,
   [switch]$SkipSlow,
-  [switch]$SkipSupabaseLint
+  [switch]$SkipSupabaseLint,
+  [switch]$SkipExportDryRun,
+  [switch]$SkipAuthSmoke
 )
 
 $ErrorActionPreference = "Stop"
@@ -30,26 +32,28 @@ if (!$SkipSupabaseLint) {
 }
 
 Invoke-Step "Production leak scan" {
-  $args = @("-File", ".\tools\scan-production-leaks.ps1", "-ScanApp")
-  if ($FinalistExportPath) { $args += @("-ExportPath", $FinalistExportPath) }
-  powershell -ExecutionPolicy Bypass @args
+  $scanArgs = @("-File", ".\\tools\\scan-production-leaks.ps1", "-ScanApp")
+  if ($FinalistExportPath) { $scanArgs += @("-ExportPath", $FinalistExportPath) }
+  powershell -ExecutionPolicy Bypass @scanArgs
 }
 
-Invoke-Step "Production finalist export dry run" {
-  powershell -ExecutionPolicy Bypass -File .\tools\export-production-finalists.ps1 -DryRun
+if (!$SkipExportDryRun) {
+  Invoke-Step "Production finalist export dry run" {
+    powershell -ExecutionPolicy Bypass -File .\\tools\\export-production-finalists.ps1 -DryRun
+  }
 }
 
 if (!$SkipSlow) {
   Invoke-Step "Generator flow" {
-    powershell -ExecutionPolicy Bypass -File .\tools\test-generator-flow.ps1
+    powershell -ExecutionPolicy Bypass -File .\\tools\\test-generator-flow.ps1
   }
 
   Invoke-Step "Quality Gate v2" {
-    powershell -ExecutionPolicy Bypass -File .\tools\test-quality-gate-v2.ps1
+    powershell -ExecutionPolicy Bypass -File .\\tools\\test-quality-gate-v2.ps1
   }
 
   Invoke-Step "Creator video review" {
-    powershell -ExecutionPolicy Bypass -File .\tools\test-creator-video-review.ps1
+    powershell -ExecutionPolicy Bypass -File .\\tools\\test-creator-video-review.ps1
   }
 }
 

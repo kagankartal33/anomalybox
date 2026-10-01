@@ -13,6 +13,8 @@ import type {
 } from "../algorithmic-reason/types";
 
 export const CREATIVE_TAXONOMY_VERSION = "creative-taxonomy-v1" as const;
+export const CREATIVE_SCHEDULER_VERSION = "creative-scheduler-v2.1" as const;
+export const CREATIVE_SIGNATURE_VERSION = "creative-signature-v2" as const;
 
 export const CONTENT_GENRE_IDS = [
   "controlled_comparison",
@@ -30,6 +32,34 @@ export const CONTENT_GENRE_IDS = [
   "ranked_selection",
   "interview_exchange",
 ] as const;
+
+type VibePreset = {
+  energy: "low" | "measured" | "high";
+  tempo: string;
+  tone: string;
+  light: string;
+  sound: string;
+  editBoundary: string;
+};
+
+export const VIBE_PRESETS: Readonly<Record<(typeof VIBE_PRESET_IDS)[number], VibePreset>> = {
+  clean_editorial: { energy: "measured", tempo: "deliberate", tone: "clear and composed", light: "soft neutral key light", sound: "clean speech and restrained room tone", editBoundary: "straight cuts; no decorative effects" },
+  quiet_luxury: { energy: "low", tempo: "unhurried", tone: "specific and understated", light: "soft directional light with controlled highlights", sound: "close natural detail with minimal music", editBoundary: "hold material details; avoid status spectacle" },
+  warm_confessional: { energy: "measured", tempo: "conversational", tone: "candid and humane", light: "warm practical light", sound: "intimate natural voice", editBoundary: "few cuts; retain believable pauses" },
+  dry_deadpan: { energy: "low", tempo: "precise", tone: "literal and restrained", light: "even observational light", sound: "dry delivery with real object sounds", editBoundary: "hard cuts only where the consequence changes" },
+  playful_chaos: { energy: "high", tempo: "brisk but readable", tone: "playful, never humiliating", light: "bright available light", sound: "layered real reactions without clipping", editBoundary: "controlled escalation; preserve continuity" },
+  tactile_asmr: { energy: "low", tempo: "patient", tone: "sensory and concrete", light: "raking light that reveals texture", sound: "licensed or original close-mic object sound", editBoundary: "long enough holds to perceive texture" },
+  cinematic_wonder: { energy: "measured", tempo: "expansive", tone: "observant, not grandiose", light: "motivated environmental light", sound: "original ambience with restrained score", editBoundary: "reveal scale through shot progression, not effects" },
+  documentary_observational: { energy: "measured", tempo: "event-led", tone: "factual and present", light: "available natural light", sound: "location sound and intelligible speech", editBoundary: "chronology stays honest; label time jumps" },
+  raw_bts: { energy: "measured", tempo: "working pace", tone: "direct and transparent", light: "available work light", sound: "real setup sound", editBoundary: "keep useful imperfections; disclose resets" },
+  bright_utility: { energy: "measured", tempo: "efficient", tone: "helpful and concrete", light: "bright even task light", sound: "crisp instruction and real action sound", editBoundary: "cut on completed actions, not every word" },
+  precise_neutral: { energy: "low", tempo: "methodical", tone: "bounded and exact", light: "matched controlled light", sound: "neutral voice with low ambience", editBoundary: "comparison conditions must remain identical" },
+  cozy_domestic: { energy: "low", tempo: "comfortable", tone: "familiar and grounded", light: "soft home practicals", sound: "gentle room tone and natural speech", editBoundary: "preserve spatial and prop continuity" },
+  high_energy_challenge: { energy: "high", tempo: "fast with action room", tone: "committed but safe", light: "clear high-output task light", sound: "original rhythm and audible action", editBoundary: "no dangerous compression or fake countdown" },
+  minimal_suspense: { energy: "low", tempo: "progressive", tone: "curious without fear", light: "controlled contrast with visible detail", sound: "subtle original tension bed or room tone", editBoundary: "open loop must close; no fake threat" },
+  street_spontaneous: { energy: "high", tempo: "responsive", tone: "present and consent-aware", light: "available exterior light", sound: "clear location sound", editBoundary: "avoid identifiable bystanders and private details" },
+  calm_expert: { energy: "low", tempo: "assured", tone: "specific, sourced and non-absolute", light: "soft functional light", sound: "clean natural voice", editBoundary: "use inserts only to show evidence" },
+};
 
 export const HOOK_DELIVERY_IDS = [
   "visual_action",
@@ -167,10 +197,10 @@ export const ADDITIONAL_HOOKS = [
   compatiblePersonas: readonly CreatorPersona[];
 }[];
 
-export const HOOK_TYPE_IDS = [
+export const HOOK_TYPE_IDS = Array.from(new Set([
   ...ALL_HOOKS.map((hook) => hook.id),
   ...ADDITIONAL_HOOKS.map((hook) => hook.id),
-] as [string, ...string[]];
+])) as [string, ...string[]];
 
 export const EVIDENCE_REQUIRED_HOOK_IDS = [
   "statistic_shock",
@@ -195,7 +225,7 @@ export type AudienceActionId = (typeof AUDIENCE_ACTION_IDS)[number];
 
 const hookTypeIdSchema = z.string().refine((value) => HOOK_TYPE_IDS.includes(value), "unknown_hook_type");
 
-export const creativeRecipeSchema = z.object({
+const creativeRecipeShapeSchema = z.object({
   taxonomyVersion: z.literal(CREATIVE_TAXONOMY_VERSION),
   genreId: z.enum(CONTENT_GENRE_IDS),
   hookTypeId: hookTypeIdSchema,
@@ -206,11 +236,17 @@ export const creativeRecipeSchema = z.object({
   proofDeviceId: z.enum(PROOF_DEVICE_IDS),
   payoffTypeId: z.enum(PAYOFF_TYPE_IDS),
   audienceActionId: z.enum(AUDIENCE_ACTION_IDS),
-  shootFormat: z.enum(CREATOR_MODES as [CreatorMode, ...CreatorMode[]]),
-  presenceMode: z.enum(CREATOR_PERSONAS as [CreatorPersona, ...CreatorPersona[]]),
+  shootFormat: z.enum([...CREATOR_MODES] as [CreatorMode, ...CreatorMode[]]),
+  presenceMode: z.enum([...CREATOR_PERSONAS] as [CreatorPersona, ...CreatorPersona[]]),
 }).strict();
 
-export type CreativeRecipe = z.infer<typeof creativeRecipeSchema>;
+export type CreativeRecipe = z.infer<typeof creativeRecipeShapeSchema>;
+
+export const creativeRecipeSchema = creativeRecipeShapeSchema.superRefine((recipe, context) => {
+  for (const code of validateRecipeCompatibility(recipe)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: code });
+  }
+});
 
 export type RecipeEvidence = {
   factualEvidence?: boolean;
@@ -234,7 +270,7 @@ type HookDefinition = {
   compatiblePersonas: readonly CreatorPersona[];
 };
 
-const HOOKS: HookDefinition[] = [
+const HOOKS: HookDefinition[] = [...new Map([
   ...ALL_HOOKS.map((hook) => ({
     id: hook.id,
     category: hook.category,
@@ -243,7 +279,7 @@ const HOOKS: HookDefinition[] = [
     compatiblePersonas: hook.compatiblePersonas,
   })),
   ...ADDITIONAL_HOOKS,
-];
+].map((hook) => [hook.id, hook])).values()];
 
 const GENRES_BY_LANE: Record<PurchaseLane, readonly ContentGenreId[]> = {
   beauty: ["controlled_comparison", "demonstration_tutorial", "experiment_test", "before_after_process", "decision_guide", "myth_reframe", "sensory_process", "mini_vlog"],
@@ -300,6 +336,30 @@ function stableHash(value: string): number {
     hash ^= value.charCodeAt(index);
     hash = Math.imul(hash, 16777619);
   }
+
+/** Prompt-safe execution direction. It contains no scores or performance claims. */
+export function creativeDirectionForRecipe(recipe: CreativeRecipe) {
+  return {
+    firstFrame: `${recipe.hookDeliveryId} delivery must visibly establish the ${recipe.promiseTypeId} promise immediately`,
+    emotionBeats: recipe.emotionArcId.split("_to_"),
+    vibe: VIBE_PRESETS[recipe.vibePresetId],
+    evidence: `${recipe.proofDeviceId} must occur on camera before the ${recipe.payoffTypeId} payoff`,
+    audienceAction: recipe.audienceActionId,
+    production: { shootFormat: recipe.shootFormat, presenceMode: recipe.presenceMode },
+  };
+  const pairUniqueCounts = {
+    genreVibe: new Set(recipes.map((recipe) => `${recipe.genreId}|${recipe.vibePresetId}`)).size,
+    hookGenre: new Set(recipes.map((recipe) => `${recipe.hookTypeId}|${recipe.genreId}`)).size,
+    emotionPayoff: new Set(recipes.map((recipe) => `${recipe.emotionArcId}|${recipe.payoffTypeId}`)).size,
+    formatProof: new Set(recipes.map((recipe) => `${recipe.shootFormat}|${recipe.proofDeviceId}`)).size,
+  };
+  const pairUniqueCounts = {
+    genreVibe: new Set(recipes.map((recipe) => `${recipe.genreId}|${recipe.vibePresetId}`)).size,
+    hookGenre: new Set(recipes.map((recipe) => `${recipe.hookTypeId}|${recipe.genreId}`)).size,
+    emotionPayoff: new Set(recipes.map((recipe) => `${recipe.emotionArcId}|${recipe.payoffTypeId}`)).size,
+    formatProof: new Set(recipes.map((recipe) => `${recipe.shootFormat}|${recipe.proofDeviceId}`)).size,
+  };
+}
   return hash >>> 0;
 }
 
@@ -307,13 +367,55 @@ function hookFamily(recipe: CreativeRecipe): string {
   return HOOKS.find((hook) => hook.id === recipe.hookTypeId)?.category ?? "unknown";
 }
 
-export function creativeRecipeId(recipe: CreativeRecipe): string {
+/** Only for recognizing already stored V1 reservation IDs, never recipe equality. */
+export function legacyCreativeRecipeId(recipe: CreativeRecipe): string {
   const signature = [
     hookFamily(recipe), recipe.hookTypeId, recipe.genreId, recipe.hookDeliveryId,
     recipe.promiseTypeId, recipe.emotionArcId, recipe.vibePresetId, recipe.proofDeviceId,
     recipe.payoffTypeId, recipe.audienceActionId, recipe.shootFormat, recipe.presenceMode,
   ].join(":");
   return `${CREATIVE_TAXONOMY_VERSION}:${stableHash(signature).toString(16).padStart(8, "0")}`;
+}
+
+/** Fixed-field canonical identity is synchronous and lossless in browsers and Deno. */
+export function creativeRecipeId(recipe: CreativeRecipe): string {
+  return `${CREATIVE_SIGNATURE_VERSION}:${JSON.stringify([
+    recipe.taxonomyVersion, recipe.hookTypeId, recipe.genreId, recipe.hookDeliveryId,
+    recipe.promiseTypeId, recipe.emotionArcId, recipe.vibePresetId, recipe.proofDeviceId,
+    recipe.payoffTypeId, recipe.audienceActionId, recipe.shootFormat, recipe.presenceMode,
+  ])}`;
+}
+
+const REQUIRED_HOOK_DELIVERIES: Partial<Record<string, readonly HookDeliveryId[]>> = {
+  text_first_silent_hook: ["on_screen_text"],
+  sound_before_source: ["sound"],
+};
+
+/** Hard execution constraints; a valid enum alone does not make a recipe usable. */
+export function validateRecipeCompatibility(recipe: CreativeRecipe, lane?: PurchaseLane): string[] {
+  const issues: string[] = [];
+  const hook = HOOKS.find((item) => item.id === recipe.hookTypeId);
+  if (!hook) return ["unknown_hook_taxonomy_id"];
+  if (!hook.compatibleModes.includes(recipe.shootFormat)) issues.push("recipe_hook_format_incompatible");
+  if (!hook.compatiblePersonas.includes(recipe.presenceMode)) issues.push("recipe_hook_presence_incompatible");
+  if (recipe.presenceMode === "faceless_curator" && ["talking_head", "interview"].includes(recipe.shootFormat)) {
+    issues.push("recipe_presence_format_incompatible");
+  }
+  const deliveries = REQUIRED_HOOK_DELIVERIES[recipe.hookTypeId];
+  if (deliveries && !deliveries.includes(recipe.hookDeliveryId)) issues.push("recipe_hook_delivery_incompatible");
+  if (recipe.hookDeliveryId === "sound" && !["voiceover", "hands_only", "pov", "object_led"].includes(recipe.shootFormat)) {
+    issues.push("recipe_delivery_format_incompatible");
+  }
+  if (lane) {
+    if (!hook.compatibleLanes.includes(lane)) issues.push("recipe_hook_lane_incompatible");
+    if (!GENRES_BY_LANE[lane]?.includes(recipe.genreId)) issues.push("recipe_genre_lane_incompatible");
+    if (!PROOF_BY_LANE[lane]?.includes(recipe.proofDeviceId)) issues.push("recipe_proof_lane_incompatible");
+    if (!VIBES_BY_LANE[lane]?.includes(recipe.vibePresetId)) issues.push("recipe_vibe_lane_incompatible");
+    if (recipe.audienceActionId === "disclosed_commercial_action" && lane !== "commerce_affiliate") {
+      issues.push("recipe_commercial_action_lane_incompatible");
+    }
+  }
+  return issues;
 }
 
 export function recipeDistance(left: CreativeRecipe, right: CreativeRecipe): number {
@@ -340,24 +442,65 @@ export function validateRecipeSet(recipes: CreativeRecipe[], expectedCount = 5):
   return [...new Set(issues)];
 }
 
-function valueCount(recipes: CreativeRecipe[], getter: (recipe: CreativeRecipe) => string): Map<string, number> {
-  const counts = new Map<string, number>();
-  for (const recipe of recipes) counts.set(getter(recipe), (counts.get(getter(recipe)) ?? 0) + 1);
-  return counts;
+type RecipeGetter = (recipe: CreativeRecipe) => string;
+
+const COVERAGE_AXES: readonly RecipeGetter[] = [
+  (value) => value.hookTypeId,
+  (value) => hookFamily(value),
+  (value) => value.genreId,
+  (value) => value.emotionArcId,
+  (value) => value.vibePresetId,
+  (value) => value.proofDeviceId,
+  (value) => value.payoffTypeId,
+  (value) => value.shootFormat,
+];
+
+const COVERAGE_PAIRS: readonly [RecipeGetter, RecipeGetter][] = [
+  [(value) => value.genreId, (value) => value.vibePresetId],
+  [(value) => hookFamily(value), (value) => value.genreId],
+  [(value) => value.hookTypeId, (value) => value.genreId],
+  [(value) => value.emotionArcId, (value) => value.payoffTypeId],
+  [(value) => value.shootFormat, (value) => value.proofDeviceId],
+];
+
+type CoverageStats = {
+  total: number;
+  signatures: Set<string>;
+  axes: Map<string, number>[];
+  pairs: Map<string, number>[];
+};
+
+function increment(map: Map<string, number>, key: string): void {
+  map.set(key, (map.get(key) ?? 0) + 1);
 }
 
-function leastUsedScore(recipe: CreativeRecipe, recent: CreativeRecipe[]): number {
-  const getters = [
-    (value: CreativeRecipe) => value.hookTypeId,
-    (value: CreativeRecipe) => hookFamily(value),
-    (value: CreativeRecipe) => value.genreId,
-    (value: CreativeRecipe) => value.emotionArcId,
-    (value: CreativeRecipe) => value.vibePresetId,
-    (value: CreativeRecipe) => value.proofDeviceId,
-    (value: CreativeRecipe) => value.payoffTypeId,
-    (value: CreativeRecipe) => value.shootFormat,
-  ];
-  return getters.reduce((score, getter) => score + (valueCount(recent, getter).get(getter(recipe)) ?? 0), 0);
+function coverageStats(recipes: CreativeRecipe[]): CoverageStats {
+  const stats: CoverageStats = {
+    total: recipes.length,
+    signatures: new Set<string>(),
+    axes: COVERAGE_AXES.map(() => new Map<string, number>()),
+    pairs: COVERAGE_PAIRS.map(() => new Map<string, number>()),
+  };
+  for (const recipe of recipes) {
+    stats.signatures.add(creativeRecipeId(recipe));
+    COVERAGE_AXES.forEach((getter, index) => increment(stats.axes[index], getter(recipe)));
+    COVERAGE_PAIRS.forEach(([left, right], index) => increment(stats.pairs[index], `${left(recipe)}|${right(recipe)}`));
+  }
+  return stats;
+}
+
+function coveragePenalty(recipe: CreativeRecipe, stats: CoverageStats): number {
+  if (stats.signatures.has(creativeRecipeId(recipe))) return 1_000_000;
+  const denominator = Math.max(1, stats.total);
+  const axisPenalty = COVERAGE_AXES.reduce(
+    (score, getter, index) => score + (stats.axes[index].get(getter(recipe)) ?? 0) / denominator,
+    0,
+  );
+  const pairPenalty = COVERAGE_PAIRS.reduce(
+    (score, [left, right], index) => score + (stats.pairs[index].get(`${left(recipe)}|${right(recipe)}`) ?? 0) / denominator,
+    0,
+  );
+  return axisPenalty + pairPenalty * 2;
 }
 
 function eligibleHooks(lane: PurchaseLane, evidence: RecipeEvidence): HookDefinition[] {
@@ -378,27 +521,30 @@ function candidateRecipes(input: RecipeScheduleInput): CreativeRecipe[] {
   const actions = input.lane === "commerce_affiliate"
     ? AUDIENCE_ACTION_IDS
     : AUDIENCE_ACTION_IDS.filter((value) => value !== "disclosed_commercial_action");
-  const seed = stableHash(`${input.lane}:${input.seed}`);
   const candidates: CreativeRecipe[] = [];
-  for (let index = 0; index < 480; index += 1) {
-    const hook = hooks[(seed + index * 17) % hooks.length];
+  const pick = <T>(values: readonly T[], index: number, axis: string): T =>
+    values[stableHash(`${input.lane}:${input.seed}:${index}:${axis}`) % values.length];
+  // Independent, axis-salted sampling prevents the modular correlations that
+  // made marginal distributions look healthy while pair combinations repeated.
+  for (let index = 0; index < 256; index += 1) {
+    const hook = pick(hooks, index, "hook");
     const modes = hook.compatibleModes.length ? hook.compatibleModes : CREATOR_MODES;
     const personas = hook.compatiblePersonas.length ? hook.compatiblePersonas : CREATOR_PERSONAS;
-    const recipe = creativeRecipeSchema.parse({
+    const recipe: CreativeRecipe = {
       taxonomyVersion: CREATIVE_TAXONOMY_VERSION,
-      genreId: genres[(seed + index * 5) % genres.length],
+      genreId: pick(genres, index, "genre"),
       hookTypeId: hook.id,
-      hookDeliveryId: HOOK_DELIVERY_IDS[(seed + index * 3) % HOOK_DELIVERY_IDS.length],
-      promiseTypeId: PROMISE_TYPE_IDS[(seed + index * 7) % PROMISE_TYPE_IDS.length],
-      emotionArcId: EMOTION_ARC_IDS[(seed + index * 5) % EMOTION_ARC_IDS.length],
-      vibePresetId: vibes[(seed + index * 7) % vibes.length],
-      proofDeviceId: proofs[(seed + index * 3) % proofs.length],
-      payoffTypeId: PAYOFF_TYPE_IDS[(seed + index * 7) % PAYOFF_TYPE_IDS.length],
-      audienceActionId: actions[(seed + index * 5) % actions.length],
-      shootFormat: modes[(seed + index * 3) % modes.length],
-      presenceMode: personas[(seed + index * 7) % personas.length],
-    });
-    if (recipe.hookDeliveryId === "sound" && !["voiceover", "hands_only", "pov", "object_led"].includes(recipe.shootFormat)) continue;
+      hookDeliveryId: pick(REQUIRED_HOOK_DELIVERIES[hook.id] ?? HOOK_DELIVERY_IDS, index, "delivery"),
+      promiseTypeId: pick(PROMISE_TYPE_IDS, index, "promise"),
+      emotionArcId: pick(EMOTION_ARC_IDS, index, "emotion"),
+      vibePresetId: pick(vibes, index, "vibe"),
+      proofDeviceId: pick(proofs, index, "proof"),
+      payoffTypeId: pick(PAYOFF_TYPE_IDS, index, "payoff"),
+      audienceActionId: pick(actions, index, "audience_action"),
+      shootFormat: pick(modes, index, "shoot_format"),
+      presenceMode: pick(personas, index, "presence"),
+    };
+    if (validateRecipeCompatibility(recipe, input.lane).length) continue;
     candidates.push(recipe);
   }
   return [...new Map(candidates.map((recipe) => [creativeRecipeId(recipe), recipe])).values()];
@@ -410,18 +556,30 @@ export function scheduleCreativeRecipes(input: RecipeScheduleInput): CreativeRec
   if (count !== 5) throw new Error("creative_recipe_count_must_be_five");
   const selected: CreativeRecipe[] = [];
   const recent = (input.recentRecipes ?? []).filter((recipe) => creativeRecipeSchema.safeParse(recipe).success);
-  const candidates = candidateRecipes(input).sort((left, right) => {
-    const coverage = leastUsedScore(left, recent) - leastUsedScore(right, recent);
-    return coverage || stableHash(`${input.seed}:${creativeRecipeId(left)}`) - stableHash(`${input.seed}:${creativeRecipeId(right)}`);
-  });
-  for (const candidate of candidates) {
-    if (selected.every((existing) => recipeDistance(existing, candidate) >= 4) &&
-      selected.every((existing) => !(
+  const candidates = candidateRecipes(input);
+  while (selected.length < count) {
+    const stats = coverageStats([...recent, ...selected]);
+    let next: CreativeRecipe | undefined;
+    let nextPenalty = Number.POSITIVE_INFINITY;
+    let nextTie = Number.POSITIVE_INFINITY;
+    for (const candidate of candidates) {
+      if (stats.signatures.has(creativeRecipeId(candidate))) continue;
+      if (!selected.every((existing) => recipeDistance(existing, candidate) >= 4)) continue;
+      if (!selected.every((existing) => !(
         hookFamily(existing) === hookFamily(candidate) &&
         existing.genreId === candidate.genreId &&
         existing.payoffTypeId === candidate.payoffTypeId
-      ))) selected.push(candidate);
-    if (selected.length === count) break;
+      ))) continue;
+      const penalty = coveragePenalty(candidate, stats);
+      const tie = stableHash(`${input.seed}:${creativeRecipeId(candidate)}`);
+      if (penalty < nextPenalty || (penalty === nextPenalty && tie < nextTie)) {
+        next = candidate;
+        nextPenalty = penalty;
+        nextTie = tie;
+      }
+    }
+    if (!next) break;
+    selected.push(next);
   }
   const issues = validateRecipeSet(selected, count);
   if (issues.length) throw new Error(`creative_recipe_schedule_failed:${issues.join(",")}`);
@@ -432,12 +590,14 @@ export type CreativeDistribution = {
   total: number;
   uniqueSignatures: number;
   maxShares: { hookType: number; hookFamily: number; genre: number; emotionArc: number; vibe: number; payoff: number };
+  pairUniqueCounts: { genreVibe: number; hookGenre: number; emotionPayoff: number; formatProof: number };
   issueCodes: string[];
 };
 
 function maxShare(values: string[]): number {
   if (!values.length) return 0;
-  const counts = valueCount(values.map((value) => ({ value })) as never[], (row) => (row as never as { value: string }).value);
+  const counts = new Map<string, number>();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
   return Math.max(...counts.values()) / values.length;
 }
 
@@ -460,7 +620,13 @@ export function analyzeCreativeDistribution(recipes: CreativeRecipe[]): Creative
   if (total >= 50 && maxShares.payoff > 0.2) issueCodes.push("payoff_concentration");
   const uniqueSignatures = new Set(recipes.map(creativeRecipeId)).size;
   if (uniqueSignatures !== total) issueCodes.push("creative_signature_duplicate");
-  return { total, uniqueSignatures, maxShares, issueCodes };
+  if (total >= 50 && pairUniqueCounts.genreVibe < 20) issueCodes.push("genre_vibe_pair_coverage_low");
+  if (total >= 50 && pairUniqueCounts.emotionPayoff < 24) issueCodes.push("emotion_payoff_pair_coverage_low");
+  if (total >= 50 && pairUniqueCounts.formatProof < 12) issueCodes.push("format_proof_pair_coverage_low");
+  if (total >= 500 && pairUniqueCounts.genreVibe < 60) issueCodes.push("genre_vibe_pair_coverage_low");
+  if (total >= 500 && pairUniqueCounts.emotionPayoff < 100) issueCodes.push("emotion_payoff_pair_coverage_low");
+  if (total >= 500 && pairUniqueCounts.formatProof < 20) issueCodes.push("format_proof_pair_coverage_low");
+  return { total, uniqueSignatures, maxShares, pairUniqueCounts, issueCodes };
 }
 
 export function hookAutomationStatus(hookId: string, evidence: RecipeEvidence = {}): "allowed" | "evidence_required" | "blocked" | "unknown" {

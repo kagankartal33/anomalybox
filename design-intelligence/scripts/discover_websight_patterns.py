@@ -35,7 +35,7 @@ def rows_url(offset: int, length: int) -> str:
 
 
 def count_tags(html: str, tag: str) -> int:
-    return len(re.findall(rf"<\s*{tag}\b", html, flags=re.IGNORECASE))
+    return len(re.findall(rf"<\\s*{tag}\\b", html, flags=re.IGNORECASE))
 
 
 def has_any(text: str, words: list[str]) -> bool:
@@ -154,7 +154,7 @@ def main() -> int:
 
     with OUTPUT.open("w", encoding="utf-8") as fh:
         for note in notes:
-            fh.write(json.dumps(note, ensure_ascii=False) + "\n")
+            fh.write(json.dumps(note, ensure_ascii=False) + "\
 
     print(f"Wrote {len(notes)} WebSight pattern notes to {OUTPUT}")
     return 0

@@ -20,7 +20,6 @@ import {
   Gem,
   GraduationCap,
   HeartHandshake,
-  MapPin,
   Palette,
   Radio,
   Search,
@@ -121,7 +120,7 @@ const cuisineTerms = [
 ];
 
 function normalized(value: string) {
-  return value.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+  return value.toLowerCase().replace(/[_-]+/g, " ").replace(/\\s+/g, " ").trim();
 }
 
 function titleCase(value: string) {
@@ -130,10 +129,6 @@ function titleCase(value: string) {
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
-}
-
-function hasTerm(text: string, terms: string[]) {
-  return terms.some((term) => text.includes(term));
 }
 
 function categoryText(category: CategoryOption) {
@@ -166,7 +161,6 @@ function isCuisineSpecificRestaurant(category: CategoryOption) {
 
 function categoryBucket(category: CategoryOption) {
   const text = categoryText(category);
-  if (category.family === "creator_content") return "creator";
   if (/beauty|makeup|skin|hair|salon|cosmetic|spa|nail|lash|brow|fragrance/.test(text)) return "beauty";
   if (/fashion|style|clothing|jewelry|watch|shoe|boutique|streetwear|luxury|outfit/.test(text)) return "fashion";
   if (/food|restaurant|cafe|bakery|coffee|pizza|kitchen|dessert|tea|recipe|cooking|dining|bar|sushi|brunch/.test(text)) return "food";
@@ -175,6 +169,7 @@ function categoryBucket(category: CategoryOption) {
   if (/education|school|course|coach|training|author|book|tutorial|science|tech|learning/.test(text)) return "education";
   if (/entertainment|comedy|music|artist|theater|film|cinema|gaming|creator|podcast|dance/.test(text)) return "entertainment";
   if (/shop|store|commerce|product|retail|affiliate|market|supply|ecommerce|brand/.test(text)) return "commerce";
+  if (category.family === "creator_content") return "creator";
   return category.family === "instagram_business" ? "business" : "creator";
 }
 
@@ -463,9 +458,9 @@ export function OnboardingLanePicker({
                 <BadgeCheck className="h-3.5 w-3.5" />
                 Lane matching profile
               </div>
-              <h2 className="mt-3 text-2xl font-semibold tracking-[-0.3px]">Choose the lanes your audience already recognizes you for.</h2>
+              <h2 className="mt-3 text-2xl font-semibold">Choose the lanes your audience already recognizes you for.</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">
-                Your primary lane powers new purchases. Supporting lanes help shape your creator profile, while sealed boxes already in your vault keep their original match.
+                Your primary lane powers new purchases. Supporting lanes help shape your creator profile, while secured dossiers already in your vault keep their original match.
               </p>
             </div>
             <div className="rounded-md border border-ink/10 bg-paper px-4 py-3 text-sm">
@@ -550,7 +545,7 @@ export function OnboardingLanePicker({
                 <div>
                   <p className="text-sm font-semibold text-ink">Use Restaurant as the main lane.</p>
                   <p className="mt-1 text-sm leading-6 text-ink/60">
-                    Keep {titleCase(cuisineQuery)} as a cuisine or concept detail, so your box still uses the broad food inventory while the cards understand the specific context.
+                    Keep {titleCase(cuisineQuery)} as a cuisine or concept detail, so your dossier still uses the broad food inventory while the briefs understand the specific context.
                   </p>
                 </div>
                 <button className="focus-ring rounded-md bg-ink px-4 py-2 text-sm font-semibold text-white" type="button" onClick={useCuisineAsRestaurant}>
@@ -633,7 +628,7 @@ export function OnboardingLanePicker({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Creator mode</p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-[-0.3px]">Choose the mode your audience already recognizes you for.</h2>
+            <h2 className="mt-2 text-2xl font-semibold">Choose the mode your audience already recognizes you for.</h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">
               This shapes the rhythm, visual grammar, audience promise, and strategic angle of every card.
             </p>
@@ -702,7 +697,7 @@ export function OnboardingLanePicker({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm">
             <span className="font-semibold">{selectedCategoryIds.length}/3 lanes selected</span>
-            <span className="ml-2 text-ink/55">Your box will be matched to your lane, format, and audience promise.</span>
+            <span className="ml-2 text-ink/55">Your dossier will be matched to your lane, format, and audience promise.</span>
           </div>
           <button className="focus-ring rounded-md bg-ink px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40" type="submit" disabled={!selectedCategoryIds.length}>
             Save profile and continue to Store

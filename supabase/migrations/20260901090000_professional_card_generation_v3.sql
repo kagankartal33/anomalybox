@@ -6,6 +6,24 @@ alter table public.idea_generation_runs add column if not exists stage text not 
 alter table public.idea_generation_runs add column if not exists heartbeat_at timestamptz;
 alter table public.idea_generation_runs add column if not exists lease_expires_at timestamptz;
 
+alter table public.idea_scores alter column viral_potential_score drop not null;
+alter table public.idea_scores alter column viral_potential_score drop default;
+
+alter table public.idea_scores alter column viral_potential_score drop not null;
+alter table public.idea_scores alter column viral_potential_score drop default;
+
+alter table public.trend_signals add column if not exists source_url text;
+alter table public.trend_signals add column if not exists observed_at timestamptz;
+alter table public.trend_signals add column if not exists country_code text;
+alter table public.trend_signals add column if not exists signal_scope text;
+alter table public.trend_signals add column if not exists expires_at timestamptz;
+alter table public.trend_signals add column if not exists sanitized boolean not null default false;
+alter table public.trend_signals drop constraint if exists trend_signals_signal_scope_check;
+alter table public.trend_signals add constraint trend_signals_signal_scope_check check (signal_scope is null or signal_scope in ('organic','ad','mixed'));
+alter table public.trend_signals drop constraint if exists trend_signals_country_code_check;
+alter table public.trend_signals add constraint trend_signals_country_code_check check (country_code is null or country_code ~ '^[A-Z]{2}$');
+create index if not exists trend_signals_generation_fresh_idx on public.trend_signals(platform, expires_at desc) where sanitized;
+
 alter table public.idea_generation_runs drop constraint if exists idea_generation_runs_status_check;
 alter table public.idea_generation_runs add constraint idea_generation_runs_status_check
   check (status in ('queued', 'running', 'completed', 'partial', 'failed'));
@@ -28,17 +46,96 @@ create unique index if not exists idea_candidates_batch_creative_signature_uidx
   where decision_trace#>>'{generation,creative_signature}' is not null;
 
 create or replace function public.reconcile_expired_idea_generation_run(p_run_id uuid)
-returns public.idea_generation_runs language plpgsql security invoker set search_path = public as $$
-declare result public.idea_generation_runs%rowtype;
+returns jsonb language plpgsql security invoker set search_path = public as $$
+declare result public.idea_generation_runs%rowtype; imported_n integer := 0;
 begin
+  perform 1 from public.idea_generation_batches b join public.idea_generation_runs r on r.generation_batch_id = b.id where r.id = p_run_id for update of b;
   select * into result from public.idea_generation_runs where id = p_run_id for update;
   if not found then raise exception 'Generation run not found'; end if;
   if result.status = 'running' and coalesce(result.lease_expires_at, result.started_at + interval '10 minutes') < now() then
-    update public.idea_generation_runs set status = 'failed', stage = 'failed', completed_at = now(),
+    select count(*) into imported_n from public.idea_candidates i join public.idea_cards c on c.idea_id = i.id
+      where i.generation_batch_id = result.generation_batch_id and i.decision_trace#>>'{generation,run_id}' = result.id::text;
+    update public.idea_generation_runs set status = case when imported_n > 0 then 'partial' else 'failed' end,
+      stage = case when imported_n > 0 then 'awaiting_embedding' else 'failed' end,
+      imported_count = imported_n, generated_count = greatest(generated_count, imported_n),
+      reject_count = greatest(reject_count, requested_count - imported_n), completed_at = now(),
       metadata = metadata || '{"lease_expired":true}'::jsonb
     where id = p_run_id returning * into result;
   end if;
-  return result;
+  return to_jsonb(result);
+end $$;
+
+create or replace function public.quarantine_idea_inventory_v3(p_inventory_id uuid, p_reasons text[], p_score numeric)
+returns boolean language plpgsql security invoker set search_path = public as $$
+begin
+  perform 1 from public.idea_inventory where id = p_inventory_id for update;
+  update public.idea_inventory inv set status = 'paused',
+    metadata = coalesce(inv.metadata, '{}'::jsonb) || jsonb_build_object(
+      'pause_reason', 'quality_quarantine_v3', 'quality_quarantine_at', now(),
+      'quality_quarantine_reasons', coalesce(to_jsonb(p_reasons), '[]'::jsonb),
+      'quality_quarantine_score', p_score), updated_at = now()
+  where inv.id = p_inventory_id and inv.status = 'available' and inv.reuse_count = 0
+    and not exists (select 1 from public.idea_box_items d where d.inventory_id = inv.id or d.idea_id = inv.idea_id)
+    and not exists (select 1 from public.checkout_inventory_reservations r where r.status = 'active' and (r.inventory_id = inv.id or r.idea_id = inv.idea_id));
+  return found;
+end $$;
+
+create or replace function public.rollback_idea_inventory_v3(p_inventory_id uuid)
+returns boolean language plpgsql security invoker set search_path = public as $$
+begin
+  perform 1 from public.idea_inventory where id = p_inventory_id for update;
+  update public.idea_inventory inv set status = 'available',
+    metadata = (coalesce(inv.metadata, '{}'::jsonb) - 'pause_reason') || jsonb_build_object('quality_quarantine_rolled_back_at', now()), updated_at = now()
+  where inv.id = p_inventory_id and inv.status = 'paused' and inv.reuse_count = 0
+    and inv.metadata->>'pause_reason' = 'quality_quarantine_v3'
+    and not exists (select 1 from public.idea_box_items d where d.inventory_id = inv.id or d.idea_id = inv.idea_id)
+    and not exists (select 1 from public.checkout_inventory_reservations r where r.status = 'active' and (r.inventory_id = inv.id or r.idea_id = inv.idea_id));
+  return found;
+end $$;
+
+revoke all on function public.quarantine_idea_inventory_v3(uuid, text[], numeric) from public, anon, authenticated;
+revoke all on function public.rollback_idea_inventory_v3(uuid) from public, anon, authenticated;
+grant execute on function public.quarantine_idea_inventory_v3(uuid, text[], numeric) to service_role;
+grant execute on function public.rollback_idea_inventory_v3(uuid) to service_role;
+
+create or replace function public.inventory_idea_quality_allows_sale(p_idea_id uuid)
+returns boolean language sql stable set search_path = public as $$
+  select exists (
+    select 1 from public.idea_candidates i
+    join public.idea_cards c on c.idea_id = i.id
+    left join public.idea_quality_checks q on q.idea_id = i.id
+    where i.id = p_idea_id
+      and i.status::text not in ('blocked', 'needs_refinement', 'human_review_required', 'archived')
+      and i.safety_status::text = 'SAFE'
+      and (q.idea_id is null or (
+        q.decision = 'approve' and not q.second_opinion_required
+        and (not (q.metadata ? 'card_snapshot') or q.metadata->'card_snapshot' = (c.card - 'id' - 'one_sentence_premise'))
+      ))
+      and (i.decision_trace->>'import_source' is distinct from 'verified_generation' or (
+        q.idea_id is not null and q.metadata->>'card_hash' is not null
+        and q.metadata->'card_snapshot' = (c.card - 'id' - 'one_sentence_premise')
+        and i.decision_trace#>>'{generation_gate,critic_verification,card_hash}' = q.metadata->>'card_hash'
+        and i.decision_trace#>>'{generation_gate,final_decision}' = 'approve'
+      ))
+  );
+$$;
+
+drop trigger if exists idea_gold_ratings_inventory_guard on public.idea_card_gold_ratings;
+
+create or replace function public.quarantine_inventory_after_quality_change()
+returns trigger language plpgsql security invoker set search_path = public as $$
+declare affected_id uuid; inventory_id uuid; current_score numeric;
+begin
+  if tg_table_name = 'idea_candidates' then affected_id := coalesce(new.id, old.id);
+  else affected_id := coalesce(new.idea_id, old.idea_id); end if;
+  if affected_id is null then return null; end if;
+  select craft_score into current_score from public.idea_quality_checks where idea_id = affected_id;
+  if not public.inventory_idea_quality_allows_sale(affected_id) then
+    for inventory_id in select id from public.idea_inventory where idea_id = affected_id and status = 'available' loop
+      perform public.quarantine_idea_inventory_v3(inventory_id, array['quality_evidence_invalidated'], current_score);
+    end loop;
+  end if;
+  return null;
 end $$;
 
 create or replace function public.guard_automatic_generation_run() returns trigger
@@ -83,7 +180,7 @@ returns boolean language sql volatile security invoker set search_path = public 
       and i.decision_trace->>'import_source' = 'verified_generation'
       and i.decision_trace#>>'{generation,taxonomy_version}' = 'creative-taxonomy-v1'
       and i.decision_trace#>>'{generation,creative_signature}' is not null
-      and i.decision_trace#>>'{generation_gate,policy_version}' = 'automatic-card-policy-v3'
+      and i.decision_trace#>>'{generation_gate,policy_version}' = 'automatic-card-policy-v3.1'
       and i.decision_trace#>>'{generation_gate,critic_verification,card_hash}' = q.metadata->>'card_hash'
       and i.decision_trace#>>'{generation_gate,critic_verification,independent}' = 'true'
       and i.decision_trace#>'{generation_gate,critic_verification,profile_snapshot}' = public.idea_model_contract(critic)
@@ -145,10 +242,24 @@ begin
     e.prompt_version = 'idea-card-premium-v3.0.0-automatic' and e.schema_version = 2
     and e.quality_gate_version = 'quality-gate-v3.0.0-automatic'
     and m->>'qualification_mode' = 'automatic-v3'
+    and m->>'pipeline_version' = 'generation-pipeline-v3.1'
+    and m->>'scheduler_version' = 'creative-scheduler-v2'
+    and m->>'concept_ranker_version' = 'concept-ranker-v2'
+    and m->>'duration_planner_version' = 'duration-planner-v2'
+    and m->>'pipeline_version' = 'generation-pipeline-v3.1'
+    and m->>'scheduler_version' = 'creative-scheduler-v2'
+    and m->>'concept_ranker_version' = 'concept-ranker-v2'
+    and m->>'duration_planner_version' = 'duration-planner-v2'
     and m->>'regression_version' = 'automatic-quality-regression-v3'
-    and m->>'regression_passed' = 'true' and (m->>'regression_case_count')::integer >= 72
+    and m->>'regression_passed' = 'true' and (m->>'regression_case_count')::integer = 72
     and m->'generator_snapshot' = public.idea_model_contract(p)
-    and (m->>'evaluated_count')::integer = e.brief_count and e.brief_count >= 600
+    and (m->>'evaluated_count')::integer = e.brief_count and e.brief_count = 600
+    and case when jsonb_typeof(e.category_counts) = 'object'
+      then (select count(*) from jsonb_object_keys(e.category_counts)) = 12
+      else false end
+    and m->'category_counts' = e.category_counts
+    and jsonb_typeof(e.category_counts) = 'object' and jsonb_object_length(e.category_counts) = 12
+    and m->'category_counts' = e.category_counts
     and (m->>'embedded_count')::integer = e.brief_count
     and (m->>'critic_record_count')::integer = e.brief_count
     and (m->>'current_gate_count')::integer = e.brief_count
@@ -190,7 +301,7 @@ begin
     join public.categories c on c.id = i.category_id
     join public.idea_generation_runs r on r.id::text = i.decision_trace#>>'{generation,run_id}'
     where r.id = any(e.generation_run_ids) and r.model_profile_id = p.id and c.slug = category_name;
-    valid := valid and n >= 50 and coalesce((e.category_counts->>category_name)::integer,0) = n;
+    valid := valid and n = 50 and coalesce((e.category_counts->>category_name)::integer,0) = 50;
   end loop;
   if not exists (select 1 from public.idea_model_profiles critic where critic.id::text = m->>'critic_profile_id'
     and critic.enabled and public.idea_model_contract(critic) = m->'critic_snapshot'
@@ -229,6 +340,14 @@ begin
       and p.qualified_prompt_version = 'idea-card-premium-v3.0.0-automatic'
       and p.qualified_schema_version = 2 and p.qualified_quality_gate_version = 'quality-gate-v3.0.0-automatic'
       and p.qualification_eval_id is not null and p.qualification_metrics->>'qualification_mode' = 'automatic-v3'
+      and p.qualification_metrics->>'pipeline_version' = 'generation-pipeline-v3.1'
+      and p.qualification_metrics->>'scheduler_version' = 'creative-scheduler-v2'
+      and p.qualification_metrics->>'concept_ranker_version' = 'concept-ranker-v2'
+      and p.qualification_metrics->>'duration_planner_version' = 'duration-planner-v2'
+      and p.qualification_metrics->>'pipeline_version' = 'generation-pipeline-v3.1'
+      and p.qualification_metrics->>'scheduler_version' = 'creative-scheduler-v2'
+      and p.qualification_metrics->>'concept_ranker_version' = 'concept-ranker-v2'
+      and p.qualification_metrics->>'duration_planner_version' = 'duration-planner-v2'
   ) then raise exception 'Qualified V3 automatic generation run required for publication' using errcode = '23514'; end if;
   return new;
 end $$;

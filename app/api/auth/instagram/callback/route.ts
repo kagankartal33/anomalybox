@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { env, siteUrl } from "@/lib/env";
+import { encryptLinkedAccountToken } from "@/lib/token-crypto";
+
+export const runtime = "nodejs";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

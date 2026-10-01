@@ -1,9 +1,22 @@
 import { ideaCardSchema } from "../idea-card/schema.ts";
 
-export const AUTOMATIC_POLICY_VERSION = "automatic-card-policy-v1";
-export const AUTOMATIC_QUALIFICATION_MODE = "automatic-v1";
+export const AUTOMATIC_POLICY_VERSION = "automatic-card-policy-v3.1";
+// Bump whenever an automatic acceptance or publication invariant changes.
+// Qualifications are deliberately bound to this value and must be rerun.
+export const GENERATION_PIPELINE_VERSION = "generation-pipeline-v3.1.2";
+export const AUTOMATIC_QUALIFICATION_MODE = "automatic-v3";
 export const SEMANTIC_DOCUMENT_VERSION = "card-semantic-v2";
-export const CRITIC_CHECKS = ["filmability", "lane_fit", "natural_speech", "visible_proof", "safety", "originality"] as const;
+export const CRITIC_CHECKS = [
+  "filmability",
+  "first_frame_hook",
+  "lane_fit",
+  "emotion_vibe",
+  "natural_speech",
+  "proof_payoff",
+  "duration",
+  "safety",
+  "originality",
+] as const;
 
 export function objectRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
@@ -45,7 +58,7 @@ export function semanticDocument(value: unknown): string {
     fields.push(step.purpose, step.goal, step.action ?? step.visual_action, step.spokenLine ?? step.voiceover ?? step.spoken_line, step.shot ?? step.shot_type, step.onScreenText ?? step.on_screen_text, step.editNote ?? step.edit_note);
   }
   const flatten = (item: unknown): string[] => Array.isArray(item) ? item.flatMap(flatten) : typeof item === "string" ? [item.trim()] : [];
-  return fields.flatMap(flatten).filter(Boolean).join("\
+  return fields.flatMap(flatten).filter(Boolean).join("
 }
 
 export function modelContract(row: unknown): Record<string, unknown> {
@@ -69,10 +82,12 @@ export function automaticGenerationBlockers(trace: unknown, contentHash: string)
   const verification = objectRecord(gate.critic_verification);
   const blockers: string[] = [];
   if (!generation.run_id || row.import_source !== "verified_generation") blockers.push("unverified_generation_source");
+  if (generation.pipeline_version !== GENERATION_PIPELINE_VERSION) blockers.push("stale_generation_pipeline");
+  if (generation.pipeline_version !== GENERATION_PIPELINE_VERSION) blockers.push("stale_generation_pipeline");
   if (gate.policy_version !== AUTOMATIC_POLICY_VERSION) blockers.push("stale_generation_policy");
   if (gate.final_decision !== "approve") blockers.push(gate.final_decision === "reject" ? "generation_rejected" : "generation_unresolved");
   if (!Array.isArray(gate.hardGateCodes) || gate.hardGateCodes.length) blockers.push("generation_hard_gate_unresolved");
-  if (!verification.passed || verification.independent !== true || verification.card_hash !== contentHash || !verification.profile_id || !verification.profile_hash) blockers.push("critic_verification_missing_or_stale");
+  if (verification.passed !== true || verification.independent !== true || verification.card_hash !== contentHash || !verification.profile_id || !verification.profile_hash) blockers.push("critic_verification_missing_or_stale");
   return blockers;
 }
 
@@ -85,9 +100,9 @@ export function publicationBlockers(params: {
   const blockers = automaticGenerationBlockers(params.trace, params.contentHash);
   if (!ideaCardSchema.safeParse(params.card).success) blockers.push("schema_invalid");
   if (q.decision !== "approve" || q.second_opinion_required === true) blockers.push("quality_not_approved");
-  if (q.human_review_decision === "reject" || q.human_review_decision === "refine") blockers.push("editorial_veto");
+
   if (q.evaluator_version !== params.gateVersion || meta.card_hash !== params.contentHash) blockers.push("quality_stale");
-  if (!Number.isFinite(q.craft_score) || Number(q.craft_score) < 88 || !Number.isFinite(q.editorial_quality_score) || Number(q.editorial_quality_score) < 88) blockers.push("quality_below_floor");
+  if (!Number.isFinite(q.craft_score) || Number(q.craft_score) < 90 || !Number.isFinite(q.editorial_quality_score) || Number(q.editorial_quality_score) < 90) blockers.push("quality_below_floor");
   if (!Number.isFinite(q.embedding_duplicate_score) || Number(q.embedding_duplicate_score) >= 0.78 || Number(q.embedding_duplicate_score) < 0) blockers.push("semantic_not_clear");
   if (embedding.source_text_hash !== params.semanticHash || !embedding.embedding_model || !em.model_version || em.document_version !== SEMANTIC_DOCUMENT_VERSION || em.corpus_complete !== true || em.comparison_scope !== "global") blockers.push("embedding_missing_or_stale");
   if (q.embedding_model !== embedding.embedding_model || q.embedding_model_version !== em.model_version || q.embedding_duplicate_score !== em.nearest_similarity) blockers.push("embedding_score_stale");

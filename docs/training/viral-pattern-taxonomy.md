@@ -75,3 +75,133 @@ Global trendler Turkiye'de aile, futbol, gundelik absurtluk, toplumsal tartisma 
 - hassas konularda human review ister,
 - basmakalip ulusal stereotip kullanmaz,
 - creator'in kendi audience contract'ina gore yerellestirir.
+
+## 9. Community Is Now A Production Partner
+
+2025-2026 raporlari community'nin yalniz yorum yapan kitle degil, formatin bir parcasi oldugunu gosteriyor. Premium fikirlerde community:
+
+- poll ile konu secebilir,
+- broadcast channel'da taslak oylayabilir,
+- izinli UGC kaniti verebilir,
+- seri finalini etkileyebilir,
+- fan/arsivci/editor/tester rolunu alabilir.
+
+Bu `VTP-009`, `VTP-012`, `VTP-015` ve `VTP-017` icin ana egitim dersidir.
+
+## 10. Search And Entertainment Converged
+
+Instagram, TikTok ve YouTube artik sadece takip edilen hesap akisi degil, arama ve karar motoru gibi de calisir. Generator:
+
+- tek bir search intent belirler,
+- ilk saniyede soruyu gosterir,
+- creator cevabini proof veya sahneyle destekler,
+- carouselde slide progression, Reels'te saveable timeline kurar,
+- keyword stuffing yapmaz.
+
+Bu `VTP-013` icin ana egitim dersidir.
+
+## 11. Curation Beats Trend Copying
+
+Trend yorgunlugu arttikca iyi creator her trende katilan degil, neyi secip neyi atlayacagini bilen kisi olur. ViralBox premium kartlari bu nedenle:
+
+- creator'in taste filter'ini,
+- "bunu yapma" listesini,
+- audience'a neden uydugunu,
+- overconsumption veya copycat riskini
+
+aciklar. Bu `VTP-018` icin ana egitim dersidir.
+
+## 12. Hook Integrity Is A Trust Product
+
+2026 ortaminda izleyici clickbait'e daha hizli ceza verir. Iyi hook yalniz dikkat cekmez; verdigi vaadi tutar.
+
+Generator her premium fikirde:
+
+- ilk 1 saniye gorsel hook,
+- ilk cumle,
+- cover/title,
+- caption,
+- payoff
+
+arasinda ayni promise'i korur. Bu `VTP-027` icin ana egitim dersidir.
+
+## 13. Commerce Needs Emotional ROI
+
+Product-led icerik ozellik anlatmaktan fazlasini yapmali. Kullanici su sorulara cevap ister:
+
+- Bu bana hangi rahatligi, guveni, zevki veya kimlik sinyalini veriyor?
+- Kim icin uygun degil?
+- Kanit nerede?
+- Sonraki adim baskisiz mi?
+
+Bu `VTP-021` ve `VTP-025` icin ana egitim dersidir.
+
+## 14. Deep Fandom Creates Authority
+
+YouTube ve kisa video kulturunde fan artik sadece izleyici degil; arsivci, editor, yorumcu, aciklayici ve remix kurucusu olabilir. Premium creator bunu:
+
+- safe asset plan,
+- kaynak/credit,
+- fan rolu,
+- non-toxic comment question
+
+ile kullanir. Bu `VTP-023` icin ana egitim dersidir.
+
+## 15. Low-Regret Attention Wins Trust
+
+Her viral fikir yuksek uyarilma gerektirmez. Overstimulated izleyici bazen kisa, sakin, anlamli ve izledikten sonra iyi hissettiren icerigi kaydeder. Bu `VTP-026` icin ana egitim dersidir.
+
+## 16. Discovery Needs A Loyalty Bridge
+
+Kisa video yeni izleyiciyi getirir; baglilik ise seri, uzun format, broadcast channel, DM akisi veya topluluk ritueliyle kurulur. Premium fikirlerde:
+
+- short hook,
+- deeper asset tease,
+- net next step,
+- recurring reason
+
+birlikte tasarlanir. Bu `VTP-029` icin ana egitim dersidir.
+
+## 17. Comments And DMs Are Product Research
+
+Yorumlardaki tekrar eden itirazlar ve DM sorulari fikir motorunun en guclu sinyallerindendir. Generator bunlari:
+
+- anonimlestirir,
+- saygili cevaplar,
+- proof veya boundary ile kapatir,
+- soft next action verir.
+
+Bu `VTP-030` ve `VTP-032` icin ana egitim dersidir.
+
+## 18. Lore Must Welcome Newcomers
+
+Creator lore, eski takipciye aidiyet verir ama yeni izleyiciyi dislamamalidir. Iyi lore icerigi:
+
+- recurring symbol kullanir,
+- newcomer context verir,
+- fan reward ekler,
+- bir sonraki lore promptunu acar.
+
+Bu `VTP-031` ve `VTP-034` icin ana egitim dersidir.
+
+## 19. Save-First Utility Is Viral Later
+
+Her viral hareket anlik patlamaz; bazi fikirler kaydedilip sonra paylasilir. Save-first fikirlerde:
+
+- specific problem,
+- decision rule,
+- checklist,
+- future use case
+
+bulunur. Bu `VTP-038` icin ana egitim dersidir.
+
+## 20. Sponsor Trust Can Be Content
+
+High-profile influencer icin sponsorlu icerikte guven, sadece disclosure ile bitmez. Iyi partnerlik fikri:
+
+- neden bu marka,
+- creator'in standardi ne,
+- neyi reddederdi,
+- onerinin siniri ne
+
+sorularini cevaplar. Bu `VTP-040` icin ana egitim dersidir.

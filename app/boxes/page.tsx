@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
-import { ViralBoxShelf, type CreatorBox } from "@/components/ViralBoxShelf";
+import { CreativeDossierShelf, type CreatorBox } from "@/components/CreativeDossierShelf";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { displayCardPremise, displayCardTitle } from "@/lib/card-display";
 
 export default async function BoxesPage() {
   const { user } = await requireUser();
@@ -44,8 +45,8 @@ export default async function BoxesPage() {
           id: item.id,
           idea_id: item.idea_id,
           slot_index: item.slot_index,
-          title: card?.title ?? String(cardPayload.title ?? "Premium creator card"),
-          premise: String(cardPayload.one_sentence_premise ?? cardPayload.premise ?? ""),
+          title: displayCardTitle(cardPayload, card?.title),
+          premise: displayCardPremise(cardPayload),
         };
       });
 
@@ -82,7 +83,7 @@ export default async function BoxesPage() {
           <Link className="mt-6 inline-flex rounded-md bg-ink px-5 py-3 font-semibold text-white" href="/store">Browse ViralBox store</Link>
         </section>
       ) : (
-        <ViralBoxShelf boxes={boxes} />
+        <CreativeDossierShelf boxes={boxes} />
       )}
     </AppShell>
   );

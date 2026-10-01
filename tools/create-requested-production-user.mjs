@@ -29,7 +29,20 @@ function valueFor(key) {
 
 const supabaseUrl = valueFor("NEXT_PUBLIC_SUPABASE_URL");
 const anonKey = valueFor("NEXT_PUBLIC_SUPABASE_ANON_KEY");
-const serviceRoleKey = valueFor("SUPABASE_SERVICE_ROLE_KEY");
+const apiKeysRaw = execFileSync(
+  process.env.ComSpec ?? "cmd.exe",
+  [
+    "/d",
+    "/s",
+    "/c",
+    "npx supabase projects api-keys --project-ref psqqqhcfmfojrqsvzzzb --reveal --output json",
+  ],
+  { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+);
+const apiKeys = JSON.parse(apiKeysRaw.replace(/^\\uFEFF/, ""));
+const serviceRoleKey =
+  apiKeys.find((key) => key.type === "secret" && key.secret_jwt_template?.role === "service_role")?.api_key ??
+  apiKeys.find((key) => key.id === "service_role")?.api_key;
 
 if (!supabaseUrl || !anonKey || !serviceRoleKey) {
   throw new Error("Required production Supabase configuration is unavailable.");

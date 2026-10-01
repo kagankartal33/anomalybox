@@ -1,20 +1,65 @@
 param(
   [Parameter(Mandatory = $true)][string]$InputPath,
   [string]$DbContainer = "supabase_db_ViralBox",
+  [string]$DatabaseUrl = "",
   [int]$BatchSize = 250,
-  [switch]$Apply
+  [switch]$Apply,
+  [switch]$Rollback
 )
 
 $ErrorActionPreference = "Stop"
 
 function Invoke-DbSqlFile {
   param([Parameter(Mandatory = $true)][string]$SqlPath)
+  if (-not [string]::IsNullOrWhiteSpace($DatabaseUrl)) {
+    Get-Content -LiteralPath $SqlPath -Raw | psql $DatabaseUrl -v ON_ERROR_STOP=1 -P pager=off
+    return
+  }
+
+if ($invalidTitles.Count -gt 0) {
+  $summary | ConvertTo-Json -Depth 6
+  $invalidTitles | Select-Object -First 25 | Format-Table -AutoSize
+  throw "Finalist import title validation failed."
+}
+
+$invalidTitles = @()
+$seenTitles = @{}
+foreach ($record in $records) {
+  $title = [string]$record.card.title
+  $issue = Test-PremiumTitleQuality -Value $title
+  if ($issue) {
+    $invalidTitles += [pscustomobject]@{
+      category_slug = $record.category_slug
+      persona_slug = $record.persona_slug
+      title = $title
+      issue = $issue
+    }
+  } elseif ($seenTitles.ContainsKey($title)) {
+    $invalidTitles += [pscustomobject]@{
+      category_slug = $record.category_slug
+      persona_slug = $record.persona_slug
+      title = $title
+      issue = "duplicate title in finalist import"
+    }
+  } else {
+    $seenTitles[$title] = $true
+  }
+}
   Get-Content -LiteralPath $SqlPath -Raw | docker exec -i $DbContainer psql -U postgres -d postgres -v ON_ERROR_STOP=1 -P pager=off
 }
 
 function ConvertTo-SqlJsonLiteral {
   param([Parameter(Mandatory = $true)][string]$Json)
   return "`$json`$" + $Json + "`$json`$"
+}
+
+function Test-PremiumTitleQuality {
+  param([AllowNull()][string]$Value)
+  if ([string]::IsNullOrWhiteSpace($Value)) { return "missing title" }
+  if ($Value.Length -gt 52) { return "title longer than 52 characters" }
+  if ($Value -match '\\b(Brief|Ritual|Report|Memo|Audit|Dossier|File|Sheet|SOP|Framework|Blueprint|AI|Algorithm|Engine|Model|Prompt|Agent|Neural|Autopilot|System|Quality Gate|score|score_band|training|dataset|inventory)\\b') { return "technical or document-style title language" }
+  if ($Value -match 'run_\\d{8}_\\d{6}|\\b\\d{3,}\\b') { return "raw id or number suffix" }
+  return ""
 }
 
 if (-not (Test-Path -LiteralPath $InputPath)) {
@@ -49,7 +94,9 @@ $summary = [ordered]@{
   finalist_records = $records.Count
   routes = $groups.Count
   invalid_routes = $invalidGroups.Count
+  invalid_titles = $invalidTitles.Count
   apply = [bool]$Apply
+  rollback = [bool]$Rollback
 }
 
 if ($invalidGroups.Count -gt 0) {
@@ -70,6 +117,7 @@ try {
     $batch = @($lines[$offset..([Math]::Min($offset + $BatchSize - 1, $lines.Count - 1))])
     $jsonArray = "[" + ($batch -join ",") + "]"
     $jsonLiteral = ConvertTo-SqlJsonLiteral -Json $jsonArray
+    $transactionEnd = if ($Rollback) { "rollback;" } else { "commit;" }
     $sqlPath = Join-Path $env:TEMP ("viralbox-finalist-import-{0}.sql" -f ([guid]::NewGuid().ToString("N")))
     $tempFiles.Add($sqlPath) | Out-Null
 
@@ -120,7 +168,7 @@ candidate_upsert as (
     doc #>> '{candidate,core_insight}',
     doc #>> '{candidate,opportunity_statement}',
     coalesce(array(select jsonb_array_elements_text(coalesce(doc #> '{candidate,mechanism_ids}', '[]'::jsonb))), array[]::text[]),
-    coalesce(array(select jsonb_array_elements_text(coalesce(doc #> '{candidate,trend_signal_ids}', '[]'::jsonb))), array[]::text[]),
+    coalesce(array(select jsonb_array_elements_text(coalesce(doc #> '{candidate,trend_signal_ids}', '[]'::jsonb))::uuid), array[]::uuid[]),
     coalesce(doc #> '{candidate,hook_options}', '[]'::jsonb),
     coalesce(doc #> '{candidate,story_beats}', '[]'::jsonb),
     coalesce(doc #> '{candidate,comedy_remix}', '{}'::jsonb),
@@ -195,7 +243,7 @@ select
   true,
   'available'::public.inventory_status,
   0,
-  greatest(coalesce((doc #>> '{inventory,max_reuse_count}')::integer, 1), 1),
+  1,
   now(),
   coalesce(doc #> '{inventory,metadata}', '{}'::jsonb) || jsonb_build_object(
     'production_finalist', true,
@@ -218,7 +266,7 @@ on conflict (idea_id) do update set
   metadata = excluded.metadata,
   updated_at = now();
 
-commit;
+$transactionEnd
 "@
 
     Set-Content -LiteralPath $sqlPath -Value $sql -Encoding utf8

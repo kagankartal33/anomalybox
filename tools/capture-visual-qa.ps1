@@ -1,8 +1,8 @@
 $ErrorActionPreference = "Stop"
 
 $workspace = [System.IO.Path]::GetFullPath((Get-Location).Path)
-$outputRoot = [System.IO.Path]::GetFullPath((Join-Path $workspace "tmp\visual-qa-20260729"))
-$chrome = Join-Path $env:ProgramFiles "Google\Chrome\Application\chrome.exe"
+$outputRoot = [System.IO.Path]::GetFullPath((Join-Path $workspace "tmp\\visual-qa-20260729"))
+$chrome = Join-Path $env:ProgramFiles "Google\\Chrome\\Application\\chrome.exe"
 
 if (-not $outputRoot.StartsWith($workspace, [System.StringComparison]::OrdinalIgnoreCase)) {
   throw "Visual QA output escaped the workspace."

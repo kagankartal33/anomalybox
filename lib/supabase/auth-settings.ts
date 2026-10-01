@@ -4,7 +4,9 @@ type PublicAuthSettings = {
   external?: Record<string, boolean>;
 };
 
-export async function isOAuthProviderEnabled(provider: "google"): Promise<boolean> {
+export type SupportedOAuthProvider = "google" | "apple";
+
+export async function isOAuthProviderEnabled(provider: SupportedOAuthProvider): Promise<boolean> {
   try {
     const response = await fetch(`${env.supabaseUrl()}/auth/v1/settings`, {
       headers: {

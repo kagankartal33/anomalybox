@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { AuthShell } from "@/components/AuthShell";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { safeNextPath } from "@/lib/navigation";
 import { isOAuthProviderEnabled } from "@/lib/supabase/auth-settings";
 import { signInWithPassword, signUpWithPassword } from "./actions";
@@ -9,6 +12,7 @@ type LoginParams = {
   error?: string;
   next?: string;
   password?: string;
+  signup?: string;
 };
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<LoginParams> }) {
@@ -33,6 +37,11 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       {params.password === "reset" ? (
         <div className="mb-5 rounded-md border border-teal/20 bg-teal/10 p-3 text-sm text-teal">
           Your password has been updated. Sign in with the new password.
+        </div>
+      ) : null}
+      {params.signup === "confirm" ? (
+        <div className="mb-5 rounded-md border border-teal/20 bg-teal/10 p-3 text-sm leading-6 text-teal">
+          Account created. Check your inbox to confirm your email, then sign in.
         </div>
       ) : null}
 
@@ -64,6 +73,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               Forgot password?
             </Link>
           </div>
+          <TurnstileWidget />
           <button
             className="focus-ring flex w-full items-center justify-center gap-2 rounded-md bg-ink py-3 font-semibold text-white"
             type="submit"
@@ -135,6 +145,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               placeholder="Create password (8+ characters)"
               required
             />
+            <TurnstileWidget />
             <button className="focus-ring w-full rounded-md bg-plum-deep py-3 font-semibold text-white hover:bg-[#3F3545]" type="submit">
               Create account
             </button>

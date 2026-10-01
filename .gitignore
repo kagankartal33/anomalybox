@@ -5,3 +5,17 @@ node_modules/
 production_exports/
 generated_batches/
 *.log
+
+# Local tooling and generated working material
+.kilo/
+.supabase/
+tsconfig.tsbuildinfo
+generated_outputs/
+site-html-export/
+anomaly-box-premium-assets-20260724/
+anomaly-box-premium-assets-20260724.zip
+tmp-*
+
+# Local-only reference renders
+sceneflowboard.png
+editassemblyguide.png

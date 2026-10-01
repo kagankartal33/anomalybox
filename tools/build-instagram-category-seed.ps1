@@ -1,6 +1,6 @@
 param(
-  [string]$LocalCategoryFile = ".\instagram_tum_kategoriler_birlesik.md",
-  [string]$OutputSql = ".\supabase\seeds\instagram_categories.sql",
+  [string]$LocalCategoryFile = ".\\instagram_tum_kategoriler_birlesik.md",
+  [string]$OutputSql = ".\\supabase\\seeds\\instagram_categories.sql",
   [string]$SourceUrl = "https://thepennymatters.com/instagram-categories-list/"
 )
 
@@ -9,11 +9,13 @@ $ProgressPreference = "SilentlyContinue"
 
 function Convert-Slug([string]$Name) {
   $s = $Name.ToLowerInvariant()
-  $s = $s.Replace([char]0x2019, "").Replace([char]0x2018, "").Replace("'", "")
+  $s = $s -replace ([string][char]0x2019), ""
+  $s = $s -replace ([string][char]0x2018), ""
+  $s = $s.Replace("'", "")
   $s = $s -replace "&", " and "
-  $s = $s -replace "\+", " plus "
+  $s = $s -replace "\\+", " plus "
   $s = $s -replace "/", " "
-  $s = $s -replace "\([^)]*\)", " "
+  $s = $s -replace "\\([^)]*\\)", " "
   $s = $s -replace "[^a-z0-9]+", "_"
   $s = ($s.Trim("_") -replace "_+", "_")
   if ([string]::IsNullOrWhiteSpace($s)) {
@@ -66,8 +68,8 @@ function LayersFor([string]$Name, [string]$Family) {
   return @($layers | Select-Object -Unique)
 }
 
-function Add-Category($Map, [string]$Name, [string]$Source, [string]$Group, [string]$Family) {
-  $clean = (($Name -replace "\s+", " ").Trim())
+function Add-Category($Map, [string]$Name, [string]$Source, [string]$Group, [string]$Family, [string]$PreferredSlug = "") {
+  $clean = (($Name -replace "\\s+", " ").Trim())
   if (-not $clean) {
     return
   }
@@ -75,8 +77,8 @@ function Add-Category($Map, [string]$Name, [string]$Source, [string]$Group, [str
     return
   }
 
-  $slug = Convert-Slug $clean
-  if (-not $Map.ContainsKey($slug)) {
+  $slug = if ($PreferredSlug) { $PreferredSlug } else { Convert-Slug $clean }
+  if (-not $Map.Contains($slug)) {
     $Map[$slug] = [ordered]@{
       slug = $slug
       name = $clean
@@ -110,11 +112,11 @@ function Add-Category($Map, [string]$Name, [string]$Source, [string]$Group, [str
 $map = [ordered]@{}
 
 $html = (Invoke-WebRequest -Uri $SourceUrl -UseBasicParsing -TimeoutSec 30).Content
-$tds = [regex]::Matches($html, "<td[^>]*>([\s\S]*?)</td>", "IgnoreCase")
+$tds = [regex]::Matches($html, "<td[^>]*>([\\s\\S]*?)</td>", "IgnoreCase")
 foreach ($match in $tds) {
   $value = $match.Groups[1].Value -replace "<[^>]+>", " "
   $value = [System.Net.WebUtility]::HtmlDecode($value)
-  $value = ($value -replace "\s+", " ").Trim()
+  $value = ($value -replace "\\s+", " ").Trim()
   if ($value -and $value.Length -lt 90 -and $value -notmatch "^[0-9]+$") {
     Add-Category $map $value "the_penny_matters_2026" "Instagram Business Categories" "instagram_business"
   }
@@ -123,34 +125,34 @@ foreach ($match in $tds) {
 $currentGroup = $null
 Get-Content -Path $LocalCategoryFile -Encoding UTF8 | ForEach-Object {
   $line = $_.Trim()
-  if ($line -match "^##\s+\d+\.\s+(.+)$") {
+  if ($line -match "^##\\s+\\d+\\.\\s+(.+)$") {
     $currentGroup = $Matches[1].Trim()
     return
   }
-  if ($line -match "^-\s+(.+)$") {
+  if ($line -match "^-\\s+(.+)$") {
     $name = $Matches[1].Trim()
-    if ($name -notmatch "^artifacts klas|^https?://|^\*\*") {
+    if ($name -notmatch "^artifacts klas|^https?://|^\\*\\*") {
       Add-Category $map $name "local_influencer_niches" $currentGroup "creator_content"
     }
   }
 }
 
 $coreCategories = @(
-  @("Beauty", "Core Creator Category"),
-  @("Fashion", "Core Creator Category"),
-  @("Travel", "Core Creator Category"),
-  @("Lifestyle", "Core Creator Category"),
-  @("Food", "Core Creator Category"),
-  @("Luxury", "Core Creator Category"),
-  @("Commerce & Affiliate", "Core Creator Category"),
-  @("Creator Education", "Core Creator Category"),
-  @("Thought Leadership", "Core Creator Category"),
-  @("Parenting & Family", "Core Creator Category"),
-  @("Entertainment Comedy", "Core Creator Category"),
-  @("Fitness & Wellness Safe", "Core Creator Category")
+  @("beauty", "Beauty", "Core Creator Category"),
+  @("fashion", "Fashion", "Core Creator Category"),
+  @("travel", "Travel", "Core Creator Category"),
+  @("lifestyle", "Lifestyle", "Core Creator Category"),
+  @("food", "Food", "Core Creator Category"),
+  @("luxury", "Luxury", "Core Creator Category"),
+  @("commerce_affiliate", "Commerce & Affiliate", "Core Creator Category"),
+  @("creator_education", "Creator Education", "Core Creator Category"),
+  @("thought_leadership", "Thought Leadership", "Core Creator Category"),
+  @("parenting_family", "Parenting & Family", "Core Creator Category"),
+  @("entertainment_comedy", "Entertainment Comedy", "Core Creator Category"),
+  @("fitness_wellness_safe", "Fitness & Wellness Safe", "Core Creator Category")
 )
 foreach ($category in $coreCategories) {
-  Add-Category $map $category[0] "viralbox_core" $category[1] "creator_content"
+  Add-Category $map $category[1] "viralbox_core" $category[2] "creator_content" $category[0]
 }
 
 $rows = @()
@@ -220,7 +222,9 @@ $sql += "on conflict (namespace, version) do update set"
 $sql += "  config = excluded.config,"
 $sql += "  enabled = excluded.enabled;"
 
-Set-Content -Path $OutputSql -Value ($sql -join "`r`n") -Encoding UTF8
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+$outputFullPath = [System.IO.Path]::GetFullPath($OutputSql)
+[System.IO.File]::WriteAllText($outputFullPath, ($sql -join "`r`n"), $utf8NoBom)
 
 [pscustomobject]@{
   generated_categories = $map.Count

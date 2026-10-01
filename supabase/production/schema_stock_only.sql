@@ -395,7 +395,11 @@ as $$
   from counts
   join public.categories c on c.id = counts.category_id
   join public.creator_personas p on p.id = counts.persona_id
-  order by needs_generation desc, c.sort_order, p.sort_order, c.slug, p.slug;
+  order by (counts.low_count < 60 or counts.mid_count < 30 or counts.high_count < 30) desc,
+    c.sort_order,
+    p.sort_order,
+    c.slug,
+    p.slug;
 $$;
 
 create or replace function public.deliver_idea_box(p_user_id uuid, p_box_product_slug text, p_category_slug text, p_persona_slug text, p_purchase_id uuid default null)

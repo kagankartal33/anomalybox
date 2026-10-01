@@ -37,13 +37,15 @@ values ('$productSlug', 'Single Use Test Box', 100, 1, '{"high":1}'::jsonb, true
 on conflict (slug) do update set enabled = true, allocation = excluded.allocation;
 
 insert into public.idea_candidates (
-  id, user_id, platform, idea_type, language, region, title, premise, mechanism_ids,
-  hook_options, story_beats, idea_card, safety_status, originality_status, brand_safety_status,
+  id, user_id, platform, format, language, locale, title, one_sentence_premise,
+  core_insight, opportunity_statement, mechanism_ids, hook_options, story_beats,
+  production_requirements, safety_status, perspective_prism_status, confidence_band,
   status, external_idea_id, category_id, persona_id, content_style_layers, candidate_source
 ) values (
   '$ideaId', '$userOneId', 'instagram_reels', 'reels_35s', 'en', 'US', 'Single Use Fixture Card',
-  'A one-use delivery test premise.', array['TEST']::text[], '["hook"]'::jsonb, '["hook","payoff"]'::jsonb,
-  '{"idea_summary":{"premise":"Single-use fixture"}}'::jsonb, 'SAFE', 'PASS', 'HIGH', 'published', '$runId-card',
+  'A one-use delivery test premise.', 'The card must only be delivered once.',
+  'Protect premium scarcity.', array['TEST']::text[], '["hook"]'::jsonb, '["hook","payoff"]'::jsonb,
+  '{"equipment":["phone"]}'::jsonb, 'SAFE', 'PASS', 'HIGH', 'published', '$runId-card',
   (select id from public.categories where slug = '$categorySlug'),
   (select id from public.creator_personas where slug = '$personaSlug'),
   array['test']::text[], 'admin_direct'
@@ -137,6 +139,9 @@ try {
   $setupAndAssertSql | Set-Content -LiteralPath $sqlFile -Encoding ascii
   Get-Content -LiteralPath $sqlFile -Raw |
     docker exec -i supabase_db_ViralBox psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - | Out-Null
+  if ($LASTEXITCODE -ne 0) {
+    throw "Single-use setup/assert SQL failed with exit code $LASTEXITCODE"
+  }
   Write-Host "Single-use card delivery test passed."
 } finally {
   $cleanupSql | Set-Content -LiteralPath $cleanupFile -Encoding ascii

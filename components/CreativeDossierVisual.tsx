@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { premiumAssets } from "@/lib/premium-assets";
 
 export type CreativeDossierVariant = "red" | "purple" | "black";
 
@@ -11,25 +12,28 @@ type CreativeDossierVisualProps = {
   size?: "sm" | "md" | "lg";
 };
 
-const dossierByVariant: Record<CreativeDossierVariant, { src: string; accent: string }> = {
+const dossierByVariant: Record<CreativeDossierVariant, { image: string; accent: string; name: string }> = {
   red: {
-    src: "/assets/premium/studio/dossier-classic.webp",
-    accent: "bg-[#A52434]",
+    image: premiumAssets.dossiers.classic,
+    accent: "bg-[#963B48]",
+    name: "classic red",
   },
   purple: {
-    src: "/assets/premium/studio/dossier-signature.webp",
-    accent: "bg-[#6D3AA8]",
+    image: premiumAssets.dossiers.signature,
+    accent: "bg-[#725F7B]",
+    name: "signature purple",
   },
   black: {
-    src: "/assets/premium/studio/dossier-atelier.webp",
-    accent: "bg-[#202124]",
+    image: premiumAssets.dossiers.atelier,
+    accent: "bg-[#27272A]",
+    name: "atelier black",
   },
 };
 
 const sizeClass = {
-  sm: "h-40 max-w-[230px]",
-  md: "h-60 max-w-[380px]",
-  lg: "h-80 max-w-[500px]",
+  sm: "h-44 max-w-[250px]",
+  md: "h-64 max-w-[420px]",
+  lg: "h-80 max-w-[540px]",
 };
 
 export function CreativeDossierVisual({
@@ -43,30 +47,34 @@ export function CreativeDossierVisual({
   const dossier = dossierByVariant[variant];
   const displayLabel = label ?? (available ? `${itemCount} briefs available` : "secured creative dossier");
   const alt = available
-    ? `${variant} creative dossier with ${itemCount} private briefs available`
-    : `${variant} secured creative dossier`;
+    ? `${dossier.name} Anomaly Box creative dossier with ${itemCount} private briefs available`
+    : `${dossier.name} Anomaly Box secured creative dossier in a production studio`;
 
   return (
     <div
-      className={`creative-dossier relative mx-auto w-full ${sizeClass[size]} ${available ? "is-available" : "is-secured"} ${className}`}
+      className={`creative-dossier mx-auto grid w-full grid-rows-[minmax(0,1fr)_auto] ${sizeClass[size]} ${available ? "is-available" : "is-secured"} ${className}`}
     >
-      <div className="relative h-[calc(100%-1.5rem)] overflow-hidden rounded-[3px] bg-ink">
+      <div className="relative min-h-0 overflow-hidden rounded-xl bg-[#171619]">
         <Image
-          src={dossier.src}
+          src={dossier.image}
           alt={alt}
           fill
           sizes="(max-width: 768px) 78vw, 380px"
           className="object-cover transition duration-500 ease-out group-hover:scale-[1.015]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" aria-hidden="true" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/5" aria-hidden="true" />
         <div
-          className={`absolute bottom-3 left-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm ${dossier.accent}`}
+          className={`absolute bottom-3 left-3 inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm ${dossier.accent}`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${available ? "bg-[#B8F2D0]" : "bg-white/70"}`} aria-hidden="true" />
           {available ? "Available" : "Secured"}
         </div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-ink/48">
+      <div
+        className={`px-1 pt-2 text-center text-[10px] font-semibold uppercase leading-[1.35] tracking-[0.14em] [overflow-wrap:anywhere] ${
+          variant === "black" ? "text-white/85" : "text-ink"
+        }`}
+      >
         {displayLabel}
       </div>
     </div>

@@ -1,5 +1,7 @@
 # Card training V2 — current operating contract
 
+> Archived V2 contract. Superseded by [card-training-v3.md](card-training-v3.md); retained only for legacy reader compatibility.
+
 Updated 2026-08-31. English / Instagram Reels only. No mandatory human review.
 SEO resources, book excerpts and raw social posts are not SFT card targets.
 
@@ -45,7 +47,7 @@ Each JSONL row must satisfy `cardTrainingRecordSchema` in
   present. Computed production estimates are excluded from assistant targets.
 - `verification`: current prompt/gate versions, a matching `cardHash`, generator
   identity, independent critic identity and passing structured result. Semantic
-  evidence includes a finite `maxSimilarity`, embedding model and full pinned
+  evidence includes a finite `maxSimilarity`, matching `sourceTextHash`, embedding model and full pinned
   revision, `documentVersion: card-semantic-v2`, `scope: global`, and
   `corpusComplete: true`.
 
@@ -55,6 +57,13 @@ call a critic or calculate embeddings; it validates supplied internal evidence a
 re-runs the shared deterministic gate. Missing evidence is rejected, not guessed.
 No self-reported model score is used. No secret or private reasoning field is part
 of the training record contract. Synthetic fixtures in tests are not production evidence.
+
+New generation traces retain the compact selected `generation.concept_plan` and
+`generation_gate.critic_result` (decision/check enums, short issue codes and edit
+instructions only) so later approved exports can recover their actual planning
+input and critic result. These are internal metadata, not creator-facing copy or
+private chain-of-thought. Older records missing this evidence cannot be upgraded
+by inventing it.
 
 ## Data gates and reproducibility
 
@@ -75,8 +84,9 @@ Percentages are approximate, so small corpora can have empty held-out splits.
 
 Training readiness requires at least 200 unique eligible cards; each pilot lane
 needs at least 20 train, 5 validation and 5 test cards, with at least three runtime
-profiles. No exact video duration may exceed 20% of the corpus. This is an automated
-coverage floor, not a human gold set or proof of premium model performance.
+profiles. No exact video duration may exceed 20% of the corpus; a category cannot
+exceed 35% or a source family 10%. These are automated coverage floors, not a human
+gold set or proof of premium model performance.
 
 Each export writes train/validation/test JSONL, source-family metadata and a
 manifest with SHA-256 file hashes, rejection codes, coverage and readiness blockers.
@@ -167,3 +177,17 @@ The code uses model-native [Hugging Face chat templates](https://huggingface.co/
 the documented [Trainer callback lifecycle](https://huggingface.co/docs/transformers/main_classes/callback),
 and [PEFT quantized-model preparation](https://huggingface.co/docs/peft/developer_guides/quantization).
 This implementation is provider-independent and does not create a hosted fine-tuning job.
+
+## Verification of this implementation
+
+Local typecheck, lint, production build (316 generated pages), card tests, 24-case
+quality regression, adapter/qualification contract tests, training tests and
+offline embedding-worker tests passed. The cached Qwen tokenizer at revision
+`989aa7980e4cf806f80c7fef2b1adb7bc71aa306` encoded the complete test example as 1,381
+tokens: 876 prompt tokens masked from loss, 505 assistant tokens retained. This is
+one tokenizer smoke test, not trained-model performance or a CUDA training test.
+
+The Supabase SQL test could not connect to the local Docker Linux engine. The new
+migration has not been applied to production. No new weights were trained and no
+model was qualified or promoted in this implementation run; a sufficiently broad
+verified corpus and a successful live shadow benchmark are still required.

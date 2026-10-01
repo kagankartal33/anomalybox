@@ -11,6 +11,8 @@ import argparse
 import json
 import sys
 import time
+import socket
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -23,9 +25,9 @@ DATASET = "ronantakizawa/webui"
 API = "https://datasets-server.huggingface.co"
 
 
-def fetch_json(url: str) -> dict[str, Any]:
+def fetch_json(url: str, timeout: int = 45) -> dict[str, Any]:
     req = urllib.request.Request(url, headers={"User-Agent": "ViralBoxDesignIntelligence/1.0"})
-    with urllib.request.urlopen(req, timeout=45) as response:
+    with urllib.request.urlopen(req, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
@@ -109,7 +111,7 @@ def compact_record(row_idx: int, row: dict[str, Any]) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--max-records", type=int, default=120)
-    parser.add_argument("--page-size", type=int, default=100)
+    parser.add_argument("--page-size", type=int, default=20)
     parser.add_argument("--offsets", nargs="*", type=int, default=[0, 500, 1500, 3000, 6000, 9000])
     args = parser.parse_args()
 
@@ -132,7 +134,11 @@ def main() -> int:
     for offset in args.offsets:
         if len(records) >= args.max_records:
             break
-        data = fetch_json(rows_url("default", "train", offset, args.page_size))
+        try:
+            data = fetch_json(rows_url("default", "train", offset, args.page_size), timeout=75)
+        except (TimeoutError, socket.timeout, urllib.error.URLError) as exc:
+            print(f"Skipping offset {offset}: {exc}", file=sys.stderr)
+            continue
         for item in data.get("rows", []):
             row = item.get("row") or {}
             sample_id = row.get("sample_id")
@@ -144,12 +150,16 @@ def main() -> int:
                 break
         time.sleep(0.4)
 
-    with MANIFEST.open("w", encoding="utf-8") as fh:
-        for record in records:
-            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+    write_manifest(records)
 
     print(f"Wrote {len(records)} candidates to {MANIFEST}")
     return 0
+
+
+def write_manifest(records: list[dict[str, Any]]) -> None:
+    with MANIFEST.open("w", encoding="utf-8") as fh:
+        for record in records:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\
 
 
 if __name__ == "__main__":

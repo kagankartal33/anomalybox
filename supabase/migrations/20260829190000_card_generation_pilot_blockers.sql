@@ -10,6 +10,27 @@ alter table public.idea_model_profiles
   add column if not exists qualification_eval_id uuid
     references public.idea_model_qualification_evals(id) on delete set null;
 
+update public.idea_model_profiles
+set enabled = false,
+    qualification_status = 'shadow',
+    qualification_metrics = '{}'::jsonb,
+    qualified_prompt_version = null,
+    qualified_schema_version = null,
+    qualified_quality_gate_version = null,
+    qualification_eval_id = null,
+    updated_at = now()
+where api_key_env_var !~ '^VIRALBOX_MODEL_PROVIDER_[A-Z0-9_]{2,96}$';
+
+alter table public.idea_model_profiles
+  drop constraint if exists idea_model_profiles_api_key_env_var_check;
+
+alter table public.idea_model_profiles
+  drop constraint if exists idea_model_profiles_provider_secret_allowlist_check;
+
+alter table public.idea_model_profiles
+  add constraint idea_model_profiles_provider_secret_allowlist_check
+  check (not enabled or api_key_env_var ~ '^VIRALBOX_MODEL_PROVIDER_[A-Z0-9_]{2,96}$');
+
 -- Older approvals did not prove the full v2.2.1 runtime contract.
 update public.idea_model_profiles
 set qualification_status = 'shadow',
@@ -148,3 +169,74 @@ $$;
 
 revoke all on function public.qualify_idea_model_profile(text, uuid) from public, anon, authenticated;
 grant execute on function public.qualify_idea_model_profile(text, uuid) to service_role;
+
+create or replace function public.quarantine_idea_inventory_v2_2(
+  p_inventory_id uuid,
+  p_reasons text[],
+  p_score numeric
+)
+returns boolean
+language plpgsql
+security invoker
+set search_path = public
+as $$
+begin
+  update public.idea_inventory inventory
+  set status = 'paused'::public.inventory_status,
+      metadata = coalesce(inventory.metadata, '{}'::jsonb) || jsonb_build_object(
+        'pause_reason', 'quality_quarantine_v2_2',
+        'quality_quarantine_at', now(),
+        'quality_quarantine_reasons', coalesce(to_jsonb(p_reasons), '[]'::jsonb),
+        'quality_quarantine_score', p_score
+      ),
+      updated_at = now()
+  where inventory.id = p_inventory_id
+    and inventory.status = 'available'::public.inventory_status
+    and inventory.reuse_count = 0
+    and not exists (
+      select 1 from public.idea_box_items delivered
+      where delivered.inventory_id = inventory.id or delivered.idea_id = inventory.idea_id
+    )
+    and not exists (
+      select 1 from public.checkout_inventory_reservations reserved
+      where reserved.status = 'active'
+        and (reserved.inventory_id = inventory.id or reserved.idea_id = inventory.idea_id)
+    );
+  return found;
+end;
+$$;
+
+create or replace function public.rollback_idea_inventory_v2_2(p_inventory_id uuid)
+returns boolean
+language plpgsql
+security invoker
+set search_path = public
+as $$
+begin
+  update public.idea_inventory inventory
+  set status = 'available'::public.inventory_status,
+      metadata = (coalesce(inventory.metadata, '{}'::jsonb) - 'pause_reason') || jsonb_build_object(
+        'quality_quarantine_rolled_back_at', now()
+      ),
+      updated_at = now()
+  where inventory.id = p_inventory_id
+    and inventory.status = 'paused'::public.inventory_status
+    and inventory.reuse_count = 0
+    and inventory.metadata->>'pause_reason' = 'quality_quarantine_v2_2'
+    and not exists (
+      select 1 from public.idea_box_items delivered
+      where delivered.inventory_id = inventory.id or delivered.idea_id = inventory.idea_id
+    )
+    and not exists (
+      select 1 from public.checkout_inventory_reservations reserved
+      where reserved.status = 'active'
+        and (reserved.inventory_id = inventory.id or reserved.idea_id = inventory.idea_id)
+    );
+  return found;
+end;
+$$;
+
+revoke all on function public.quarantine_idea_inventory_v2_2(uuid, text[], numeric) from public, anon, authenticated;
+revoke all on function public.rollback_idea_inventory_v2_2(uuid) from public, anon, authenticated;
+grant execute on function public.quarantine_idea_inventory_v2_2(uuid, text[], numeric) to service_role;
+grant execute on function public.rollback_idea_inventory_v2_2(uuid) to service_role;

@@ -1,2 +1,2 @@
 export default async (_request: Request, context: { next: () => Promise<Response> }) => context.next();
-export const config = { path: ["/api/store/availability", "/api/checkout/status"], rateLimit: { windowLimit: 60, windowSize: 60, aggregateBy: ["ip"] } };
+export const config = { path: ["/api/store/availability", "/api/checkout/status", "/api/health"], rateLimit: { windowLimit: 60, windowSize: 60, aggregateBy: ["ip"] } };

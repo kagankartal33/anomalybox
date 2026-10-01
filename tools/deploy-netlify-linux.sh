@@ -4,14 +4,14 @@ set -euo pipefail
 deploy_root="/workspace/anomaly-box"
 mkdir -p "$deploy_root"
 
-tar \
-  --exclude="./node_modules" \
-  --exclude="./.next" \
-  --exclude="./.netlify" \
-  --exclude="./.env.local" \
-  --exclude="./archive" \
-  --exclude="./tmp" \
-  --exclude="./production_exports" \
+tar \\
+  --exclude="./node_modules" \\
+  --exclude="./.next" \\
+  --exclude="./.netlify" \\
+  --exclude="./.env.local" \\
+  --exclude="./archive" \\
+  --exclude="./tmp" \\
+  --exclude="./production_exports" \\
   -C /source -cf - . |
   tar -C "$deploy_root" -xf -
 
@@ -40,10 +40,10 @@ if [[ -z "$NETLIFY_AUTH_TOKEN" ]]; then
 fi
 export NETLIFY_AUTH_TOKEN
 
-npx --yes netlify-cli@latest deploy \
-  --prod \
-  --build \
-  --site "0ace5ce9-d9e5-4d5a-9b14-99c5801d0501" \
+npx --yes netlify-cli@latest deploy \\
+  --prod \\
+  --build \\
+  --site "0ace5ce9-d9e5-4d5a-9b14-99c5801d0501" \\
   --message "Production hardening: auth recovery, reserved fulfillment, premium UX"
 
 unset NETLIFY_AUTH_TOKEN

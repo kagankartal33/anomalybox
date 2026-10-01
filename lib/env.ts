@@ -9,14 +9,16 @@ export function siteUrl() {
 }
 
 export const env = {
-  supabaseUrl: () => readEnv("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:55321"),
+  supabaseUrl: () => readEnv("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:58321"),
   supabaseAnonKey: () => readEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
   supabaseServiceRoleKey: () => readEnv("SUPABASE_SERVICE_ROLE_KEY"),
   stripeSecretKey: () => readEnv("STRIPE_SECRET_KEY"),
   stripeWebhookSecret: () => readEnv("STRIPE_WEBHOOK_SECRET"),
   resendApiKey: () => process.env.RESEND_API_KEY,
-  emailFrom: () => process.env.EMAIL_FROM ?? "ViralBox <notifications@viralbox.local>",
+  emailFrom: () => process.env.EMAIL_FROM ?? "Anomaly Box <notifications@anomalybox.com>",
+  atelierInbox: () => "support@anomalybox.com",
   metaAppId: () => process.env.META_APP_ID,
   metaAppSecret: () => process.env.META_APP_SECRET,
   metaRedirectUri: () => process.env.META_REDIRECT_URI ?? `${siteUrl()}/api/auth/instagram/callback`,
+  linkedAccountTokenSecret: () => readEnv("LINKED_ACCOUNT_TOKEN_SECRET"),
 };

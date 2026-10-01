@@ -3,6 +3,10 @@
 alter table public.idea_card_feedback
   add column if not exists actual_capture_minutes integer;
 
+alter table public.idea_card_gold_ratings
+  add column if not exists runtime_fit text
+  check (runtime_fit in ('rushed', 'right', 'padded'));
+
 alter table public.idea_card_feedback
   drop constraint if exists idea_card_feedback_capture_minutes_requires_shot_check;
 
@@ -23,16 +27,34 @@ select
   c.language,
   count(*) filter (where f.shot_status = 'shot' and f.rating is not null) as shot_rating_count,
   avg(f.rating) filter (where f.shot_status = 'shot' and f.rating is not null) as average_shot_rating,
-  count(*) filter (where f.shot_status = 'shot' and f.actual_capture_minutes is not null) as capture_time_sample_count,
-  avg(f.actual_capture_minutes) filter (where f.shot_status = 'shot' and f.actual_capture_minutes is not null) as average_capture_minutes,
   case
     when count(*) filter (where f.shot_status = 'shot' and f.rating is not null) < 20 then 0::numeric
     else greatest(-5::numeric, least(5::numeric,
       (avg(f.rating) filter (where f.shot_status = 'shot' and f.rating is not null) - 3) * 2.5
     ))
-  end as quality_adjustment
+  end as quality_adjustment,
+  count(*) filter (where f.shot_status = 'shot' and f.actual_capture_minutes is not null) as capture_time_sample_count,
+  avg(f.actual_capture_minutes) filter (where f.shot_status = 'shot' and f.actual_capture_minutes is not null) as average_capture_minutes,
+  count(*) filter (
+    where f.shot_status = 'shot'
+      and f.actual_capture_minutes is not null
+      and ic.card->'productionEstimate'->>'captureMinutesLow' ~ '^[0-9]+$'
+      and ic.card->'productionEstimate'->>'captureMinutesHigh' ~ '^[0-9]+$'
+  ) as capture_estimate_sample_count,
+  avg(case
+    when f.shot_status = 'shot'
+      and f.actual_capture_minutes is not null
+      and ic.card->'productionEstimate'->>'captureMinutesLow' ~ '^[0-9]+$'
+      and ic.card->'productionEstimate'->>'captureMinutesHigh' ~ '^[0-9]+$'
+    then case when f.actual_capture_minutes between
+      (ic.card->'productionEstimate'->>'captureMinutesLow')::integer and
+      (ic.card->'productionEstimate'->>'captureMinutesHigh')::integer
+      then 1 else 0 end
+    else null
+  end) as capture_estimate_within_range_rate
 from public.idea_card_feedback f
 join public.idea_candidates c on c.id = f.idea_id
+left join public.idea_cards ic on ic.idea_id = f.idea_id
 group by c.category_id, c.persona_id, c.platform, c.language;
 
 revoke all privileges on public.idea_creator_feedback_lane_summary from public, anon, authenticated;
@@ -78,8 +100,25 @@ begin
     coalesce((v_metrics->>'gold_gate_agreement')::numeric, 0) >= 0.85 and
     coalesce((v_metrics->>'human_rank_spearman')::numeric, 0) >= 0.60 and
     coalesce((v_metrics->>'duration_fit_rate')::numeric, 0) >= 0.95 and
+    coalesce((v_metrics->>'human_runtime_fit_rate')::numeric, 0) >= 0.85 and
+    coalesce((v_metrics->>'human_runtime_rated_count')::integer, 0) >= 200 and
     coalesce((v_metrics->>'exact_duration_max_share')::numeric, 1) <= 0.20 and
-    coalesce((v_metrics->>'timing_template_duplicate_rate')::numeric, 1) = 0;
+    coalesce((v_metrics->>'timing_template_duplicate_rate')::numeric, 1) = 0 and
+    coalesce((v_metrics#>>'{gold_category_counts,beauty}')::integer, 0) >= 40 and
+    coalesce((v_metrics#>>'{gold_category_counts,entertainment_comedy}')::integer, 0) >= 40 and
+    coalesce((v_metrics#>>'{gold_category_counts,travel}')::integer, 0) >= 40 and
+    coalesce((v_metrics#>>'{gold_category_counts,fitness_wellness_safe}')::integer, 0) >= 40 and
+    coalesce((v_metrics#>>'{gold_category_counts,food}')::integer, 0) >= 40 and
+    coalesce((v_metrics#>>'{gold_source_counts,beauty,existing_stock}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,beauty,generated}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,entertainment_comedy,existing_stock}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,entertainment_comedy,generated}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,travel,existing_stock}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,travel,generated}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,fitness_wellness_safe,existing_stock}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,fitness_wellness_safe,generated}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,food,existing_stock}')::integer, 0) >= 20 and
+    coalesce((v_metrics#>>'{gold_source_counts,food,generated}')::integer, 0) >= 20;
 
   update public.idea_model_profiles
   set qualification_status = case when v_pass then 'approved' else 'shadow' end,
@@ -103,6 +142,7 @@ values (
     "runtime_seconds_min": 10,
     "runtime_seconds_max": 60,
     "duration_fit_rate_min": 0.95,
+    "human_runtime_fit_rate_min": 0.85,
     "exact_duration_max_share": 0.20,
     "capture_calibration_min_samples": 20
   }'::jsonb,

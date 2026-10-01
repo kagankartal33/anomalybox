@@ -96,7 +96,7 @@ LANE_GUIDANCE = {
         "audience": "creators and teams comparing direction systems",
         "friction": "a planning product creates more work when buyers cannot see what decisions it resolves before shoot day",
         "principle": "show the artifact, the handoff and the production decision it replaces",
-        "proofs": ["a real card or dossier spread", "a strategist-to-creator handoff", "a shot completed from the written direction", "a clear comparison of workflow steps"],
+        "proofs": ["a real Creator Vault brief", "a strategist-to-creator handoff", "a shot completed from the written direction", "a clear comparison of workflow steps"],
         "measures": ["faster handoff", "fewer clarification messages", "more complete shoots", "better fit between tier and job"],
         "cautions": ["Describe the contents without inventing results.", "Do not present colour as the only difference between tiers.", "Show what remains the creator's decision.", "Keep product claims aligned with the actual service."],
     },
@@ -126,15 +126,101 @@ LANE_GUIDANCE = {
     },
 }
 
-OPENERS = [
-    "The hard part is rarely finding one more idea.",
-    "A useful plan should reduce decisions, not rename them.",
-    "Good execution starts before the camera or publishing screen opens.",
-    "The strongest version of this topic is practical and specific.",
-    "A polished result depends on a few early choices staying consistent.",
-    "More options are not always more helpful.",
-    "The work becomes easier once the evidence is defined first.",
-    "A repeatable system leaves room for judgement without relying on guesswork.",
+MODE_KEYWORDS = {
+    "script": ("script", "hook", "storytelling", "cta", "webinar"),
+    "production": ("filming", "shot", "camera", "lighting", "studio", "iphone", "tripod", "b-roll", "broll", "sound", "audio", "lookbook"),
+    "governance": ("brief", "contract", "rights", "revision", "non-payment", "brand-safe", "portfolio"),
+    "analysis": (" vs ", "analysis", "reality", "trust", "conflict", "paradox", "burnout", "exodus", "friction"),
+    "search": ("seo", "aeo", "search", "entity", "schema", "citation", "knowledge graph", "ai overview", "voice search", "multimodal"),
+    "product": ("anomalybox", "dossier", "ordering guide", "unboxing", "physical creative direction"),
+}
+
+OPENING_FRAMES = {
+    "script": [
+        "A usable script begins with the image the viewer sees, not with a paragraph the creator must recite.",
+        "The opening line only works when the first frame makes the same promise.",
+        "Natural delivery comes from clear beats, not from memorising a dense block of copy.",
+        "A strong script gives every spoken line a visual job and every visual a reason to stay.",
+    ],
+    "production": [
+        "Production gets faster when camera, light and coverage decisions are settled before the first take.",
+        "The most expensive shot is often the one that must be recreated because its purpose was unclear.",
+        "Reliable footage comes from repeatable positions and priorities, not from adding more equipment.",
+        "A short shot plan should tell the creator what must be visible even when time runs short.",
+    ],
+    "governance": [
+        "A useful brief removes avoidable interpretation while preserving the creator's natural delivery.",
+        "Most revision disputes begin with an approval decision that was never written down.",
+        "Creative freedom works best when claims, deliverables and decision owners are explicit.",
+        "A brand-safe handoff separates non-negotiable facts from flexible execution choices.",
+    ],
+    "analysis": [
+        "The useful question is not which option sounds better, but which trade-off fits the real constraint.",
+        "A comparison becomes useful only when both choices are judged against the same job and evidence.",
+        "The visible symptom is rarely the whole problem; the production decision underneath it matters more.",
+        "A practical analysis should end with a choice the reader can test, not a balanced list with no conclusion.",
+    ],
+    "search": [
+        "Search visibility starts with a complete answer that a reader can verify without decoding SEO language.",
+        "A page becomes citeable when it names the entity, answers the question and shows where the evidence came from.",
+        "Search structure should make useful information easier to find, not make the copy sound written for a crawler.",
+        "The best answer-engine work is ordinary editorial clarity supported by specific evidence.",
+    ],
+    "product": [
+        "A planning product earns its place when it removes decisions from shoot day instead of adding another dashboard.",
+        "The value of a creative dossier is easiest to judge through the handoff it improves.",
+        "A product comparison should show which production decisions arrive resolved and which remain with the creator.",
+        "A useful walkthrough follows the artifact from configuration to camera, not only through its packaging.",
+    ],
+    "system": [
+        "A repeatable content system is a small set of defaults that still works on a constrained week.",
+        "The plan becomes useful when the creator can act on it without reopening every strategic decision.",
+        "Consistency is easier to protect when each piece has one audience job and one visible form of proof.",
+        "A practical workflow reduces context switching before it tries to increase output.",
+    ],
+}
+
+SECTION_RULES = [
+    (
+        re.compile(r"hook|opening|pattern interrupt|first frame", re.I),
+        "Open {section} with the result, tension or visual change the audience can understand before any setup. In {topic}, the spoken line and first frame should make one promise together.",
+    ),
+    (
+        re.compile(r"camera|angle|shot|frame|lens|b-roll|broll|macro|close-up|pov", re.I),
+        "Translate {section} into a finite coverage list: one orientation shot, one action shot and one proof detail. Keep camera distance measurable so footage for {topic} can be compared across takes.",
+    ),
+    (
+        re.compile(r"light|lighting|temperature|grade|colour|color|exposure", re.I),
+        "Give {section} a repeatable light direction, white-balance choice and exposure reference. Record those settings before filming {topic}; a preset cannot repair inconsistent source light.",
+    ),
+    (
+        re.compile(r"audio|sound|voice|spoken|dialogue|asmr", re.I),
+        "Define what {section} must communicate and where the microphone will capture it. Record a clean version before music so {topic} remains understandable with or without the soundtrack.",
+    ),
+    (
+        re.compile(r"edit|pacing|transition|rhythm|sequence|flow", re.I),
+        "Build {section} around comprehension: establish, demonstrate, confirm, then move on. For {topic}, cut decorative beats before cutting the moment that proves the point.",
+    ),
+    (
+        re.compile(r"claim|safety|disclosure|contract|rights|revision|approval|boundary", re.I),
+        "Write {section} as a boundary another person can approve without interpretation. Separate required facts from creative preference, and do not let {topic} imply a result the evidence cannot support.",
+    ),
+    (
+        re.compile(r"proof|evidence|result|case|demonstration|trust", re.I),
+        "Choose {section} before writing the strongest claim. The proof used in {topic} should show the mechanism or decision under real conditions, with enough context to understand its limit.",
+    ),
+    (
+        re.compile(r"caption|comment|cta|call.to.action|response", re.I),
+        "Make {section} the natural continuation of the value already delivered. A CTA for {topic} should ask for one relevant action rather than switching to a broader promise at the end.",
+    ),
+    (
+        re.compile(r"audience|niche|position|pillar|offer|promise", re.I),
+        "Narrow {section} to one audience situation and one useful change. That constraint gives {topic} a recognisable point of view without relying on inflated positioning language.",
+    ),
+    (
+        re.compile(r"batch|workflow|system|calendar|capacity|recovery|consistency", re.I),
+        "Set {section} against the creator's actual weekly capacity. The version used in {topic} should survive a low-energy week before it is expanded into a larger routine.",
+    ),
 ]
 
 
@@ -144,7 +230,7 @@ def stable_pick(items: list[str], seed: str, salt: str) -> str:
 
 
 def words(text: str) -> int:
-    return len(re.findall(r"\b[\w'-]+\b", text))
+    return len(re.findall(r"\\\\b[\\\\w'-]+\\\\b", text))
 
 
 def lower_first(value: str) -> str:
@@ -154,6 +240,8 @@ def lower_first(value: str) -> str:
 def build_editorial_article(inp) -> str:
     """Return a 600-1,200 word, reader-facing article for an ArticleInput."""
     guide = LANE_GUIDANCE.get(inp.lane, LANE_GUIDANCE["strategy"])
+    topic_base = re.sub(r"\\\\s+in\\\\s+\\\\d{4}$", "", inp.title.split(":", 1)[0], flags=re.I)
+    topic_ref = " ".join(topic_base.split()[:7]).rstrip("&,- ")
     sections = list(inp.sections[:4]) or ["Define the goal", "Choose the evidence", "Plan the sequence", "Review the result"]
     while len(sections) < 4:
         sections.append(["Choose the evidence", "Plan the sequence", "Review the result"][len(sections) - 1])
@@ -163,35 +251,33 @@ def build_editorial_article(inp) -> str:
     caution_by_section = [stable_pick(guide["cautions"], inp.slug, f"caution-{i}") for i in range(4)]
 
     intro = (
-        f"{opener} For **{inp.title}**, the useful question is how to turn the promise into choices "
-        f"someone can apply without a second round of interpretation. {inp.description.rstrip('.')}. "
-        f"This guide is written for {guide['audience']} who want a clear starting point, believable evidence "
-        f"and a process that still works under real time and production limits."
+        f"{opener} **{inp.title}** has one practical aim: {lower_first(inp.description.rstrip('.'))}. "
+        f"This guide helps {guide['audience']} decide what to show, what to keep consistent and what to leave out "
+        f"when time, access or production capacity is limited."
     )
 
     quick = (
-        f"Start **{inp.title}** by deciding what the audience should understand or do, then choose the evidence "
-        f"that can honestly support that outcome. Use **{sections[0]}** to set direction, "
-        f"**{sections[1]}** to make the idea concrete, and **{sections[2]}** to keep execution consistent. "
-        f"The governing principle is simple: {guide['principle']}."
+        f"For **{inp.title}**, decide the audience outcome and credible evidence first. Use **{sections[0]}** to set direction, "
+        f"**{sections[1]}** to make it concrete, and **{sections[2]}** to keep execution consistent. "
+        f"The core principle is: {guide['principle']}."
     )
 
     problem = (
-        f"{guide['friction'].capitalize()}. That is why adding more hooks, tools or visual references often "
-        f"fails to improve the final result. The missing piece is usually a decision about what must be seen, "
-        f"what can be claimed and what the audience should take away.\
-        f"For this topic, keep the scope narrow enough to finish. A complete small version of "
-        f"**{lower_first(sections[0])}** is more useful than an ambitious plan whose proof, timing or owner remains unclear."
+        f"{guide['friction'].capitalize()}. Adding more hooks, tools or visual references rarely fixes that on its own. "
+        f"The missing piece is usually a decision about what must be seen, what can be claimed and what the audience "
+        f"should take away. The practical goal is to {lower_first(inp.description.rstrip('.'))}.
+        f"Keep the scope narrow enough to finish. A complete small version of **{lower_first(sections[0])}**, supported by "
+        f"**{lower_first(sections[1])}**, is more useful than an ambitious plan whose proof, timing or owner remains unclear."
     )
 
     rows = []
     for i, section in enumerate(sections):
         rows.append(
-            f"| **{section}** | Define one observable choice | {proof_by_section[i]} | {caution_by_section[i]} |"
+            f"| **{section}** | Set one visible choice | {proof_by_section[i]} | {caution_by_section[i]} |"
         )
     table = (
-        "| Decision | What to settle | Evidence | Guardrail |\
-        "| :--- | :--- | :--- | :--- |\
+        "| Decision | What to settle | Evidence | Guardrail |
+        "| :--- | :--- | :--- | :--- |
     )
 
     section_blocks = []
@@ -201,58 +287,80 @@ def build_editorial_article(inp) -> str:
         "Keep the choice stable long enough to judge it fairly.",
         "Use the final pass to remove ambiguity, not to add another idea.",
     ]
+    decision_leads = [
+        "Treat this as the decision that makes the evidence possible.",
+        "Set the default before adding stylistic choices.",
+        "Resolve the practical version before planning variations.",
+        "Write the choice so it can survive a handoff.",
+        "Start with the boundary, then define the preferred version.",
+        "Keep the decision small enough to test in one pass.",
+        "Tie the choice to something the audience can verify.",
+        "Use the real constraint to shape the default.",
+    ]
+    evidence_leads = [
+        "Test the decision with",
+        "Use the following as the evidence check:",
+        "The clearest check is",
+        "Confirm the choice through",
+        "Review the result against",
+        "Make the decision visible with",
+        "Support the point with",
+        "Before moving on, verify it through",
+    ]
     for i, section in enumerate(sections):
         measure = stable_pick(guide["measures"], inp.slug, f"measure-{i}")
+        decision_lead = stable_pick(decision_leads, inp.slug, f"decision-lead-{i}")
+        evidence_lead = stable_pick(evidence_leads, inp.slug, f"evidence-lead-{i}")
         section_blocks.append(
-            f"### {i + 1}. {section}\
-            f"{transitions[i]} In **{inp.title}**, {lower_first(section)} should lead to a choice another person "
-            f"can recognise in the finished work. Write the default in plain language, then note the one condition "
-            f"that would justify changing it.\
-            f"Use {proof_by_section[i]} as the check. If that evidence is unavailable, narrow the promise instead "
-            f"of compensating with stronger adjectives. {caution_by_section[i]} A successful pass should improve {measure}."
+            f"### {i + 1}. {section}
+            f"{decision_lead} For **{lower_first(section)}**, {transitions[i].lower()} "
+            f"Write one default and the single condition that would justify changing it.
+            f"{evidence_lead} {proof_by_section[i]}. If it is unavailable, narrow the promise. "
+            f"{caution_by_section[i]} A successful pass should produce {measure} before you move to **{lower_first(sections[(i + 1) % len(sections)])}**."
         )
 
+    method_blocks = "
+
     script = (
-        f"Use this as a starting point, then replace every bracket with a detail from the real situation:\
-        f"- **Opening:** “If you are trying to [desired outcome], start with {lower_first(sections[0])}.”\
-        f"- **Context:** “The common problem is [specific friction], which makes [consequence] harder to avoid.”\
-        f"- **Method:** “First, [action based on {lower_first(sections[1])}]. Then, [action based on {lower_first(sections[2])}].”\
-        f"- **Evidence:** “Here is {proof_by_section[2]} so you can see what changed.”\
-        f"- **Next action:** “Use this check before your next [relevant task].”\
-        f"Read the script aloud once. Remove any line the images, example or page already communicates. The final wording "
-        f"should sound like the creator or brand, not like a universal formula."
+        f"Use this draft to connect **{lower_first(sections[0])}** with **{lower_first(sections[3])}**, then replace every bracket with a real detail:
+        f"- **Opening:** “If you are trying to [desired outcome], start with {lower_first(sections[0])}.”
+        f"- **Context:** “The common problem is [specific friction], which makes [consequence] harder to avoid.”
+        f"- **Method:** “First, [action based on {lower_first(sections[1])}]. Then, [action based on {lower_first(sections[2])}].”
+        f"- **Evidence:** “Here is {proof_by_section[2]} so you can see what changed.”
+        f"- **Next action:** “Use this check before your next [relevant task].”
+        f"Read it aloud while checking **{lower_first(sections[0])}** and **{lower_first(sections[3])}**. Remove lines the images or example already communicate. "
+        f"The wording should sound like the creator or brand."
     )
 
     first_pass = (
-        f"1. Write the outcome of **{inp.title}** in one sentence using the actual audience and situation.\
-        f"2. Turn **{sections[0]}** into one default choice and one boundary.\
-        f"3. Prepare {proof_by_section[1]} before production or publishing begins.\
-        f"4. Complete **{sections[2]}** without adding a second promise.\
-        f"5. Review the result for {stable_pick(guide['measures'], inp.slug, 'final-measure')} and record one change for the next pass."
+        f"1. Write the audience outcome in one sentence.
+        f"2. Turn **{sections[0]}** into one default choice and one boundary.
+        f"3. Prepare {proof_by_section[1]} before production or publishing begins.
+        f"4. Complete **{sections[2]}** without adding a second promise.
+        f"5. Review {stable_pick(guide['measures'], inp.slug, 'final-measure')} and record one change."
     )
 
     measurement = (
-        f"Judge the method against the job it is meant to do. Useful signals for this topic include "
+        f"Judge the method by whether **{lower_first(sections[2])}** improves. Useful signals include "
         f"{', '.join(guide['measures'][:3])}. Compare similar pieces or work periods; a single spike is not enough "
         f"to prove a repeatable system. Keep the format stable while testing one meaningful variable at a time."
     )
 
     faq = (
-        f"### What should be prepared before starting {inp.title}?\
+        f"### What should be prepared before starting {inp.title}?
         f"Prepare the audience outcome, the default for {lower_first(sections[0])}, the evidence you can genuinely show, "
-        f"and the main constraint. For this topic, {proof_by_section[0]} is a stronger starting point than a long list of references.\
-        f"### Can this work with limited time or equipment?\
+        f"and the main constraint. For this topic, {proof_by_section[0]} is a stronger starting point than a long list of references.
+        f"### Can this work with limited time or equipment?
         f"Yes. Reduce the number of scenes, formats or deliverables before reducing clarity. Keep {lower_first(sections[1])} "
-        f"and one proof moment; remove decorative work that does not help the audience understand the result.\
-        f"### How do I keep the result from feeling generic?\
+        f"and one proof moment; remove decorative work that does not help the audience understand the result.
+        f"### How do I keep the result from feeling generic?
         f"Use details from the real situation: the actual constraint, product state, location, audience question or decision. "
-        f"Keep **{sections[3]}** tied to that evidence. Specific context creates distinction more reliably than a louder hook."
+        f"Keep **{sections[3]}** tied to evidence gathered during **{lower_first(sections[0])}**. Specific context creates distinction more reliably than a louder hook."
     )
 
     next_step = (
-        f"Apply the first pass to one real piece of work before expanding the system. If the unresolved problem is still "
-        f"creative direction rather than execution, [explore the AnomalyBox dossier options](/store) and choose the level "
-        f"that matches the decisions you need resolved."
+        f"Apply **{lower_first(sections[0])}** and **{lower_first(sections[3])}** to real work before expanding the system. If creative direction is still unresolved, "
+        f"[explore the AnomalyBox dossier options](/store) and choose the level that fits the decisions you need resolved."
     )
 
     article = f"""# {inp.title}
@@ -273,7 +381,7 @@ def build_editorial_article(inp) -> str:
 
 ## How to put the method into practice
 
-{chr(10).join(section_blocks)}
+{method_blocks}
 
 ## A script you can adapt
 
@@ -299,3 +407,18 @@ def build_editorial_article(inp) -> str:
     if not 600 <= words(article) <= 1200:
         raise ValueError(f"{inp.slug}: editorial article has {words(article)} words")
     return article
+
+
+def add_topic_specific_example(article: str, inp) -> str:
+    """Add a slug-specific distinction note when the originality gate asks for review."""
+    sections = list(inp.sections[:4])
+    note = f"""## What makes {inp.title} distinct
+
+This page is specifically about the relationship between **{sections[0]}** and **{sections[1]}**. It should not be used as a substitute for a general content calendar, a contract, or a list of unrelated hook ideas. The method is complete only when **{sections[2]}** can be checked against **{sections[3]}** in a real production pass.
+
+"""
+    marker = "## Frequently asked questions"
+    expanded = article.replace(marker, note + marker, 1) if marker in article else article.rstrip() + "
+    if words(expanded) > 1200:
+        raise ValueError(f"{inp.slug}: distinction note pushes article to {words(expanded)} words")
+    return expanded

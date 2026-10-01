@@ -35,6 +35,16 @@ begin
   if nullif(btrim(p_platform), '') is null or nullif(btrim(p_signature), '') is null then
     raise exception 'Platform and creative signature are required' using errcode = '22023';
   end if;
+  if not exists (
+    select 1
+    from public.idea_generation_runs r
+    join public.idea_generation_batches b on b.id = r.generation_batch_id
+    where r.id = p_run_id and b.id = p_batch_id
+      and b.category_id = p_category_id and b.persona_id = p_persona_id
+      and b.platform = btrim(p_platform)
+  ) then
+    raise exception 'Generation run and lane reservation scope do not match' using errcode = '23514';
+  end if;
 
   insert into public.idea_creative_signature_reservations(
     generation_run_id, generation_batch_id, category_id, persona_id, platform, creative_signature

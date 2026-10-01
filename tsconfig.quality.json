@@ -7,6 +7,8 @@
     "tools/audit-card-stock-v2-2.ts",
     "tools/restock-pilot-v2-2.ts",
     "tools/qualify-model-profile-v2-2.ts",
+    "tools/build-card-training.ts",
+    "tools/eval-card-training.ts",
     "tests/**/*.ts"
   ],
   "exclude": ["node_modules"]

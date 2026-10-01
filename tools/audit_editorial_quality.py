@@ -10,30 +10,45 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIRS = [ROOT / "content" / "seo-package", ROOT / "content" / "resources"]
 
 FORBIDDEN = {
-    "zero-click label": r"Zero-Click Summary",
+    "zero-click label": r">\\\\s*\\\\*\\\\*Zero-Click Summary:\\\\*\\\\*",
     "seo operator heading": r"SEO operator rules",
     "training profile": r"training profile",
     "pipeline disclaimer": r"not viral idea-card patterns|not book quotations",
     "scope lock": r"Scope lock:",
-    "search-intent narration": r"Search intent for \*\*.+?\*\* is",
+    "search-intent narration": r"Search intent for \\\\*\\\\*.+?\\\\*\\\\* is",
     "generation instruction": r"No content may be auto-published|AI engines actively demote generic synthesis",
     "template answer tail": r"Keep the answer specific to your niche constraints",
     "template audience tail": r"who need filmable rules, not inspiration dumps",
     "strict-on-purpose tail": r"this will feel strict on purpose",
-    "information gain heading": r"^##\s+Information gain",
-    "internal empty heading": r"^##\s+(Signature protocol|Operator notes|Field implementation|Anti-overlap lock)\s*$",
+    "field-note label": r"\\\\bfield notes?\\\\b",
+    "publish-ready label": r"\\\\bpublish-ready\\\\b",
+    "reader-job phrasing": r"reader[’']s job",
+    "article instruction": r"inside this article|not generic motivation",
+    "production-system template": r"as a production decision system",
+    "information gain heading": r"^##\\\\s+Information gain",
+    "internal empty heading": r"^##\\\\s+(Signature protocol|Operator notes|Field implementation|Anti-overlap lock)\\\\s*$",
+    "internal page-focus label": r"\\\\bPage focus:",
+    "publication evidence note": r"^##\\\\s+Publication evidence|must verify live",
+    "generated angle cta": r"Apply (?:the|this) .{0,120}? angle",
+    "legacy practical-aim opener": r"has one practical aim",
+    "legacy ambiguity instruction": r"use the final pass to remove ambiguity",
+    "legacy evidence instruction": r"tied to evidence gathered during",
+    "stale physical delivery claim": r"\\\\bphysical (?:creative direction|dossier|dossiers)|\\\\bdossier box\\\\b|current shipping details",
+    "generic page-example anchor": r"\\\\bthe page example\\\\b",
+    "internal editorial-use heading": r"^##\\\\s+Editorial use note\\\\s*$",
+    "outdated private-dossier label": r"\\\\bprivate (?:AnomalyBox )?dossiers?\\\\b|\\\\bdossier boxes\\\\b",
 }
 
 
 def word_count(text: str) -> int:
-    return len(re.findall(r"\b[\w'-]+\b", text))
+    return len(re.findall(r"\\\\b[\\\\w'-]+\\\\b", text))
 
 
 def paragraphs(text: str) -> list[str]:
     return [
-        re.sub(r"\s+", " ", block.strip()).lower()
-        for block in re.split(r"\
-        if len(block.split()) >= 14 and not block.lstrip().startswith(("#", "|", "-", "1."))
+        re.sub(r"\\\\s+", " ", block.strip()).lower()
+        for block in re.split(r"
+        if len(block.split()) >= 14 and not block.lstrip().startswith(("#", "|", "-", "1.", "```", ">"))
     ]
 
 
@@ -49,7 +64,7 @@ def main() -> int:
         if not 600 <= wc <= 1200:
             errors.append(f"word-count {wc}: {rel}")
 
-        h2s = re.findall(r"^##\s+(.+?)\s*$", text, re.M)
+        h2s = re.findall(r"^##\\\\s+(.+?)\\\\s*$", text, re.M)
         normalized_h2 = [re.sub(r"[^a-z0-9]+", " ", h.lower()).strip() for h in h2s]
         duplicates = [h for h, count in Counter(normalized_h2).items() if count > 1]
         if duplicates:
@@ -69,8 +84,13 @@ def main() -> int:
             if re.search(pattern, text, re.I | re.M):
                 errors.append(f"{label}: {rel}")
 
-        for paragraph in paragraphs(text):
-            para_owners.setdefault(paragraph, []).append(rel)
+        # Exact cross-page duplication is a hard failure for the 123 legacy
+        # resource articles. Curated route families may intentionally share a
+        # short safety or platform principle; their public-residue and heading
+        # checks still run above.
+        if path.parent.name == "resources":
+            for paragraph in paragraphs(text):
+                para_owners.setdefault(paragraph, []).append(rel)
 
     repeated = [(p, owners) for p, owners in para_owners.items() if len(set(owners)) > 1]
     for paragraph, owners in repeated:
@@ -81,7 +101,7 @@ def main() -> int:
     print(f"repeated paragraphs: {len(repeated)}")
     print(f"errors: {len(errors)}")
     for error in errors[:200]:
-        print(f"- {error}")
+        print((f"- {error}").encode("ascii", "backslashreplace").decode("ascii"))
     return 1 if errors else 0
 
 

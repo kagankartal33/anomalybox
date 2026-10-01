@@ -2,6 +2,7 @@
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlsplit, urlunsplit
 
 
@@ -11,17 +12,21 @@ with urllib.request.urlopen(sitemap_url, timeout=20) as response:
     root = ET.fromstring(response.read())
 namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 urls = [node.text for node in root.findall("sm:url/sm:loc", namespace) if node.text]
-bad = []
-for url in urls:
+def check(url):
     parsed = urlsplit(url)
     target = urlunsplit((urlsplit(base).scheme, urlsplit(base).netloc, parsed.path, parsed.query, parsed.fragment))
     try:
         request = urllib.request.Request(target, headers={"User-Agent": "anomalybox-sitemap-audit/1.0"})
-        with urllib.request.urlopen(request, timeout=20) as response:
+        with urllib.request.urlopen(request, timeout=10) as response:
             if response.status != 200:
-                bad.append((target, response.status))
+                return target, response.status
     except Exception as error:  # pragma: no cover - diagnostic output
-        bad.append((target, str(error)))
+        return target, str(error)
+    return None
+
+
+with ThreadPoolExecutor(max_workers=20) as executor:
+    bad = [result for result in executor.map(check, urls) if result is not None]
 print(f"sitemap_urls={len(urls)}")
 print(f"bad={len(bad)}")
 for item in bad[:20]:

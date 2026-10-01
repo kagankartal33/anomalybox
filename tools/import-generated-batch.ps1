@@ -10,7 +10,7 @@ param(
 
   [int]$QualityFloor = 55,
 
-  [int]$MaxReuseCount = 999999
+  [int]$MaxReuseCount = 1
 )
 
 $ErrorActionPreference = "Stop"
@@ -90,7 +90,7 @@ Write-Host "Scored: $($scoreResult.scored)"
 if ($Publish) {
   $publishBody = @{
     quality_floor = $QualityFloor
-    max_reuse_count = $MaxReuseCount
+    max_reuse_count = 1
   } | ConvertTo-Json
 
   Write-Host "Publishing inventory..."

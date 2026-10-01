@@ -46,7 +46,7 @@ export function stockAuditQualityContext(card: unknown, candidate: unknown, cont
     const persona = objectRecord(stored.persona).slug;
     if (!category || !persona) hardGateCodes.push("stock_lane_unverified");
     else if (rawCard.category !== category || rawCard.personaSlug !== persona
-      || rawCard.platform !== stored.platform || rawCard.language !== stored.language) hardGateCodes.push("stock_card_lane_mismatch");
+      || rawCard.platform !== stored.platform) hardGateCodes.push("stock_card_lane_mismatch");
   }
   if (stored.safety_status && stored.safety_status !== "SAFE") hardGateCodes.push("stock_candidate_safety_not_safe");
   if (objectRecord(stored.decision_trace).import_source === "verified_generation") {

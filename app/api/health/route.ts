@@ -17,12 +17,22 @@ export async function GET() {
       ? "ok"
       : "degraded";
   const payments = stripeResult.status === "fulfilled" ? "ok" : "degraded";
+  const paymentMode = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_")
+    ? "live"
+    : process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_")
+      ? "test"
+      : "unknown";
+  const paymentMode = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_")
+    ? "live"
+    : process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_")
+      ? "test"
+      : "unknown";
   const status = database === "ok" && payments === "ok" ? 200 : 503;
 
   return NextResponse.json(
     {
       status: status === 200 ? "ok" : "degraded",
-      checks: { database, payments },
+      checks: { database, payments, paymentMode },
       timestamp: new Date().toISOString(),
     },
     {

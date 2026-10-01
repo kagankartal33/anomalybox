@@ -1,7 +1,7 @@
-import { normalizeCardSections } from "@/lib/card-sections";
+import { normalizeAdminCardSections } from "@/lib/card-sections";
 
 export function checklistFromIdeaCard(card: unknown) {
-  return normalizeCardSections(card).map((section) => ({
+  return normalizeAdminCardSections(card).map((section) => ({
     section: section.title,
     check_key: section.key,
     label: section.title,

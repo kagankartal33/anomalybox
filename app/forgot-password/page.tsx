@@ -1,6 +1,18 @@
 import Link from "next/link";
 import { ArrowLeft, Mail } from "lucide-react";
 import { AuthShell } from "@/components/AuthShell";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { requestPasswordReset } from "./actions";
 
 export default async function ForgotPasswordPage({
@@ -46,6 +58,7 @@ export default async function ForgotPasswordPage({
               required
             />
           </label>
+          <TurnstileWidget />
           <button className="focus-ring w-full rounded-md bg-ink px-5 py-3 font-semibold text-white" type="submit">
             Send secure reset link
           </button>

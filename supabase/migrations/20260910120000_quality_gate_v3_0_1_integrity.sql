@@ -23,7 +23,7 @@ $$;
 
 create or replace function public.automatic_card_content_hash(p_card jsonb)
 returns text language sql immutable set search_path = public as $$
-  select encode(digest(convert_to(public.automatic_stable_json_text(p_card - 'id' - 'one_sentence_premise'), 'UTF8'), 'sha256'), 'hex')
+  select encode(extensions.digest(convert_to(public.automatic_stable_json_text(p_card - 'id' - 'one_sentence_premise'), 'UTF8'), 'sha256'), 'hex')
 $$;
 
 -- Keep the database pre-publication check byte-for-byte compatible with the
@@ -54,11 +54,11 @@ returns text language sql immutable set search_path = public as $$
       public.automatic_json_trimmed_string(summary.value->'viewer_takeaway')
     ) from card cross join summary
     union all
-    select 3 + (step.ordinality - 1) * 9 + field.ordinality,
+    select 3 + (step.ordinality - 1) * 7 + field.ordinality,
       public.automatic_json_trimmed_string(field.value)
     from selected_steps
     cross join lateral jsonb_array_elements(selected_steps.value) with ordinality as step(value, ordinality)
-    cross join lateral values
+    cross join lateral (values
       (1::bigint, step.value->'purpose'),
       (2::bigint, step.value->'goal'),
       (3::bigint, coalesce(step.value->'action', step.value->'visual_action')),
@@ -66,14 +66,14 @@ returns text language sql immutable set search_path = public as $$
       (5::bigint, coalesce(step.value->'shot', step.value->'shot_type')),
       (6::bigint, coalesce(step.value->'onScreenText', step.value->'on_screen_text')),
       (7::bigint, coalesce(step.value->'editNote', step.value->'edit_note'))
-      as field(ordinality, value)
+    ) as field(ordinality, value)
   )
-  select coalesce(string_agg(value, E'\
+  select coalesce(string_agg(value, E'
 $$;
 
 create or replace function public.automatic_card_semantic_hash(p_card jsonb)
 returns text language sql immutable set search_path = public as $$
-  select encode(digest(convert_to(public.automatic_card_semantic_document(p_card), 'UTF8'), 'sha256'), 'hex')
+  select encode(extensions.digest(convert_to(public.automatic_card_semantic_document(p_card), 'UTF8'), 'sha256'), 'hex')
 $$;
 
 create or replace function public.automatic_card_evidence_valid(p_idea_id uuid, p_require_approve boolean default true)

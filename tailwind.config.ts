@@ -6,14 +6,17 @@ const config: Config = {
     extend: {
       colors: {
         ink: "#141414",
-        paper: "#f7f5ef",
+        paper: "#f7f4ed",
         mist: "#e8ece6",
         coral: "#df5b45",
         citron: "#c8d957",
         teal: "#1a7c76",
+        plum: "#725f7b",
+        "plum-deep": "#4e4155",
+        "plum-soft": "#eee8f0",
       },
       boxShadow: {
-        soft: "0 18px 55px rgba(20, 20, 20, 0.10)",
+        soft: "0 24px 70px -42px rgba(25, 20, 27, 0.38)",
       },
     },
   },

@@ -15,14 +15,10 @@ from pathlib import Path
 csv.field_size_limit(1024 * 1024 * 64)
 
 BOOK_CATEGORY_SLUGS = [
-    "bureaucratic_comedy",
-    "absurd_procedure",
-    "book_launch_content",
-    "literary_lifestyle",
-    "narrative_serial_content",
-    "comedy_worldbuilding",
-    "visual_meme_post",
     "author_brand_content",
+    "creator_education",
+    "entertainment_comedy",
+    "lifestyle",
 ]
 
 BOOK_SQLITE_TABLES = {
@@ -102,15 +98,15 @@ def file_sha(path: Path) -> str:
 
 
 def clean(value, limit=1200):
-    value = re.sub(r"\s+", " ", str(value or "")).strip()
+    value = re.sub(r"\\s+", " ", str(value or "")).strip()
     return value[:limit].strip()
 
 
 def content_identity(text: str) -> str:
-    normalized = re.sub(r"\s+", " ", str(text or "").strip().lower())
-    normalized = re.sub(r"[\"'`´“”‘’]+", "", normalized)
-    normalized = re.sub(r"[^a-z0-9ığüşöçİĞÜŞÖÇ\s:_/-]+", " ", normalized)
-    normalized = re.sub(r"\s+", " ", normalized).strip()
+    normalized = re.sub(r"\\s+", " ", str(text or "").strip().lower())
+    normalized = re.sub(r"["'`´“”‘’]+", "", normalized)
+    normalized = re.sub(r"[^a-z0-9ığüşöçİĞÜŞÖÇ\\s:_/-]+", " ", normalized)
+    normalized = re.sub(r"\\s+", " ", normalized).strip()
     return sha(f"normalized_content|{normalized}")
 
 
@@ -172,7 +168,7 @@ def infer_category(text):
         ("creator_education", r"education|tutorial|how to|ai|tech|software|guide|lesson"),
         ("thought_leadership", r"opinion|politic|public figure|movement|leadership|analysis"),
         ("parenting_family", r"family|parent|baby|kid|child"),
-        ("celebrity_fan_lore", r"celebrity|fan|fandom|lore|red carpet|award|premiere"),
+
         ("entertainment_comedy", r"comedy|funny|meme|joke|challenge|prank|entertainment|humor|mizah"),
     ]
     for name, pattern in checks:
@@ -182,17 +178,17 @@ def infer_category(text):
 
 
 def book_category_for(text, rel):
-    n = f"{text} {rel}".lower().replace("\\", "/")
+    n = f"{text} {rel}".lower().replace("", "/")
     if "x-post-generator" in n or "visual_identity" in n or "performance.json" in n or "post_batch" in n:
-        return "visual_meme_post"
+        return "creator_education"
     if "bookcomedyalgo" in n or "codex_comedy_system_package" in n:
-        return "bureaucratic_comedy"
+        return "entertainment_comedy"
     if re.search(r"book launch|kdp|cover|publish|epub|kindle|bookready|pubfix", n):
-        return "book_launch_content"
+        return "author_brand_content"
     if re.search(r"chapter|story beat|character|worldbuilding|lore|arc", n):
-        return "comedy_worldbuilding"
+        return "author_brand_content"
     if re.search(r"serial|episode|cliffhanger|installment", n):
-        return "narrative_serial_content"
+        return "author_brand_content"
     return infer_category(n)
 
 
@@ -200,7 +196,7 @@ def risk_for(text):
     n = (text or "").lower()
     if re.search(r"gambling|casino|tobacco|weapon|adult|explicit|dangerous|injury|choking|salt and ice", n):
         return "restricted"
-    if re.search(r"health|medical|doctor|diet|weight|finance|investment|crypto|legal|law|child|kid|baby|politic|public figure|sponsor|affiliate|\bad\b", n):
+    if re.search(r"health|medical|doctor|diet|weight|finance|investment|crypto|legal|law|child|kid|baby|politic|public figure|sponsor|affiliate|\\bad\\b", n):
         return "medium"
     return "low"
 
@@ -213,13 +209,13 @@ def patterns_for(text):
         ("VTP-003", r"meme|template|joke|humor|funny|remix|comedy|mizah"),
         ("VTP-004", r"transition|reveal|before|after|glow|transformation"),
         ("VTP-005", r"comment|poll|interactive|audience|viewer|live"),
-        ("VTP-006", r"\bai\b|artificial intelligence|deepfake|synthetic"),
-        ("VTP-036", r"\bai\b|artificial intelligence|deepfake|synthetic"),
+        ("VTP-006", r"\\bai\\b|artificial intelligence|deepfake|synthetic"),
+        ("VTP-036", r"\\bai\\b|artificial intelligence|deepfake|synthetic"),
         ("VTP-007", r"behind the scenes|bts|process|unfiltered|mistake|workflow|draft"),
         ("VTP-019", r"behind the scenes|bts|process|unfiltered|mistake|workflow|draft"),
-        ("VTP-008", r"commerce|shopping|shop|buy|affiliate|brand deal|sponsor|\bad\b"),
-        ("VTP-021", r"commerce|shopping|shop|buy|affiliate|brand deal|sponsor|\bad\b"),
-        ("VTP-040", r"commerce|shopping|shop|buy|affiliate|brand deal|sponsor|\bad\b"),
+        ("VTP-008", r"commerce|shopping|shop|buy|affiliate|brand deal|sponsor|\\bad\\b"),
+        ("VTP-021", r"commerce|shopping|shop|buy|affiliate|brand deal|sponsor|\\bad\\b"),
+        ("VTP-040", r"commerce|shopping|shop|buy|affiliate|brand deal|sponsor|\\bad\\b"),
         ("VTP-009", r"community|co-design|campaign|ugc|submission"),
         ("VTP-017", r"community|co-design|campaign|ugc|submission"),
         ("VTP-010", r"movement|values|solidarity|activism"),
@@ -350,7 +346,8 @@ def run_sql(sql_text):
         stderr=subprocess.STDOUT,
     )
     if proc.returncode != 0:
-        raise RuntimeError(proc.stdout)
+        preview = sql_text[:4000]
+        raise RuntimeError(f"{proc.stdout}\
     return proc.stdout
 
 
@@ -376,8 +373,9 @@ def should_skip_path(path: Path, dataset: Path):
 
 
 def chunk_text(raw: str, max_chars=1800, min_chars=80):
-    raw = re.sub(r"\r\n?", "\n", raw or "")
-    pieces = re.split(r"(?m)(?:^#{1,4}\s+|^\s*[-*]\s{2,}|\n{2,})", raw)
+    raw = re.sub(r"\
+\
+    pieces = re.split(r"(?m)(?:^#{1,4}\\s+|^\\s*[-*]\\s{2,}|\
     carry = ""
     for piece in pieces:
         piece = clean(piece, max_chars)
@@ -409,7 +407,7 @@ def flatten_json(value, limit=2200):
                 walk(item, key)
         else:
             text = clean(node, 500)
-            if text and not re.fullmatch(r"[-+]?\d+(\.\d+)?", text):
+            if text and not re.fullmatch(r"[-+]?\\d+(\\.\\d+)?", text):
                 values.append(f"{key}: {text}" if key else text)
 
     walk(value)
@@ -424,7 +422,7 @@ def read_docx(path: Path):
     for node in root.iter():
         if node.tag.endswith("}t") and node.text:
             texts.append(node.text)
-    return "\n".join(texts)
+    return "\
 
 
 def read_epub(path: Path):
@@ -437,11 +435,11 @@ def read_epub(path: Path):
                 raw = z.read(name).decode("utf-8", errors="replace")
             except Exception:
                 continue
-            raw = re.sub(r"<script\b[^>]*>.*?</script>", " ", raw, flags=re.I | re.S)
-            raw = re.sub(r"<style\b[^>]*>.*?</style>", " ", raw, flags=re.I | re.S)
+            raw = re.sub(r"<script\\b[^>]*>.*?</script>", " ", raw, flags=re.I | re.S)
+            raw = re.sub(r"<style\\b[^>]*>.*?</style>", " ", raw, flags=re.I | re.S)
             raw = re.sub(r"<[^>]+>", " ", raw)
             texts.append(raw)
-    return "\n".join(texts)
+    return "\
 
 
 def iter_sqlite_rows(path: Path):
@@ -473,7 +471,7 @@ def parse_sql_chunks(path: Path):
         buffer = []
         idx = 0
         for line in f:
-            if not re.search(r"insert|values|\(|\)|'[A-Za-z0-9]", line, re.I):
+            if not re.search(r"insert|values|\\(|\\)|'[A-Za-z0-9]", line, re.I):
                 continue
             buffer.append(line.strip())
             if len(buffer) >= 20:
@@ -495,11 +493,12 @@ def main():
     ap.add_argument("--compile-version", default="2026-v2-dataset")
     ap.add_argument("--source-slug", default="dataset_full_training_v2")
     ap.add_argument("--trend-source", default=None)
-    ap.add_argument("--mode", choices=["dataset", "book"], default="dataset")
+    ap.add_argument("--mode", choices=["dataset", "book", "hf", "book_train", "book_train_extended"], default="dataset")
     ap.add_argument("--batch-size", type=int, default=650)
     ap.add_argument("--max-training-examples", type=int, default=25000)
     ap.add_argument("--max-trend-signals", type=int, default=12000)
     ap.add_argument("--max-eval-cases", type=int, default=200)
+    ap.add_argument("--max-file-observations", type=int, default=3000)
     ap.add_argument("--apply", action="store_true")
     args = ap.parse_args()
 
@@ -508,7 +507,13 @@ def main():
     if not re.match(r"^[a-z0-9]+(_[a-z0-9]+)*$", args.source_slug):
         raise SystemExit("source slug must be lowercase snake_case")
     if args.trend_source is None:
-        args.trend_source = "book_training_v1" if args.mode == "book" else "dataset_training_v2"
+        args.trend_source = (
+            "book_training_v1" if args.mode == "book"
+            else "book_train_cinema_v1" if args.mode == "book_train"
+            else "book_train_extended_v1" if args.mode == "book_train_extended"
+            else "hf_training_v1" if args.mode == "hf"
+            else "dataset_training_v2"
+        )
 
     root = Path.cwd()
     dataset = Path(args.dataset_path).resolve()
@@ -607,9 +612,11 @@ def main():
         for category in BOOK_CATEGORY_SLUGS:
             add_category(category, "book_source_policy", "low")
 
-    allowed_suffixes = [".csv", ".md", ".ipynb"] if args.mode == "dataset" else [
-        ".md", ".txt", ".json", ".jsonl", ".sql", ".db", ".sqlite", ".sqlite3", ".docx", ".epub"
-    ]
+    allowed_suffixes = (
+        [".csv", ".md", ".ipynb"] if args.mode == "dataset"
+        else [".jsonl"] if args.mode in {"hf", "book_train", "book_train_extended"}
+        else [".md", ".txt", ".json", ".jsonl", ".sql", ".db", ".sqlite", ".sqlite3", ".docx", ".epub"]
+    )
     files = sorted([p for p in dataset.rglob("*") if p.is_file() and p.suffix.lower() in allowed_suffixes])
     for path in files:
         skip, reason = should_skip_path(path, dataset)
@@ -630,6 +637,109 @@ def main():
         ext = path.suffix.lower()
 
         try:
+            if args.mode in {"hf", "book_train", "book_train_extended"} and ext == ".jsonl":
+                with path.open("r", encoding="utf-8", errors="replace") as f:
+                    for idx, line in enumerate(f, 1):
+                        if idx > args.max_file_observations:
+                            break
+                        line = line.strip()
+                        if not line:
+                            continue
+                        stats["jsonl_rows"] += 1
+                        try:
+                            item = json.loads(line)
+                        except json.JSONDecodeError:
+                            stats["quarantine_count"] += 1
+                            continue
+                        text = clean(item.get("abstract_text") or item.get("text") or item.get("title") or item.get("comment"), 1800)
+                        if len(text) < 30:
+                            continue
+                        platform = item.get("platform") or infer_platform(text, rel)
+                        category = item.get("category_slug") or infer_category(text)
+                        risk = item.get("risk_level") or risk_for(text)
+                        raw_metrics = item.get("metrics") if isinstance(item.get("metrics"), dict) else {}
+                        views = float(raw_metrics.get("views") or 0)
+                        likes = float(raw_metrics.get("likes") or raw_metrics.get("like_count") or 0)
+                        comments = float(raw_metrics.get("comments") or raw_metrics.get("comment_count") or raw_metrics.get("reply_count") or 0)
+                        shares = float(raw_metrics.get("shares") or 0)
+                        saves = float(raw_metrics.get("saves") or 0)
+                        source_policy = item.get("training_use") or ("negative_example" if risk == "restricted" else "pattern_only")
+                        if item.get("eval_only"):
+                            source_policy = "eval_only"
+                        weight = float(item.get("training_weight") or weight_for(views, likes, comments, shares, saves, text, risk))
+                        repo_id = clean(item.get("hf_repo_id") or item.get("source_ref"), 220)
+                        config = clean(item.get("hf_config") or item.get("extraction_method"), 120)
+                        split = clean(item.get("hf_split") or item.get("source_kind") or "prepared", 120)
+                        row_id = clean(item.get("hf_row_id") or item.get("chunk_id") or item.get("row_index") or idx, 120)
+                        provided_hash = str(item.get("content_hash") or "")
+                        h = provided_hash if re.match(r"^[a-f0-9]{64}$", provided_hash) else content_identity(text)
+                        source_class = (
+                            "book_train_cinema" if args.mode == "book_train"
+                            else "book_train_extended_intelligence" if args.mode == "book_train_extended"
+                            else "huggingface_social_training"
+                        )
+                        title_prefix = (
+                            "Cinema craft training signal" if args.mode == "book_train"
+                            else "Book-Train extended training signal" if args.mode == "book_train_extended"
+                            else "HF training pattern"
+                        )
+                        add_category(category, rel, risk)
+                        add_observation({
+                            "content_hash": h,
+                            "source_path": rel,
+                            "source_kind": "jsonl",
+                            "row_number": idx,
+                            "chunk_index": None,
+                            "platform": platform,
+                            "category_slug": category,
+                            "locale": item.get("locale") or item.get("language") or "GLOBAL",
+                            "title_algorithmic": f"{title_prefix} {h[:12]}",
+                            "text_signals": {
+                                "abstract_text": text,
+                                "emotional_triggers": triggers_for(text),
+                                "hf_repo_id": repo_id,
+                                "hf_config": config,
+                                "hf_split": split,
+                                "source_family": item.get("source_family"),
+                                "source_intent": item.get("source_intent"),
+                                "surface_features": item.get("surface_features"),
+                                "craft_features": item.get("craft_features"),
+                                "book_train_layer": item.get("book_train_layer"),
+                                "language": item.get("language"),
+                            },
+                            "metric_signals": {
+                                **raw_metrics,
+                                "engagement_total": likes + comments + shares + saves,
+                            },
+                            "derived_pattern_ids": item.get("derived_pattern_ids") or patterns_for(text),
+                            "named_entity_refs": [],
+                            "training_weight": round(max(0.05, min(1.0, weight)), 4),
+                            "copy_risk": item.get("copy_risk") or "high",
+                            "risk_level": risk,
+                            "training_use": source_policy,
+                            "quarantine_reason": item.get("quarantine_reason"),
+                            "metadata": {
+                                "anti_copy": True,
+                                "surface_not_allowed": True,
+                                "source_extension": ".jsonl",
+                                "source_slug": args.source_slug,
+                                "source_class": source_class,
+                                "hf_repo_id": repo_id,
+                                "hf_config": config,
+                                "hf_split": split,
+                                "hf_row_id": row_id,
+                                "source_ref": item.get("source_ref"),
+                                "book_train_layer": item.get("book_train_layer"),
+                                "extraction_method": item.get("extraction_method"),
+                                "language": item.get("language"),
+                                "raw_text_hash": item.get("raw_text_hash"),
+                                "license": item.get("license"),
+                                "rights_policy": item.get("rights_policy") or "pattern_only_or_eval_only",
+                                "creator_visible": False,
+                            },
+                        })
+                continue
+
             if args.mode == "dataset" and ext == ".csv":
                 with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as f:
                     reader = csv.DictReader(f)
@@ -673,6 +783,8 @@ def main():
             if ext in {".md", ".txt"}:
                 raw = path.read_text(encoding="utf-8", errors="replace")
                 for idx, text in enumerate(chunk_text(raw, 1800, 80), 1):
+                    if idx > args.max_file_observations:
+                        break
                     if args.mode == "book":
                         stats["markdown_chunks" if ext == ".md" else "text_chunks"] += 1
                         add_book_observation(text, path, "markdown" if ext == ".md" else "text", chunk_index=idx)
@@ -717,6 +829,8 @@ def main():
                 data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
                 rows = data if isinstance(data, list) else [data]
                 for idx, item in enumerate(rows, 1):
+                    if idx > args.max_file_observations:
+                        break
                     text = flatten_json(item, 2200)
                     if len(text) >= 50:
                         stats["json_rows"] += 1
@@ -726,6 +840,8 @@ def main():
             if args.mode == "book" and ext == ".jsonl":
                 with path.open("r", encoding="utf-8", errors="replace") as f:
                     for idx, line in enumerate(f, 1):
+                        if idx > args.max_file_observations:
+                            break
                         line = line.strip()
                         if not line:
                             continue
@@ -741,25 +857,33 @@ def main():
                 continue
 
             if args.mode == "book" and ext in {".db", ".sqlite", ".sqlite3"}:
-                for table, idx, text, data in iter_sqlite_rows(path):
+                for idx_total, (table, idx, text, data) in enumerate(iter_sqlite_rows(path), 1):
+                    if idx_total > args.max_file_observations:
+                        break
                     stats["db_rows"] += 1
                     add_book_observation(text, path, "sqlite", row_number=idx, extra={"sqlite_table": table, "sqlite_columns": list(data.keys())})
                 continue
 
             if args.mode == "book" and ext == ".sql":
                 for idx, text in parse_sql_chunks(path) or []:
+                    if idx > args.max_file_observations:
+                        break
                     stats["sql_chunks"] += 1
                     add_book_observation(text, path, "sql", chunk_index=idx, extra={"sql_policy": "whitelist_export_pattern_only"})
                 continue
 
             if args.mode == "book" and ext == ".docx":
                 for idx, text in enumerate(chunk_text(read_docx(path), 1800, 120), 1):
+                    if idx > args.max_file_observations:
+                        break
                     stats["docx_chunks"] += 1
                     add_book_observation(text, path, "docx", chunk_index=idx)
                 continue
 
             if args.mode == "book" and ext == ".epub":
                 for idx, text in enumerate(chunk_text(read_epub(path), 1800, 120), 1):
+                    if idx > args.max_file_observations:
+                        break
                     stats["epub_chunks"] += 1
                     add_book_observation(text, path, "epub", chunk_index=idx)
                 continue
@@ -768,6 +892,15 @@ def main():
             print(f"warning: quarantined {rel}: {exc}", file=sys.stderr)
 
     stats["entities"] = len(entities)
+    for observation in observations:
+        metadata = observation.setdefault("metadata", {})
+        source_slugs = metadata.get("source_slugs")
+        if not isinstance(source_slugs, list):
+            source_slugs = []
+        if args.source_slug not in source_slugs:
+            source_slugs.append(args.source_slug)
+        metadata["source_slugs"] = sorted({str(slug) for slug in source_slugs if str(slug)})
+
     if not args.apply:
         print(json.dumps(stats, ensure_ascii=False, indent=2))
         return
@@ -830,29 +963,81 @@ insert into public.dataset_training_observations (
   training_weight, copy_risk, risk_level, training_use, quarantine_reason, metadata
 ) values {",".join(values)}
 on conflict (content_hash) do update set
-  metadata = public.dataset_training_observations.metadata || jsonb_build_object(
-    'duplicate_seen_from_source_slug', excluded.metadata ->> 'source_slug',
-    'duplicate_seen_from_source_path', excluded.source_path
+  metadata = jsonb_set(
+    public.dataset_training_observations.metadata || jsonb_build_object(
+      'duplicate_seen_from_source_slug', excluded.metadata ->> 'source_slug',
+      'duplicate_seen_from_source_path', excluded.source_path
+    ),
+    '{{source_slugs}}',
+    (
+      select coalesce(jsonb_agg(distinct source_slug_value order by source_slug_value), '[]'::jsonb)
+      from jsonb_array_elements_text(
+        coalesce(public.dataset_training_observations.metadata -> 'source_slugs', '[]'::jsonb) ||
+        coalesce(excluded.metadata -> 'source_slugs', '[]'::jsonb)
+      ) as source_slug_values(source_slug_value)
+    ),
+    true
   ),
   updated_at = now();
 """)
+
+    source_title = {
+        "book": "Book Full Training v1",
+        "hf": "Hugging Face Social Training v1",
+        "book_train": "Book Train Cinema Craft v1",
+        "book_train_extended": "Book-Train Extended SEO Marketing Social v1",
+    }.get(args.mode, "Dataset Full Training v2")
+    source_type = "external_research" if args.mode == "hf" else "local_markdown"
+    source_class = {
+        "book": "book_craft_training",
+        "hf": "huggingface_social_training",
+        "book_train": "book_train_cinema",
+        "book_train_extended": "book_train_extended_intelligence",
+    }.get(args.mode, "dataset_training")
+    source_notes = {
+        "book": "Book project additive training. Craft, comedy, narrative, hook/caption and editorial quality only; no creator-facing surface copy.",
+        "hf": "Hugging Face additive social training. Score/comment/caption/safety signals are pattern-only or eval-only; no creator-facing surface copy.",
+        "book_train": "Book-Train cinema craft training. Cinematography, film grammar, editing, sound and screenplay lessons are pattern-only; no creator-facing source surface copy.",
+        "book_train_extended": "Book-Train extended training. SEO, marketing, sentiment and product-review signals are pattern-only; no creator-facing surface copy, personal data, source row, brand imitation or claim guarantee.",
+    }.get(args.mode, "Additive dataset training from local markdown, notebook and CSV archives. Pattern-only and anti-copy; named entities are internal provenance only.")
+    eval_prefix = (
+        "book_eval" if args.mode == "book"
+        else "book_train_eval" if args.mode == "book_train"
+        else "book_train_extended_eval" if args.mode == "book_train_extended"
+        else "hf_eval" if args.mode == "hf"
+        else "dataset_eval"
+    )
+    freshness_multiplier = (
+        "35" if args.mode == "book"
+        else "45" if args.mode == "book_train"
+        else "55" if args.mode == "book_train_extended"
+        else "70" if args.mode == "hf"
+        else "100"
+    )
+    confidence_offset = (
+        "0.22" if args.mode == "book"
+        else "0.24" if args.mode == "book_train"
+        else "0.23" if args.mode == "book_train_extended"
+        else "0.20" if args.mode == "hf"
+        else "0.18"
+    )
 
     promote_sql = (
         PROMOTE_SQL
         .replace("__VERSION__", args.compile_version)
         .replace("__SOURCE_SLUG__", args.source_slug)
-        .replace("__SOURCE_TITLE__", "Book Full Training v1" if args.mode == "book" else "Dataset Full Training v2")
-        .replace("__SOURCE_URI__", str(dataset).replace("\\", "/"))
+        .replace("__SOURCE_TITLE__", source_title)
+        .replace("__SOURCE_URI__", str(dataset).replace("", "/"))
         .replace("__TREND_SOURCE__", args.trend_source)
-        .replace("__SOURCE_TYPE__", "local_markdown")
-        .replace("__SOURCE_CLASS__", "book_craft_training" if args.mode == "book" else "dataset_training")
-        .replace("__SOURCE_NOTES__", "Book project additive training. Craft, comedy, narrative, hook/caption and editorial quality only; no creator-facing surface copy." if args.mode == "book" else "Additive dataset training from local markdown, notebook and CSV archives. Pattern-only and anti-copy; named entities are internal provenance only.")
+        .replace("__SOURCE_TYPE__", source_type)
+        .replace("__SOURCE_CLASS__", source_class)
+        .replace("__SOURCE_NOTES__", source_notes)
         .replace("__MAX_TRAINING_EXAMPLES__", str(args.max_training_examples))
         .replace("__MAX_TREND_SIGNALS__", str(args.max_trend_signals))
         .replace("__MAX_EVAL_CASES__", str(args.max_eval_cases))
-        .replace("__EVAL_PREFIX__", "book_eval" if args.mode == "book" else "dataset_eval")
-        .replace("__TREND_FRESHNESS_MULTIPLIER__", "35" if args.mode == "book" else "100")
-        .replace("__TREND_CONFIDENCE_OFFSET__", "0.22" if args.mode == "book" else "0.18")
+        .replace("__EVAL_PREFIX__", eval_prefix)
+        .replace("__TREND_FRESHNESS_MULTIPLIER__", freshness_multiplier)
+        .replace("__TREND_CONFIDENCE_OFFSET__", confidence_offset)
     )
     run_sql(promote_sql)
     compile_sql = Path("supabase/seeds/viral_training_compile.sql").read_text(encoding="utf-8")
@@ -864,7 +1049,7 @@ on conflict (content_hash) do update set
         .replace("__VERSION__", args.compile_version)
         .replace("__SOURCE_SLUG__", args.source_slug)
         .replace("__TREND_SOURCE__", args.trend_source)
-        .replace("__EVAL_PREFIX__", "book_eval" if args.mode == "book" else "dataset_eval")
+        .replace("__EVAL_PREFIX__", eval_prefix)
     )
     print(json.dumps({"dry_run_stats": stats, "applied": True, "compile_version": args.compile_version, "validation": validation}, ensure_ascii=False, indent=2))
 
@@ -878,24 +1063,35 @@ with source as (
   on conflict (slug) do update set metadata = excluded.metadata, enabled = true, updated_at = now()
   returning id
 ),
+cleared_examples as (
+  delete from public.viral_training_examples example
+  using source
+  where example.source_id = source.id
+  returning example.id
+),
+cleared_evals as (
+  delete from public.generator_eval_cases
+  where slug like '__EVAL_PREFIX__\\_%' escape '\\'
+  returning id
+),
 ranked as (
   select observation.*,
-    row_number() over (partition by coalesce(observation.category_slug, 'uncategorized'), observation.platform order by observation.training_weight desc, observation.imported_at desc) as segment_rank
+    row_number() over (partition by coalesce(observation.category_slug, 'uncategorized'), observation.platform order by observation.training_weight desc, observation.imported_at desc, observation.content_hash) as segment_rank
   from public.dataset_training_observations observation
   where observation.training_use in ('pattern_only', 'negative_example', 'eval_only')
     and observation.quarantine_reason is null
     and observation.training_weight >= 0.24
-    and observation.metadata ->> 'source_slug' = '__SOURCE_SLUG__'
-    and not exists (
-      select 1
-      from public.viral_training_examples existing
-      join public.viral_training_sources existing_source on existing_source.id = existing.source_id
-      where existing.external_ref = observation.content_hash
-        and existing_source.slug <> '__SOURCE_SLUG__'
+    and (
+      observation.metadata ->> 'source_slug' = '__SOURCE_SLUG__'
+      or exists (
+        select 1
+        from jsonb_array_elements_text(coalesce(observation.metadata -> 'source_slugs', '[]'::jsonb)) source_slug_values(source_slug_value)
+        where source_slug_value = '__SOURCE_SLUG__'
+      )
     )
 ),
 selected as (
-  select * from ranked where segment_rank <= 1200 order by training_weight desc, imported_at desc limit __MAX_TRAINING_EXAMPLES__
+  select * from ranked where segment_rank <= 1200 order by training_weight desc, imported_at desc, content_hash limit __MAX_TRAINING_EXAMPLES__
 )
 insert into public.viral_training_examples (
   source_id, external_ref, year, platform, category_slug, title, phenomenon_type, abstracted_mechanism,
@@ -908,11 +1104,13 @@ select source.id, selected.content_hash, 2026, selected.platform, selected.categ
        when 'VTP-001' = any(selected.derived_pattern_ids) then 'challenge'
        when 'VTP-037' = any(selected.derived_pattern_ids) then 'localization_case'
        else 'meme' end,
-  case when '__SOURCE_CLASS__' = 'book_craft_training'
+  case when '__SOURCE_CLASS__' in ('book_craft_training', 'book_train_cinema')
        then 'Book-derived craft/comedy/narrative observation; use only as an abstract mechanism and editorial quality signal, never as text, title, scene, character, quote or voice.'
+       when '__SOURCE_CLASS__' = 'book_train_extended_intelligence'
+       then 'Book-Train extended SEO/marketing/social observation; use only as abstract conversion, trust, caption, sentiment or positioning signal, never as raw row text, personal data, brand promise or claim guarantee.'
        else 'Dataset-derived viral behavior observation; use only as abstract mechanism evidence, not as a title, person, sound, scene or exact format.' end,
-  concat_ws(' + ', coalesce(selected.platform,'internet'), coalesce(selected.category_slug,'general'), array_to_string(selected.derived_pattern_ids,'+'), case when '__SOURCE_CLASS__' = 'book_craft_training' then 'craft signal => premium-safe pattern translation' else 'weighted signal => premium-safe pattern translation' end),
-  case when '__SOURCE_CLASS__' = 'book_craft_training' then 'abstract craft/comedy/editorial structure signal' else 'dataset-derived abstract participation or trend signal' end,
+  concat_ws(' + ', coalesce(selected.platform,'internet'), coalesce(selected.category_slug,'general'), array_to_string(selected.derived_pattern_ids,'+'), case when '__SOURCE_CLASS__' in ('book_craft_training', 'book_train_cinema') then 'craft signal => premium-safe pattern translation' when '__SOURCE_CLASS__' = 'book_train_extended_intelligence' then 'marketing intelligence => premium-safe conversion translation' else 'weighted signal => premium-safe pattern translation' end),
+  case when '__SOURCE_CLASS__' in ('book_craft_training', 'book_train_cinema') then 'abstract craft/comedy/editorial structure signal' when '__SOURCE_CLASS__' = 'book_train_extended_intelligence' then 'abstract SEO/marketing/sentiment/social-proof signal' else 'dataset-derived abstract participation or trend signal' end,
   coalesce(array(select jsonb_array_elements_text(selected.text_signals -> 'emotional_triggers')), array['curiosity','recognition']::text[]),
   selected.derived_pattern_ids,
   array_remove(array[
@@ -920,7 +1118,7 @@ select source.id, selected.content_hash, 2026, selected.platform, selected.categ
     case when selected.copy_risk = 'high' then 'copy_risk' end,
     case when cardinality(selected.named_entity_refs) > 0 then 'named_entity_internal_only' end,
     case when selected.training_use = 'negative_example' then 'negative_example_guardrail' end,
-    case when '__SOURCE_CLASS__' = 'book_craft_training' then 'source_surface_never_copy' end
+    case when '__SOURCE_CLASS__' in ('book_craft_training', 'book_train_cinema', 'book_train_extended_intelligence') then 'source_surface_never_copy' end
   ], null),
   selected.copy_risk,
   case selected.training_use when 'negative_example' then 'negative_example' when 'eval_only' then 'eval_only' else 'pattern_only' end,
@@ -941,17 +1139,26 @@ select '__TREND_SOURCE__', observation.platform, observation.locale,
   now() + interval '180 days'
 from public.dataset_training_observations observation
 where observation.quarantine_reason is null
-  and observation.metadata ->> 'source_slug' = '__SOURCE_SLUG__'
-  and (observation.training_use = 'trend_signal_only' or observation.metric_signals <> '{}'::jsonb or '__SOURCE_CLASS__' = 'book_craft_training')
-order by observation.training_weight desc, observation.imported_at desc
+  and (
+    observation.metadata ->> 'source_slug' = '__SOURCE_SLUG__'
+    or exists (
+      select 1
+      from jsonb_array_elements_text(coalesce(observation.metadata -> 'source_slugs', '[]'::jsonb)) source_slug_values(source_slug_value)
+      where source_slug_value = '__SOURCE_SLUG__'
+    )
+  )
+  and (observation.training_use = 'trend_signal_only' or observation.metric_signals <> '{}'::jsonb or '__SOURCE_CLASS__' in ('book_craft_training', 'book_train_cinema', 'book_train_extended_intelligence'))
+order by observation.training_weight desc, observation.imported_at desc, observation.content_hash
 limit __MAX_TREND_SIGNALS__;
 
 insert into public.generator_eval_cases (slug, title, category_slug, persona_slug, input_brief, expected_patterns, forbidden_patterns, quality_rubric, enabled)
 select concat('__EVAL_PREFIX__', '_', substring(observation.content_hash from 1 for 18)),
-  concat(case when '__SOURCE_CLASS__' = 'book_craft_training' then 'Book craft eval ' else 'Dataset eval ' end, substring(observation.content_hash from 1 for 12)),
+  concat(case when '__SOURCE_CLASS__' = 'book_craft_training' then 'Book craft eval ' when '__SOURCE_CLASS__' = 'book_train_cinema' then 'Book-Train cinema eval ' when '__SOURCE_CLASS__' = 'book_train_extended_intelligence' then 'Book-Train extended eval ' else 'Dataset eval ' end, substring(observation.content_hash from 1 for 12)),
   observation.category_slug, null,
-  jsonb_build_object('brief', case when '__SOURCE_CLASS__' = 'book_craft_training'
+  jsonb_build_object('brief', case when '__SOURCE_CLASS__' in ('book_craft_training', 'book_train_cinema')
     then 'Generate a premium Instagram idea using only abstract craft/comedy/narrative lessons. Do not copy source wording, character, title, scene, quote, file name or internal source.'
+    when '__SOURCE_CLASS__' = 'book_train_extended_intelligence'
+    then 'Generate a premium Instagram idea using only abstract SEO, marketing, sentiment, review and social-proof signals. Do not copy raw row text, personal data, source wording, brand claim, guarantee, URL or internal source.'
     else 'Generate a premium Instagram idea from this abstract dataset signal without copying names, titles, surfaces, sounds or exact scenes.' end,
     'platform', observation.platform, 'category_slug', observation.category_slug, 'named_entity_policy', 'do_not_use_names_or_likeness', 'creator_visible', false),
   observation.derived_pattern_ids,
@@ -960,16 +1167,29 @@ select concat('__EVAL_PREFIX__', '_', substring(observation.content_hash from 1 
   true
 from public.dataset_training_observations observation
 where observation.quarantine_reason is null
-  and observation.metadata ->> 'source_slug' = '__SOURCE_SLUG__'
+  and (
+    observation.metadata ->> 'source_slug' = '__SOURCE_SLUG__'
+    or exists (
+      select 1
+      from jsonb_array_elements_text(coalesce(observation.metadata -> 'source_slugs', '[]'::jsonb)) source_slug_values(source_slug_value)
+      where source_slug_value = '__SOURCE_SLUG__'
+    )
+  )
   and observation.training_weight >= 0.58
-order by observation.training_weight desc, observation.imported_at desc
+order by observation.training_weight desc, observation.imported_at desc, observation.content_hash
 limit __MAX_EVAL_CASES__
 on conflict (slug) do update set input_brief = excluded.input_brief, expected_patterns = excluded.expected_patterns, forbidden_patterns = excluded.forbidden_patterns, quality_rubric = excluded.quality_rubric, enabled = true, updated_at = now();
 """
 
 VALIDATION_SQL = r"""
 select 'dataset_observations' as metric, count(*)::text as value from public.dataset_training_observations
-union all select 'source_observations', count(*)::text from public.dataset_training_observations where metadata ->> 'source_slug' = '__SOURCE_SLUG__'
+union all select 'source_observations', count(*)::text from public.dataset_training_observations
+where metadata ->> 'source_slug' = '__SOURCE_SLUG__'
+   or exists (
+     select 1
+     from jsonb_array_elements_text(coalesce(metadata -> 'source_slugs', '[]'::jsonb)) source_slug_values(source_slug_value)
+     where source_slug_value = '__SOURCE_SLUG__'
+   )
 union all select 'dataset_entities', count(*)::text from public.dataset_named_entity_provenance
 union all select 'dataset_categories', count(*)::text from public.dataset_category_candidates
 union all select 'training_examples', count(*)::text from public.viral_training_examples

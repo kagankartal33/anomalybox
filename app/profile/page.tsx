@@ -17,7 +17,7 @@ type ProfileParams = {
 function initials(value: string) {
   const parts = value
     .replace(/@.*/, "")
-    .split(/[\s._-]+/)
+    .split(/[\\s._-]+/)
     .filter(Boolean)
     .slice(0, 2);
   return (parts.map((part) => part[0]).join("") || "VB").toUpperCase();
@@ -43,7 +43,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
     supabase.from("notifications").select("id,type,title,body,href,read_at,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
   ]);
 
-  const displayName = profile?.display_name ?? user.email ?? "ViralBox creator";
+  const displayName = profile?.display_name ?? user.email ?? "Anomaly Box creator";
   const providers = providerNames(user.app_metadata?.providers);
   const googleOnly = providers.includes("google") && !providers.includes("email");
   const message = accountMessage(params);
@@ -79,7 +79,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               <PremiumIcon icon={UserRound} tone="ink" />
               <div>
                 <h2 className="text-2xl font-semibold">Profile identity</h2>
-                <p className="text-sm text-ink/60">This is the name and image attached to your ViralBox account.</p>
+                <p className="text-sm text-ink/60">This is the name and image attached to your Anomaly Box account.</p>
               </div>
             </div>
 
@@ -87,9 +87,14 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               <div className="rounded-md border border-ink/10 bg-paper/70 p-4">
                 <div className="mx-auto grid h-32 w-32 place-items-center overflow-hidden rounded-full border border-ink/10 bg-white shadow-sm">
                   {profile?.avatar_url ? (
-                    <img alt={`${displayName} avatar`} className="h-full w-full object-cover" src={profile.avatar_url} />
+                    <span
+                      aria-label={`${displayName} avatar`}
+                      className="block h-full w-full bg-cover bg-center"
+                      role="img"
+                      style={{ backgroundImage: `url(${profile.avatar_url})` }}
+                    />
                   ) : (
-                    <span className="text-3xl font-semibold tracking-[-0.4px] text-ink/45">{initials(displayName)}</span>
+                    <span className="text-3xl font-semibold text-ink/45">{initials(displayName)}</span>
                   )}
                 </div>
                 <form action={uploadProfileAvatar} className="mt-4 grid gap-3" encType="multipart/form-data">
@@ -160,7 +165,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               <div>
                 <h2 className="text-2xl font-semibold">User Agreement & Legal</h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/65">
-                  By using ViralBox and purchasing digital boxes, you agree to the Terms, Privacy Policy, and Digital Goods policy.
+                  By using Anomaly Box and purchasing digital dossiers, you agree to the Terms, Privacy Policy, and Digital Goods policy.
                 </p>
                 <Link className="focus-ring mt-5 inline-flex items-center gap-2 rounded-md border border-ink/15 px-4 py-3 text-sm font-semibold hover:bg-paper" href="/legal">
                   <ShieldCheck className="h-4 w-4" />
@@ -172,7 +177,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
         </section>
 
         <aside id="notifications" className="space-y-3">
-          <h2 className="text-xl font-semibold tracking-tight">Notifications</h2>
+          <h2 className="text-xl font-semibold">Notifications</h2>
           <NotificationList notifications={notifications ?? []} />
         </aside>
       </div>

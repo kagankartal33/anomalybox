@@ -34,7 +34,7 @@ const weak: RankableConcept = {
   resetCount: 4,
 };
 
-const plan: DurationPlan = { runtimeProfile: "single_proof", targetSeconds: 24, plannerVersion: "duration-planner-v1" };
+const plan: DurationPlan = { runtimeProfile: "single_proof", targetSeconds: 24, plannerVersion: "duration-planner-v2" };
 const input = {
   concepts: [weak, base],
   comparisonTexts: ["A familiar jacket comparison with two sleeves"],

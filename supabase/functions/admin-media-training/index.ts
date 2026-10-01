@@ -35,7 +35,7 @@ function requireAdmin(req: Request) {
   const expected = Deno.env.get("ADMIN_API_TOKEN") ?? Deno.env.get("INTERNAL_API_TOKEN");
   if (!expected) throw new HttpError(500, "ADMIN_API_TOKEN or INTERNAL_API_TOKEN is not configured");
 
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  const bearer = req.headers.get("authorization")?.replace(/^Bearer\\s+/i, "");
   const token = req.headers.get("x-admin-token") ?? bearer;
   if (token !== expected) throw new HttpError(401, "Unauthorized admin request");
 }
@@ -82,6 +82,19 @@ async function lookupBySlug(table: string, slug: string) {
   return rows[0];
 }
 
+async function sourceRef(idOrExternalId: string, body: Json = {}) {
+  const uuid = isUuid(idOrExternalId);
+  if (!uuid) return await resolveSource(idOrExternalId);
+  return {
+    id: idOrExternalId,
+    category_id: body.category_id ?? null,
+    persona_id: body.persona_id ?? null,
+    platform: body.platform ?? "instagram_reels",
+    language: body.language ?? "tr",
+    stats: {},
+  } as Json;
+}
+
 async function lookupById(table: string, id: string) {
   const rows = await getRows(table, `select=id,slug&id=eq.${id}&limit=1`);
   if (!rows.length) throw new HttpError(400, `${table} id not found: ${id}`);
@@ -89,7 +102,7 @@ async function lookupById(table: string, id: string) {
 }
 
 function isUuid(value: string) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{12}$/i.test(value);
+  return /^[0-9a-f-]{36}$/i.test(value);
 }
 
 function routeSegments(req: Request) {
@@ -108,9 +121,9 @@ function slugify(value: string) {
 function normalizeText(value: unknown) {
   return String(value ?? "")
     .toLowerCase()
-    .replace(/https?:\/\/\S+/g, " ")
-    .replace(/[^\p{L}\p{N}\s]+/gu, " ")
-    .replace(/\s+/g, " ")
+    .replace(/https?:\\/\\/\\S+/g, " ")
+    .replace(/[^\\p{L}\\p{N}\\s]+/gu, " ")
+    .replace(/\\s+/g, " ")
     .trim();
 }
 
@@ -121,11 +134,11 @@ function normalizeUrl(value: unknown) {
     const url = new URL(raw);
     url.hash = "";
     url.search = "";
-    url.hostname = url.hostname.toLowerCase().replace(/^www\./, "");
-    url.pathname = url.pathname.replace(/\/+$/, "");
-    return url.toString().replace(/\/$/, "");
+    url.hostname = url.hostname.toLowerCase().replace(/^www\\./, "");
+    url.pathname = url.pathname.replace(/\\/+$/, "");
+    return url.toString().replace(/\\/$/, "");
   } catch {
-    return raw.toLowerCase().replace(/[?#].*$/, "").replace(/\/+$/, "");
+    return raw.toLowerCase().replace(/[?#].*$/, "").replace(/\\/+$/, "");
   }
 }
 
@@ -283,7 +296,10 @@ async function resolveSource(idOrExternalId: string) {
   const filter = isUuid(idOrExternalId)
     ? `id=eq.${idOrExternalId}`
     : `external_source_id=eq.${encodeURIComponent(idOrExternalId)}`;
-  const rows = await getRows("media_training_sources", `select=*&${filter}&limit=1`);
+  const rows = await getRows(
+    "media_training_sources",
+    `select=id,external_source_id,title,purpose,status,category_id,persona_id,platform,language,rights_policy,metadata,stats,created_at,updated_at&${filter}&limit=1`,
+  );
   if (!rows.length) throw new HttpError(404, `media training source not found: ${idOrExternalId}`);
   return rows[0];
 }
@@ -325,9 +341,17 @@ async function dedupeAsset(payload: Json) {
 }
 
 async function addAssets(sourceId: string, body: Json) {
-  const source = await resolveSource(sourceId);
-  const category = source.category_id ? await lookupById("categories", String(source.category_id)) : null;
-  const persona = source.persona_id ? await lookupById("creator_personas", String(source.persona_id)) : null;
+  const source = await sourceRef(sourceId, body);
+  const category = body.category_slug
+    ? await lookupBySlug("categories", String(body.category_slug))
+    : source.category_id
+      ? await lookupById("categories", String(source.category_id))
+      : null;
+  const persona = body.persona_slug
+    ? await lookupBySlug("creator_personas", String(body.persona_slug))
+    : source.persona_id
+      ? await lookupById("creator_personas", String(source.persona_id))
+      : null;
   const assets = (Array.isArray(body.assets) ? body.assets : [body]) as Json[];
   const created: Json[] = [];
   const duplicates: Json[] = [];
@@ -386,10 +410,11 @@ async function createReviewItems(source: Json, asset: Json, observation: Json | 
 }
 
 async function analyzeSource(sourceId: string) {
-  const source = await resolveSource(sourceId);
-  const category = source.category_id ? await lookupById("categories", String(source.category_id)) : null;
-  const persona = source.persona_id ? await lookupById("creator_personas", String(source.persona_id)) : null;
-  const assets = await getRows("media_training_assets", `select=*&source_id=eq.${source.id}&order=created_at.asc`);
+  const source = await sourceRef(sourceId);
+  const assets = await getRows(
+    "media_training_assets",
+    `select=id,source_id,source_type,source_url,storage_path,file_hash,normalized_url_hash,text_hash,caption,transcript,admin_notes,category_id,persona_id,platform,rights_status,training_use,status,frame_metadata,analysis_summary,metadata,created_at,updated_at&source_id=eq.${source.id}&order=created_at.asc`,
+  );
   let approved = 0;
   let quarantined = 0;
   let duplicates = 0;
@@ -397,6 +422,8 @@ async function analyzeSource(sourceId: string) {
   await patchRows("media_training_sources", `id=eq.${source.id}`, { status: "analyzing" });
 
   for (const asset of assets) {
+    const category = asset.category_id ? await lookupById("categories", String(asset.category_id)) : null;
+    const persona = asset.persona_id ? await lookupById("creator_personas", String(asset.persona_id)) : null;
     const runRows = await postRows("media_training_analysis_runs", {
       source_id: source.id,
       asset_id: asset.id,
@@ -519,7 +546,7 @@ function sourceKindForObservation(kind: unknown) {
 }
 
 async function promoteTraining(sourceId: string, body: Json) {
-  const source = await resolveSource(sourceId);
+  const source = await sourceRef(sourceId, body);
   const compileVersion = String(body.compile_version ?? "2026-v4-media-training");
   await postRows("viral_training_sources?on_conflict=slug", {
     slug: "media_training_v1",
@@ -542,7 +569,7 @@ async function promoteTraining(sourceId: string, body: Json) {
   const trainingSource = sourceRows[0];
   const observations = await getRows(
     "media_training_observations",
-    `select=*&source_id=eq.${source.id}&status=eq.approved&rights_status=in.(owned,permissioned,public_research)&order=created_at.asc`,
+    `select=id,source_id,asset_id,content_hash,observation_kind,platform,category_slug,persona_slug,locale,hook_pattern,first_second_visual,scene_rhythm,shot_taxonomy,caption_mechanism,comment_trigger,save_trigger,creator_presence_mode,category_layer_signals,derived_pattern_ids,copy_risk,risk_level,rights_status,training_use,training_weight,status,metadata&source_id=eq.${source.id}&status=eq.approved&rights_status=in.(owned,permissioned,public_research)&order=created_at.asc`,
   );
 
   let promoted = 0;
@@ -671,11 +698,16 @@ async function promoteTraining(sourceId: string, body: Json) {
   }));
   if (evalRows.length) await postRows("generator_eval_cases", evalRows, "return=minimal");
 
-  const compile = await rpc("compile_viral_training_profile", { p_version: compileVersion });
-  await patchRows("media_training_sources", `id=eq.${source.id}`, {
-    status: "promoted",
-    stats: { ...((source.stats ?? {}) as Json), promoted_observations: promoted, compile_version: compileVersion },
-  });
+  const shouldCompile = body.compile !== false;
+  const compile = shouldCompile
+    ? await rpc("compile_viral_training_profile", { p_version: compileVersion })
+    : { skipped: true, version: compileVersion };
+  if (body.update_source_status === true) {
+    await patchRows("media_training_sources", `id=eq.${source.id}`, {
+      status: "promoted",
+      stats: { ...((source.stats ?? {}) as Json), promoted_observations: promoted, compile_version: compileVersion },
+    });
+  }
 
   return { source_id: source.id, promoted_observations: promoted, compile };
 }

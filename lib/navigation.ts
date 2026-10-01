@@ -1,7 +1,7 @@
 export function safeNextPath(value: string | null | undefined, fallback = "/profile") {
   if (!value || !value.startsWith("/") || value.startsWith("//")) return fallback;
   try {
-    const url = new URL(value, "https://viralbox.local");
+    const url = new URL(value, "https://anomalybox.local");
     if (!url.pathname.startsWith("/")) return fallback;
     if (url.pathname.startsWith("/api/")) return fallback;
     return `${url.pathname}${url.search}${url.hash}`;

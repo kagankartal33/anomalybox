@@ -1,7 +1,9 @@
 param(
-  [string]$RawDir = ".\dataset\huggingface\raw",
-  [string]$OutDir = ".\dataset\huggingface",
+  [string]$RawDir = ".\\dataset\\huggingface\
+aw",
+  [string]$OutDir = ".\\dataset\\huggingface\\prepared_downloaded",
   [int]$MaxRowsPerSource = 50000,
+  [int]$MaxScanRowsPerSource = 250000,
   [string]$CompileVersion = "2026-v6-hf-downloaded",
   [string]$SourceSlug = "hf_downloaded_social_v1",
   [string]$TrendSource = "hf_downloaded_training_v1",
@@ -9,16 +11,18 @@ param(
   [int]$MaxTrendSignals = 12000,
   [int]$MaxEvalCases = 200,
   [switch]$PrepareOnly,
+  [switch]$KeepExistingSourceObservations,
   [switch]$Apply
 )
 
 $ErrorActionPreference = "Stop"
 
 $prepareArgs = @(
-  ".\tools\prepare-downloaded-hf-training-data.py",
+  ".\\tools\\prepare-downloaded-hf-training-data.py",
   "--raw-dir", $RawDir,
   "--out-dir", $OutDir,
-  "--max-rows-per-source", "$MaxRowsPerSource"
+  "--max-rows-per-source", "$MaxRowsPerSource",
+  "--max-scan-rows-per-source", "$MaxScanRowsPerSource"
 )
 
 if ($Apply) {
@@ -40,7 +44,23 @@ if ($PrepareOnly) {
   exit 0
 }
 
-& .\tools\train-from-dataset.ps1 `
+if (-not $KeepExistingSourceObservations) {
+  $dbContainer = docker ps --format "{{.Names}}" |
+    Where-Object { $_ -eq "supabase_db_ViralBox" } |
+    Select-Object -First 1
+  if (-not $dbContainer) {
+    $dbContainer = docker ps --format "{{.Names}}" |
+      Where-Object { $_ -like "supabase_db_*" } |
+      Select-Object -First 1
+  }
+  if (-not $dbContainer) {
+    throw "Could not find a running Supabase database container. Run supabase start first."
+  }
+  $safeSourceSlug = $SourceSlug.Replace("'", "''")
+  docker exec -i $dbContainer psql -U postgres -d postgres -v ON_ERROR_STOP=1 -P pager=off -c "delete from public.dataset_training_observations where metadata ->> 'source_slug' = '$safeSourceSlug';"
+}
+
+& .\\tools\\train-from-dataset.ps1 `
   -DatasetPath $OutDir `
   -Mode hf `
   -SourceSlug $SourceSlug `

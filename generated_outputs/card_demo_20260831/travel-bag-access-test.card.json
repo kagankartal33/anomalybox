@@ -58,7 +58,7 @@
       "action": "Place the case on the table. Return the folded jumper to the main compartment and close its zip. Open the front pocket, place the case inside, then close that zip. Hold both empty hands clear of the bag.",
       "spokenLine": "Same bag. Same stuff. Headphones go here.",
       "shot": "Locked overhead close-up wide enough to include both zips and the table",
-      "onScreenText": "Only the case moves",
+      "onScreenText": "Only the case changes pockets",
       "editNote": "Keep the case placement visible. A cut between completed repacking actions is acceptable; do not hide an item being removed.",
       "performanceNote": "Use normal packing movements. Leave the jumper folded so replacing it is one action."
     },

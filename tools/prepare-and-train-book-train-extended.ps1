@@ -1,7 +1,8 @@
 param(
-  [string]$InputDir = ".\Book-Train",
-  [string]$OutDir = ".\dataset\book_train\prepared\extended",
+  [string]$InputDir = ".\\Book-Train",
+  [string]$OutDir = ".\\dataset\\book_train\\prepared\\extended",
   [string]$OutputName = "book_train_extended_v1.jsonl",
+  [string]$SourceFilter = "",
   [string]$CompileVersion = "2026-v8-book-train-extended",
   [string]$SourceSlug = "book_train_extended_v1",
   [string]$TrendSource = "book_train_extended_v1",
@@ -18,7 +19,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $prepareArgs = @(
-  ".\tools\prepare-book-train-extended-data.py",
+  ".\\tools\\prepare-book-train-extended-data.py",
   "--input-dir", $InputDir,
   "--out-dir", $OutDir,
   "--output-name", $OutputName,
@@ -28,6 +29,10 @@ $prepareArgs = @(
 
 if ($Apply) {
   $prepareArgs += "--apply"
+}
+
+if ($SourceFilter -ne "") {
+  $prepareArgs += @("--source-filter", $SourceFilter)
 }
 
 python @prepareArgs
@@ -61,7 +66,7 @@ if (-not $KeepExistingSourceObservations) {
   docker exec -i $dbContainer psql -U postgres -d postgres -v ON_ERROR_STOP=1 -P pager=off -c "delete from public.dataset_training_observations where metadata ->> 'source_slug' = '$safeSourceSlug';"
 }
 
-& .\tools\train-from-dataset.ps1 `
+& .\\tools\\train-from-dataset.ps1 `
   -DatasetPath $OutDir `
   -Mode book_train_extended `
   -SourceSlug $SourceSlug `

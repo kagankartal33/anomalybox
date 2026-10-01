@@ -146,7 +146,6 @@ declare
   v_persona_id uuid;
   v_band public.score_band;
   v_needed integer;
-  v_loop_index integer;
   v_slot_index integer := 1;
   v_inventory_id uuid;
   v_idea_id uuid;

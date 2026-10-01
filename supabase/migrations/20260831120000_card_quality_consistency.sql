@@ -1,6 +1,37 @@
 -- V2.3.1: retain inventory, but never sell a subsequently rejected/stale card.
 -- No bulk stock mutation. Delivered/used/reserved rows are not quarantined.
 
+-- Lock first, then check reservations in a fresh statement snapshot. A single
+-- UPDATE/NOT EXISTS can otherwise use a snapshot taken before a reservation
+-- committed while it waited for the inventory row lock.
+create or replace function public.quarantine_idea_inventory_v2_2(p_inventory_id uuid, p_reasons text[], p_score numeric)
+returns boolean language plpgsql security invoker set search_path = public as $$
+begin
+  perform 1 from public.idea_inventory where id = p_inventory_id for update;
+  update public.idea_inventory inv set status = 'paused',
+    metadata = coalesce(inv.metadata, '{}'::jsonb) || jsonb_build_object(
+      'pause_reason', 'quality_quarantine_v2_2', 'quality_quarantine_at', now(),
+      'quality_quarantine_reasons', coalesce(to_jsonb(p_reasons), '[]'::jsonb),
+      'quality_quarantine_score', p_score), updated_at = now()
+    where inv.id = p_inventory_id and inv.status = 'available' and inv.reuse_count = 0
+      and not exists (select 1 from public.idea_box_items d where d.inventory_id = inv.id or d.idea_id = inv.idea_id)
+      and not exists (select 1 from public.checkout_inventory_reservations r where r.status = 'active' and (r.inventory_id = inv.id or r.idea_id = inv.idea_id));
+  return found;
+end $$;
+
+create or replace function public.rollback_idea_inventory_v2_2(p_inventory_id uuid)
+returns boolean language plpgsql security invoker set search_path = public as $$
+begin
+  perform 1 from public.idea_inventory where id = p_inventory_id for update;
+  update public.idea_inventory inv set status = 'available',
+    metadata = (coalesce(inv.metadata, '{}'::jsonb) - 'pause_reason') || jsonb_build_object('quality_quarantine_rolled_back_at', now()), updated_at = now()
+    where inv.id = p_inventory_id and inv.status = 'paused' and inv.reuse_count = 0
+      and inv.metadata->>'pause_reason' = 'quality_quarantine_v2_2'
+      and not exists (select 1 from public.idea_box_items d where d.inventory_id = inv.id or d.idea_id = inv.idea_id)
+      and not exists (select 1 from public.checkout_inventory_reservations r where r.status = 'active' and (r.inventory_id = inv.id or r.idea_id = inv.idea_id));
+  return found;
+end $$;
+
 create or replace function public.inventory_idea_quality_allows_sale(p_idea_id uuid)
 returns boolean language sql stable set search_path = public as $$
   select exists (

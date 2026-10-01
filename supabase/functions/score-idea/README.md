@@ -1,8 +1,8 @@
-# `score-idea` Edge Function
+# `score-idea`
 
-Bu function, bir fikrin deterministik ve açıklanabilir skorlarını hesaplar.
+Legacy placeholder for single-idea scoring. Yeni stok modelinde batch scoring `admin-generation-batches/:id/score` aksiyonunda calisir.
 
-Skorlar:
+Skorlar `idea_scores` tablosuna yazilir ve internal kalir:
 
 - `viral_potential_score`
 - `psychology_fit_score`
@@ -13,4 +13,4 @@ Skorlar:
 - `demand_opportunity_score`
 - `trust_sustainability_score`
 
-Output `idea_scores` tablosuna yazılır. Gerekirse `human_awareness_assessments` kaydı da oluşturulur.
+Influencer UI skor, score band veya inventory rank alanlarini okumaz.

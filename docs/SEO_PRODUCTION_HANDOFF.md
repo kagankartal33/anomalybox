@@ -15,7 +15,7 @@
 Vercel's environment pull masks secret values, so the following must be confirmed in the Vercel project dashboard without pasting secrets into chat:
 
 1. Add `RESEND_API_KEY` (verified `anomalybox.com` sender) for Atelier and auth email delivery.
-2. Add `INTERNAL_API_TOKEN` and `ADMIN_API_TOKEN` (or `ADMIN_INTERNAL_SECRET`), each a random 24+ character secret.
+2. `INTERNAL_API_TOKEN`, `ADMIN_API_TOKEN` and `INDEXNOW_KEY` are now generated and configured automatically in Vercel.
 3. Confirm `NEXT_PUBLIC_SITE_URL=https://anomalybox.com` and the production Supabase URL.
 4. Confirm Stripe live secret and webhook secret, then register `https://anomalybox.com/api/stripe/webhook` in Stripe.
 5. Add the Google, Bing and Yandex verification values as Vercel production variables:

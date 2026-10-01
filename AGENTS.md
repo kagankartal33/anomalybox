@@ -7,6 +7,8 @@ Before implementing or modifying UI:
    - `design-intelligence/derived/premium-pattern-library.md`
    - `design-intelligence/derived/anti-pattern-library.md`
    - `design-intelligence/derived/seo-marketing-implementation-rules.md`
+   - `design-intelligence/derived/premium-image-direction.md`
+   - `design-intelligence/derived/box-reveal-motion-spec.md`
 
 2. Use reference materials to derive principles only. Never copy:
    - brand names,
@@ -25,6 +27,8 @@ Before implementing or modifying UI:
    - semantic HTML,
    - keyboard-accessible controls,
    - responsive recomposition,
+   - premium product imagery,
+   - state-explaining motion,
    - Core Web Vitals,
    - truthful SEO metadata and structured data.
 

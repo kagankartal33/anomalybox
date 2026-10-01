@@ -94,7 +94,7 @@ npm run typecheck
 npm run lint
 npm run build
 supabase db lint --local
-powershell -ExecutionPolicy Bypass -File .\tools\test-generator-flow.ps1
-powershell -ExecutionPolicy Bypass -File .\tools\test-quality-gate-v2.ps1
-powershell -ExecutionPolicy Bypass -File .\tools\test-creator-video-review.ps1
+powershell -ExecutionPolicy Bypass -File .\\tools\\test-generator-flow.ps1
+powershell -ExecutionPolicy Bypass -File .\\tools\\test-quality-gate-v2.ps1
+powershell -ExecutionPolicy Bypass -File .\\tools\\test-creator-video-review.ps1
 ```

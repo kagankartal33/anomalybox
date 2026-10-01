@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
-export async function openViralBox(deliveryId: string) {
+export async function openCreativeDossier(deliveryId: string) {
   const {
     user,
   } = await requireUser();
@@ -18,7 +18,7 @@ export async function openViralBox(deliveryId: string) {
     .single();
 
   if (error || !delivery) {
-    throw new Error("ViralBox delivery not found");
+    throw new Error("Anomaly Box delivery not found");
   }
 
   const metadata = (delivery.metadata ?? {}) as Record<string, unknown>;

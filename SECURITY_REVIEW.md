@@ -80,7 +80,7 @@ Rules:
 - Cleanup must be run manually or scheduled with:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\cleanup-review-videos.ps1 -Apply
+powershell -ExecutionPolicy Bypass -File .\\tools\\cleanup-review-videos.ps1 -Apply
 ```
 
 ## Open Risks

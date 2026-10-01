@@ -1,6 +1,6 @@
 param(
-  [string]$InputDir = ".\Book-Train",
-  [string]$OutDir = ".\dataset\book_train\prepared",
+  [string]$InputDir = ".\\Book-Train",
+  [string]$OutDir = ".\\dataset\\book_train\\prepared",
   [int]$MaxChunksPerBook = 12000,
   [int]$MinChunkChars = 300,
   [int]$MaxChunkChars = 1800,
@@ -10,6 +10,8 @@ param(
   [int]$MaxTrainingExamples = 25000,
   [int]$MaxTrendSignals = 12000,
   [int]$MaxEvalCases = 200,
+  [string]$SourceFilter = "",
+  [string]$OutputName = "book_train_cinema_v1.jsonl",
   [switch]$PrepareOnly,
   [switch]$KeepExistingSourceObservations,
   [switch]$Apply
@@ -18,13 +20,18 @@ param(
 $ErrorActionPreference = "Stop"
 
 $prepareArgs = @(
-  ".\tools\prepare-book-train-data.py",
+  ".\\tools\\prepare-book-train-data.py",
   "--input-dir", $InputDir,
   "--out-dir", $OutDir,
+  "--output-name", $OutputName,
   "--max-chunks-per-book", "$MaxChunksPerBook",
   "--min-chunk-chars", "$MinChunkChars",
   "--max-chunk-chars", "$MaxChunkChars"
 )
+
+if ($SourceFilter -ne "") {
+  $prepareArgs += @("--source-filter", $SourceFilter)
+}
 
 if ($Apply) {
   $prepareArgs += "--apply"
@@ -61,7 +68,7 @@ if (-not $KeepExistingSourceObservations) {
   docker exec -i $dbContainer psql -U postgres -d postgres -v ON_ERROR_STOP=1 -P pager=off -c "delete from public.dataset_training_observations where metadata ->> 'source_slug' = '$safeSourceSlug';"
 }
 
-& .\tools\train-from-dataset.ps1 `
+& .\\tools\\train-from-dataset.ps1 `
   -DatasetPath $OutDir `
   -Mode book_train `
   -SourceSlug $SourceSlug `

@@ -11,8 +11,19 @@ function Assert-True {
 
 function Status-WithoutRedirect {
   param([string]$Uri, [string]$Method = "GET", [string]$Body = "", [string]$ContentType = "application/json")
+  $request = @{
+    Uri = $Uri
+    Method = $Method
+    UseBasicParsing = $true
+    MaximumRedirection = 0
+    ErrorAction = "Stop"
+  }
+  if ($Method -ne "GET") {
+    $request.Body = $Body
+    $request.ContentType = $ContentType
+  }
   try {
-    $response = Invoke-WebRequest -Uri $Uri -Method $Method -Body $Body -ContentType $ContentType -UseBasicParsing -MaximumRedirection 0 -ErrorAction Stop
+    $response = Invoke-WebRequest @request
     return @{ Status = [int]$response.StatusCode; Location = [string]$response.Headers.Location; Body = [string]$response.Content }
   } catch {
     if (-not $_.Exception.Response) { throw }
@@ -40,9 +51,9 @@ foreach ($route in $routes) {
   Write-Output "OK route $($route.Path)"
 }
 
-$home = Invoke-WebRequest -Uri "$BaseUrl/" -UseBasicParsing -TimeoutSec 30
-Assert-True (-not ([string]$home.Content).Contains("/assets/premium/boxes/")) "Home still references legacy box assets."
-Assert-True ([string]$home.Content).Contains("hero-studio-desktop") "Home does not reference the premium studio hero."
+$homeResponse = Invoke-WebRequest -Uri "$BaseUrl/" -UseBasicParsing -TimeoutSec 30
+Assert-True (-not ([string]$homeResponse.Content).Contains("/assets/premium/boxes/")) "Home still references legacy box assets."
+Assert-True ([string]$homeResponse.Content).Contains("hero-studio-desktop") "Home does not reference the premium studio hero."
 
 $assets = @(
   "/icon.png",
@@ -60,13 +71,13 @@ foreach ($asset in $assets) {
   Write-Output "OK asset $asset"
 }
 
-$availability = Invoke-RestMethod -Uri "$BaseUrl/api/store/availability?box_product_slug=viral_box_500&category_slug=restaurant&persona_slug=luxury_editor" -TimeoutSec 30
-Assert-True ($availability.ok -eq $true) "Approved restaurant inventory is not available for Classic Red."
+$availability = Invoke-RestMethod -Uri "$BaseUrl/api/store/availability?box_product_slug=viral_box_500&category_slug=beauty&persona_slug=luxury_editor" -TimeoutSec 30
+Assert-True ($availability.ok -eq $true) "Approved Beauty inventory is not available for Classic Red."
 Write-Output "OK production inventory availability"
 
-$checkout = Status-WithoutRedirect -Uri "$BaseUrl/api/checkout" -Method "POST" -Body '{"box_product_slug":"viral_box_500","category_slug":"restaurant","persona_slug":"luxury_editor"}'
+$checkout = Status-WithoutRedirect -Uri "$BaseUrl/api/checkout" -Method "POST" -Body '{"box_product_slug":"viral_box_500","category_slug":"beauty","persona_slug":"luxury_editor"}'
 Assert-True ($checkout.Status -eq 401) "Unauthenticated checkout did not fail with 401."
-Assert-True $checkout.Body.Contains("login_required") "Unauthenticated checkout did not provide the login handoff."
+Assert-True ($checkout.Body.Contains("login_required")) "Unauthenticated checkout did not provide the login handoff."
 Write-Output "OK checkout authentication gate"
 
 $webhook = Status-WithoutRedirect -Uri "$BaseUrl/api/stripe/webhook" -Method "POST" -Body '{}'
@@ -74,9 +85,9 @@ Assert-True ($webhook.Status -eq 400) "Unsigned webhook did not fail closed."
 Write-Output "OK webhook signature gate"
 
 foreach ($provider in @("google", "apple")) {
-  $result = Status-WithoutRedirect -Uri "$BaseUrl/api/auth/$provider?next=%2Fprofile"
-  Assert-True ($result.Status -in 302, 303, 307, 308) "$provider OAuth route did not redirect."
-  Assert-True $result.Location.Contains("/login") "$provider OAuth disabled state did not return safely to login."
+  $result = Invoke-WebRequest -Uri "$BaseUrl/api/auth/${provider}?next=%2Fprofile" -UseBasicParsing -TimeoutSec 30
+  Assert-True ($result.StatusCode -eq 200) "$provider OAuth fallback did not render the login page."
+  Assert-True (([string]$result.BaseResponse.ResponseUri.AbsolutePath) -eq "/login") "$provider OAuth disabled state did not return safely to login."
   Write-Output "OK $provider OAuth safe gate"
 }
 

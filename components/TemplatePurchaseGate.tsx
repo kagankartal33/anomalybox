@@ -29,7 +29,7 @@ export function TemplatePurchaseGate({ accessState, returnPath }: Props) {
             <p className="mt-5 max-w-2xl text-base leading-7 text-ink/65 sm:text-lg">
               {isAnonymous
                 ? "Purchased Anomaly Box customers can use the private production-resource library from the account connected to their Creator Vault."
-                : "Your account is active, but it does not yet have a paid Anomaly Box purchase. Any completed Classic Red or Signature Purple purchase unlocks this library."}
+                : "Your account is active, but it does not yet have a paid Anomaly Box purchase. Any completed creative brief purchase unlocks this library."}
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -37,7 +37,7 @@ export function TemplatePurchaseGate({ accessState, returnPath }: Props) {
                 href={isAnonymous ? loginHref : "/store"}
                 className="focus-ring inline-flex items-center gap-2 rounded-xl bg-ink px-6 py-3 font-semibold text-white transition hover:bg-plum-deep"
               >
-                {isAnonymous ? "Sign in" : "Choose a dossier"}
+                {isAnonymous ? "Sign in" : "Choose a creative brief"}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               <Link

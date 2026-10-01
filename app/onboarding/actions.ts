@@ -8,6 +8,7 @@ export async function saveOnboarding(formData: FormData) {
   const displayName = String(formData.get("display_name") ?? "");
   const handle = String(formData.get("handle") ?? "");
   const niche = String(formData.get("niche") ?? "");
+  const cuisineDetail = String(formData.get("cuisine_detail") ?? "").trim().slice(0, 140);
   const categoryId = String(formData.get("category_id") ?? "");
   const personaId = String(formData.get("persona_id") ?? "");
 
@@ -21,7 +22,7 @@ export async function saveOnboarding(formData: FormData) {
     handle,
     niche,
     default_platforms: ["instagram_reels"],
-    production_capacity: { review_flow: "manual_admin", mvp: true },
+    production_capacity: { review_flow: "manual_admin", mvp: true, cuisine_detail: cuisineDetail || null },
   }, { onConflict: "user_id" });
 
   if (categoryId) {

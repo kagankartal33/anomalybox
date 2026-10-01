@@ -30,8 +30,26 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { CheckoutButton } from "@/components/CheckoutButton";
 import { PremiumIcon } from "@/components/PremiumIcon";
-import { ProductBoxVisual, type ProductBoxVariant } from "@/components/ProductBoxVisual";
+import { CreativeDossierVisual, type CreativeDossierVariant } from "@/components/CreativeDossierVisual";
 import { money } from "@/lib/format";
+import {
+  categoryBucket,
+  categoryText,
+  cuisineFromQuery,
+  filterStoreCategories,
+  isCanonicalRestaurant,
+  premiumCategoryLabel,
+  titleCase,
+} from "@/lib/store-category-search";
+import {
+  categoryBucket,
+  categoryText,
+  cuisineFromQuery,
+  filterStoreCategories,
+  isCanonicalRestaurant,
+  premiumCategoryLabel,
+  titleCase,
+} from "@/lib/store-category-search";
 
 type ProductOption = {
   slug: string;
@@ -66,6 +84,10 @@ type Availability = {
   ok: boolean;
   missing: string[];
   counts: Record<string, number>;
+};
+
+type AvailabilityState = Availability & {
+  key: string;
 };
 
 type Visual = {
@@ -107,7 +129,19 @@ const cuisineTerms = [
 ];
 
 function normalized(value: string) {
-  return value.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\\u0300-\\u036f]/g, "")
+    .replace(/ı/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .replace(/[_-]+/g, " ")
+    .replace(/\\s+/g, " ")
+    .trim();
 }
 
 function titleCase(value: string) {
@@ -120,6 +154,91 @@ function titleCase(value: string) {
 
 function categoryText(category: CategoryOption) {
   return normalized(`${category.slug} ${category.name}`);
+}
+
+function premiumCategoryLabel(category: CategoryOption) {
+  const slug = normalized(category.slug);
+  const name = normalized(category.name);
+  const text = `${slug} ${name}`;
+
+  if (/boat tour|boat rental|yacht|yat|tekne|charter|sailing/.test(text)) return "Yacht Luxury Travel";
+  if (slug === "luxury travel") return "Luxury Travel";
+  if (/travel agency|travel company|travel service|tour agency|tour guide|sightseeing/.test(text)) return "Private Travel & Tours";
+  if (/hotel|resort|villa/.test(text)) return "Luxury Stay Experience";
+  if (/restaurant|dining|food|cafe|bakery/.test(text)) return "Dining & Food Experience";
+  if (/fashion|style|boutique|jewelry|watch/.test(text)) return "Style & Luxury Retail";
+  if (/beauty|makeup|skin|hair|spa|salon/.test(text)) return "Beauty & Self-Care";
+
+  return category.name;
+}
+
+function categorySearchAliases(category: CategoryOption) {
+  const text = categoryText(category);
+  const aliases: string[] = [];
+
+  if (/boat|yacht|sailing|charter|ferry/.test(text)) {
+    aliases.push(
+      "yat",
+      "yatch",
+      "yacht",
+      "tekne",
+      "tekne turu",
+      "yat turu",
+      "yat kiralama",
+      "tekne kiralama",
+      "ozel yat",
+      "ozel tekne",
+      "mavi tur",
+      "gulet",
+      "sunset cruise",
+      "private yacht charter",
+      "luxury yacht travel",
+      "boat tour",
+      "boat rental",
+      "sailing tour",
+    );
+  }
+
+  if (/travel|tour|tourism|sightseeing|hotel|resort/.test(text)) {
+    aliases.push("tur", "gezi", "seyahat", "tatil", "rota", "luxury travel", "private tour", "travel reels");
+  }
+
+  if (/restaurant|food|cafe|bakery|dining/.test(text)) {
+    aliases.push("restoran", "yemek", "kafe", "kahve", "menu", "dining", "food reels");
+  }
+
+  if (/beauty|makeup|skin|hair|spa|salon/.test(text)) {
+    aliases.push("guzellik", "makyaj", "cilt", "sac", "bakim", "beauty reels");
+  }
+
+  if (/fashion|style|boutique|jewelry|watch|outfit/.test(text)) {
+    aliases.push("moda", "stil", "kombin", "butik", "taki", "saat", "luxury fashion");
+  }
+
+  return aliases.map(normalized);
+}
+
+function categorySearchText(category: CategoryOption) {
+  return normalized([category.slug, category.name, premiumCategoryLabel(category), ...categorySearchAliases(category)].join(" "));
+}
+
+function categorySearchScore(category: CategoryOption, query: string, cuisineQuery: string, restaurantSlug?: string) {
+  const needle = normalized(query);
+  if (!needle) return 0;
+  const label = normalized(premiumCategoryLabel(category));
+  const slug = normalized(category.slug);
+  const haystack = categorySearchText(category);
+  let score = 0;
+
+  if (label === needle || slug === needle) score += 120;
+  if (label.includes(needle)) score += 80;
+  if (categorySearchAliases(category).some((alias) => alias === needle)) score += 100;
+  if (categorySearchAliases(category).some((alias) => alias.includes(needle) || needle.includes(alias))) score += 70;
+  if (haystack.includes(needle)) score += 35;
+  if (/\\b(yat|yatch|yacht|tekne|gulet|charter|mavi tur)\\b/.test(needle) && label === "yacht luxury travel") score += 160;
+  if (cuisineQuery && restaurantSlug === category.slug) score += 90;
+
+  return score;
 }
 
 function cuisineFromQuery(query: string) {
@@ -209,7 +328,7 @@ function personaHint(persona: PersonaOption) {
   return persona.description ?? persona.metadata?.audience_promise ?? "Shapes voice, pacing, visual grammar, and audience promise.";
 }
 
-function productVariant(product: ProductOption): ProductBoxVariant {
+function productVariant(product: ProductOption): CreativeDossierVariant {
   return product.slug.includes("1000") ? "purple" : "red";
 }
 
@@ -246,13 +365,14 @@ export function StoreConfigurator({
   const [contextDetail, setContextDetail] = useState(initialContextDetail);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
-  const [availability, setAvailability] = useState<Availability | null>(null);
-  const [checking, setChecking] = useState(true);
+  const [availability, setAvailability] = useState<AvailabilityState | null>(null);
 
   const selectedProduct = products.find((product) => product.slug === selectedProductSlug) ?? products[0];
   const selectedCategory = categories.find((category) => category.slug === selectedCategorySlug) ?? categories[0];
   const selectedPersona = personas.find((persona) => persona.slug === selectedPersonaSlug) ?? personas[0];
   const selectedVariant = selectedProduct ? productVariant(selectedProduct) : "red";
+  const availabilityKey = selectedProduct && selectedCategory && selectedPersona ? `${selectedProduct.slug}:${selectedCategory.slug}:${selectedPersona.slug}` : "";
+  const checking = !availability || availability.key !== availabilityKey;
   const cuisineQuery = cuisineFromQuery(query);
   const restaurantCategory = useMemo(
     () => categories.find(isCanonicalRestaurant) ?? categories.find((category) => categoryBucket(category) === "food" && categoryText(category).includes("restaurant")),
@@ -260,16 +380,7 @@ export function StoreConfigurator({
   );
 
   const filteredCategories = useMemo(() => {
-    const needle = normalized(query.trim());
-    return categories
-      .filter((category) => {
-        if (isCuisineSpecificRestaurant(category)) return false;
-        const bucket = categoryBucket(category);
-        const isCuisineRestaurantMatch = Boolean(cuisineQuery && restaurantCategory?.slug === category.slug);
-        const haystack = normalized(`${category.slug} ${category.name}`);
-        return (!needle || haystack.includes(needle) || isCuisineRestaurantMatch) && (filter === "all" || bucket === filter || isCuisineRestaurantMatch);
-      })
-      .slice(0, 180);
+    return filterStoreCategories(categories, query, filter, cuisineQuery, restaurantCategory?.slug).slice(0, 180);
   }, [categories, cuisineQuery, filter, query, restaurantCategory?.slug]);
 
   const selectedBucket = selectedCategory ? categoryBucket(selectedCategory) : "";
@@ -283,18 +394,15 @@ export function StoreConfigurator({
       category_slug: selectedCategory.slug,
       persona_slug: selectedPersona.slug,
     });
-    setChecking(true);
-    setAvailability(null);
     fetch(`/api/store/availability?${params.toString()}`, { signal: controller.signal })
       .then((response) => response.json())
-      .then((data: Availability) => setAvailability(data))
+      .then((data: Availability) => setAvailability({ ...data, key: availabilityKey }))
       .catch((error: unknown) => {
         if (error instanceof Error && error.name === "AbortError") return;
-        setAvailability({ ok: false, missing: ["availability check failed"], counts: {} });
+        setAvailability({ ok: false, missing: ["availability check failed"], counts: {}, key: availabilityKey });
       })
-      .finally(() => setChecking(false));
     return () => controller.abort();
-  }, [selectedProduct, selectedCategory, selectedPersona]);
+  }, [availabilityKey, selectedProduct, selectedCategory, selectedPersona]);
 
   function useCuisineAsRestaurant() {
     const cuisine = cuisineQuery ? titleCase(cuisineQuery) : contextDetail;
@@ -314,13 +422,13 @@ export function StoreConfigurator({
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_390px]">
-      <div className="grid gap-6">
-        <section className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
+    <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_390px]">
+      <div className="grid min-w-0 gap-6">
+        <section className="min-w-0 overflow-hidden rounded-md border border-ink/10 bg-white p-5 shadow-soft">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">Step 1</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-[-0.3px]">Choose the box you want to open.</h2>
+              <h2 className="mt-2 text-2xl font-semibold">Choose your private creative dossier.</h2>
             </div>
             <div className="rounded-full bg-paper px-3 py-1 text-xs font-semibold text-ink/55">Checkout requires login</div>
           </div>
@@ -332,19 +440,19 @@ export function StoreConfigurator({
               return (
                 <button
                   key={product.slug}
-                  className={`group rounded-md border p-5 text-left transition hover:-translate-y-0.5 ${
+                  className={`group w-full min-w-0 overflow-hidden rounded-md border p-5 text-left transition hover:-translate-y-0.5 ${
                     selected ? "border-ink bg-ink text-white shadow-soft" : "border-ink/10 bg-[#fbfaf6] hover:border-ink/25"
                   }`}
                   type="button"
                   onClick={() => setSelectedProductSlug(product.slug)}
                 >
                   <div className="grid gap-4 sm:grid-cols-[130px_1fr] sm:items-center">
-                    <div className={selected ? "rounded-md bg-white/8" : "rounded-md bg-white"}>
-                      <ProductBoxVisual variant={variant} cardCount={product.idea_count} className="h-36 max-w-[190px]" />
+                    <div className="min-w-0 rounded-md bg-white">
+                      <CreativeDossierVisual variant={variant} itemCount={product.idea_count} size="sm" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <div className="flex items-center justify-between gap-3">
-                        <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${selected ? "bg-white/10 text-white/70" : "bg-white text-ink/55"}`}>
+                        <div className={`inline-flex max-w-full items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${selected ? "bg-white/10 text-white/70" : "bg-white text-ink/55"}`}>
                           <PremiumIcon icon={variant === "purple" ? Crown : Gem} size="sm" tone={tone} />
                           {productEyebrow(product)}
                         </div>
@@ -352,7 +460,7 @@ export function StoreConfigurator({
                           <Check className="h-4 w-4" />
                         </span>
                       </div>
-                      <h3 className="mt-4 text-xl font-semibold">{product.name}</h3>
+                      <h3 className="mt-4 text-xl font-semibold">{productEyebrow(product)}</h3>
                       <p className={`mt-1 text-sm leading-6 ${selected ? "text-white/66" : "text-ink/60"}`}>{productDescription(product)}</p>
                       <div className={`mt-3 text-2xl font-semibold ${selected ? "text-white" : "text-ink"}`}>{money(product.price_usd_cents)}</div>
                     </div>
@@ -363,17 +471,17 @@ export function StoreConfigurator({
           </div>
         </section>
 
-        <section className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
+        <section className="min-w-0 overflow-hidden rounded-md border border-ink/10 bg-white p-5 shadow-soft">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">Step 2</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.3px]">Select one purchase lane.</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">This lane is locked to the box you buy. Future Store selections will not change sealed or opened boxes already in your vault.</p>
+          <h2 className="mt-2 text-2xl font-semibold">Select one purchase lane.</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">This lane is locked to the dossier you buy. Future Store selections will not change secured or available dossiers already in your vault.</p>
 
           <div className="mt-5 rounded-md border border-ink/10 bg-[#fbfaf6] p-4">
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" />
               <input
                 className="focus-ring w-full rounded-md border border-ink/15 bg-white py-3 pl-10 pr-3 text-sm"
-                placeholder="Search beauty, restaurant, travel, fashion, education..."
+                placeholder="Search yacht, yat, tekne, luxury travel, restaurant, beauty..."
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
               />
@@ -433,13 +541,13 @@ export function StoreConfigurator({
                     type="button"
                     onClick={() => setSelectedCategorySlug(category.slug)}
                   >
-                    <div className="flex items-start justify-between gap-3">
+                    <div className="flex flex-col items-start gap-3 sm:flex-row sm:justify-between">
                       <div className="flex min-w-0 items-start gap-3">
                         <div className={`grid h-9 w-9 shrink-0 place-items-center rounded-md ${visual.tone}`}>
                           <Icon className="h-4 w-4" />
                         </div>
                         <div className="min-w-0">
-                          <h3 className="font-semibold leading-5">{category.name}</h3>
+                          <h3 className="font-semibold leading-5">{premiumCategoryLabel(category)}</h3>
                           <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-ink/35">{visual.label}</p>
                         </div>
                       </div>
@@ -455,10 +563,10 @@ export function StoreConfigurator({
           </div>
         </section>
 
-        <section className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
+        <section className="min-w-0 overflow-hidden rounded-md border border-ink/10 bg-white p-5 shadow-soft">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">Step 3</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.3px]">Choose your creator mode.</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">Your creator mode shapes the rhythm, visual grammar, audience promise, and strategic angle of every card in this box.</p>
+          <h2 className="mt-2 text-2xl font-semibold">Choose your creator mode.</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">Your creator mode shapes the rhythm, visual grammar, audience promise, and strategic angle of every brief in this dossier.</p>
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {personas.map((persona) => {
               const selected = persona.slug === selectedPersona.slug;
@@ -474,11 +582,11 @@ export function StoreConfigurator({
                   onClick={() => setSelectedPersonaSlug(persona.slug)}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start gap-3">
+                    <div className="flex min-w-0 items-start gap-3">
                       <div className={`grid h-9 w-9 shrink-0 place-items-center rounded-md ${selected ? "bg-white text-ink" : visual.tone}`}>
                         <Icon className="h-4 w-4" />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <h3 className="font-semibold">{persona.name}</h3>
                         <p className={`mt-1 text-[11px] uppercase tracking-[0.12em] ${selected ? "text-white/45" : "text-ink/35"}`}>{visual.label}</p>
                       </div>
@@ -495,19 +603,19 @@ export function StoreConfigurator({
         </section>
       </div>
 
-      <aside className="lg:sticky lg:top-24 lg:self-start">
+      <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
         <div className="overflow-hidden rounded-md border border-ink/10 bg-white shadow-soft">
           <div className={`p-6 ${selectedVariant === "purple" ? "bg-[radial-gradient(circle_at_50%_0%,#F3E8FF_0%,#FFFFFF_48%,#F7F5EF_100%)]" : "bg-[radial-gradient(circle_at_50%_0%,#FFE6DD_0%,#FFFFFF_48%,#F7F5EF_100%)]"}`}>
             <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink/55 shadow-sm">
               <PremiumIcon icon={selectedVariant === "purple" ? Crown : Gem} size="sm" tone={selectedVariant === "purple" ? "purple" : "red"} />
               {productEyebrow(selectedProduct)}
             </div>
-            <ProductBoxVisual variant={selectedVariant} cardCount={selectedProduct.idea_count} className="mt-4" />
+            <CreativeDossierVisual variant={selectedVariant} itemCount={selectedProduct.idea_count} className="mt-4" />
           </div>
           <div className="p-6">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="text-2xl font-semibold tracking-[-0.3px]">{selectedProduct.name}</h2>
+                <h2 className="text-2xl font-semibold">{productEyebrow(selectedProduct)}</h2>
                 <p className="mt-1 text-sm leading-6 text-ink/60">{productDescription(selectedProduct)}</p>
               </div>
               <div className="text-2xl font-semibold">{money(selectedProduct.price_usd_cents)}</div>
@@ -536,7 +644,7 @@ export function StoreConfigurator({
                 Availability
               </div>
               <p className="mt-1 text-ink/60">
-                {checking ? "Checking this exact box match..." : availability?.ok ? "Available for this lane and creator mode." : "Temporarily unavailable for this match."}
+                {checking ? "Checking this exact dossier match..." : availability?.ok ? "Available for this lane and creator mode." : "Temporarily unavailable for this match."}
               </p>
             </div>
 
@@ -552,8 +660,8 @@ export function StoreConfigurator({
             </div>
 
             <div className="mt-5 grid gap-2 text-xs leading-5 text-ink/52">
-              <div className="flex gap-2"><LockKeyhole className="mt-0.5 h-3.5 w-3.5" /> Box enters your Creator Vault sealed after purchase.</div>
-              <div className="flex gap-2"><ShieldCheck className="mt-0.5 h-3.5 w-3.5" /> Scores and internal inventory details are never shown.</div>
+              <div className="flex gap-2"><LockKeyhole className="mt-0.5 h-3.5 w-3.5" /> Your dossier enters Creator Vault secured after purchase.</div>
+              <div className="flex gap-2"><ShieldCheck className="mt-0.5 h-3.5 w-3.5" /> Private card details stay inside your Creator Vault.</div>
             </div>
           </div>
         </div>

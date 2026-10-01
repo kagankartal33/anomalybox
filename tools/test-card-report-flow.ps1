@@ -28,6 +28,21 @@ $existingInvId = [guid]::NewGuid().ToString()
 $newInvId = [guid]::NewGuid().ToString()
 
 $sql = @"
+insert into auth.users (
+  id, instance_id, aud, role, email, encrypted_password, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+) values
+  (
+    '$creatorId', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+    '$runId-creator@example.test', crypt('Password123!', gen_salt('bf')), now(),
+    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now()
+  ),
+  (
+    '$adminId', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+    '$runId-admin@example.test', crypt('Password123!', gen_salt('bf')), now(),
+    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now()
+  );
+
 insert into public.profiles (id, display_name, role, plan, locale)
 values
   ('$creatorId', 'Card Report Creator', 'creator', 'premium', 'en-US'),
@@ -82,9 +97,9 @@ values
 insert into public.idea_inventory (
   id, idea_id, category_id, persona_id, platform, language, internal_rank_score, score_band, quality_floor_passed, status, reuse_count, max_reuse_count, metadata
 ) values
-  ('$oldInvId', '$oldIdeaId', (select id from public.categories where slug = '$categorySlug'), (select id from public.creator_personas where slug = '$personaSlug'), 'instagram_reels', 'en', 90, 'high', true, 'available', 1, 99, '{"test":"$runId"}'::jsonb),
-  ('$existingInvId', '$existingIdeaId', (select id from public.categories where slug = '$categorySlug'), (select id from public.creator_personas where slug = '$personaSlug'), 'instagram_reels', 'en', 89, 'high', true, 'available', 1, 99, '{"test":"$runId"}'::jsonb),
-  ('$newInvId', '$newIdeaId', (select id from public.categories where slug = '$categorySlug'), (select id from public.creator_personas where slug = '$personaSlug'), 'instagram_reels', 'en', 95, 'high', true, 'available', 0, 99, '{"test":"$runId"}'::jsonb);
+  ('$oldInvId', '$oldIdeaId', (select id from public.categories where slug = '$categorySlug'), (select id from public.creator_personas where slug = '$personaSlug'), 'instagram_reels', 'en', 90, 'high', true, 'retired', 1, 1, '{"test":"$runId"}'::jsonb),
+  ('$existingInvId', '$existingIdeaId', (select id from public.categories where slug = '$categorySlug'), (select id from public.creator_personas where slug = '$personaSlug'), 'instagram_reels', 'en', 89, 'high', true, 'retired', 1, 1, '{"test":"$runId"}'::jsonb),
+  ('$newInvId', '$newIdeaId', (select id from public.categories where slug = '$categorySlug'), (select id from public.creator_personas where slug = '$personaSlug'), 'instagram_reels', 'en', 95, 'high', true, 'available', 0, 1, '{"test":"$runId"}'::jsonb);
 
 insert into public.idea_box_deliveries (
   id, user_id, box_product_id, category_id, persona_id, status, allocation, delivered_at
@@ -150,6 +165,8 @@ declare
   v_report public.card_reports%rowtype;
   v_old_reuse integer;
   v_new_reuse integer;
+  v_old_status public.inventory_status;
+  v_new_status public.inventory_status;
   v_audit_count integer;
 begin
   select * into v_item from public.idea_box_items where id = '$itemOneId';
@@ -162,10 +179,10 @@ begin
     raise exception 'report was not marked replaced';
   end if;
 
-  select reuse_count into v_old_reuse from public.idea_inventory where id = '$oldInvId';
-  select reuse_count into v_new_reuse from public.idea_inventory where id = '$newInvId';
-  if v_old_reuse <> 0 or v_new_reuse <> 1 then
-    raise exception 'inventory reuse counters were not adjusted';
+  select reuse_count, status into v_old_reuse, v_old_status from public.idea_inventory where id = '$oldInvId';
+  select reuse_count, status into v_new_reuse, v_new_status from public.idea_inventory where id = '$newInvId';
+  if v_old_reuse <> 1 or v_old_status <> 'retired'::public.inventory_status or v_new_reuse <> 1 or v_new_status <> 'retired'::public.inventory_status then
+    raise exception 'single-use inventory state was not preserved';
   end if;
 
   select count(*) into v_audit_count from public.card_report_replacements where report_id = '$reportId';
@@ -189,6 +206,7 @@ delete from public.box_products where slug = '$productSlug';
 delete from public.creator_personas where slug = '$personaSlug';
 delete from public.categories where slug = '$categorySlug';
 delete from public.profiles where id in ('$creatorId', '$adminId');
+delete from auth.users where id in ('$creatorId', '$adminId');
 "@
 
 $sqlFile = Join-Path $env:TEMP "viralbox-card-report-$runId.sql"
@@ -198,8 +216,11 @@ try {
   $sql | Set-Content -LiteralPath $sqlFile -Encoding ascii
   Get-Content -LiteralPath $sqlFile -Raw |
     docker exec -i supabase_db_ViralBox psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - | Out-Null
+  if ($LASTEXITCODE -ne 0) { throw "fixture SQL failed with exit code $LASTEXITCODE" }
 
-  $result = (& docker exec -i supabase_db_ViralBox psql -U postgres -d postgres -t -A -c "select status || ':' || admin_decision from public.card_reports where id = '$reportId';").Trim()
+  $rawResult = & docker exec -i supabase_db_ViralBox psql -U postgres -d postgres -t -A -c "select status || ':' || admin_decision from public.card_reports where id = '$reportId';"
+  if ($LASTEXITCODE -ne 0) { throw "verification SQL failed with exit code $LASTEXITCODE" }
+  $result = ($rawResult | Out-String).Trim()
   Assert-True ($result -eq "replaced:accept_replace") "Unexpected report result: $result"
   Write-Host "Card report flow test passed. ReportId=$reportId ReplacementIdea=$newIdeaId"
 } finally {

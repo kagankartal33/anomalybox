@@ -11,9 +11,12 @@ export function ConsentAnalytics() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("anomalybox_analytics_consent");
-    setConsent(saved === "granted" || saved === "denied" ? saved : null);
-    setReady(true);
+    const timer = window.setTimeout(() => {
+      const saved = window.localStorage.getItem("anomalybox_analytics_consent");
+      setConsent(saved === "granted" || saved === "denied" ? saved : null);
+      setReady(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   function choose(value: Exclude<Consent, null>) {

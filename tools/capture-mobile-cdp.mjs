@@ -2,10 +2,11 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-const chrome = "C:\Program Files\Google\Chrome\Application\chrome.exe";
+const chrome = "C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe";
 const outputRoot = path.resolve("tmp", "visual-qa-20260729");
 const profileRoot = path.resolve("tmp", "chrome-cdp-profile-20260729");
 const port = 9337;
+const baseUrl = (process.argv[2] ?? "https://anomalybox.com").replace(/\\/$/, "");
 
 fs.mkdirSync(outputRoot, { recursive: true });
 fs.mkdirSync(profileRoot, { recursive: true });
@@ -99,8 +100,29 @@ async function capture(name, url) {
     returnByValue: true,
   });
   const value = metrics.result.value;
-  if (value.innerWidth !== 390 || value.clientWidth !== 390 || value.scrollWidth > 390) {
-    throw new Error(`${name} mobile overflow: ${JSON.stringify(value)}`);
+  const overflow = value.innerWidth !== 390 || value.clientWidth !== 390 || value.scrollWidth > 390;
+  let offenders = [];
+  if (overflow) {
+    const offenderResult = await send("Runtime.evaluate", {
+      expression: `Array.from(document.querySelectorAll("*"))
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          return {
+            tag: element.tagName,
+            className: String(element.className || "").slice(0, 180),
+            text: String(element.textContent || "").trim().replace(/\\\\s+/g, " ").slice(0, 100),
+            left: Math.round(rect.left),
+            right: Math.round(rect.right),
+            width: Math.round(rect.width),
+            scrollWidth: element.scrollWidth
+          };
+        })
+        .filter((item) => item.right > 391 || item.width > 391 || item.scrollWidth > 391)
+        .sort((a, b) => Math.max(b.right, b.scrollWidth) - Math.max(a.right, a.scrollWidth))
+        .slice(0, 12)`,
+      returnByValue: true,
+    });
+    offenders = offenderResult.result.value;
   }
 
   const screenshot = await send("Page.captureScreenshot", {
@@ -111,6 +133,7 @@ async function capture(name, url) {
   const outputPath = path.join(outputRoot, `${name}-mobile-cdp.png`);
   fs.writeFileSync(outputPath, Buffer.from(screenshot.data, "base64"));
   console.log(`OK ${name} ${JSON.stringify(value)} ${outputPath}`);
+  if (overflow) console.error(`OVERFLOW ${name} ${JSON.stringify(offenders)}`);
 
   socket.close();
   await fetch(`http://127.0.0.1:${port}/json/close/${target.id}`);
@@ -118,11 +141,11 @@ async function capture(name, url) {
 
 try {
   await waitForBrowser();
-  await capture("home", "https://anomalybox.com/");
-  await capture("login", "https://anomalybox.com/login");
-  await capture("store", "https://anomalybox.com/store");
-  await capture("forgot", "https://anomalybox.com/forgot-password");
-  await capture("reset", "https://anomalybox.com/reset-password");
+  await capture("home", `${baseUrl}/`);
+  await capture("login", `${baseUrl}/login`);
+  await capture("store", `${baseUrl}/store`);
+  await capture("forgot", `${baseUrl}/forgot-password`);
+  await capture("reset", `${baseUrl}/reset-password`);
 } finally {
   browser.kill();
 }

@@ -25,9 +25,11 @@ export async function POST(request: Request) {
 
   const supabase = createSupabaseAdminClient();
   const attemptId = crypto.randomUUID();
-  let reviewId = input.review_id ?? crypto.randomUUID();
+  const reviewId = input.review_id ?? crypto.randomUUID();
   let ideaId = "";
   let attemptNumber = 1;
+  const safeName = input.original_filename.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120) || "review-video.mp4";
+  const storagePath = `${user.id}/${reviewId}/${attemptId}/${safeName}`;
 
   if (input.review_id) {
     const { data: review } = await supabase.from("creator_video_reviews").select("*").eq("id", input.review_id).eq("user_id", user.id).single();
@@ -46,8 +48,8 @@ export async function POST(request: Request) {
       delivery_item_id: input.delivery_item_id,
       idea_id: ideaId,
       storage_bucket: "creator-review-videos",
-      storage_path: "",
-      original_filename: input.original_filename,
+      storage_path: storagePath,
+      original_filename: safeName,
       mime_type: input.mime_type,
       file_size_bytes: input.file_size_bytes,
       caption: input.caption,
@@ -60,8 +62,6 @@ export async function POST(request: Request) {
     if (reviewError) return NextResponse.json({ error: reviewError.message }, { status: 400 });
   }
 
-  const safeName = input.original_filename.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120) || "review-video.mp4";
-  const storagePath = `${user.id}/${reviewId}/${attemptId}/${safeName}`;
   const { data: attempt, error: attemptError } = await supabase.from("creator_video_review_attempts").insert({
     id: attemptId,
     review_id: reviewId,

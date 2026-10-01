@@ -1,15 +1,21 @@
-# ViralBox Production Deployment
+# Anomaly Box Production Deployment
 
-ViralBox is a server-rendered Next.js application. Uploading only HTML files is
-not sufficient. Deploy the repository root to Railway and the `supabase`
-directory to a hosted Supabase project.
+Anomaly Box is a server-rendered Next.js application. Uploading only HTML files is
+not sufficient. Deploy the repository root to Netlify and deploy only the
+production app database surface to a hosted Supabase project.
 
 ## 1. Authenticate the deployment tools
 
-Run these from the project root:
+Netlify is already linked for this workspace:
+
+- Project URL: `https://anomaly-box.netlify.app`
+- Admin URL: `https://app.netlify.com/projects/anomaly-box`
+- Supabase URL: `https://psqqqhcfmfojrqsvzzzb.supabase.co`
+- Supabase project ref: `psqqqhcfmfojrqsvzzzb`
+
+Netlify and Supabase CLI are logged in and linked.
 
 ```powershell
-npx --yes @railway/cli login
 supabase login
 ```
 
@@ -18,28 +24,54 @@ the repository.
 
 ## 2. Deploy Supabase
 
-Create or choose a production project in the Supabase dashboard, then run:
+Important: do not run `supabase db push` against the current migration folder
+for production. The repository migrations include training/research tables and
+seeds. Production should receive only:
 
-```powershell
-supabase link --project-ref <production-project-ref>
-supabase db push
-supabase functions deploy admin-generation-batches
-supabase functions deploy deliver-idea-box
-supabase functions deploy generate-ideas
-supabase functions deploy inventory-health
-supabase functions deploy score-idea
+- Core app/auth tables and RLS.
+- Public catalog tables: `categories`, `creator_personas`, `box_products`.
+- Purchase, checkout, webhook, notification, Vault delivery and card report tables.
+- `idea_candidates`, `idea_cards`, and `idea_inventory` for approved stock.
+- RPCs: `deliver_idea_box`, `replace_reported_card`, `inventory_health`.
+- Storage bucket/policies for `profile-avatars`.
+- Atelier lead table.
+
+Do not deploy:
+
+- `viral_training_*`
+- `dataset_training_*`
+- training/eval seeds
+- raw research or generated training outputs
+- generation Edge Functions
+
+The stock-only schema lives at:
+
+```text
+supabase/production/schema_stock_only.sql
 ```
 
-Before `db push`, inspect the migration preview shown by the CLI. The project
-contains 26 ordered migrations under `supabase/migrations`.
+It was deployed with:
 
-## 3. Deploy the app to Railway
+```powershell
+npx supabase db query --linked --file supabase\\production\\schema_stock_only.sql
+```
 
-Create a Railway project from this repository root. Railway uses
-`railway.json`, runs `npm ci && npm run build`, starts with `npm run start`, and
-checks `/` for health.
+Deploy only runtime Edge Functions:
 
-Set these Railway variables using values from the production services:
+```powershell
+supabase functions deploy deliver-idea-box
+supabase functions deploy inventory-health
+```
+
+The training/generation functions are intentionally not part of production.
+
+## 3. Deploy the app to Netlify
+
+Create a Netlify project from this repository root. Netlify detects Next.js and
+uses its OpenNext adapter for App Router, API routes, Server Actions, and image
+optimization. The repository's `netlify.toml` runs `npm run build` on Node 22.
+
+Set these Netlify environment variables using values from the production services:
 
 ```text
 NEXT_PUBLIC_SITE_URL
@@ -49,8 +81,6 @@ SUPABASE_SERVICE_ROLE_KEY
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
 LINKED_ACCOUNT_TOKEN_SECRET
-INTERNAL_API_TOKEN
-ADMIN_INTERNAL_SECRET
 RESEND_API_KEY
 EMAIL_FROM
 META_APP_ID
@@ -59,7 +89,8 @@ META_REDIRECT_URI
 ```
 
 `RESEND_*` and `META_*` can remain unset if those optional features will not be
-enabled at launch. All other values must pass:
+enabled at launch. `STRIPE_WEBHOOK_SECRET` is created after the Stripe webhook is
+added. All non-optional values must pass:
 
 ```powershell
 npm run audit:env:production

@@ -1,11 +1,11 @@
 $ErrorActionPreference = "Stop"
 
 $workspace = [System.IO.Path]::GetFullPath((Get-Location).Path)
-$archive = [System.IO.Path]::GetFullPath((Join-Path $workspace "archive\legacy-premium-assets-20260729"))
+$archive = [System.IO.Path]::GetFullPath((Join-Path $workspace "archive\\legacy-premium-assets-20260729"))
 $sources = @(
-  (Join-Path $workspace "public\assets\premium\boxes"),
-  (Join-Path $workspace "public\assets\premium\cards"),
-  (Join-Path $workspace "public\assets\premium\marketing")
+  (Join-Path $workspace "public\\assets\\premium\\boxes"),
+  (Join-Path $workspace "public\\assets\\premium\\cards"),
+  (Join-Path $workspace "public\\assets\\premium\\marketing")
 )
 
 if (-not $archive.StartsWith($workspace, [System.StringComparison]::OrdinalIgnoreCase)) {

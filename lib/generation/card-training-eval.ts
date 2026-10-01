@@ -22,7 +22,7 @@ export function evaluateCardTrainingSamples(expected: CardSftRow[], samples: unk
       const value = byId.get(id);
       const card = cardTrainingTarget(typeof value === "string" ? JSON.parse(value) : value);
       const target = JSON.parse(row.messages.at(-1)!.content);
-      const gate = evaluateIdeaCardV22(card);
+      const gate = evaluateIdeaCardV22(card, { creativeRecipe: row.meta.creative_recipe, concept: row.meta.concept });
       const codes = [...gate.hardGateCodes, ...gate.issueCodes, ...gate.humanReviewReasons];
       if (gate.decision !== "approve") codes.push("quality_not_approved");
       if (["category", "personaSlug", "platform", "durationSeconds", "hookId", "shootFormat"].some(key => card[key] !== target[key])) codes.push("brief_contract_mismatch");
@@ -35,6 +35,6 @@ export function evaluateCardTrainingSamples(expected: CardSftRow[], samples: unk
     passed_count: passed, pass_rate: passed / Math.max(1, expected.length), unexpected_rows: unexpectedRows,
     diagnostic_passed: expected.length > 0 && passed === expected.length && unexpectedRows.length === 0,
     model_qualified: false, semantic_duplicate_rate: null,
-    next_gate: "Run independent critic, global semantic dedup and model:qualify-v2.2 before publication.", results,
+    next_gate: "Run independent critic, global semantic dedup and model:qualify-v3 before publication.", results,
   };
 }

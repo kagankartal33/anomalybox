@@ -29,7 +29,7 @@ def main() -> int:
             for old, new in REPLACEMENTS:
                 polished = polished.replace(old, new)
             if polished != original:
-                path.write_text(polished, encoding="utf-8", newline="\
+                path.write_text(polished, encoding="utf-8", newline="
                 changed += 1
     print(f"modernized public Markdown files: {changed}")
     return 0

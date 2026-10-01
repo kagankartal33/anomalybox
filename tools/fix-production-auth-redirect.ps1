@@ -1,6 +1,9 @@
+$ErrorActionPreference = "Stop"
+
 Add-Type @"
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 public static class CredentialReader {
   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -33,10 +36,9 @@ public static class CredentialReader {
 
     try {
       var credential = Marshal.PtrToStructure<CREDENTIAL>(pointer);
-      return Marshal.PtrToStringUni(
-        credential.CredentialBlob,
-        checked((int)credential.CredentialBlobSize / 2)
-      );
+      var bytes = new byte[credential.CredentialBlobSize];
+      Marshal.Copy(credential.CredentialBlob, bytes, 0, bytes.Length);
+      return Encoding.UTF8.GetString(bytes);
     } finally {
       CredFree(pointer);
     }
@@ -60,6 +62,8 @@ $before = Invoke-RestMethod -Method Get -Uri $endpoint -Headers $headers
 $body = @{
   site_url = "https://anomalybox.com"
   uri_allow_list = "https://anomalybox.com/auth/callback**"
+  smtp_admin_email = "auth@anomalybox.com"
+  smtp_sender_name = "Anomaly Box"
 } | ConvertTo-Json -Compress
 
 $after = Invoke-RestMethod -Method Patch -Uri $endpoint -Headers $headers -Body $body

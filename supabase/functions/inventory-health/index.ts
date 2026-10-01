@@ -15,18 +15,18 @@ class HttpError extends Error {
   }
 }
 
-const supabaseUrl = Deno.env.get("SUPABASE_URL");
-const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? Deno.env.get("LOCAL_SUPABASE_URL");
+const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("LOCAL_SUPABASE_SERVICE_ROLE_KEY");
 
 if (!supabaseUrl || !serviceRoleKey) {
-  throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required");
+  throw new Error("Supabase URL and service role key are required");
 }
 
 function requireAdmin(req: Request) {
   const expected = Deno.env.get("ADMIN_API_TOKEN") ?? Deno.env.get("INTERNAL_API_TOKEN");
   if (!expected) throw new HttpError(500, "ADMIN_API_TOKEN or INTERNAL_API_TOKEN is not configured");
 
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  const bearer = req.headers.get("authorization")?.replace(/^Bearer\\s+/i, "");
   const token = req.headers.get("x-admin-token") ?? bearer;
   if (token !== expected) throw new HttpError(401, "Unauthorized admin request");
 }

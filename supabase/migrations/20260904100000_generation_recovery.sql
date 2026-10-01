@@ -3,7 +3,10 @@
 alter table public.idea_creative_signature_reservations
   add column if not exists state text not null default 'pending',
   add column if not exists lease_expires_at timestamptz not null default (now() + interval '10 minutes'),
-  add column if not exists idea_id uuid references public.idea_candidates(id) on delete set null;
+  add column if not exists idea_id uuid references public.idea_candidates(id) on delete set null,
+  add column if not exists import_payload_hash text;
+alter table public.idea_creative_signature_reservations
+  drop constraint if exists idea_creative_signature_reservations_state_check;
 alter table public.idea_creative_signature_reservations
   add constraint idea_creative_signature_reservations_state_check check (state in ('pending', 'committed'));
 
@@ -55,6 +58,31 @@ begin
       where i.decision_trace#>>'{generation,run_id}'=p_run_id::text);
   get diagnostics released = row_count;
   return released;
+end $$;
+
+create or replace function public.guard_automatic_generation_run() returns trigger
+language plpgsql set search_path=public as $$
+begin
+  if new.prompt_version<>'idea-card-premium-v3.0.0-automatic' then return new; end if;
+  perform 1 from public.idea_generation_batches where id=new.generation_batch_id for update;
+  if new.request_key is null or new.requested_count<>1 or new.candidate_multiplier<>5
+    or new.taxonomy_version is distinct from 'creative-taxonomy-v1' then
+    raise exception 'V3 generation requires request_key, requested_count=1, candidate_multiplier=5 and creative-taxonomy-v1';
+  end if;
+  if exists(select 1 from public.idea_generation_runs where generation_batch_id=new.generation_batch_id and request_key=new.request_key) then
+    raise exception 'Generation request already exists' using errcode='23505';
+  end if;
+  perform public.reconcile_idea_generation_batch(new.generation_batch_id);
+  if exists(select 1 from public.idea_generation_runs where generation_batch_id=new.generation_batch_id and status in ('queued','running')) then
+    raise exception 'Generation batch is busy' using errcode='55P03';
+  end if;
+  if (select count(*) from public.idea_candidates where generation_batch_id=new.generation_batch_id)
+    >= (select target_count from public.idea_generation_batches where id=new.generation_batch_id) then
+    raise exception 'Generation batch target already filled';
+  end if;
+  new.stage:=case when new.status='queued' then 'queued' else 'normalize' end;
+  new.heartbeat_at:=now(); new.lease_expires_at:=now()+interval '10 minutes';
+  return new;
 end $$;
 
 create or replace function public.reconcile_idea_generation_run(p_run_id uuid, p_force boolean default false)
@@ -156,7 +184,8 @@ create or replace function public.import_generated_idea_card(p_run_id uuid,p_can
 returns uuid language plpgsql security invoker set search_path = public as $$
 declare owner public.idea_generation_runs%rowtype; batch public.idea_generation_batches%rowtype;
   incoming public.idea_candidates%rowtype; existing public.idea_candidates%rowtype;
-  card_id uuid; canonical_signature text; normalized_card jsonb; held public.idea_creative_signature_reservations%rowtype;
+  card_id uuid; canonical_signature text; normalized_card jsonb; payload_hash text;
+  held public.idea_creative_signature_reservations%rowtype;
 begin
   if jsonb_typeof(p_candidate) is distinct from 'object' or jsonb_typeof(p_card) is distinct from 'object' then
     raise exception 'Candidate and card must be JSON objects' using errcode='22023';
@@ -172,12 +201,18 @@ begin
     or incoming.decision_trace->>'import_source' is distinct from 'verified_generation'
     or incoming.decision_trace#>>'{generation,run_id}' is distinct from p_run_id::text
     or incoming.decision_trace#>>'{generation,prompt_version}' is distinct from owner.prompt_version
+    or incoming.decision_trace#>>'{generation,profile_slug}' is distinct from owner.profile_slug
+    or incoming.decision_trace#>>'{generation,provider}' is distinct from owner.provider
+    or incoming.decision_trace#>>'{generation,model}' is distinct from owner.model
+    or incoming.decision_trace#>>'{generation,schema_version}' is distinct from owner.schema_version::text
+    or incoming.decision_trace#>>'{generation,taxonomy_version}' is distinct from owner.taxonomy_version
     or nullif(incoming.external_idea_id,'') is null then
     raise exception 'Verified generation provenance and lane must match the run' using errcode='23514';
   end if;
   canonical_signature:=public.creative_signature_from_recipe_v2(incoming.decision_trace#>'{generation,creative_recipe}');
   if canonical_signature is null or incoming.decision_trace#>>'{generation,creative_signature}' is distinct from canonical_signature
-    or p_card->>'schemaVersion' is distinct from '2' or nullif(btrim(p_card->>'title'),'') is null
+    or p_card->>'schemaVersion' is distinct from '2' or jsonb_typeof(p_card->'title') is distinct from 'string'
+    or nullif(btrim(p_card->>'title'),'') is null or p_card->>'title' is distinct from incoming.title
     or jsonb_typeof(p_card->'steps') is distinct from 'array'
     or p_card->>'category' is distinct from (select slug from public.categories where id=batch.category_id)
     or p_card->>'personaSlug' is distinct from (select slug from public.creator_personas where id=batch.persona_id)
@@ -188,12 +223,17 @@ begin
     raise exception 'Generated card contract or creative signature is invalid' using errcode='23514';
   end if;
   if jsonb_array_length(p_card->'steps')=0 then raise exception 'Generated card needs steps' using errcode='23514'; end if;
+  payload_hash:=encode(sha256(convert_to(p_candidate::text || E'
   select * into existing from public.idea_candidates
     where generation_batch_id=batch.id and external_idea_id=incoming.external_idea_id for update;
   if found then
     normalized_card:=p_card || jsonb_build_object('id',existing.id,'title',coalesce(p_card->>'title',incoming.title),
       'one_sentence_premise',coalesce(p_card->>'one_sentence_premise',incoming.one_sentence_premise));
-    if not (to_jsonb(existing) @> p_candidate) or not exists(select 1 from public.idea_cards c where c.idea_id=existing.id and c.card=normalized_card) then
+    select * into held from public.idea_creative_signature_reservations where generation_run_id=p_run_id
+      and creative_signature=canonical_signature and state='committed' and idea_id=existing.id for update;
+    if (held.import_payload_hash is not null and held.import_payload_hash is distinct from payload_hash)
+      or (held.import_payload_hash is null and not (to_jsonb(existing) @> p_candidate))
+      or not exists(select 1 from public.idea_cards c where c.idea_id=existing.id and c.card=normalized_card) then
       raise exception 'Generation replay does not match the committed candidate and card' using errcode='23514';
     end if;
     return existing.id;
@@ -219,7 +259,7 @@ begin
     'one_sentence_premise',coalesce(p_card->>'one_sentence_premise',incoming.one_sentence_premise));
   insert into public.idea_cards(idea_id,title,card,markdown)
     values(card_id,incoming.title,normalized_card,case when jsonb_typeof(p_card->'markdown')='string' then p_card->>'markdown' else null end);
-  update public.idea_creative_signature_reservations set state='committed',idea_id=card_id where id=held.id;
+  update public.idea_creative_signature_reservations set state='committed',idea_id=card_id,import_payload_hash=payload_hash where id=held.id;
   return card_id;
 end $$;
 

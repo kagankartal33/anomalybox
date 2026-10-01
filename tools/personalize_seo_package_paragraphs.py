@@ -19,7 +19,7 @@ CONTENT_DIR = ROOT / "content" / "seo-package"
 
 
 def normalized(block: str) -> str:
-    return re.sub(r"\s+", " ", block.strip()).lower()
+    return re.sub(r"\\\\s+", " ", block.strip()).lower()
 
 
 def eligible(block: str) -> bool:
@@ -30,20 +30,21 @@ def eligible(block: str) -> bool:
 
 
 def anchors(text: str) -> list[str]:
-    candidates = re.findall(r"^###\s+(.+?)\s*$", text, re.M)
-    candidates += re.findall(r"\*\*([^*:\
-    title_match = re.search(r"^#\s+(.+?)\s*$", text, re.M)
+    candidates = re.findall(r"^###\\\\s+(.+?)\\\\s*$", text, re.M)
+    candidates += re.findall(r"\\\\*\\\\*([^*:
+    title_match = re.search(r"^#\\\\s+(.+?)\\\\s*$", text, re.M)
+    page_title = title_match.group(1) if title_match else "the page example"
     if title_match:
-        candidates.append(title_match.group(1))
+        candidates.append(page_title)
 
     useful: list[str] = []
     for candidate in candidates:
-        clean = re.sub(r"^[0-9]+\.\s*", "", candidate).strip()
-        if re.match(r"^(how|what|when|can|should|is|do|does)\b", clean, re.I):
+        clean = re.sub(r"^[0-9]+\\\\.\\\\s*", "", candidate).strip()
+        if re.match(r"^(how|what|when|can|should|is|do|does)\\\\b", clean, re.I):
             continue
         if clean and clean.lower() not in {item.lower() for item in useful}:
             useful.append(clean)
-    return useful or ["the page example"]
+    return useful or [page_title]
 
 
 def contextualize(block: str, anchor: str, variant: int) -> str:
@@ -68,7 +69,7 @@ def main() -> int:
     raw_by_key: dict[str, str] = {}
 
     for path, text in texts.items():
-        for block in re.split(r"\
+        for block in re.split(r"
             if eligible(block):
                 key = normalized(block)
                 owners[key].add(path)
@@ -80,24 +81,33 @@ def main() -> int:
 
     for path, original in texts.items():
         page_anchors = anchors(original)
+        title_match = re.search(r"^#\\\\s+(.+?)\\\\s*$", original, re.M)
+        page_title = title_match.group(1) if title_match else path.stem.replace("-", " ")
         occurrence = 0
 
         def replace(match: re.Match[str]) -> str:
             nonlocal occurrence, changed_paragraphs
-            block = match.group(0).strip()
+            prefix = match.group("prefix")
+            block = match.group("block").strip()
             key = normalized(block)
             if key not in duplicate_keys:
                 return match.group(0)
             digest = hashlib.sha256(f"{path.stem}:{key}".encode("utf-8")).hexdigest()
             anchor = page_anchors[int(digest[:8], 16) % len(page_anchors)]
+            if anchor == "the page example" or anchor.lower().startswith("will a break destroy"):
+                anchor = page_title
             variant = int(digest[8:16], 16) % 4
             occurrence += 1
             changed_paragraphs += 1
-            return contextualize(block, anchor, variant)
+            return prefix + contextualize(block, anchor, variant)
 
-        polished = re.sub(r"(?ms)(?<!\
+        polished = re.sub(
+            r"(?ms)(?P<prefix>\\\\A|
+            replace,
+            original,
+        )
         if polished != original:
-            path.write_text(polished.rstrip() + "\
+            path.write_text(polished.rstrip() + "
             changed_files += 1
 
     print(f"personalized SEO package files: {changed_files}")

@@ -15,6 +15,7 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = ROOT / "Book-Train"
 DEFAULT_OUTPUT = ROOT / "dataset" / "book_train" / "prepared" / "extended"
+csv.field_size_limit(1024 * 1024 * 128)
 
 
 SOURCES = [
@@ -119,15 +120,15 @@ def sha(value: str) -> str:
 
 
 def clean(value: Any, limit: int = 2400) -> str:
-    text = re.sub(r"\s+", " ", str(value or "")).strip()
+    text = re.sub(r"\\s+", " ", str(value or "")).strip()
     return text[:limit].strip()
 
 
 def normalized(value: str) -> str:
-    value = re.sub(r"https?://\S+", " ", value or "")
-    value = re.sub(r"@\w+", " ", value)
-    value = re.sub(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", " ", value, flags=re.I)
-    value = re.sub(r"\s+", " ", value).strip().lower()
+    value = re.sub(r"https?://\\S+", " ", value or "")
+    value = re.sub(r"@\\w+", " ", value)
+    value = re.sub(r"\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\b", " ", value, flags=re.I)
+    value = re.sub(r"\\s+", " ", value).strip().lower()
     return value
 
 
@@ -144,7 +145,25 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
         for line in f:
             line = line.strip()
             if line:
-                yield json.loads(line)
+                try:
+                    item = json.loads(line)
+                except json.JSONDecodeError:
+                    decoder = json.JSONDecoder()
+                    cursor = 0
+                    while cursor < len(line):
+                        while cursor < len(line) and line[cursor].isspace():
+                            cursor += 1
+                        if cursor >= len(line):
+                            break
+                        try:
+                            item, cursor = decoder.raw_decode(line, cursor)
+                        except json.JSONDecodeError:
+                            break
+                        if isinstance(item, dict):
+                            yield item
+                    continue
+                if isinstance(item, dict):
+                    yield item
 
 
 def iter_json_items(path: Path) -> Iterable[dict[str, Any]]:
@@ -222,13 +241,13 @@ def feature_flags(source: dict[str, Any], row: dict[str, Any], text: str) -> lis
     flags: list[str] = []
     if "seo" in family:
         flags.append("seo_intent")
-    if re.search(r"\b(technical|crawl|index|schema|structured|robots|sitemap|canonical|rank|h1|snippet)\b", n):
+    if re.search(r"\\b(technical|crawl|index|schema|structured|robots|sitemap|canonical|rank|h1|snippet)\\b", n):
         flags.append("technical_trust")
-    if re.search(r"\b(keyword|intent|title|description|readability|content|landing|conversion|lead)\b", n):
+    if re.search(r"\\b(keyword|intent|title|description|readability|content|landing|conversion|lead)\\b", n):
         flags.append("clear_value_prop")
-    if re.search(r"\?|what|how|why|when|is it|difference", n):
+    if re.search(r"\\?|what|how|why|when|is it|difference", n):
         flags.append("question_answer")
-    if re.search(r"\b(legal|claim|compliance|can-spam|disclosure|safe|risk|evidence)\b", n):
+    if re.search(r"\\b(legal|claim|compliance|can-spam|disclosure|safe|risk|evidence)\\b", n):
         flags.append("premium_claim_boundary")
     if family == "twitter_sentiment":
         flags.append("social_microcopy")
@@ -252,9 +271,9 @@ def risk_level(source: dict[str, Any], text: str) -> str:
     n = text.lower()
     if source.get("eval_only"):
         return "medium"
-    if re.search(r"\b(suicide|self harm|weapon|murder|rape|porn|explicit)\b", n):
+    if re.search(r"\\b(suicide|self harm|weapon|murder|rape|porn|explicit)\\b", n):
         return "restricted"
-    if re.search(r"\b(legal|finance|medical|health|child|kid|politic|hate|claim|guarantee|can-spam)\b", n):
+    if re.search(r"\\b(legal|finance|medical|health|child|kid|politic|hate|claim|guarantee|can-spam)\\b", n):
         return "medium"
     return "low"
 
@@ -383,6 +402,7 @@ def main() -> None:
     parser.add_argument("--input-dir", default=str(DEFAULT_INPUT))
     parser.add_argument("--out-dir", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--output-name", default="book_train_extended_v1.jsonl")
+    parser.add_argument("--source-filter", default="")
     parser.add_argument("--max-rows-per-source", type=int, default=0)
     parser.add_argument("--max-scan-rows-per-source", type=int, default=0)
     parser.add_argument("--apply", action="store_true")
@@ -393,9 +413,12 @@ def main() -> None:
     output_path = out_dir / args.output_name
     manifest_path = out_dir / args.output_name.replace(".jsonl", ".manifest.json")
 
+    source_filter = args.source_filter.strip().lower()
     sources = []
     for source in SOURCES:
         adjusted = dict(source)
+        if source_filter and source_filter not in adjusted["family"].lower() and source_filter not in adjusted["path"].lower():
+            continue
         if args.max_rows_per_source > 0:
             adjusted["max_rows"] = min(int(adjusted.get("max_rows", args.max_rows_per_source)), args.max_rows_per_source)
         if args.max_scan_rows_per_source > 0:
@@ -428,7 +451,7 @@ def main() -> None:
                 if row["content_hash"] in seen:
                     continue
                 seen.add(row["content_hash"])
-                out.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+                out.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\
                 total += 1
     manifest = {
         **plan,

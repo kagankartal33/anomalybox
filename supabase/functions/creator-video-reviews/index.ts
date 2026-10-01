@@ -78,7 +78,7 @@ async function patchRows(table: string, query: string, payload: unknown, prefer 
 }
 
 async function requireUser(req: Request) {
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  const bearer = req.headers.get("authorization")?.replace(/^Bearer\\s+/i, "");
   if (!bearer) throw new HttpError(401, "Authorization bearer token is required");
 
   const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
@@ -95,7 +95,7 @@ async function requireUser(req: Request) {
 }
 
 function requireAdmin(req: Request) {
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  const bearer = req.headers.get("authorization")?.replace(/^Bearer\\s+/i, "");
   const token = req.headers.get("x-admin-token") ?? bearer;
   if (token !== adminApiToken) throw new HttpError(401, "Unauthorized admin request");
 }
@@ -137,7 +137,7 @@ function truncate(value: string, length = 280) {
 }
 
 function valueAtPath(source: Json, path: string): unknown {
-  const tokens = path.match(/[^.[\]]+/g) ?? [];
+  const tokens = path.match(/[^.[\\]]+/g) ?? [];
   return tokens.reduce((acc: unknown, key) => {
     if (Array.isArray(acc)) return acc[Number(key)];
     return asObject(acc)[key];
@@ -213,22 +213,22 @@ function addCheck(
 function checklistFromCard(card: Json) {
   const checks: Json[] = [];
   const hookPack = asObject(card.hook_performance_pack);
-  addCheck(checks, "Hook", "hook_first_second_visual", "Ilk 1 saniyede gorsel hook var", "hook_performance_pack.first_second_visual_hook", true, "Ilk saniyede durdurma etkisi yaratan gorsel, hareket veya kontrast var mi?");
-  addCheck(checks, "Hook", "hook_first_line", "Ilk cumle karttaki hook niyetini tasiyor", "hook_performance_pack.first_line_hook", true, "Konusulan ilk cumle veya ekrandaki ilk metin karttaki hook ile ayni vaadi veriyor mu?");
+  addCheck(checks, "Hook", "hook_first_second_visual", "The first second includes a visual hook", "hook_performance_pack.first_second_visual_hook", true, "Does the first second include a visual, movement, or contrast that creates a stop-scroll moment?");
+  addCheck(checks, "Hook", "hook_first_line", "The first line carries the card's hook intent", "hook_performance_pack.first_line_hook", true, "Does the spoken first line or opening on-screen text deliver the same promise as the card hook?");
   if (asArray(hookPack.hook_options).length >= 3) {
-    addCheck(checks, "Hook", "hook_variants_available", "Karttaki hook varyantlarindan biri kullanilmis", "hook_performance_pack.hook_options", false, "Creator karttaki hooklardan birini ya da ayni niyette uyarlanmis bir versiyonu kullanmis mi?");
+    addCheck(checks, "Hook", "hook_variants_available", "One of the card's hook variants is used", "hook_performance_pack.hook_options", false, "Did the creator use one of the card hooks or a version adapted with the same intent?");
   }
 
   asArray(card.scene_script).slice(0, 8).forEach((scene, index) => {
     const row = asObject(scene);
     addCheck(
       checks,
-      "Sahne Akisi",
+      "Scene Flow",
       `scene_script_${index + 1}`,
-      `Sahne ${index + 1}: ${String(row.purpose ?? "kart amaci")} amaci islenmis`,
+      `Scene ${index + 1}: ${String(row.purpose ?? "card purpose")} is covered`,
       `scene_script[${index}]`,
       true,
-      "Bu sahnenin amaci videoda net hissediliyor mu; voiceover, spoken line veya ekrandaki text bunu destekliyor mu?",
+      "Is the purpose of this scene clear in the video, and is it supported by voiceover, spoken line, or on-screen text?",
     );
   });
 
@@ -238,10 +238,10 @@ function checklistFromCard(card: Json) {
       checks,
       "B-roll",
       `shot_list_${index + 1}`,
-      `Shot ${index + 1}: ${String(row.shot ?? row.type ?? "kart shot")} gorunuyor`,
+      `Shot ${index + 1}: ${String(row.shot ?? row.type ?? "card shot")} appears`,
       `shot_list[${index}]`,
       true,
-      "Karttaki shot tipi videoda benzer niyetle cekilmis mi?",
+      "Is the shot type from the card captured with a similar intent in the video?",
     );
   });
 
@@ -251,26 +251,26 @@ function checklistFromCard(card: Json) {
       checks,
       "B-roll",
       `b_roll_${index + 1}`,
-      `B-roll: ${String(row.type ?? row.shot ?? "kart b-roll")} kullanilmis`,
+      `B-roll: ${String(row.type ?? row.shot ?? "card b-roll")} is used`,
       `b_roll_plan[${index}]`,
       false,
-      "B-roll sahnesi reklamsi durmadan atmosfer, kanit veya gerceklik hissi katiyor mu?",
+      "Does the B-roll add atmosphere, proof, or realism without feeling like an obvious ad insert?",
     );
   });
 
   for (const key of ["face", "hands", "body", "expression"]) {
     if (hasText(asObject(card.pose_direction)[key])) {
-      addCheck(checks, "Poz ve Mikro Davranis", `pose_${key}`, `Poz yonu: ${key} uygulanmis`, `pose_direction.${key}`, false, "Yuz/beden/el kullanimi karttaki ton ve premium/relatable hedefe uyuyor mu?");
+      addCheck(checks, "Pose & Micro Behavior", `pose_${key}`, `Pose direction: ${key} is applied`, `pose_direction.${key}`, false, "Do face, body, and hand usage match the card's tone and premium/relatable goal?");
     }
   }
   for (const key of ["facial_expression", "eye_contact", "product_handling", "camera_attention", "smile_timing", "avoid_over_advertising"]) {
     if (hasText(asObject(card.micro_behavior_guide)[key])) {
-      addCheck(checks, "Poz ve Mikro Davranis", `micro_${key}`, `Mikro davranis: ${key} uygulanmis`, `micro_behavior_guide.${key}`, false, "Creator'in mikro davranisi fazla reklam gibi durmadan karttaki niyeti tasiyor mu?");
+      addCheck(checks, "Pose & Micro Behavior", `micro_${key}`, `Micro behavior: ${key} is applied`, `micro_behavior_guide.${key}`, false, "Does the creator's micro behavior carry the card's intent without looking overly promotional?");
     }
   }
   for (const key of ["framing", "movement", "lighting"]) {
     if (hasText(asObject(card.camera_direction)[key])) {
-      addCheck(checks, "Poz ve Mikro Davranis", `camera_${key}`, `Kamera yonu: ${key} uygulanmis`, `camera_direction.${key}`, true, "Kamera kadraji, hareketi veya isigi karttaki cekim diline uyuyor mu?");
+      addCheck(checks, "Pose & Micro Behavior", `camera_${key}`, `Camera direction: ${key} is applied`, `camera_direction.${key}`, true, "Do framing, movement, or lighting match the visual language of the card?");
     }
   }
 
@@ -280,30 +280,30 @@ function checklistFromCard(card: Json) {
       checks,
       "Edit Timeline",
       `edit_timeline_${index + 1}`,
-      `Edit beat: ${String(row.beat ?? row.second ?? "kart beat")} takip edilmis`,
+      `Edit beat: ${String(row.beat ?? row.second ?? "card beat")} is followed`,
       `editing_timeline[${index}]`,
       true,
-      "Video zaman akisi karttaki pattern interrupt, premise, proof/turn, payoff ve CTA ritmine uyuyor mu?",
+      "Does the video's timing follow the card's pattern interrupt, premise, proof/turn, payoff, and CTA rhythm?",
     );
   });
 
   const captionPack = asObject(card.caption_pack);
-  addCheck(checks, "Caption & Comment", "caption_present", "Caption girilmis", "caption_pack.caption_options", true, "Caption karttaki seceneklerden biri ya da ayni niyette guclu bir uyarlama mi?");
+  addCheck(checks, "Caption & Comment", "caption_present", "Caption is included", "caption_pack.caption_options", true, "Is the caption one of the card options, or a strong adaptation with the same intent?");
   if (asArray(captionPack.on_screen_text).length > 0) {
-    addCheck(checks, "Caption & Comment", "onscreen_text_present", "Ekran yazisi kullanilmis", "caption_pack.on_screen_text", false, "Ekran text'i videonun hook, kanit veya payoff kismini daha anlasilir yapiyor mu?");
+    addCheck(checks, "Caption & Comment", "onscreen_text_present", "On-screen text is used", "caption_pack.on_screen_text", false, "Does the on-screen text make the hook, proof, or payoff easier to understand?");
   }
   if (card.comment_engine) {
-    addCheck(checks, "Caption & Comment", "comment_trigger_present", "Yorum tetikleyen soru veya pinned comment hazir", "comment_engine", false, "Yorum sorusu takipcinin cevap vermesini kolaylastiriyor mu?");
+    addCheck(checks, "Caption & Comment", "comment_trigger_present", "Comment trigger or pinned comment is ready", "comment_engine", false, "Does the comment question make it easy for followers to respond?");
   }
 
   if (hasText(card.brand_lift_statement)) {
-    addCheck(checks, "Brand Lift", "brand_lift_alignment", "Video creator marka algisini karttaki yone tasiyor", "brand_lift_statement", false, "Video creator'i karttaki marka pozisyonuna yaklastiriyor mu?");
+    addCheck(checks, "Brand Lift", "brand_lift_alignment", "The video moves creator perception toward the card's brand direction", "brand_lift_statement", false, "Does the video move the creator closer to the brand position described in the card?");
   }
 
   const brandSafety = asObject(card.brand_safety);
-  if (hasText(brandSafety.disclosure_text)) addCheck(checks, "Brand Safety", "disclosure_present", "Sponsor/disclosure gerekliligi kontrol edildi", "brand_safety.disclosure_text", true, "Sponsorluysa disclosure video/caption basinda yeterince acik mi?");
-  if (hasText(brandSafety.claim_boundary)) addCheck(checks, "Brand Safety", "claim_boundary_present", "Claim boundary korunmus", "brand_safety.claim_boundary", true, "Saglik/finans/performans gibi iddialar kisisel baglam ve sinirla anlatilmis mi?");
-  if (asArray(brandSafety.do_not_say).length > 0) addCheck(checks, "Brand Safety", "do_not_say_avoided", "Bunu soyleme listesi ihlal edilmemis", "brand_safety.do_not_say", true, "Karttaki yasakli/riski ifadeler videoda veya caption'da kullanilmamis mi?");
+  if (hasText(brandSafety.disclosure_text)) addCheck(checks, "Brand Safety", "disclosure_present", "Sponsor/disclosure requirement is checked", "brand_safety.disclosure_text", true, "If sponsored, is the disclosure clear enough at the start of the video and caption?");
+  if (hasText(brandSafety.claim_boundary)) addCheck(checks, "Brand Safety", "claim_boundary_present", "Claim boundary is protected", "brand_safety.claim_boundary", true, "Are health, finance, performance, or similar claims framed with personal context and limits?");
+  if (asArray(brandSafety.do_not_say).length > 0) addCheck(checks, "Brand Safety", "do_not_say_avoided", "The do-not-say list is respected", "brand_safety.do_not_say", true, "Were the card's restricted or risky phrases avoided in the video and caption?");
 
   return checks;
 }
@@ -333,13 +333,13 @@ function section(
   return {
     key,
     title,
-    short_summary: objectText(payload).trim() ? summary : "Bu kartta bu bolum icin ozel yonerge yok.",
-    how_to_do_it: objectText(payload).trim() ? howTo : "Karttaki diger bolumleri takip et; bu sekme icin zorunlu ekstra aksiyon bulunmuyor.",
-    what_good_looks_like: objectText(payload).trim() ? good : "Video genel kart fikrine sadik kaldigi surece bu bolum sorun sayilmaz.",
+    short_summary: objectText(payload).trim() ? summary : "This card has no dedicated guidance for this section.",
+    how_to_do_it: objectText(payload).trim() ? howTo : "Follow the other card sections; this tab does not require an extra action.",
+    what_good_looks_like: objectText(payload).trim() ? good : "As long as the video stays faithful to the core card idea, this section is not a blocker.",
     common_mistakes: objectText(payload).trim() ? mistakes : [],
-    example_execution: objectText(payload).trim() ? example : "Ornek gerekli degil.",
+    example_execution: objectText(payload).trim() ? example : "No example is required.",
     source_payload: payload,
-    checklist_items: checks.filter((check) => String(check.section) === title || (title === "Sahne Akisi" && String(check.section) === "Sahne Akisi")),
+    checklist_items: checks.filter((check) => String(check.section) === title),
   };
 }
 
@@ -348,25 +348,25 @@ function cardSections(card: Json, checks: Json[]) {
     section(
       card,
       "scene_flow",
-      "Sahne Akisi",
+      "Scene Flow",
       ["video_blueprint", "scene_script", "shot_list"],
-      "Videonun hangi sirayla ilerleyecegini ve her sahnenin amacini gosterir.",
-      "Sahneleri karttaki sirayla cek: once dikkat, sonra guven/kanit, sonra payoff ve CTA. Her sahne icin voiceover, konusma veya ekran yazisindan en az birini kullan.",
-      "Izleyen kisi ilk saniyede konuyu anlar, ortada neden inanacagini gorur, finalde ne yapacagini bilir.",
-      ["Sahneleri karistirmak", "Payoff'u gec vermek", "Kanit sahnesini sadece urun gosterimine cevirmek"],
-      "0-2 saniyede final goruntu, 3-8 saniyede karar/premise, 9-20 saniyede kanit, finalde kaydetme CTA.",
+      "Shows the order of the video and the job of each scene.",
+      "Shoot the scenes in the card's order: attention first, then trust/proof, then payoff and CTA. Use at least one of voiceover, spoken line, or on-screen text for each scene.",
+      "The viewer understands the topic in the first second, sees why to trust it in the middle, and knows what to do at the end.",
+      ["Mixing the scene order", "Delivering the payoff too late", "Turning the proof scene into plain product display"],
+      "0-2s final visual, 3-8s decision/premise, 9-20s proof, final seconds save CTA.",
       checks,
     ),
     section(
       card,
       "pose_micro_behavior",
-      "Poz ve Mikro Davranis",
+      "Pose & Micro Behavior",
       ["pose_direction", "micro_behavior_guide", "camera_direction"],
-      "Creator'in kamerada nasil duracagini, nereye bakacagini ve urunu nasil tutacagini anlatir.",
-      "Yuz ifadesi, el hareketi, goz temasi ve kamera kadrajini karttaki tona gore uygula. Urunu gostermek yerine davranisin dogal hissini koru.",
-      "Creator guvenilir, rahat ve reklamsi olmayan bir enerji verir; urun/konu kadrajda vardir ama zorla satilmaz.",
-      ["Kameraya surekli bakmak", "Urunu fazla sallamak", "Abartili satis mimigi", "Isik/kadrajla premium hissi bozmak"],
-      "Hook'ta kameraya bak, kanit anlatirken urune/aksiyona don, payoff'ta tekrar kameraya gelip sakin CTA ver.",
+      "Explains how the creator should stand, look, move, and handle the subject on camera.",
+      "Match expression, hand movement, eye contact, and framing to the card's tone. Keep the behavior natural instead of forcing the product or topic into the frame.",
+      "The creator feels credible, relaxed, and not overly promotional; the subject is present without feeling pushed.",
+      ["Looking into the camera the entire time", "Over-handling the product", "Using exaggerated sales expressions", "Breaking the premium feel with poor lighting or framing"],
+      "Look to camera for the hook, turn to the product/action during proof, then return calmly for the CTA.",
       checks,
     ),
     section(
@@ -374,11 +374,11 @@ function cardSections(card: Json, checks: Json[]) {
       "b_roll",
       "B-roll",
       ["b_roll_plan", "shot_list"],
-      "Videoyu tek konusmadan cikaran detay, hazirlik, close-up ve atmosfer cekimlerini listeler.",
-      "B-roll'u ana cumleyi kanitlamak veya atmosferi guclendirmek icin kullan. Her shot'un bir amaci olsun: kanit, gerceklik, ortam veya gecis.",
-      "Close-up, el hareketi, ortam detayi ve gerceklik ani videonun pahali ama insan hissini guclendirir.",
-      ["Gereksiz stok goruntu gibi B-roll", "Ayni aciyi fazla tekrarlamak", "Before/after ile riskli iddia kurmak"],
-      "Urun close-up + el hareketi + ortam detayi + kucuk gerceklik ani + guvenli alternatif shot.",
+      "Lists the detail, preparation, close-up, and atmosphere shots that keep the video from feeling like a single talking head.",
+      "Use B-roll to prove the main line or strengthen the atmosphere. Every shot should have a job: proof, realism, setting, or transition.",
+      "Close-ups, hand movement, environment details, and small real moments make the video feel premium but human.",
+      ["Using pointless stock-like B-roll", "Repeating the same angle too often", "Creating risky before/after claims"],
+      "Product close-up + hand movement + environment detail + small reality moment + safer alternative shot.",
       checks,
     ),
     section(
@@ -386,11 +386,11 @@ function cardSections(card: Json, checks: Json[]) {
       "edit_timeline",
       "Edit Timeline",
       ["editing_timeline", "editing_notes"],
-      "Videonun saniye saniye ritmini ve hangi noktada ne olacagini tarif eder.",
-      "Ilk 2 saniyede pattern interrupt, sonra premise, sonra proof/turn, finalde payoff ve save/comment CTA ritmini koru.",
-      "Video hizli baslar, ortada netlesir, finalde izleyiciye kaydetme veya yorum atma nedeni verir.",
-      ["Ilk saniyeyi bos gecirmek", "Proof kismini uzatmak", "CTA'yi cok hizli gecmek"],
-      "0-2 sn hook, 3-8 sn premise, 9-20 sn proof/turn, 21-35 sn payoff, son 3 sn CTA.",
+      "Defines the second-by-second rhythm of the video and what should happen at each point.",
+      "Keep the rhythm: pattern interrupt in the first 2 seconds, then premise, proof/turn, payoff, and a save/comment CTA.",
+      "The video starts fast, clarifies in the middle, and gives the viewer a reason to save or comment at the end.",
+      ["Wasting the first second", "Dragging out the proof section", "Rushing the CTA"],
+      "0-2s hook, 3-8s premise, 9-20s proof/turn, 21-35s payoff, final 3s CTA.",
       checks,
     ),
     section(
@@ -398,11 +398,11 @@ function cardSections(card: Json, checks: Json[]) {
       "caption_comment",
       "Caption & Comment",
       ["caption_pack", "comment_engine", "story_followup"],
-      "Caption, ekran yazisi, pinned comment ve yorum tetikleyici soruyu hazirlar.",
-      "Caption'i karttaki seceneklerden sec veya ayni niyette uyarlayarak yaz. Pinned comment ve yorum sorusu takipcinin kolay cevap verecegi kadar net olsun.",
-      "Caption videoyu tekrar izletir, ekran yazisi ana fikri sabitler, yorum sorusu takipciyi konusmaya davet eder.",
-      ["Caption'i sadece aciklama gibi yazmak", "Yorum sorusunu cok genel sormak", "Ekran yazisini kalabalik yapmak"],
-      "Caption: 'Finalden onceki karar daha onemli.' Pinned comment: 'Siz bu kararda neyi elerdiniz?'",
+      "Prepares the caption, on-screen text, pinned comment, and comment-trigger question.",
+      "Choose one of the card's caption options or adapt it with the same intent. The pinned comment and question should be specific enough for followers to answer easily.",
+      "The caption makes the video worth replaying, on-screen text anchors the main idea, and the question invites a real response.",
+      ["Writing the caption like a plain explanation", "Asking a generic comment question", "Overloading the screen text"],
+      "Caption: 'The decision before the final result matters more.' Pinned comment: 'What would you remove from this decision?'",
       checks,
     ),
     section(
@@ -410,11 +410,11 @@ function cardSections(card: Json, checks: Json[]) {
       "brand_lift",
       "Brand Lift",
       ["brand_lift_statement", "strategic_value", "creator_presence_mode", "atmosphere_direction"],
-      "Bu fikrin creator'in marka algisina ne katmasi gerektigini aciklar.",
-      "Videonun tonu, atmosferi ve anlatim bicimi creator'i karttaki marka pozisyonuna tasimali: daha guvenilir, daha premium, daha relatable veya daha uzman.",
-      "Izleyici sadece fikri degil creator'in zevkini, karar kalitesini ve marka degerini hatirlar.",
-      ["Fikri sadece taktik gibi yapmak", "Creator markasina katacagi hissi gostermemek", "Premium/relatable tonu karistirmak"],
-      "Creator urunu zorlamadan karar standardini gosterir; takipci 'bu kisi secmeyi biliyor' hissiyle ayrilir.",
+      "Explains what this idea should add to the creator's brand perception.",
+      "The tone, atmosphere, and delivery should move the creator toward the card's brand position: more credible, premium, relatable, or expert.",
+      "The viewer remembers not only the idea, but the creator's taste, decision quality, and brand value.",
+      ["Treating the idea like a simple tactic", "Not showing what the idea adds to the creator brand", "Mixing premium and relatable tones without intention"],
+      "The creator shows decision quality without forcing the product; the viewer leaves thinking, 'this creator knows how to choose.'",
       checks,
     ),
     section(
@@ -422,11 +422,40 @@ function cardSections(card: Json, checks: Json[]) {
       "brand_safety",
       "Brand Safety",
       ["brand_safety"],
-      "Sponsor, claim, yasakli ifade ve guvenli alternatif dil sinirlarini belirler.",
-      "Disclosure gerekiyorsa acik yaz. Kesin sonuc, tedavi, garanti, herkeste calisir gibi iddialardan uzak dur. Karttaki daha guvenli ifadeyi kullan.",
-      "Video guven verir; sponsorluysa saklamaz, iddialari baglamla sinirlar ve marka riskini dusurur.",
-      ["Disclosure saklamak", "Kesin sonuc vaadi", "Kanit gerektiren claim'i kanitsiz soylemek", "Do not say listesini ihlal etmek"],
-      "Bunu 'herkeste calisir' yerine 'benim bugunku baglamimda daha guvenli secim bu' diye anlat.",
+      "Sets the sponsor, claim, restricted wording, and safer-language boundaries.",
+      "Use clear disclosure when needed. Avoid claims like guaranteed results, treatment, warranty, or works for everyone. Use the safer wording from the card.",
+      "The video feels trustworthy; if sponsored, it is transparent, limits claims by context, and reduces brand risk.",
+      ["Hiding disclosure", "Promising a guaranteed result", "Making an evidence-based claim without evidence", "Violating the do-not-say list"],
+      "Say 'in my context today, this is the safer choice' instead of 'this works for everyone.'",
+      checks,
+    ),
+  ];
+}
+
+function creatorCardSections(card: Json, checks: Json[]) {
+  return [
+    section(
+      card,
+      "scene_flow",
+      "Scene Flow",
+      ["video_blueprint", "scene_script", "shot_list", "b_roll_plan", "pose_direction", "micro_behavior_guide", "camera_direction"],
+      "Shoot the Reel in the card's exact order.",
+      "Follow the scene order, capture each required shot once, and keep the camera/framing clear.",
+      "The creator can shoot the draft without guessing what comes next.",
+      ["Repeating the same action", "Adding context before the hook", "Skipping the required frame"],
+      "Shoot the hook first, then the proof/action, then the final payoff.",
+      checks,
+    ),
+    section(
+      card,
+      "edit_timeline",
+      "Edit Assembly Guide",
+      ["editing_timeline", "editing_notes", "edit_assembly_guide", "scene_script", "shot_list"],
+      "Assemble the final Reel with the card's timing and cut rhythm.",
+      "Use the listed clip order, cut points, overlays, voice sync, and final checklist.",
+      "The edit is clean, readable, and ready for human review.",
+      ["Using every take", "Adding decorative transitions", "Letting overlays arrive too late"],
+      "Cut each scene at the listed moment, keep overlays readable, and check the final frame before exporting.",
       checks,
     ),
   ];
@@ -439,11 +468,11 @@ function adminReviewGuide(card: Json, checks: Json[]) {
     final_decision_options: ["ready_to_post", "minor_revisions", "needs_reshoot", "brand_safety_blocked"],
     sections: sections.map((item) => ({
       ...item,
-      admin_instruction: "Videoyu izlerken karttaki orijinal onerinin ayni niyetle uygulanip uygulanmadigini kontrol et. Birebir kopya arama; amac, ritim, guvenlik ve creator-fit yeterli mi bak.",
+      admin_instruction: "While watching the video, check whether the card's original recommendation was executed with the same intent. Do not look for an exact copy; judge purpose, rhythm, safety, and creator fit.",
       checklist_template: asArray(item.checklist_items).map((check) => ({
         ...asObject(check),
         original_suggestion: valueAtPath(card, String(asObject(check).source_card_path ?? "")) ?? null,
-        feedback_placeholder: "Creator'a net, uygulanabilir ve kisa feedback yaz.",
+        feedback_placeholder: "Write clear, practical, concise feedback for the creator.",
       })),
     })),
   };
@@ -457,7 +486,7 @@ function creatorReport(decision: string, overallFeedback: string, checkRows: Jso
     (sections[sectionName] as Json[]).push({
       label: row.label,
       status: row.status,
-      durum: row.status === "pass" ? "Yapilmis" : row.status === "partial" ? "Kismen" : row.status === "missing" ? "Eksik" : "Uygun degil",
+      status_label: row.status === "pass" ? "Completed" : row.status === "partial" ? "Partially done" : row.status === "missing" ? "Missing" : "Not applicable",
       evidence_summary: row.evidence_summary,
       revision_advice: row.revision_advice,
     });
@@ -466,12 +495,12 @@ function creatorReport(decision: string, overallFeedback: string, checkRows: Jso
   return {
     final_decision: decision,
     headline: decision === "ready_to_post"
-      ? "Video paylasima hazir."
+      ? "Your video is ready to post."
       : decision === "brand_safety_blocked"
-      ? "Brand safety duzeltilmeden paylasma."
+      ? "Do not post until brand safety is fixed."
       : decision === "needs_reshoot"
-      ? "Bazi kritik bolumler yeniden cekilmeli."
-      : "Revizyonla daha guclu olacak.",
+      ? "A few critical sections should be reshot."
+      : "This will be stronger with revision.",
     overall_feedback: overallFeedback,
     sections,
     raw_scores_visible: false,
@@ -728,7 +757,7 @@ async function getReview(userId: string, reviewId: string) {
     review: safeReview(review),
     attempts: await attemptsForReview(reviewId),
     checks: await checksForReview(reviewId),
-    card_sections: cardSections(card, checks),
+    card_sections: creatorCardSections(card, checks),
   };
 }
 
@@ -745,7 +774,7 @@ async function adminQueue(req: Request) {
   const status = url.searchParams.get("status") ?? "under_review";
   const attempts = await getRows(
     "creator_video_review_attempts",
-    `select=id,review_id,user_id,idea_id,attempt_number,original_filename,mime_type,status,final_decision,submitted_at,created_at,updated_at&status=eq.${encodeURIComponent(status)}&order=submitted_at.desc.nullslast,created_at.desc&limit=100`,
+    `select=id,review_id,user_id,idea_id,attempt_number,original_filename,mime_type,status,final_decision,submitted_at,created_at,updated_at&status=eq.${encodeURIComponent(status)}&order=created_at.desc&limit=100`,
   );
   return { attempts: attempts.map(safeAttempt) };
 }
@@ -919,7 +948,7 @@ Deno.serve(async (req) => {
     if (req.method === "GET" && segments.length === 1) {
       return jsonResponse(200, await getReview(user.id, segments[0]));
     }
-    if (req.method === "POST" && segments.length === 3 && segments[1] === "attempts") {
+    if (req.method === "POST" && segments.length === 2 && segments[1] === "attempts") {
       return jsonResponse(201, await createNewAttempt(user.id, segments[0], body));
     }
     if (req.method === "POST" && segments.length === 4 && segments[1] === "attempts" && segments[3] === "submit") {

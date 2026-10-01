@@ -1,9 +1,11 @@
 import type { IdeaCard, IdeaCardProductionEstimate } from "./types";
+import type { PurchaseLane } from "../algorithmic-reason/types";
 
-export const DURATION_PLANNER_VERSION = "duration-planner-v1";
+export const DURATION_PLANNER_VERSION = "duration-planner-v2";
 export const PRODUCTION_ESTIMATE_VERSION = "production-estimate-v1-uncalibrated";
 
-export type RuntimeProfile = "quick_payoff" | "single_proof" | "story_proof" | "deep_process";
+export const RUNTIME_PROFILES = ["quick_payoff", "single_proof", "story_proof", "deep_process"] as const;
+export type RuntimeProfile = (typeof RUNTIME_PROFILES)[number];
 
 export const RUNTIME_PROFILE_RANGES: Record<RuntimeProfile, { min: number; max: number }> = {
   quick_payoff: { min: 12, max: 18 },
@@ -12,7 +14,7 @@ export const RUNTIME_PROFILE_RANGES: Record<RuntimeProfile, { min: number; max: 
   deep_process: { min: 40, max: 60 },
 };
 
-const PROFILE_ORDER = Object.keys(RUNTIME_PROFILE_RANGES) as RuntimeProfile[];
+const PROFILE_ORDER = [...RUNTIME_PROFILES];
 
 const DEFAULT_MIX: Record<RuntimeProfile, number> = {
   quick_payoff: 0.2,
@@ -21,12 +23,19 @@ const DEFAULT_MIX: Record<RuntimeProfile, number> = {
   deep_process: 0.1,
 };
 
-const LANE_MIXES: Record<string, Record<RuntimeProfile, number>> = {
+export const RUNTIME_PROFILE_MIXES_BY_LANE: Record<PurchaseLane, Record<RuntimeProfile, number>> = {
   beauty: { quick_payoff: 0.2, single_proof: 0.4, story_proof: 0.3, deep_process: 0.1 },
+  fashion: { quick_payoff: 0.25, single_proof: 0.4, story_proof: 0.25, deep_process: 0.1 },
+  commerce_affiliate: { quick_payoff: 0.25, single_proof: 0.45, story_proof: 0.25, deep_process: 0.05 },
+  creator_education: { quick_payoff: 0.15, single_proof: 0.35, story_proof: 0.35, deep_process: 0.15 },
   entertainment_comedy: { quick_payoff: 0.45, single_proof: 0.35, story_proof: 0.15, deep_process: 0.05 },
-  travel: { quick_payoff: 0.1, single_proof: 0.25, story_proof: 0.45, deep_process: 0.2 },
   fitness_wellness_safe: { quick_payoff: 0.15, single_proof: 0.4, story_proof: 0.35, deep_process: 0.1 },
   food: { quick_payoff: 0.2, single_proof: 0.4, story_proof: 0.3, deep_process: 0.1 },
+  lifestyle: { quick_payoff: 0.25, single_proof: 0.4, story_proof: 0.25, deep_process: 0.1 },
+  luxury: { quick_payoff: 0.15, single_proof: 0.35, story_proof: 0.35, deep_process: 0.15 },
+  parenting_family: { quick_payoff: 0.2, single_proof: 0.4, story_proof: 0.3, deep_process: 0.1 },
+  thought_leadership: { quick_payoff: 0.1, single_proof: 0.3, story_proof: 0.4, deep_process: 0.2 },
+  travel: { quick_payoff: 0.1, single_proof: 0.25, story_proof: 0.45, deep_process: 0.2 },
 };
 
 export type DurationPlanningConcept = {
@@ -65,12 +74,19 @@ function stableHash(value: string): number {
     hash ^= value.charCodeAt(index);
     hash = Math.imul(hash, 16777619);
   }
+  // Avalanche the low bits before modulo allocation. Raw FNV low bits formed
+  // visible exact-second clusters for similarly suffixed concept IDs.
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x7feb352d);
+  hash ^= hash >>> 15;
+  hash = Math.imul(hash, 0x846ca68b);
+  hash ^= hash >>> 16;
   return hash >>> 0;
 }
 
 function allocationCounts(categorySlug: string, targetCount: number): Record<RuntimeProfile, number> {
   const count = Math.max(1, Math.floor(targetCount));
-  const mix = LANE_MIXES[categorySlug] ?? DEFAULT_MIX;
+  const mix = RUNTIME_PROFILE_MIXES_BY_LANE[categorySlug as PurchaseLane] ?? DEFAULT_MIX;
   const counts = Object.fromEntries(PROFILE_ORDER.map((profile) => [profile, Math.floor(mix[profile] * count)])) as Record<RuntimeProfile, number>;
   let assigned = Object.values(counts).reduce((sum, value) => sum + value, 0);
   const remainderOrder = [...PROFILE_ORDER].sort((left, right) => {
@@ -145,10 +161,14 @@ export function planCardDuration(
     + Math.max(0, clamp(concept.locationCount, 1, 3) - 1) * 3
     + clamp(concept.resetCount, 0, 4) * 2;
   const contentMinimum = Math.max(speechSeconds + 3, visualSeconds);
-  const variation = (stableHash(`${categorySlug}:${slotIndex}:${concept.conceptId}`) % 5) - 2;
+  if (contentMinimum > range.max) {
+    throw new Error("concept_exceeds_runtime_profile");
+  }
+  const spreadTarget = range.min
+    + (stableHash(`${categorySlug}:${slotIndex}:${concept.conceptId}`) % (range.max - range.min + 1));
   return {
     runtimeProfile,
-    targetSeconds: clamp(contentMinimum + variation, range.min, range.max),
+    targetSeconds: clamp(Math.max(contentMinimum, spreadTarget), range.min, range.max),
     plannerVersion: DURATION_PLANNER_VERSION,
   };
 }
@@ -197,11 +217,12 @@ export function buildProductionEstimate(
   };
 }
 
-export function timingFingerprint(card: Pick<IdeaCard, "durationSeconds" | "steps">): string {
+export function timingFingerprint(card: Pick<IdeaCard, "durationSeconds" | "steps" | "shootFormat">): string {
   if (!card.durationSeconds) return "invalid";
-  return card.steps
-    .map((step) => `${step.stage}:${Math.round((step.endSecond / card.durationSeconds) * 20) / 20}`)
+  const beats = card.steps
+    .map((step) => `${step.stage}:${Math.round((step.endSecond / card.durationSeconds) * 100) / 100}`)
     .join("|");
+  return `${card.shootFormat ?? "unknown"}|${beats}`;
 }
 
 export function analyzeDurationDistribution(

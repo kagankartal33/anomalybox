@@ -1,5 +1,5 @@
 param(
-  [string]$OutDir = ".\dataset\huggingface",
+  [string]$OutDir = ".\\dataset\\huggingface",
   [int]$MaxRowsPerSource = 1000,
   [switch]$IncludeP1,
   [string]$CompileVersion = "2026-v5-hf-social",
@@ -14,7 +14,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $fetchArgs = @(
-  ".\tools\fetch-huggingface-training-data.py",
+  ".\\tools\\fetch-huggingface-training-data.py",
   "--out-dir", $OutDir,
   "--max-rows-per-source", "$MaxRowsPerSource"
 )
@@ -37,7 +37,7 @@ if (-not $Apply) {
   exit 0
 }
 
-& .\tools\train-from-dataset.ps1 `
+& .\\tools\\train-from-dataset.ps1 `
   -DatasetPath $OutDir `
   -Mode hf `
   -SourceSlug $SourceSlug `

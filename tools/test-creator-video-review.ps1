@@ -12,7 +12,13 @@ $runId = "creator_video_review_{0}" -f (Get-Date -Format "yyyyMMdd_HHmmss")
 $outLog = Join-Path $env:TEMP "viralbox-cvr-out-$runId.log"
 $errLog = Join-Path $env:TEMP "viralbox-cvr-err-$runId.log"
 $envFile = Join-Path $env:TEMP "viralbox-cvr-env-$runId.env"
+$progressLog = Join-Path $env:TEMP "viralbox-cvr-progress-$runId.log"
 $server = $null
+
+function Write-ProgressLog {
+  param([Parameter(Mandatory = $true)][string]$Message)
+  Add-Content -LiteralPath $progressLog -Encoding ascii -Value ("{0} {1}" -f (Get-Date -Format "HH:mm:ss"), $Message)
+}
 
 function Invoke-Json {
   param(
@@ -129,6 +135,7 @@ function New-ChecksFromTemplate {
 }
 
 try {
+  Write-ProgressLog "start"
   if (-not $KeepServer) {
     Stop-LocalFunctionServers -RemoveEdgeRuntime
   }
@@ -146,6 +153,7 @@ try {
   $token = $signup.access_token
   $userId = $signup.user.id
   if (-not $token -or -not $userId) { throw "Auth signup did not return access_token/user.id" }
+  Write-ProgressLog "signed up user $userId"
 
   $ideaId = [guid]::NewGuid().ToString()
   $inventoryId = [guid]::NewGuid().ToString()
@@ -231,12 +239,12 @@ values ('$ideaId', 'Creator manual review fixture card', '$cardJson'::jsonb)
 on conflict (idea_id) do update set card = excluded.card, updated_at = now();
 
 insert into public.idea_inventory (
-  id, idea_id, category_id, persona_id, platform, language, content_style_layers, internal_rank_score, score_band, quality_floor_passed, status, metadata
+  id, idea_id, category_id, persona_id, platform, language, content_style_layers, internal_rank_score, score_band, quality_floor_passed, status, reuse_count, max_reuse_count, metadata
 ) values (
   '$inventoryId', '$ideaId',
   (select id from public.categories where slug = 'beauty'),
   (select id from public.creator_personas where slug = 'luxury_editor'),
-  'instagram_reels', 'tr', array['premium_video_blueprint']::text[], 91, 'high', true, 'available', '{"test":"creator_video_review"}'::jsonb
+  'instagram_reels', 'tr', array['premium_video_blueprint']::text[], 91, 'high', true, 'retired', 1, 1, '{"test":"creator_video_review"}'::jsonb
 );
 
 insert into public.idea_box_deliveries (
@@ -261,6 +269,7 @@ insert into public.idea_box_items (
   Get-Content -LiteralPath $fixtureFile -Raw |
     docker exec -i supabase_db_ViralBox psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - | Out-Null
   Remove-Item -LiteralPath $fixtureFile -Force
+  Write-ProgressLog "fixture inserted"
 
   @(
     "SUPABASE_URL=$localApiUrl",
@@ -299,6 +308,7 @@ insert into public.idea_box_items (
     }
   }
   if (-not $ready) { throw "Functions server did not become ready. Last probe error: $lastError" }
+  Write-ProgressLog "functions ready"
 
   $created = Invoke-Json `
     -Method "POST" `
@@ -319,6 +329,7 @@ insert into public.idea_box_items (
   Assert-True (-not ($created.review.PSObject.Properties.Name -contains "admin_private_notes")) "Create leaked admin_private_notes"
   $reviewId = $created.review.id
   $attemptId = $created.attempt.id
+  Write-ProgressLog "created review $reviewId attempt $attemptId"
 
   $submitted = Invoke-Json `
     -Method "POST" `
@@ -327,17 +338,25 @@ insert into public.idea_box_items (
     -Body @{ caption = "#ad Finalden onceki karar daha onemli."; transcript = "Finalden onceki karar daha degerli." }
   Assert-True ($submitted.review.status -eq "under_review") "Submit should move review to under_review"
   Assert-True ($submitted.attempt.status -eq "under_review") "Submit should move attempt to under_review"
+  Write-ProgressLog "submitted attempt"
 
   $creatorDetail = Invoke-Json -Method "GET" -Uri "$FunctionsBaseUrl/creator-video-reviews/$reviewId" -Token $token
-  Assert-True ($creatorDetail.card_sections.Count -eq 7) "Creator should receive seven explanatory card sections"
-  Assert-True (($creatorDetail.card_sections | Where-Object { $_.key -eq "scene_flow" }).checklist_items.Count -gt 0) "Scene Flow section should include checklist items"
+  Assert-True ($creatorDetail.card_sections.Count -eq 2) "Creator should receive only execution-safe card sections"
+  $sceneSections = @($creatorDetail.card_sections | Where-Object { $_.key -eq "scene_flow" })
+  Assert-True ($sceneSections[0].checklist_items.Count -gt 0) "Scene Flow section should include checklist items"
+  $creatorHiddenSections = @($creatorDetail.card_sections | Where-Object { $_.key -in @("caption_comment", "brand_lift", "brand_safety") })
+  Assert-True ($creatorHiddenSections.Count -eq 0) "Creator detail leaked admin-only card sections"
+  Write-ProgressLog "creator detail ok"
 
   $queue = Invoke-Json -Method "GET" -Uri "$FunctionsBaseUrl/creator-video-reviews/admin" -AdminTokenValue $AdminToken
-  Assert-True (($queue.attempts | Where-Object { $_.id -eq $attemptId }).Count -eq 1) "Admin queue should include under_review attempt"
+  Write-ProgressLog ("admin queue raw {0}" -f ($queue | ConvertTo-Json -Depth 20 -Compress))
+  Assert-True (@($queue.attempts | Where-Object { $_.id -eq $attemptId }).Count -eq 1) "Admin queue should include under_review attempt"
+  Write-ProgressLog "admin queue ok"
 
   $adminDetail = Invoke-Json -Method "GET" -Uri "$FunctionsBaseUrl/creator-video-reviews/admin/creator-video-reviews/$reviewId" -AdminTokenValue $AdminToken
   Assert-True ($adminDetail.admin_review_guide.sections.Count -eq 7) "Admin detail should include review guide sections"
   Assert-True ($adminDetail.checklist_template.Count -gt 8) "Admin detail should include checklist template"
+  Write-ProgressLog "admin detail ok"
   $missingKey = $adminDetail.checklist_template[0].check_key
   $revisionChecks = New-ChecksFromTemplate -Template $adminDetail.checklist_template -MissingKey $missingKey
 
@@ -353,12 +372,14 @@ insert into public.idea_box_items (
     }
   Assert-True ($revision.review.status -eq "revision_requested") "Minor revisions should move review to revision_requested"
   Assert-True (-not ($revision.review.PSObject.Properties.Name -contains "admin_private_notes")) "Admin private note leaked in admin save response"
+  Write-ProgressLog "revision saved"
 
   $afterRevision = Invoke-Json -Method "GET" -Uri "$FunctionsBaseUrl/creator-video-reviews/$reviewId" -Token $token
   Assert-True ($afterRevision.review.status -eq "revision_requested") "Creator should see revision_requested"
   Assert-True ($afterRevision.review.creator_report.overall_feedback -like "*hook*") "Creator should see admin feedback"
   Assert-True (-not ($afterRevision.review.PSObject.Properties.Name -contains "admin_private_notes")) "Creator detail leaked admin_private_notes"
-  Assert-True (($afterRevision.checks | Where-Object { $_.status -eq "missing" }).Count -ge 1) "Creator should see missing checklist item"
+  Assert-True (@($afterRevision.checks | Where-Object { $_.status -eq "missing" }).Count -ge 1) "Creator should see missing checklist item"
+  Write-ProgressLog "creator revision visible"
 
   $second = Invoke-Json `
     -Method "POST" `
@@ -374,6 +395,7 @@ insert into public.idea_box_items (
   Assert-True ($second.attempt.attempt_number -eq 2) "Second upload should be attempt 2"
   $secondAttemptId = $second.attempt.id
   Invoke-Json -Method "POST" -Uri "$FunctionsBaseUrl/creator-video-reviews/$reviewId/attempts/$secondAttemptId/submit" -Token $token -Body @{ caption = "#ad Finalden onceki karar daha net." } | Out-Null
+  Write-ProgressLog "second attempt submitted $secondAttemptId"
 
   $adminDetail2 = Invoke-Json -Method "GET" -Uri "$FunctionsBaseUrl/creator-video-reviews/admin/creator-video-reviews/$reviewId" -AdminTokenValue $AdminToken
   $passChecks = New-ChecksFromTemplate -Template $adminDetail2.checklist_template
@@ -388,9 +410,11 @@ insert into public.idea_box_items (
       checks = $passChecks
     }
   Assert-True ($approved.review.status -eq "ready_to_post") "All required checks should allow ready_to_post"
+  Write-ProgressLog "approved ready_to_post"
 
   $analyzeGone = Invoke-Json -Method "POST" -Uri "$FunctionsBaseUrl/creator-video-reviews/$reviewId/analyze" -Token $token -Body @{} -ExpectedStatuses @(410)
   Assert-True ($analyzeGone.error -like "*disabled*") "Analyze endpoint should be disabled"
+  Write-ProgressLog "analyze disabled ok"
 
   $finalCreator = Invoke-Json -Method "GET" -Uri "$FunctionsBaseUrl/creator-video-reviews/$reviewId" -Token $token
   Assert-True ($finalCreator.attempts.Count -eq 2) "Attempt history should be preserved"
@@ -401,8 +425,13 @@ insert into public.idea_box_items (
   $trainingLeakSql = "select count(*) from public.dataset_training_observations where source_path ilike '%$reviewId%' or metadata::text ilike '%$reviewId%';"
   $trainingLeakCount = (& docker exec -i supabase_db_ViralBox psql -U postgres -d postgres -t -A -c $trainingLeakSql).Trim()
   Assert-True ([int]$trainingLeakCount -eq 0) "Creator review leaked into training observations"
+  Write-ProgressLog "training leak ok"
 
   Write-Host "Manual creator video review test passed. ReviewId=$reviewId Attempts=2 FinalStatus=$($finalCreator.review.status)"
+} catch {
+  Write-ProgressLog ("ERROR: {0}" -f $_.Exception.Message)
+  Write-ProgressLog ($_.ScriptStackTrace | Out-String)
+  throw
 } finally {
   if ($server -and -not $server.HasExited -and -not $KeepServer) {
     Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue

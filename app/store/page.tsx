@@ -4,9 +4,9 @@ import { StoreConfigurator } from "@/components/StoreConfigurator";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
-  title: "ViralBox Store | Choose Your Private Creator Box",
+  title: "Anomaly Box Store | Choose Your Private Creative Dossier",
   description:
-    "Explore Classic Red Box and SIGNATURE PURPLE BOX, then match your purchase to a creator lane and creator mode before checkout.",
+    "Explore Classic Red and Signature Purple creative dossiers, then match your purchase to a creator lane and creator mode before checkout.",
   alternates: {
     canonical: "/store",
   },
@@ -52,14 +52,14 @@ export default async function StorePage({ searchParams }: { searchParams: Promis
   return (
     <AppShell>
       <div className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/40">ViralBox Store</p>
-        <h1 className="mt-2 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-[-1px]">Choose the box, lane, and creator mode for this purchase.</h1>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/40">Anomaly Box Store</p>
+        <h1 className="mt-2 max-w-4xl text-4xl font-semibold leading-[1.04] sm:text-5xl">Choose the dossier, lane, and creator mode for this purchase.</h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-ink/66">
           Browse the Store before login. Checkout requires an account, and your selected lane and creator mode are preserved when you sign in.
         </p>
         {params.checkout === "1" ? (
-          <div className="mt-5 rounded-md border border-teal/20 bg-teal/8 p-4 text-sm leading-6 text-ink/70">
-            Your box selection is still here. Sign-in is complete, so you can review the match and open secure checkout.
+          <div className="mt-5 rounded-md border border-teal/20 bg-teal/10 p-4 text-sm leading-6 text-ink/70">
+            Your dossier selection is still here. Sign-in is complete, so you can review the match and open secure checkout.
           </div>
         ) : null}
       </div>
