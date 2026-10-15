@@ -22,7 +22,7 @@ if (Object.keys(otherVerification).length) verification.other = otherVerificatio
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: "Anomaly Box | Private Creative Direction & Briefs for Instagram Creators",
+  title: "Anomaly Box | Instagram Creative Direction & Shoot Briefs",
   description: "Private Instagram shoot briefs with openings, scene order, camera notes, scripts, and claim limits for one lane.",
   keywords: [
     "Instagram Creative Direction",
@@ -33,9 +33,6 @@ export const metadata: Metadata = {
     "Visual Signatures for Instagram",
     "Repeatable Creator System"
   ],
-  alternates: {
-    canonical: "/",
-  },
   applicationName: "Anomaly Box",
   authors: [{ name: "Anomaly Box Studio", url: "/" }],
   creator: "Anomaly Box",

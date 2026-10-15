@@ -1,7 +1,7 @@
 /**
  * Algorithmic Reason & Psychological Hook Taxonomy Types
  * 12 purchase lanes, 8 shoot formats, 6 presence personas,
- * 12 hook categories, 62 hook types, cognitive triggers, platform signals.
+ * 12 hook categories, 66 hook types, cognitive triggers, platform signals.
  */
 
 export type PurchaseLane =

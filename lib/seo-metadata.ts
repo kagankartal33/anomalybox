@@ -43,6 +43,15 @@ export function cleanAlt(value: string, title: string): string {
   return result.length <= 125 ? result : `${title} \u2014 creator planning visual.`.slice(0, 125);
 }
 
+const BRAND_SUFFIX = " | Anomaly Box";
+// Google truncates titles beyond roughly 600px (~60 characters); keep the brand suffix only when it fits.
+const MAX_TITLE_LENGTH = 60;
+
+export function brandedTitle(value: string): string {
+  const title = cleanSeoText(value);
+  return title.length + BRAND_SUFFIX.length <= MAX_TITLE_LENGTH ? `${title}${BRAND_SUFFIX}` : title;
+}
+
 export function absoluteUrl(base: string, value: string): string {
   if (/^https?:\/\//i.test(value)) return value;
   return `${base.replace(/\/$/, "")}/${value.replace(/^\//, "")}`;
@@ -51,7 +60,7 @@ export function absoluteUrl(base: string, value: string): string {
 export function publicMetadata(base: string, input: PublicSeoInput): Metadata {
   const description = cleanDescription(input.description, input.title);
   const image = input.image ? absoluteUrl(base, input.image) : undefined;
-  const title = `${cleanSeoText(input.title)} | Anomaly Box`;
+  const title = brandedTitle(input.title);
   return {
     title,
     description,
@@ -193,8 +202,14 @@ export function articleJsonLd(base: string, input: PublicSeoInput & { markdown?:
     ...(input.published ? { datePublished: input.published } : {}),
     ...(input.modified ? { dateModified: input.modified } : {}),
     inLanguage: "en",
-    author: { "@id": `${base}/#organization` },
-    publisher: { "@id": `${base}/#organization` },
+    author: { "@type": "Organization", "@id": `${base}/#organization`, name: "Anomaly Box", url: base },
+    publisher: {
+      "@type": "Organization",
+      "@id": `${base}/#organization`,
+      name: "Anomaly Box",
+      url: base,
+      logo: { "@type": "ImageObject", url: absoluteUrl(base, "/brand/mark-anomaly.svg") },
+    },
   };
   const graph: Record<string, unknown>[] = [article];
   if (faq.length) {

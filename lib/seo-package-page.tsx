@@ -26,6 +26,8 @@ const protectedMetadata: Metadata = {
   title: "Customer Resource Library | Anomaly Box",
   description: "Private production resources for customers with a completed Anomaly Box purchase.",
   robots: { index: false, follow: false },
+  // Drop the homepage canonical inherited from the root layout; a noindex page must not claim another URL.
+  alternates: { canonical: null },
 };
 
 export function packageGenerateStaticParams(section: SeoPackageSection, options: PackageRouteOptions = {}) {

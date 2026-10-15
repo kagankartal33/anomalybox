@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Customer Resource Library | Anomaly Box",
   description: "Private production resources for customers with a completed Anomaly Box purchase.",
   robots: { index: false, follow: false },
+  alternates: { canonical: null },
 };
 
 export const dynamic = "force-dynamic";

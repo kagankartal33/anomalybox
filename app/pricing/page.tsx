@@ -8,7 +8,7 @@ import { SampleBriefModal } from "@/components/SampleBriefModal";
 import { premiumAssets } from "@/lib/premium-assets";
 
 export const metadata: Metadata = {
-  title: "Anomaly Box Pricing | Classic Red, Signature Purple, and Atelier",
+  title: "Anomaly Box Pricing: Classic Red, Signature Purple, Atelier",
   description:
     "Compare Classic Red, Signature Purple, and Atelier. Briefs arrive in Creator Vault. Filming is not included.",
   alternates: {

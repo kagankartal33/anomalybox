@@ -12,6 +12,10 @@ const dossiers = {
   "signature-purple": { name: "Signature Purple Creative Brief", price: 100, count: 5, variant: "purple" as const, query: "premium_viral_box_1000", description: "Five private Instagram shoot briefs with deep proof structure, scene pacing, and spoken script systems for creators." },
 };
 
+function dossierImage(variant: "red" | "purple") {
+  return variant === "red" ? "/assets/premium/studio/dossier-classic.webp" : "/assets/premium/studio/dossier-signature.webp";
+}
+
 export function generateStaticParams() {
   return Object.keys(dossiers).map((slug) => ({ slug }));
 }
@@ -24,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         title: dossier.name,
         description: dossier.description,
         canonicalPath: `/dossiers/${slug}`,
-        image: dossier.variant === "red" ? "/assets/premium/studio/dossier-classic.webp" : "/assets/premium/studio/dossier-signature.webp",
+        image: dossierImage(dossier.variant),
         imageAlt: `${dossier.name} delivered digitally to Creator Vault`,
         keywords: [dossier.name, "private creator briefs", "creative direction"],
         schemaType: "Service",
@@ -46,7 +50,15 @@ export default async function DossierPage({ params }: { params: Promise<{ slug: 
         description: dossier.description,
         brand: { "@type": "Brand", name: "Anomaly Box" },
         url,
-        offers: { "@type": "Offer", priceCurrency: "USD", price: dossier.price, url: `${siteUrl()}/store?box=${dossier.query}` },
+        image: [`${siteUrl()}${dossierImage(dossier.variant)}`],
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "USD",
+          price: dossier.price,
+          availability: "https://schema.org/InStock",
+          url: `${siteUrl()}/store?box=${dossier.query}`,
+          seller: { "@type": "Organization", name: "Anomaly Box", url: siteUrl() },
+        },
       }} />
       <JsonLd data={breadcrumbJsonLd(siteUrl(), [
         { name: "Home", path: "/" },

@@ -107,6 +107,8 @@ export async function SeoPackageHub({ section, title, description, page = 1, pag
               <Link
                 key={s.id}
                 href={`/${s.id}`}
+                // Templates are a noindex customer area; keep crawlers from spending budget on it.
+                rel={s.id === "templates" ? "nofollow" : undefined}
                 className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                   isActive
                     ? "border-ink bg-ink text-white shadow-sm"

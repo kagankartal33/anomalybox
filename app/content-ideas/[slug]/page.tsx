@@ -11,6 +11,7 @@ import { getSeoPackageMarkdown } from "@/lib/seo-package-markdown";
 import { siteUrl } from "@/lib/env";
 import { premiumAssets } from "@/lib/premium-assets";
 import { packageGenerateMetadata } from "@/lib/seo-package-page";
+import { brandedTitle } from "@/lib/seo-metadata";
 
 const packageMeta = packageGenerateMetadata("content-ideas");
 
@@ -33,15 +34,16 @@ export async function generateMetadata({
   if (!segment) return {};
 
   const canonicalUrl = `${siteUrl()}/content-ideas/${slug}`;
+  const title = brandedTitle(`${segment.name}: Practical, Shoot-Ready Formats`);
   const ogImageUrl = `${siteUrl()}${premiumAssets.og.default}`;
 
   return {
-    title: `${segment.name}: Practical, Shoot-Ready Formats | Anomaly Box`,
+    title,
     description: `Practical ${segment.name.toLowerCase()} with hook, proof, shot, on-screen text, edit, and performance direction.`,
     keywords: [segment.name, `${segment.name} Reels`, "Shoot-Ready Briefs", "Campaign Creative Direction"],
     alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: `${segment.name}: Practical, Shoot-Ready Formats | Anomaly Box`,
+      title,
       description: `Practical ${segment.name.toLowerCase()} with hook, proof, shot, on-screen text, edit, and performance direction.`,
       type: "article",
       url: canonicalUrl,

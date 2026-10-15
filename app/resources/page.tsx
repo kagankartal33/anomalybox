@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SeoPackageHub } from "@/components/SeoPackageHub";
 import { premiumAssets } from "@/lib/premium-assets";
 
-const TITLE = "Creator Content Guides, Briefs & Production Tools | Anomaly Box";
+const TITLE = "Creator Content Guides, Briefs & Tools | Anomaly Box";
 const DESCRIPTION =
   "Find practical creator guides for content planning, Reels, UGC briefs, filming, visual direction, sustainable workflows, and performance review.";
 

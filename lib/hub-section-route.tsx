@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { SeoPackageHub } from "@/components/SeoPackageHub";
-import { clampHubPage, hubPageHref } from "@/lib/hub-pagination";
+import { clampHubPage, hubPageCount, hubPageHref } from "@/lib/hub-pagination";
+import { brandedTitle } from "@/lib/seo-metadata";
 import { publicHubCount } from "@/lib/hub-section";
 import type { SeoPackageSection } from "@/lib/seo-package";
 
@@ -11,15 +12,20 @@ export function hubPagedMetadata(basePath: string, title: string, description: s
   return async function generateMetadata({ params }: { params: Promise<{ page: string }> }): Promise<Metadata> {
     const requested = Number.parseInt((await params).page, 10);
     const section = basePath.replace(/^\//, "") as SeoPackageSection;
-    const page = clampHubPage(requested, publicHubCount(section));
+    const totalItems = publicHubCount(section);
+    const page = clampHubPage(requested, totalItems);
+    const totalPages = hubPageCount(totalItems);
     const path = hubPageHref(basePath, page);
+    const pagedTitle = brandedTitle(`${title} – Page ${page} of ${totalPages}`);
+    // Each paginated page needs a distinct description, otherwise search engines report duplicates.
+    const pagedDescription = `${description.replace(/[.\s]+$/, "")}. Page ${page} of ${totalPages}.`;
     return {
-      title: `${title} | Page ${page} | Anomaly Box`,
-      description,
+      title: pagedTitle,
+      description: pagedDescription,
       alternates: { canonical: path },
       openGraph: {
-        title: `${title} | Page ${page} | Anomaly Box`,
-        description,
+        title: pagedTitle,
+        description: pagedDescription,
         url: path,
       },
     };

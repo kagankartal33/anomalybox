@@ -16,7 +16,9 @@ import {
 assert.equal(PURCHASE_LANES.length, 12);
 assert.equal(CREATOR_MODES.length, 8);
 assert.equal(CREATOR_PERSONAS.length, 6);
-assert.equal(ALL_HOOKS.length, 62);
+assert.equal(ALL_HOOKS.length, 66);
+assert.equal(new Set(ALL_HOOKS.map((h) => h.id)).size, ALL_HOOKS.length, "hook ids must be unique");
+assert.equal(new Set(ALL_HOOKS.map((h) => h.code)).size, ALL_HOOKS.length, "hook codes must be unique");
 assert.ok(ALL_HOOKS.every((h) => h.compatibleLanes.length && h.compatibleModes.length && h.compatiblePersonas.length));
 
 for (const lane of PURCHASE_LANES) {
