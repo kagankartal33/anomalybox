@@ -47,7 +47,7 @@ def main() -> int:
         page["description"] = clean_description(str(page.get("description", "")), str(page.get("title", "")))
         page["imageAlt"] = clean_alt(str(page.get("imageAlt", "")), str(page.get("title", "")))
 
-    REGISTRY.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\
+    REGISTRY.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     repaired = 0
     for path in PACKAGE_CONTENT.glob("*.md"):
@@ -63,7 +63,7 @@ def main() -> int:
             continue
         original = article.read_text(encoding="utf-8")
         updated = repair_marker(original)
-        updated = re.sub(r"(meta_description:\s*['\"]?[^\
+        updated = re.sub(r"(meta_description:\s*['\"]?[^\n'\"]+?)[.…]+(['\"]?)", r"\1\2", updated)
         if updated != original:
             article.write_text(updated, encoding="utf-8")
 

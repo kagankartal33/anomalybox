@@ -59,12 +59,12 @@ def main() -> int:
             return match.group(0)
 
         polished = re.sub(
-            r"(?ms)(?P<prefix>\A|\
+            r"(?ms)(?P<prefix>\A|\n\n)(?P<block>[^\n#|`>].+?)(?=\n\n|\Z)",
             replace,
             original,
         )
         if polished != original:
-            path.write_text(polished.rstrip() + "\
+            path.write_text(polished.rstrip() + "\n", encoding="utf-8")
             changed_files += 1
 
     print(f"refined SEO package files: {changed_files}")

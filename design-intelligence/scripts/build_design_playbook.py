@@ -22,7 +22,7 @@ def load_jsonl(path: Path) -> list[dict]:
 
 def write(path: Path, body: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(body.strip() + "\
+    path.write_text(body.strip() + "\n", encoding="utf-8")
 
 
 def main() -> int:

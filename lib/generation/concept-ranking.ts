@@ -59,7 +59,7 @@ function specificityScore(concept: RankableConcept): number {
   if (!allTokens.length) return 0;
   const uniqueRatio = new Set(allTokens).size / allTokens.length;
   const fieldDetail = values.filter((value) => tokens(value).length >= 4).length / values.length;
-  const observableDetail = /\\\\b(show|reveal|compare|measure|place|open|cut|pour|apply|hold|screen|frame|map|result|before|after)\\\\b/i.test(values.join(" ")) ? 1 : 0.35;
+  const observableDetail = /\b(show|reveal|compare|measure|place|open|cut|pour|apply|hold|screen|frame|map|result|before|after)\b/i.test(values.join(" ")) ? 1 : 0.35;
   return clamp(uniqueRatio * 0.45 + fieldDetail * 0.35 + observableDetail * 0.2);
 }
 

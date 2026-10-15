@@ -1,15 +1,15 @@
-import { compactText, normalizeCreatorText, titleCase }
+import { compactText, normalizeCreatorText, titleCase } from "@/lib/format";
 
 function visualCueFor(value: string): PerSecondFrame["visual_cue"] {
   const text = value.toLowerCase();
-  if (/\\b(close|macro|detail|texture|proof)\\b/.test(text)) return "close_up";
-  if (/\\b(face|camera|eye|talk|speak|voice)\\b/.test(text)) return "face_camera";
-  if (/\\b(hand|hold|touch|place|sort|open|move)\\b/.test(text)) return "hand_action";
-  if (/\\b(product|item|box|bag|dress|makeup|plate|drink)\\b/.test(text)) return "product";
-  if (/\\b(room|hotel|street|table|desk|location|environment|background)\\b/.test(text)) return "environment";
-  if (/\\b(text|overlay|caption|title|word)\\b/.test(text)) return "text_overlay";
-  if (/\\b(walk|turn|pan|tilt|move|transition)\\b/.test(text)) return "movement";
-  if (/\\b(payoff|final|cta|save|comment)\\b/.test(text)) return "payoff";
+  if (/\b(close|macro|detail|texture|proof)\b/.test(text)) return "close_up";
+  if (/\b(face|camera|eye|talk|speak|voice)\b/.test(text)) return "face_camera";
+  if (/\b(hand|hold|touch|place|sort|open|move)\b/.test(text)) return "hand_action";
+  if (/\b(product|item|box|bag|dress|makeup|plate|drink)\b/.test(text)) return "product";
+  if (/\b(room|hotel|street|table|desk|location|environment|background)\b/.test(text)) return "environment";
+  if (/\b(text|overlay|caption|title|word)\b/.test(text)) return "text_overlay";
+  if (/\b(walk|turn|pan|tilt|move|transition)\b/.test(text)) return "movement";
+  if (/\b(payoff|final|cta|save|comment)\b/.test(text)) return "payoff";
   return "proof";
 }
 
@@ -97,11 +97,11 @@ function timeRangeLabel(start: number, end: number) {
 
 function shortSentence(value: unknown, maxWords = 18) {
   const text = asCleanText(value)
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .replace(/[.]+$/g, "")
     .trim();
   if (!text) return "";
-  const words = text.split(/\\s+/).filter(Boolean);
+  const words = text.split(/\s+/).filter(Boolean);
   return words.length > maxWords ? `${words.slice(0, maxWords).join(" ")}` : text;
 }
 
@@ -111,21 +111,21 @@ function joinRangeParts(parts: string[]) {
 
 function instructionText(value: unknown) {
   return asCleanText(value)
-    .replace(/\\b(your product or subject)\\s*:\\s*\\1\\b/gi, "your product or subject")
-    .replace(/\\b(the audience problem)\\s*:\\s*\\1\\b/gi, "the audience problem")
-    .replace(/\\b(today's real context)\\s*:\\s*\\1\\b/gi, "today's real context")
-    .replace(/\\b(your own recurring phrase)\\s*:\\s*\\1\\b/gi, "your own recurring phrase")
-    .replace(/\\s*\\|\\s*/g, " ")
+    .replace(/\b(your product or subject)\s*:\s*\1\b/gi, "your product or subject")
+    .replace(/\b(the audience problem)\s*:\s*\1\b/gi, "the audience problem")
+    .replace(/\b(today's real context)\s*:\s*\1\b/gi, "today's real context")
+    .replace(/\b(your own recurring phrase)\s*:\s*\1\b/gi, "your own recurring phrase")
+    .replace(/\s*\|\s*/g, " ")
     .trim();
 }
 
 function inferSayTone(value: string | undefined, purpose: string) {
   const text = `${value ?? ""} ${purpose}`.toLowerCase();
-  if (/\\b(curious|wonder|why|what|which|question|merak)\\b/.test(text)) return "curious";
-  if (/\\b(calm|soft|quiet|luxury|premium|clean|gentle)\\b/.test(text)) return "calm";
-  if (/\\b(proof|trust|boundary|explain|evidence|decision)\\b/.test(text)) return "confident";
-  if (/\\b(smile|funny|amused|light)\\b/.test(text)) return "softly amused";
-  if (/\\b(comment|save|tell|ask|reply)\\b/.test(text)) return "inviting";
+  if (/\b(curious|wonder|why|what|which|question|merak)\b/.test(text)) return "curious";
+  if (/\b(calm|soft|quiet|luxury|premium|clean|gentle)\b/.test(text)) return "calm";
+  if (/\b(proof|trust|boundary|explain|evidence|decision)\b/.test(text)) return "confident";
+  if (/\b(smile|funny|amused|light)\b/.test(text)) return "softly amused";
+  if (/\b(comment|save|tell|ask|reply)\b/.test(text)) return "inviting";
   return "natural";
 }
 
@@ -471,8 +471,8 @@ function normalizeListField(record: JsonRecord | null, keys: string[]) {
 function normalizedTokens(value: string) {
   return normalizeCreatorText(value)
     .toLowerCase()
-    .replace(/[^a-z0-9\\s]+/g, " ")
-    .split(/\\s+/)
+    .replace(/[^a-z0-9\s]+/g, " ")
+    .split(/\s+/)
     .filter((token) => token.length > 2)
     .filter((token) => !["the", "and", "for", "with", "this", "that", "your", "you", "into", "from"].includes(token));
 }
@@ -490,19 +490,19 @@ function tokenOverlap(a: string, b: string) {
 
 function actionFamily(value: string) {
   const text = value.toLowerCase();
-  if (/\\b(reveal|show|display|open|hold up)\\b/.test(text)) return "reveal";
-  if (/\\b(save|screenshot|hold|checklist)\\b/.test(text)) return "save";
-  if (/\\b(comment|ask|question|reply|poll)\\b/.test(text)) return "comment";
-  if (/\\b(cut|transition|edit|pace|freeze)\\b/.test(text)) return "edit";
-  if (/\\b(compare|filter|remove|choose|sort|select)\\b/.test(text)) return "decision";
-  if (/\\b(proof|evidence|detail|close-up|closeup)\\b/.test(text)) return "proof";
+  if (/\b(reveal|show|display|open|hold up)\b/.test(text)) return "reveal";
+  if (/\b(save|screenshot|hold|checklist)\b/.test(text)) return "save";
+  if (/\b(comment|ask|question|reply|poll)\b/.test(text)) return "comment";
+  if (/\b(cut|transition|edit|pace|freeze)\b/.test(text)) return "edit";
+  if (/\b(compare|filter|remove|choose|sort|select)\b/.test(text)) return "decision";
+  if (/\b(proof|evidence|detail|close-up|closeup)\b/.test(text)) return "proof";
   return normalizedTokens(value).slice(0, 3).join("_") || "action";
 }
 
 function parseTime(value: unknown, fallbackStart: number, fallbackDuration = 4) {
   const text = String(value ?? "")
-    .replace(/\\u2013|\\u2014/g, "-")
-    .replace(/\\s+/g, "")
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/\s+/g, "")
     .toLowerCase();
   if (text.includes("last")) {
     return { start: Math.max(0, fallbackStart), end: Math.max(fallbackStart + 3, fallbackStart + fallbackDuration), label: "last 3s" };
@@ -765,7 +765,7 @@ function buildExampleStory(card: JsonRecord, beats: CanonicalExecutionBeat[]) {
       { label: "Payoff", body: payoff || "End with a saveable decision or precise comment question." },
     ],
   };
-} from "@/lib/format";
+}
 
 type JsonRecord = Record<string, unknown>;
 
@@ -1172,3 +1172,5 @@ export function normalizeCardSections(cardValue: unknown): CardSection[] {
     section(card, "brand_safety", "Brand Safety", ["brand_safety"], "Sponsor, disclosure, claim, and wording boundaries that keep the video credible and post-ready.", "Use disclosure when needed, avoid guaranteed-result language, and keep claims tied to your real context.", "The post feels trustworthy, premium, and safe for a brand partner to stand behind.", ["Hiding disclosure", "Promising universal results", "Making claims without evidence"], "Say 'in my context this is the safer choice' instead of 'this works for everyone.'"),
   ];
 }
+
+export const normalizeAdminCardSections = normalizeCardSections;

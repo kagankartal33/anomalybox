@@ -18,7 +18,20 @@ const ReviewInput = z.object({
 
 export async function POST(request: Request) {
   const { user } = await requireUser();
-  const input = ReviewInput.parse(await request.json());
+
+  let jsonBody: unknown;
+  try {
+    jsonBody = await request.json();
+  } catch {
+    return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+  }
+
+  const parsed = ReviewInput.safeParse(jsonBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "invalid_input", details: parsed.error.flatten() }, { status: 400 });
+  }
+  const input = parsed.data;
+
   if (!allowedMimeTypes.includes(input.mime_type) || input.file_size_bytes > maxVideoBytes) {
     return NextResponse.json({ error: "unsupported_or_too_large_video" }, { status: 400 });
   }
@@ -77,7 +90,13 @@ export async function POST(request: Request) {
     transcript: input.transcript,
     status: "pending_upload",
   }).select("*").single();
-  if (attemptError || !attempt) return NextResponse.json({ error: attemptError?.message ?? "attempt_failed" }, { status: 400 });
+
+  if (attemptError || !attempt) {
+    if (!input.review_id) {
+      await supabase.from("creator_video_reviews").delete().eq("id", reviewId);
+    }
+    return NextResponse.json({ error: attemptError?.message ?? "attempt_failed" }, { status: 400 });
+  }
 
   const { data: review } = await supabase.from("creator_video_reviews").update({
     current_attempt_id: attempt.id,
@@ -91,12 +110,18 @@ export async function POST(request: Request) {
     status: "pending_upload",
   }).eq("id", reviewId).select("*").single();
 
+  const { data: signedUpload } = await supabase.storage
+    .from("creator-review-videos")
+    .createSignedUploadUrl(storagePath);
+
   return NextResponse.json({
     review,
     attempt,
     upload: {
       bucket: "creator-review-videos",
       path: storagePath,
+      token: signedUpload?.token,
+      signed_url: signedUpload?.signedUrl,
       max_file_size_bytes: maxVideoBytes,
       allowed_mime_types: allowedMimeTypes,
     },

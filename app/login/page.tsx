@@ -2,8 +2,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { AuthShell } from "@/components/AuthShell";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { safeNextPath } from "@/lib/navigation";
 import { isOAuthProviderEnabled } from "@/lib/supabase/auth-settings";
 import { signInWithPassword, signUpWithPassword } from "./actions";

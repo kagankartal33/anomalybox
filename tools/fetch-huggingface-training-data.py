@@ -117,7 +117,7 @@ def request_json(path: str, params: dict[str, object], timeout: int = 45) -> dic
 
 
 def clean(value: object, limit: int = 1800) -> str:
-    text = re.sub(r"\\s+", " ", str(value or "")).strip()
+    text = re.sub(r"\s+", " ", str(value or "")).strip()
     return text[:limit].strip()
 
 
@@ -133,7 +133,7 @@ def patterns_for(text: str, family: str) -> list[str]:
     patterns = []
     if family.startswith("reddit"):
         patterns.extend(["VTP-003", "VTP-005"])
-    if "?" in text or re.search(r"\\bwhat|why|how|who|which|siz|ne|neden\\b", n):
+    if "?" in text or re.search(r"\bwhat|why|how|who|which|siz|ne|neden\b", n):
         patterns.extend(["VTP-005", "VTP-020"])
     if re.search(r"joke|funny|humor|irony|absurd|lol|comedy", n):
         patterns.extend(["VTP-003", "VTP-011"])
@@ -287,14 +287,14 @@ def main() -> None:
             rows, stats = iter_rows(source, args.max_rows_per_source, min(100, max(1, args.page_size)))
             all_stats.append(stats)
             for row in rows:
-                f.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\
+                f.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
                 total += 1
 
     manifest = {
         "source_slug": "hf_social_training_v1",
         "compile_version": "2026-v5-hf-social",
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "output_file": str(output_path).replace("", "/"),
+        "output_file": str(output_path).replace("\\", "/"),
         "total_rows": total,
         "sources": all_stats,
         "policy": "pattern_only_anti_copy",

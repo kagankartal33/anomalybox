@@ -7,17 +7,6 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 export async function requestPasswordReset(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
 
   if (email && email.length <= 320) {
     const supabase = await createSupabaseServerClient();

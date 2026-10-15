@@ -185,7 +185,7 @@ function requireAdmin(req: Request) {
     throw new HttpError(500, "ADMIN_API_TOKEN or INTERNAL_API_TOKEN is not configured");
   }
 
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\\s+/i, "");
+  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
   const token = req.headers.get("x-admin-token") ?? bearer;
   if (token !== expected) {
     throw new HttpError(401, "Unauthorized admin request");
@@ -552,17 +552,17 @@ function findCreatorHiddenKeys(value: unknown, path = "idea_card"): string[] {
 
 const creatorFacingLeakPatterns: Array<{ pattern: RegExp; label: string }> = [
   { pattern: /Quality Gate/i, label: "Quality Gate/internal evaluator wording" },
-  { pattern: /\\brun_\\d{8}_\\d{6}_[a-z0-9_]+/i, label: "raw generator run id" },
-  { pattern: /\\{(product_name|audience_pain|daily_context|signature_phrase|[a-z]+_[a-z0-9_]+)\\}/i, label: "raw creator template placeholder" },
+  { pattern: /\brun_\d{8}_\d{6}_[a-z0-9_]+/i, label: "raw generator run id" },
+  { pattern: /\{(product_name|audience_pain|daily_context|signature_phrase|[a-z]+_[a-z0-9_]+)\}/i, label: "raw creator template placeholder" },
   { pattern: legacyDecisionFilterPattern, label: "legacy non-English technical wording" },
-  { pattern: /\\b(score|score_band|internal_score|assigned_band|inventory|content_hash|dataset|training source|training profile)\\b/i, label: "internal score/training language" },
+  { pattern: /\b(score|score_band|internal_score|assigned_band|inventory|content_hash|dataset|training source|training profile)\b/i, label: "internal score/training language" },
 ];
 
 const lowQualityTitlePattern =
-  /\\b(Brief|Ritual|Report|Memo|Audit|Dossier|File|Sheet|SOP|Framework|Blueprint|AI|Algorithm|Engine|Model|Prompt|Agent|Neural|Autopilot|System|Quality Gate|score|score_band|training|dataset|inventory)\\b|run_\\d{8}_\\d{6}|\\b\\d{3,}\\b/i;
+  /\b(Brief|Ritual|Report|Memo|Audit|Dossier|File|Sheet|SOP|Framework|Blueprint|AI|Algorithm|Engine|Model|Prompt|Agent|Neural|Autopilot|System|Quality Gate|score|score_band|training|dataset|inventory)\b|run_\d{8}_\d{6}|\b\d{3,}\b/i;
 
 const englishCreatorTextPatterns: Array<{ pattern: RegExp; label: string }> = [
-  { pattern: /[\\u00e7\\u011f\\u0131\\u00f6\\u015f\\u00fc\\u00c7\\u011e\\u0130\\u00d6\\u015e\\u00dc]/, label: "non-English creator-facing text" },
+  { pattern: /[\u00e7\u011f\u0131\u00f6\u015f\u00fc\u00c7\u011e\u0130\u00d6\u015e\u00dc]/, label: "non-English creator-facing text" },
   { pattern: legacyCreatorLeakPattern, label: "legacy non-English creator-facing text" },
 ];
 
@@ -603,7 +603,7 @@ function titleQualityErrors(value: unknown, path: string) {
   if (lowQualityTitlePattern.test(title)) {
     errors.push(`${path} uses technical, AI, document-style, or internal title language`);
   }
-  const wordCount = title.split(/\\s+/).filter(Boolean).length;
+  const wordCount = title.split(/\s+/).filter(Boolean).length;
   if (wordCount < 3 || wordCount > 7) {
     errors.push(`${path} should be 3-7 words`);
   }
@@ -1155,8 +1155,8 @@ function normalizedText(value: unknown) {
   return String(value ?? "")
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[^\\p{L}\\p{N}\\s{}_-]+/gu, " ")
-    .replace(/\\s+/g, " ")
+    .replace(/[^\p{L}\p{N}\s{}_-]+/gu, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
@@ -1422,7 +1422,7 @@ function claimEvidenceRows(candidate: Json, card: Json, safetyClassifier: Json) 
   const rows: Json[] = [];
   const boundaries = asArray(safetyClassifier.claim_boundaries).map(String);
   const brandSafetyText = normalizedText(objectText(card.brand_safety));
-  const evidenceUrlMatch = objectText(card.brand_safety).match(/https?:\\/\\/[^\\s)]+/i);
+  const evidenceUrlMatch = objectText(card.brand_safety).match(/https?:\/\/[^\s)]+/i);
   const hasEvidenceNote = evidenceNotePattern.test(brandSafetyText);
   const claimText = String(candidate.one_sentence_premise ?? candidate.title ?? "").slice(0, 500);
 

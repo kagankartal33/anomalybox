@@ -1,6 +1,5 @@
-import { Compass, Gem, Instagram, ShieldCheck } from "lucide-react";
+import { Instagram } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { OnboardingLanePicker } from "@/components/OnboardingLanePicker";
 import { requireUser } from "@/lib/auth";
 import { saveOnboarding } from "./actions";
 

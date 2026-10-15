@@ -73,14 +73,14 @@ LAYER_PATTERNS = {
 
 
 BAD_SURFACE_PATTERNS = [
-    r"\\bisbn\\b",
+    r"\bisbn\b",
     r"anna.?s archive",
-    r"\\bcopyright\\b",
+    r"\bcopyright\b",
     r"all rights reserved",
-    r"\\backnowledg",
-    r"\\bbibliograph",
-    r"\\bindex\\b",
-    r"\\bcontents\\b",
+    r"\backnowledg",
+    r"\bbibliograph",
+    r"\bindex\b",
+    r"\bcontents\b",
 ]
 
 
@@ -89,7 +89,7 @@ def sha(value: str) -> str:
 
 
 def clean(value: Any, limit: int = 2400) -> str:
-    text = re.sub(r"\\s+", " ", str(value or "")).strip()
+    text = re.sub(r"\s+", " ", str(value or "")).strip()
     return text[:limit].strip()
 
 
@@ -99,7 +99,7 @@ def safe_ref(index: int) -> str:
 
 def detect_language(text: str, filename: str) -> str:
     n = f"{text} {filename}".lower()
-    if re.search(r"\\b(ve|bir|senaryo|karakter|çekim|cekim|sahne|öykü|oyku|film örnekleri|ornekleri)\\b", n):
+    if re.search(r"\b(ve|bir|senaryo|karakter|çekim|cekim|sahne|öykü|oyku|film örnekleri|ornekleri)\b", n):
         return "tr"
     return "en"
 
@@ -169,9 +169,8 @@ def extract_source(path: Path) -> Iterable[tuple[str, int | None, int | None]]:
 
 
 def chunk_text(raw: str, max_chars: int, min_chars: int) -> Iterable[str]:
-    raw = re.sub(r"\
-\
-    pieces = re.split(r"(?m)(?:\
+    raw = re.sub(r"\r\n?", "\n", raw or "")
+    pieces = re.split(r"(?m)(?:\n{2,}|^\s*(?:chapter|bölüm|bolum)\b.*$)", raw, flags=re.I)
     buffer = ""
     for piece in pieces:
         piece = clean(piece, max_chars * 2)
@@ -209,13 +208,13 @@ def craft_features(text: str, layer: str) -> list[str]:
     n = text.lower()
     features = [layer]
     checks = [
-        ("actionable_rule", r"\\b(rule|principle|technique|method|must|should|never|always|yöntem|yontem|kural)\\b"),
-        ("attention_control", r"\\b(attention|viewer|audience|curiosity|reveal|surprise|izleyici|merak)\\b"),
-        ("scene_objective", r"\\b(objective|conflict|turn|beat|scene|sahne|çatışma|catisma)\\b"),
-        ("visual_specificity", r"\\b(frame|lens|light|color|angle|composition|kamera|ışık|isik)\\b"),
-        ("rhythm_timing", r"\\b(rhythm|timing|pace|cut|edit|tempo|kurgu)\\b"),
-        ("sound_emotion", r"\\b(sound|silence|voice|music|ambience|ses|sessizlik|diyalog)\\b"),
-        ("production_usable", r"\\b(production|workflow|practice|setup|checklist|uygulama)\\b"),
+        ("actionable_rule", r"\b(rule|principle|technique|method|must|should|never|always|yöntem|yontem|kural)\b"),
+        ("attention_control", r"\b(attention|viewer|audience|curiosity|reveal|surprise|izleyici|merak)\b"),
+        ("scene_objective", r"\b(objective|conflict|turn|beat|scene|sahne|çatışma|catisma)\b"),
+        ("visual_specificity", r"\b(frame|lens|light|color|angle|composition|kamera|ışık|isik)\b"),
+        ("rhythm_timing", r"\b(rhythm|timing|pace|cut|edit|tempo|kurgu)\b"),
+        ("sound_emotion", r"\b(sound|silence|voice|music|ambience|ses|sessizlik|diyalog)\b"),
+        ("production_usable", r"\b(production|workflow|practice|setup|checklist|uygulama)\b"),
     ]
     for label, pattern in checks:
         if re.search(pattern, n):
@@ -243,7 +242,7 @@ def quarantine_reason(text: str, extracted_chars_for_source: int) -> str | None:
     for pattern in BAD_SURFACE_PATTERNS:
         if re.search(pattern, n):
             return "frontmatter_or_rights_surface"
-    if len(re.findall(r"\\b(isbn|archive|copyright|publisher|edition)\\b", n)) >= 2:
+    if len(re.findall(r"\b(isbn|archive|copyright|publisher|edition)\b", n)) >= 2:
         return "bibliographic_surface"
     return None
 
@@ -264,13 +263,13 @@ def abstract_text(params: dict[str, Any]) -> str:
     layer = params["layer"]
     features = ", ".join(params["features"])
     return (
-        f"Cinema craft observation. Layer={layer}. "
+        f"Book-Train cinema craft observation. Layer={layer}. "
         f"Feature flags: {features}. "
         f"Language={params['language']}. "
         f"Raw surface hidden; raw_text_hash={params['raw_hash'][:16]}. "
         "Use only as abstract premium video craft guidance for scene_script, shot_list, b_roll, "
         "editing_timeline, atmosphere_direction and production_plan. Do not copy source wording, "
-        "title, author, publication identifier, file name, character, example scene, or quote."
+        "book title, author, ISBN, file name, character, example scene, or quote."
     )
 
 
@@ -285,7 +284,7 @@ def observation_for_chunk(
     chunk_index: int,
     extracted_chars_for_source: int,
 ) -> dict[str, Any]:
-    raw_hash = sha(re.sub(r"\\s+", " ", text.lower()).strip())
+    raw_hash = sha(re.sub(r"\s+", " ", text.lower()).strip())
     layer = best_layer(text)
     features = craft_features(text, layer)
     reason = quarantine_reason(text, extracted_chars_for_source)
@@ -332,25 +331,11 @@ def source_files(input_dir: Path) -> list[Path]:
     )
 
 
-def selected_sources(input_dir: Path, source_filter: str | None) -> list[tuple[int, Path]]:
-    all_sources = list(enumerate(source_files(input_dir), 1))
-    if not source_filter:
-        return all_sources
-
-    needle = source_filter.lower()
-    selected: list[tuple[int, Path]] = []
-    for source_index, path in all_sources:
-        if needle == safe_ref(source_index).lower() or needle in path.name.lower():
-            selected.append((source_index, path))
-    return selected
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", default=str(DEFAULT_INPUT))
     parser.add_argument("--out-dir", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--output-name", default="book_train_cinema_v1.jsonl")
-    parser.add_argument("--source-filter", default="")
     parser.add_argument("--max-chunks-per-book", type=int, default=12000)
     parser.add_argument("--min-chunk-chars", type=int, default=300)
     parser.add_argument("--max-chunk-chars", type=int, default=1800)
@@ -362,7 +347,7 @@ def main() -> None:
     output_path = out_dir / args.output_name
     manifest_path = out_dir / args.output_name.replace(".jsonl", ".manifest.json")
 
-    files = selected_sources(input_dir, args.source_filter.strip() or None)
+    files = source_files(input_dir)
     sources = [
         {
             "source_ref": safe_ref(i),
@@ -370,12 +355,12 @@ def main() -> None:
             "size": path.stat().st_size,
             "extraction_method": extraction_method(path),
         }
-        for i, path in files
+        for i, path in enumerate(files, 1)
     ]
     plan = {
         "mode": "book_train_cinema_prepare",
-        "input_ref": "book_train_sources",
-        "output_file": output_path.name,
+        "input_dir": str(input_dir),
+        "output_path": str(output_path),
         "source_count": len(files),
         "max_chunks_per_book": args.max_chunks_per_book,
         "sources": sources,
@@ -390,7 +375,7 @@ def main() -> None:
     stats = []
     seen_hashes = set()
     with output_path.open("w", encoding="utf-8") as out:
-        for source_index, path in files:
+        for source_index, path in enumerate(files, 1):
             source_ref = safe_ref(source_index)
             extraction = extraction_method(path)
             source_kind = path.suffix.lower().lstrip(".")
@@ -424,7 +409,7 @@ def main() -> None:
                         quarantined += 1
                     prepared += 1
                     total_rows += 1
-                    out.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\
+                    out.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
                 if chunk_counter >= args.max_chunks_per_book:
                     break
             stats.append({

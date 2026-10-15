@@ -2,13 +2,12 @@ import fs from "node:fs";
 
 const file = process.argv[2];
 const values = new Map();
-for (const line of fs.readFileSync(file, "utf8").split(/
-?
+for (const line of fs.readFileSync(file, "utf8").split(/\r?\n/)) {
   const trimmed = line.trim();
   if (!trimmed || trimmed.startsWith("#")) continue;
   const index = trimmed.indexOf("=");
   if (index < 0) continue;
-  values.set(trimmed.slice(0, index), trimmed.slice(index + 1).replace(/^['"]|['"]$/g, ""));
+  values.set(trimmed.slice(0, index), trimmed.slice(index + 1).replace(/^['\"]|['\"]$/g, ""));
 }
 console.log("keys=" + [...values.keys()].join(","));
 for (const key of [

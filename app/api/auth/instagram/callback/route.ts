@@ -42,7 +42,7 @@ export async function GET(request: Request) {
     user_id: user.id,
     provider: "instagram",
     provider_account_id: tokenPayload.user_id ? String(tokenPayload.user_id) : null,
-    access_token_encrypted: String(tokenPayload.access_token),
+    access_token_encrypted: encryptLinkedAccountToken(String(tokenPayload.access_token)),
     scopes: ["instagram_basic", "pages_show_list"],
     metadata: { connected_via: "meta_oauth", token_type: tokenPayload.token_type ?? null },
   }, { onConflict: "user_id,provider" });

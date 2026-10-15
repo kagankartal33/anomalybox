@@ -78,7 +78,7 @@ async function patchRows(table: string, query: string, payload: unknown, prefer 
 }
 
 async function requireUser(req: Request) {
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\\s+/i, "");
+  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
   if (!bearer) throw new HttpError(401, "Authorization bearer token is required");
 
   const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
@@ -95,7 +95,7 @@ async function requireUser(req: Request) {
 }
 
 function requireAdmin(req: Request) {
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\\s+/i, "");
+  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
   const token = req.headers.get("x-admin-token") ?? bearer;
   if (token !== adminApiToken) throw new HttpError(401, "Unauthorized admin request");
 }

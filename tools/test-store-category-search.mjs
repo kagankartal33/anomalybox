@@ -44,4 +44,4 @@ const travelResults = filterStoreCategories(categories, "tur", "travel");
 assert.ok(travelResults.some((category) => premiumCategoryLabel(category) === "Yacht Luxury Travel"), "travel filter should retain boat/yacht categories");
 console.log("OK  travel filter keeps yacht/boat categories");
 
-console.log("\
+console.log("\nStore category search fixtures passed.");

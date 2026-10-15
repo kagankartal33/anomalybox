@@ -5,6 +5,6 @@ const scripts = [...html.matchAll(/<script[^>]+src=["']([^"']+)["']/g)].map((mat
 const refs = new Set();
 for (const script of scripts) {
   const source = await (await fetch(script)).text();
-  for (const match of source.matchAll(/https:\\\\/\\\\/([a-z0-9]+)\\\\.supabase\\\\.co/g)) refs.add(match[1]);
+  for (const match of source.matchAll(/https:\/\/([a-z0-9]+)\.supabase\.co/g)) refs.add(match[1]);
 }
-console.log([...refs].join("
+console.log([...refs].join("\n"));

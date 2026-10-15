@@ -11,7 +11,7 @@ import process from "node:process";
 
 function loadDotEnv(filePath = ".env.local") {
   if (!fs.existsSync(filePath)) return;
-  for (const line of fs.readFileSync(filePath, "utf8").split(/\r?\
+  for (const line of fs.readFileSync(filePath, "utf8").split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
     const index = trimmed.indexOf("=");

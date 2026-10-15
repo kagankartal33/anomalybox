@@ -54,7 +54,7 @@ OPENING_FRAMES = {
     ],
     "product": [
         "A planning product earns its place when it removes decisions from shoot day instead of adding another dashboard.",
-        "The value of a creative brief is easiest to judge through the handoff it improves.",
+        "The value of a creative dossier is easiest to judge through the handoff it improves.",
         "A product comparison should show which production decisions arrive resolved and which remain with the creator.",
         "A useful walkthrough follows the artifact from configuration to camera, not only through its packaging.",
     ],
@@ -67,16 +67,16 @@ OPENING_FRAMES = {
 }
 
 SECTION_RULES = [
-    (r"hook|opening|pattern interrupt|first frame", "Open {section} with the result, tension or visual change the audience can understand before any setup. The spoken line and first frame should make one promise together."),
-    (r"camera|angle|shot|frame|lens|b-roll|broll|macro|close-up|pov", "Translate {section} into a finite coverage list: one orientation shot, one action shot and one proof detail. Keep camera distance measurable so footage can be compared across takes."),
-    (r"light|lighting|temperature|grade|colour|color|exposure", "Give {section} a repeatable light direction, white-balance choice and exposure reference. Record those settings before filming; a preset cannot repair inconsistent source light."),
-    (r"audio|sound|voice|spoken|dialogue|asmr", "Define what {section} must communicate and where the microphone will capture it. Record a clean version before music so the point remains clear with or without the soundtrack."),
-    (r"edit|pacing|transition|rhythm|sequence|flow", "Build {section} around comprehension: establish, demonstrate, confirm, then move on. Cut decorative beats before cutting the moment that proves the point."),
-    (r"claim|safety|disclosure|contract|rights|revision|approval|boundary", "Write {section} as a boundary another person can approve without interpretation. Separate required facts from creative preference, and never imply a result the evidence cannot support."),
-    (r"proof|evidence|result|case|demonstration|trust", "Choose {section} before writing the strongest claim. The evidence should show the mechanism or decision under real conditions, with enough context to understand its limit."),
-    (r"caption|comment|cta|call.to.action|response", "Make {section} the natural continuation of the value already delivered. Ask for one relevant action rather than switching to a broader promise at the end."),
-    (r"audience|niche|position|pillar|offer|promise", "Narrow {section} to one audience situation and one useful change. That constraint creates a recognisable point of view without inflated positioning language."),
-    (r"batch|workflow|system|calendar|capacity|recovery|consistency", "Set {section} against the creator's actual weekly capacity. The chosen version should survive a low-energy week before it expands into a larger routine."),
+    (r"hook|opening|pattern interrupt|first frame", "Open {section} with the result, tension or visual change the audience can understand before any setup. In {topic}, the spoken line and first frame should make one promise together."),
+    (r"camera|angle|shot|frame|lens|b-roll|broll|macro|close-up|pov", "Translate {section} into a finite coverage list: one orientation shot, one action shot and one proof detail. Keep camera distance measurable so footage for {topic} can be compared across takes."),
+    (r"light|lighting|temperature|grade|colour|color|exposure", "Give {section} a repeatable light direction, white-balance choice and exposure reference. Record those settings before filming {topic}; a preset cannot repair inconsistent source light."),
+    (r"audio|sound|voice|spoken|dialogue|asmr", "Define what {section} must communicate and where the microphone will capture it. Record a clean version before music so {topic} remains understandable with or without the soundtrack."),
+    (r"edit|pacing|transition|rhythm|sequence|flow", "Build {section} around comprehension: establish, demonstrate, confirm, then move on. For {topic}, cut decorative beats before cutting the moment that proves the point."),
+    (r"claim|safety|disclosure|contract|rights|revision|approval|boundary", "Write {section} as a boundary another person can approve without interpretation. Separate required facts from creative preference, and do not let {topic} imply a result the evidence cannot support."),
+    (r"proof|evidence|result|case|demonstration|trust", "Choose {section} before writing the strongest claim. The proof used in {topic} should show the mechanism or decision under real conditions, with enough context to understand its limit."),
+    (r"caption|comment|cta|call.to.action|response", "Make {section} the natural continuation of the value already delivered. A CTA for {topic} should ask for one relevant action rather than switching to a broader promise at the end."),
+    (r"audience|niche|position|pillar|offer|promise", "Narrow {section} to one audience situation and one useful change. That constraint gives {topic} a recognisable point of view without inflated positioning language."),
+    (r"batch|workflow|system|calendar|capacity|recovery|consistency", "Set {section} against the creator's actual weekly capacity. The version used in {topic} should survive a low-energy week before it expands into a larger routine."),
 ]
 
 
@@ -86,36 +86,29 @@ def stable_pick(items: list[str], seed: str, salt: str) -> str:
 
 
 def words(text: str) -> int:
-    return len(re.findall(r"\\\\b[\\\\w'-]+\\\\b", text))
+    return len(re.findall(r"\b[\w'-]+\b", text))
 
 
 def lower_first(value: str) -> str:
-    first_word = value.split(" ", 1)[0]
-    if first_word.isupper() or value.startswith(("Creator Vault", "Knowledge Graph", "LinkedIn ")):
-        return value
     return value[:1].lower() + value[1:] if value else value
 
 
 def article_mode(inp) -> str:
     haystack = f" {inp.slug.replace('-', ' ')} {inp.title.lower()} "
-    for mode in ("product", "search", "script", "production", "governance", "analysis"):
-        keywords = MODE_KEYWORDS[mode]
+    for mode, keywords in MODE_KEYWORDS.items():
         if any(keyword in haystack for keyword in keywords):
             return mode
     return "system"
 
 
-def section_direction(section: str, topic: str, guide: dict, index: int, anchor: str) -> str:
+def section_direction(section: str, topic: str, guide: dict) -> str:
     for pattern, direction in SECTION_RULES:
         if re.search(pattern, section, re.I):
-            return direction.format(section=lower_first(section), topic=topic) + f" Keep it consistent with **{anchor}**."
-    fallbacks = [
-        f"Write {lower_first(section)} as one choice the creator can act on without another meeting. It should support {anchor} and this rule: {guide['principle']}.",
-        f"Make {lower_first(section)} observable. If a reader or teammate cannot verify it, decide what evidence must appear before moving to **{anchor}**.",
-        f"Test {lower_first(section)} under the real production constraint before adding variations. Keep only the version that preserves the promise and the proof needed for **{anchor}**.",
-        f"Use {lower_first(section)} to set the review boundary before **{anchor}**. Name what counts as complete, what needs correction and what would become a different piece of work.",
-    ]
-    return fallbacks[index % len(fallbacks)]
+            return direction.format(section=lower_first(section), topic=topic)
+    return (
+        f"Define {lower_first(section)} as an observable choice inside {topic}. "
+        f"Use this rule: {guide['principle']}. Remove any instruction that cannot be checked in the finished work."
+    )
 
 
 def build_formula(inp, mode: str, sections: list[str], proof: str) -> str:
@@ -129,7 +122,7 @@ def build_formula(inp, mode: str, sections: list[str], proof: str) -> str:
 - **Spoken or on-screen line:** `[one sentence the footage can support]`
 - **Backup route:** `[three shots that preserve the same proof]`
 
-For **{sections[0]}**, the proof frame should be {proof}. Record it before optional transitions or atmosphere shots."""
+The proof frame should be {proof}. Record it before optional transitions or atmosphere shots."""
     if mode == "governance":
         return f"""Use this approval language for **{topic}**:
 
@@ -140,7 +133,7 @@ For **{sections[0]}**, the proof frame should be {proof}. Record it before optio
 - **Revision boundary:** `[correction versus new scope]`
 - **Final approver:** `[one named role]`
 
-Read the **{sections[0]}** brief once as the creator and once as the approver. A sentence with two reasonable interpretations still needs a decision."""
+Read the brief once as the creator and once as the approver. A sentence with two reasonable interpretations still needs a decision."""
     if mode == "search":
         return f"""Draft the answer block for **{topic}** in this order:
 
@@ -150,7 +143,7 @@ Read the **{sections[0]}** brief once as the creator and once as the approver. A
 4. **Boundary:** `[state what the evidence does not establish]`
 5. **Next useful question:** `[link to the reader's next decision]`
 
-If the answer about **{sections[0]}** depends on repeating the keyword in every line, rewrite it for the reader before publishing."""
+If the answer depends on repeating the keyword in every line, rewrite it for the reader before publishing."""
     if mode == "analysis":
         return f"""Turn **{topic}** into a decision note:
 
@@ -161,7 +154,7 @@ If the answer about **{sections[0]}** depends on repeating the keyword in every 
 - **Decision rule:** `[the condition that changes the choice]`
 - **Review date:** `[when comparable evidence will exist]`
 
-When comparing **{sections[0]}** with **{sections[1]}**, choose a route for the stated constraint. Do not pretend one route is universally superior."""
+Choose a route for the stated constraint. Do not pretend one route is universally superior."""
     if mode == "product":
         return f"""Use this handoff test for **{topic}**:
 
@@ -171,7 +164,7 @@ When comparing **{sections[0]}** with **{sections[1]}**, choose a route for the 
 - **Proof:** `{proof}`
 - **Remaining choice:** `[what still belongs to the creator]`
 
-The walkthrough from **{sections[0]}** to **{sections[3]}** is complete when the viewer can see how the artifact changes a production decision."""
+The walkthrough is complete when the viewer can see how the artifact changes a production decision."""
     if mode == "script":
         return f"""Build the spoken and visual beats for **{topic}** together:
 
@@ -182,7 +175,7 @@ The walkthrough from **{sections[0]}** to **{sections[3]}** is complete when the
 - **Payoff:** `[what the viewer now understands or can do]`
 - **Response prompt:** `[one relevant save, reply or next step]`
 
-Read the lines for **{sections[0]}** and **{sections[1]}** aloud. Shorten any sentence that forces the creator to rush past the proof."""
+Read the lines aloud. Shorten any sentence that forces the creator to rush past the proof."""
     return f"""Write one working card for **{topic}**:
 
 - **Audience situation:** `[the moment this becomes useful]`
@@ -192,24 +185,14 @@ Read the lines for **{sections[0]}** and **{sections[1]}** aloud. Shorten any se
 - **Capacity limit:** `[what must be removed on a constrained week]`
 - **Next action:** `[one relevant response, save or production step]`
 
-Keep the card for **{sections[0]}** and **{sections[1]}** narrow enough to finish once before turning it into a recurring format."""
+Keep the card narrow enough to finish once before turning it into a recurring format."""
 
 
 def build_editorial_article(inp) -> str:
     """Return a topic-specific article between 600 and 1,200 words."""
+    guide = LANE_GUIDANCE.get(inp.lane, LANE_GUIDANCE["strategy"])
     mode = article_mode(inp)
-    guide_key = "aeo" if mode == "search" else "product" if mode == "product" else inp.lane
-    guide = LANE_GUIDANCE.get(guide_key, LANE_GUIDANCE["strategy"])
     topic = inp.title.split(":", 1)[0].rstrip(" .")
-    deliverable = {
-        "script": "one short-form script",
-        "production": "one complete shoot",
-        "governance": "one approval-ready brief",
-        "analysis": "one documented decision",
-        "search": "one reference-quality page",
-        "product": "one creator handoff",
-        "system": "one finished content cycle",
-    }[mode]
     sections = list(inp.sections[:4]) or ["Define the goal", "Choose the evidence", "Plan the sequence", "Review the result"]
     while len(sections) < 4:
         sections.append(["Choose the evidence", "Plan the sequence", "Review the result"][len(sections) - 1])
@@ -220,58 +203,48 @@ def build_editorial_article(inp) -> str:
     opener = stable_pick(OPENING_FRAMES[mode], inp.slug, "opening")
 
     intro = (
-        f"{opener} **{inp.title}** has one clear job. The practical goal is to {lower_first(inp.description.rstrip('.'))}. "
-        f"This guide is for {guide['audience']}. Connect **{lower_first(sections[0])}** to "
-        f"**{lower_first(sections[1])}** before adding extra formats or visual polish."
+        f"{opener} **{inp.title}** focuses on a specific job: {lower_first(inp.description.rstrip('.'))}. "
+        f"For {guide['audience']}, the useful version connects **{lower_first(sections[0])}** to "
+        f"**{lower_first(sections[1])}** before extra formats or visual polish are added."
     )
     quick = (
-        f"Start with **{sections[0]}**. Use **{sections[1]}** to make the method visible. Let **{sections[2]}** carry the proof. "
-        f"Treat **{sections[3]}** as the final boundary or review point. The governing rule is to {guide['principle']}."
+        f"Use **{sections[0]}** to establish direction, **{sections[1]}** to make the method visible, and "
+        f"**{sections[2]}** to carry proof through the finished piece. Treat **{sections[3]}** as the boundary or review point. "
+        f"For {topic}, the governing rule is to {guide['principle']}."
     )
     context_heading = {
         "script": f"Why {sections[0]} and {sections[1]} must agree",
-        "production": "Set the production constraint",
-        "governance": "What the handoff must settle",
-        "analysis": "Choose the decision behind the comparison",
-        "search": "Answer the reader task before optimising",
-        "product": "Judge the product through the production handoff",
-        "system": "Build the minimum workable version",
+        "production": f"Set the production constraint for {topic}",
+        "governance": f"What the {topic} handoff must settle",
+        "analysis": f"Choose the decision behind {topic}",
+        "search": f"Answer the reader task before optimising {topic}",
+        "product": f"Judge {topic} through the production handoff",
+        "system": f"Build the minimum workable version of {topic}",
     }[mode]
-    if mode == "search":
-        context = (
-            f"{guide['friction'].capitalize()}. The problem appears here when **{lower_first(sections[0])}** is separated "
-            f"from **{lower_first(sections[1])}**. Check the page against {proofs[0]}. {cautions[0]} "
-            f"No proof available? Narrow the answer instead of strengthening the language."
-        )
-    else:
-        context = (
-            f"{guide['friction'].capitalize()}. Here, the problem starts when **{lower_first(sections[0])}** is decided "
-            f"apart from **{lower_first(sections[1])}**. The result may look complete. The creator is still unsure what to film, say or approve.
-            f"Start with the smallest version of **{lower_first(sections[0])}** that can produce {measures[0]}. Check it against {proofs[0]}. "
-            f"Keep this boundary visible: {cautions[0]} If the proof is unavailable, narrow the promise. Do not replace it with stronger language."
-        )
+    context = (
+        f"{guide['friction'].capitalize()}. In {topic}, that friction appears when **{lower_first(sections[0])}** is decided "
+        f"separately from **{lower_first(sections[1])}**. The result may look complete while leaving the creator unsure what to film, say or approve.\n\n"
+        f"Start with the smallest version that can produce {measures[0]}. Use {proofs[0]} as the evidence check and keep this boundary visible: "
+        f"{cautions[0]} If that proof is unavailable, narrow the promise instead of replacing it with stronger language."
+    )
 
     blocks = []
     for index, section in enumerate(sections):
         next_section = sections[(index + 1) % len(sections)]
-        check = (
-            f"Check {proofs[index]}. {cautions[index]} Review {measures[index]} before moving to **{lower_first(next_section)}**."
-            if mode == "search"
-            else f"Verify this choice with {proofs[index]}. {cautions[index]} Look for {measures[index]}. "
-            f"If that result is not visible, revise **{lower_first(section)}** before moving to **{lower_first(next_section)}**."
-        )
         blocks.append(
-            f"## {section}: the decision to make
-            f"{section_direction(section, topic, guide, index, lower_first(sections[(index + 1) % len(sections)]))}
-            f"{check}"
+            f"## {section}: the decision to make\n\n"
+            f"{section_direction(section, topic, guide)}\n\n"
+            f"Verify this choice with {proofs[index]}. {cautions[index]} "
+            f"A useful result is {measures[index]}; if that result cannot be observed, revise **{lower_first(section)}** before moving to **{lower_first(next_section)}**."
         )
 
     if mode in {"governance", "analysis", "product", "search"}:
         rows = [f"| **{section}** | {proofs[index]} | {cautions[index]} |" for index, section in enumerate(sections)]
         decision_map = (
-            f"## Decision map: {sections[0]} to {sections[3]}
-            "| Decision | Evidence to prepare | Boundary |
-            "| :--- | :--- | :--- |
+            f"## Decision map for {topic}\n\n"
+            "| Decision | Evidence to prepare | Boundary |\n"
+            "| :--- | :--- | :--- |\n"
+            + "\n".join(rows)
         )
     else:
         decision_map = f"""## Working sequence for {topic}
@@ -284,28 +257,28 @@ def build_editorial_article(inp) -> str:
 
     formula = build_formula(inp, mode, sections, proofs[2])
     example = (
-        f"Suppose {guide['audience']} must finish {deliverable} in a short production window. First, they lock "
-        f"**{lower_first(sections[0])}**. They prepare {proofs[1]}. Then they use **{lower_first(sections[2])}** to keep the promise visible. "
-        f"{cautions[2]} During review, they judge **{lower_first(sections[3])}** against {measures[3]}. A vague request for more polish is not enough."
+        f"Suppose {guide['audience']} must finish **{topic}** within a short production window. They lock "
+        f"**{lower_first(sections[0])}**, prepare {proofs[1]}, and use **{lower_first(sections[2])}** to keep the promise visible. "
+        f"{cautions[2]} During review, **{lower_first(sections[3])}** is judged against {measures[3]}, not against a vague request to make the work feel more polished."
     )
     review = (
-        f"- **Direction:** Does {lower_first(sections[0])} name one clear choice?
-        f"- **Visibility:** Can the audience see {lower_first(sections[1])} without relying on the caption?
-        f"- **Proof:** Does {proofs[2]} support the strongest statement in this piece?
-        f"- **Boundary:** Has the team followed this guardrail: {cautions[3]}
+        f"- **Direction:** Does {lower_first(sections[0])} name one clear choice?\n"
+        f"- **Visibility:** Can the audience see {lower_first(sections[1])} without relying on the caption?\n"
+        f"- **Proof:** Does {proofs[2]} support the strongest statement in {topic}?\n"
+        f"- **Boundary:** Has the team followed this guardrail: {cautions[3]}\n"
         f"- **Learning:** Will the next pass change one variable based on {measures[2]}?"
     )
     faq = (
-        f"### What must {sections[0]} decide here?
-        f"Set one default for **{lower_first(sections[0])}** alongside **{lower_first(sections[1])}**. Also name the condition that would justify a change. {proofs[0].capitalize()} is more useful than a long reference list because the team can check it in the work.
-        f"### How can {sections[1]} be tested with limited time or equipment?
-        f"Protect the proof moment. Reduce optional scenes first. A smaller version remains useful when **{lower_first(sections[1])}** stays visible and the claim remains inside the approved boundary.
-        f"### When should {sections[3]} be revised?
-        f"Revise **{lower_first(sections[3])}** when comparable work on **{lower_first(sections[2])}** shows a repeated problem. A change in audience, offer, access or capacity can also justify a revision. One isolated performance spike is not enough reason to rebuild the method."
+        f"### What must {sections[0]} decide in {topic}?\n\n"
+        f"It should settle the default direction and the condition that would justify changing it. For this topic, {proofs[0]} is more useful than a long reference list because it can be checked in the work.\n\n"
+        f"### How can {sections[1]} be tested with limited time or equipment?\n\n"
+        f"Protect the proof moment and reduce optional scenes first. A smaller version of {topic} remains useful when **{lower_first(sections[1])}** stays visible and the claim remains inside the approved boundary.\n\n"
+        f"### When should {sections[3]} be revised?\n\n"
+        f"Revise it after comparable work shows a repeated problem, or when the audience, offer, access or production constraint changes. One isolated performance spike is not enough reason to rebuild the method."
     )
     next_step = (
-        f"Put **{lower_first(sections[0])}**, **{lower_first(sections[2])}** and the main claim boundary onto one working card. Use it for the next production. "
-        f"If the team still needs several clarification rounds, [compare the Anomaly Box creative brief options](/store) for campaign-ready direction matched to the creator's lane and constraints."
+        f"Put **{lower_first(sections[0])}**, **{lower_first(sections[2])}** and the main boundary onto one working card for the next production. "
+        f"If those decisions still require several clarification rounds, [compare the Anomaly Box dossier options](/store) for a campaign-ready brief matched to the creator's lane and constraints."
     )
 
     article = f"""# {inp.title}
@@ -322,7 +295,7 @@ def build_editorial_article(inp) -> str:
 
 {decision_map}
 
-{"
+{"\n\n".join(blocks)}
 
 ## A working formula for {topic}
 
@@ -359,7 +332,7 @@ This page is specifically about the relationship between **{sections[0]}** and *
 
 """
     marker = "## Frequently asked questions"
-    expanded = article.replace(marker, note + marker, 1) if marker in article else article.rstrip() + "
+    expanded = article.replace(marker, note + marker, 1) if marker in article else article.rstrip() + "\n\n" + note
     if words(expanded) > 1200:
         raise ValueError(f"{inp.slug}: distinction note pushes article to {words(expanded)} words")
     return expanded

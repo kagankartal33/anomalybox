@@ -17,7 +17,7 @@ type ProfileParams = {
 function initials(value: string) {
   const parts = value
     .replace(/@.*/, "")
-    .split(/[\\s._-]+/)
+    .split(/[\s._-]+/)
     .filter(Boolean)
     .slice(0, 2);
   return (parts.map((part) => part[0]).join("") || "VB").toUpperCase();

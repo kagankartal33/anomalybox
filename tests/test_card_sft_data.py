@@ -111,7 +111,7 @@ class CardSftTests(unittest.TestCase):
             recipe = dict(zip(RECIPE_KEYS, recipe_values))
             row["meta"] = {"family_id": family, "source_id": split, "content_hash": hashlib.sha256(split.encode()).hexdigest(), "target_hash": hashlib.sha256(row["messages"][-1]["content"].encode()).hexdigest(), "category": "beauty", "creative_recipe": recipe, "creative_signature": "creative-signature-v2:" + json.dumps(recipe_values, separators=(",", ":")), "concept": {"recipe": recipe, "runtimeProfile": "quick_payoff"}, "split": split, "curriculum_version": CURRICULUM_VERSION, "prompt_version": PROMPT_VERSION}
             splits[split] = [row]
-            data = (json.dumps(row) + "
+            data = (json.dumps(row) + "\n").encode()
             (directory / f"{split}.jsonl").write_bytes(data)
             manifest["file_hashes"][f"{split}.jsonl"] = hashlib.sha256(data).hexdigest()
             manifest["split_counts"][split] = 1
@@ -137,7 +137,7 @@ class CardSftTests(unittest.TestCase):
             path = directory / "test.jsonl"
             row = json.loads(path.read_text())
             row["meta"]["family_id"] = json.loads((directory / "train.jsonl").read_text())["meta"]["family_id"]
-            data = (json.dumps(row) + "
+            data = (json.dumps(row) + "\n").encode()
             path.write_bytes(data)
             manifest["file_hashes"][path.name] = hashlib.sha256(data).hexdigest()
             (directory / "manifest.json").write_text(json.dumps(manifest))
@@ -173,7 +173,7 @@ class CardSftTests(unittest.TestCase):
                     card["id"] = "different-storage-id"
                     row["messages"][-1]["content"] = json.dumps(card)
                     row["meta"]["target_hash"] = hashlib.sha256(row["messages"][-1]["content"].encode()).hexdigest()
-                data = (json.dumps(row) + "
+                data = (json.dumps(row) + "\n").encode()
                 path.write_bytes(data)
                 manifest["file_hashes"][path.name] = hashlib.sha256(data).hexdigest()
                 (directory / "manifest.json").write_text(json.dumps(manifest))

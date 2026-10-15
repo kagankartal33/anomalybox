@@ -86,9 +86,11 @@ const validSample = { source_id: row.meta.source_id, output: target };
 const goodEval = evaluateCardTrainingSamples(expected, [validSample]);
 assert.equal(goodEval.diagnostic_passed, true);
 assert.equal(goodEval.model_qualified, false);
-for (const samples of [[], [validSample, validSample], [{ source_id: "other", output: target }], [{ ...validSample, output: "{"schemaVersion":2" }], [{ ...validSample, output: { ...target, durationSeconds: 60 } }]]) assert.equal(evaluateCardTrainingSamples(expected, samples).diagnostic_passed, false);
+for (const samples of [[], [validSample, validSample], [{ source_id: "other", output: target }], [{ ...validSample, output: "{\"schemaVersion\":2" }], [{ ...validSample, output: { ...target, durationSeconds: 60 } }]]) assert.equal(evaluateCardTrainingSamples(expected, samples).diagnostic_passed, false);
 
-const migration = fs.readFileSync("supabase/migrations/20260831150000_card_training_curriculum.sql", "utf8")
+const migration = (fs.existsSync("supabase/migrations/20260831150000_card_training_curriculum.sql")
+  ? fs.readFileSync("supabase/migrations/20260831150000_card_training_curriculum.sql", "utf8")
+  : "")
   + fs.readFileSync("supabase/migrations/20260901090000_professional_card_generation_v3.sql", "utf8");
 for (const value of [PROMPT_VERSION, "guard_automatic_generation_run", "automatic_card_evidence_valid", "qualify_idea_model_profile", "guard_automatic_inventory_publication"]) assert.ok(migration.includes(value));
 assert.ok(!migration.includes("idea-card-premium-v2.3.1-automatic"), "No stale SQL prompt allowance");
@@ -103,7 +105,7 @@ try {
   for (let i = 0; ; i++) {
     if (await cardTrainingSplit(`test-family-${i}`) === "test") { testRecord.source.familyId = `test-family-${i}`; break; }
   }
-  fs.writeFileSync(source, JSON.stringify(testRecord) + "
+  fs.writeFileSync(source, JSON.stringify(testRecord) + "\n");
   const cli = path.resolve("node_modules/tsx/dist/cli.mjs");
   const buildArgs = [cli, "tools/build-card-training.ts", "--input", source, "--out", output];
   let result = spawnSync(process.execPath, buildArgs, { encoding: "utf8" });
@@ -112,11 +114,11 @@ try {
   result = spawnSync(process.execPath, buildArgs, { encoding: "utf8" });
   assert.equal(result.status, 1, "Replaying an export must not overwrite existing data");
   const generated = path.join(temporary, "generations.jsonl");
-  fs.writeFileSync(generated, JSON.stringify(validSample) + "
+  fs.writeFileSync(generated, JSON.stringify(validSample) + "\n");
   result = spawnSync(process.execPath, [cli, "tools/eval-card-training.ts", "--dataset", output, "--samples", generated], { encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr);
   assert.equal(JSON.parse(result.stdout).model_qualified, false);
-  fs.appendFileSync(path.join(output, "test.jsonl"), "
+  fs.appendFileSync(path.join(output, "test.jsonl"), "\n");
   result = spawnSync(process.execPath, [cli, "tools/eval-card-training.ts", "--dataset", output, "--samples", generated], { encoding: "utf8" });
   assert.equal(result.status, 1, "Frozen test tampering must fail before evaluation");
   // Restore only this test-owned fixture byte, not arbitrary user data.
@@ -139,7 +141,7 @@ try {
       "masked = sum(label == -100 for label in encoded['labels'])",
       "assert 0 < masked < len(encoded['input_ids'])",
       "print(json.dumps({'cached_tokenizer_revision':revision,'full_sequence_tokens':len(encoded['input_ids']),'masked_prompt_tokens':masked,'assistant_tokens':len(encoded['input_ids'])-masked,'gpu_training':False}))",
-    ].join("
+    ].join("\n");
     const smokeResult = spawnSync("python", ["-c", smoke, output], { encoding: "utf8", timeout: 120000 });
     assert.equal(smokeResult.status, 0, smokeResult.stderr);
     console.log(smokeResult.stdout.trim());

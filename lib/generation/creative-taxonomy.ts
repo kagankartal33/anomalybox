@@ -336,6 +336,8 @@ function stableHash(value: string): number {
     hash ^= value.charCodeAt(index);
     hash = Math.imul(hash, 16777619);
   }
+  return hash >>> 0;
+}
 
 /** Prompt-safe execution direction. It contains no scores or performance claims. */
 export function creativeDirectionForRecipe(recipe: CreativeRecipe) {
@@ -347,20 +349,6 @@ export function creativeDirectionForRecipe(recipe: CreativeRecipe) {
     audienceAction: recipe.audienceActionId,
     production: { shootFormat: recipe.shootFormat, presenceMode: recipe.presenceMode },
   };
-  const pairUniqueCounts = {
-    genreVibe: new Set(recipes.map((recipe) => `${recipe.genreId}|${recipe.vibePresetId}`)).size,
-    hookGenre: new Set(recipes.map((recipe) => `${recipe.hookTypeId}|${recipe.genreId}`)).size,
-    emotionPayoff: new Set(recipes.map((recipe) => `${recipe.emotionArcId}|${recipe.payoffTypeId}`)).size,
-    formatProof: new Set(recipes.map((recipe) => `${recipe.shootFormat}|${recipe.proofDeviceId}`)).size,
-  };
-  const pairUniqueCounts = {
-    genreVibe: new Set(recipes.map((recipe) => `${recipe.genreId}|${recipe.vibePresetId}`)).size,
-    hookGenre: new Set(recipes.map((recipe) => `${recipe.hookTypeId}|${recipe.genreId}`)).size,
-    emotionPayoff: new Set(recipes.map((recipe) => `${recipe.emotionArcId}|${recipe.payoffTypeId}`)).size,
-    formatProof: new Set(recipes.map((recipe) => `${recipe.shootFormat}|${recipe.proofDeviceId}`)).size,
-  };
-}
-  return hash >>> 0;
 }
 
 function hookFamily(recipe: CreativeRecipe): string {
@@ -522,8 +510,17 @@ function candidateRecipes(input: RecipeScheduleInput): CreativeRecipe[] {
     ? AUDIENCE_ACTION_IDS
     : AUDIENCE_ACTION_IDS.filter((value) => value !== "disclosed_commercial_action");
   const candidates: CreativeRecipe[] = [];
+  const sampleHash = (value: string): number => {
+    let hash = stableHash(value);
+    hash ^= hash >>> 16;
+    hash = Math.imul(hash, 0x85ebca6b);
+    hash ^= hash >>> 13;
+    hash = Math.imul(hash, 0xc2b2ae35);
+    hash ^= hash >>> 16;
+    return hash >>> 0;
+  };
   const pick = <T>(values: readonly T[], index: number, axis: string): T =>
-    values[stableHash(`${input.lane}:${input.seed}:${index}:${axis}`) % values.length];
+    values[sampleHash(`${input.lane}:${axis}:${input.seed}:${index}`) % values.length];
   // Independent, axis-salted sampling prevents the modular correlations that
   // made marginal distributions look healthy while pair combinations repeated.
   for (let index = 0; index < 256; index += 1) {
@@ -620,6 +617,12 @@ export function analyzeCreativeDistribution(recipes: CreativeRecipe[]): Creative
   if (total >= 50 && maxShares.payoff > 0.2) issueCodes.push("payoff_concentration");
   const uniqueSignatures = new Set(recipes.map(creativeRecipeId)).size;
   if (uniqueSignatures !== total) issueCodes.push("creative_signature_duplicate");
+  const pairUniqueCounts = {
+    genreVibe: new Set(recipes.map((recipe) => `${recipe.genreId}|${recipe.vibePresetId}`)).size,
+    hookGenre: new Set(recipes.map((recipe) => `${recipe.hookTypeId}|${recipe.genreId}`)).size,
+    emotionPayoff: new Set(recipes.map((recipe) => `${recipe.emotionArcId}|${recipe.payoffTypeId}`)).size,
+    formatProof: new Set(recipes.map((recipe) => `${recipe.shootFormat}|${recipe.proofDeviceId}`)).size,
+  };
   if (total >= 50 && pairUniqueCounts.genreVibe < 20) issueCodes.push("genre_vibe_pair_coverage_low");
   if (total >= 50 && pairUniqueCounts.emotionPayoff < 24) issueCodes.push("emotion_payoff_pair_coverage_low");
   if (total >= 50 && pairUniqueCounts.formatProof < 12) issueCodes.push("format_proof_pair_coverage_low");

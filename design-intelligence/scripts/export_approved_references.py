@@ -52,7 +52,7 @@ def main() -> int:
     with APPROVED.open("w", encoding="utf-8") as fh:
         for record in all_records:
             match = by_id.get(record["reference_id"])
-            fh.write(json.dumps(match or record, ensure_ascii=False) + "\
+            fh.write(json.dumps(match or record, ensure_ascii=False) + "\n")
 
     print(f"Downloaded or verified {downloaded} approved desktop screenshots.")
     return 0

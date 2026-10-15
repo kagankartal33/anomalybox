@@ -28,7 +28,7 @@ function requireInternal(req: Request) {
   const expected = Deno.env.get("INTERNAL_API_TOKEN") ?? Deno.env.get("ADMIN_API_TOKEN");
   if (!expected) throw new HttpError(500, "INTERNAL_API_TOKEN or ADMIN_API_TOKEN is not configured");
 
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\\s+/i, "");
+  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
   const token = req.headers.get("x-admin-token") ?? bearer;
   if (token !== expected) throw new HttpError(401, "Unauthorized internal request");
 }

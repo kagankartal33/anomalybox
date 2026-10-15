@@ -2,17 +2,6 @@ import Link from "next/link";
 import { ArrowLeft, Mail } from "lucide-react";
 import { AuthShell } from "@/components/AuthShell";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
-import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { requestPasswordReset } from "./actions";
 
 export default async function ForgotPasswordPage({

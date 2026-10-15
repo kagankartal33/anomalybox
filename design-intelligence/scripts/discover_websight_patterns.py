@@ -154,7 +154,7 @@ def main() -> int:
 
     with OUTPUT.open("w", encoding="utf-8") as fh:
         for note in notes:
-            fh.write(json.dumps(note, ensure_ascii=False) + "\
+            fh.write(json.dumps(note, ensure_ascii=False) + "\n")
 
     print(f"Wrote {len(notes)} WebSight pattern notes to {OUTPUT}")
     return 0

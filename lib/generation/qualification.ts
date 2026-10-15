@@ -1,17 +1,29 @@
 import { DURATION_PLANNER_VERSION } from "../idea-card/duration-planner";
-import { AUTOMATIC_QUALIFICATION_MODE, GENERATION_PIPELINE_VERSION, independentCritic, modelContract, objectRecord, stableJson } from "./automatic-policy.ts";
+import { AUTOMATIC_QUALIFICATION_MODE, GENERATION_PIPELINE_VERSION, independentCritic, modelContract, objectRecord, stableJson } from "./automatic-policy";
 import { CONCEPT_RANKER_VERSION } from "./concept-ranking";
 import { CREATIVE_SCHEDULER_VERSION } from "./creative-taxonomy";
 
-import { DURATION_PLANNER_VERSION } from "../idea-card/duration-planner";
-import { AUTOMATIC_QUALIFICATION_MODE, GENERATION_PIPELINE_VERSION } from "./automatic-policy.ts";
-import { CONCEPT_RANKER_VERSION } from "./concept-ranking";
-import { CREATIVE_SCHEDULER_VERSION } from "./creative-taxonomy";
+export const QUALIFICATION_CATEGORIES = [
+  "beauty",
+  "entertainment_comedy",
+  "travel",
+  "fitness_wellness_safe",
+  "food",
+] as const;
 
-import { DURATION_PLANNER_VERSION } from "../idea-card/duration-planner";
-import { AUTOMATIC_QUALIFICATION_MODE, GENERATION_PIPELINE_VERSION } from "./automatic-policy.ts";
-import { CONCEPT_RANKER_VERSION } from "./concept-ranking";
-import { CREATIVE_SCHEDULER_VERSION } from "./creative-taxonomy";
+export type QualificationCategory = typeof QUALIFICATION_CATEGORIES[number];
+
+export function automaticQualificationPass(metrics: Record<string, unknown>): boolean {
+  if (!metrics || typeof metrics !== "object") return false;
+  if (metrics.qualification_mode !== AUTOMATIC_QUALIFICATION_MODE) return false;
+  if (!metrics.regression_passed) return false;
+  if (Number(metrics.evaluated_count ?? 0) <= 0) return false;
+  if (Number(metrics.safe_approve_rate ?? 0) < 0.6) return false;
+  if (Number(metrics.banned_residue_rate ?? 1) > 0.05) return false;
+  if (Number(metrics.duplicate_rate_078 ?? 1) > 0.1) return false;
+  if (Number(metrics.exact_duration_max_share ?? 1) > 0.25) return false;
+  return true;
+}
 
 export type QualificationContract = {
   promptVersion: string;
@@ -23,16 +35,13 @@ export function profileMatchesQualificationContract(
   profile: Record<string, unknown>,
   contract: QualificationContract,
 ) {
+  const metrics = profile.qualification_metrics as Record<string, unknown> | undefined;
   return profile.qualification_status === "approved" &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.qualification_mode === AUTOMATIC_QUALIFICATION_MODE &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.pipeline_version === GENERATION_PIPELINE_VERSION &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.scheduler_version === CREATIVE_SCHEDULER_VERSION &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.concept_ranker_version === CONCEPT_RANKER_VERSION &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.duration_planner_version === DURATION_PLANNER_VERSION &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.pipeline_version === GENERATION_PIPELINE_VERSION &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.scheduler_version === CREATIVE_SCHEDULER_VERSION &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.concept_ranker_version === CONCEPT_RANKER_VERSION &&
-    (profile.qualification_metrics as Record<string, unknown> | undefined)?.duration_planner_version === DURATION_PLANNER_VERSION &&
+    metrics?.qualification_mode === AUTOMATIC_QUALIFICATION_MODE &&
+    metrics?.pipeline_version === GENERATION_PIPELINE_VERSION &&
+    metrics?.scheduler_version === CREATIVE_SCHEDULER_VERSION &&
+    metrics?.concept_ranker_version === CONCEPT_RANKER_VERSION &&
+    metrics?.duration_planner_version === DURATION_PLANNER_VERSION &&
     profile.enabled === true &&
     profile.qualified_prompt_version === contract.promptVersion &&
     Number(profile.qualified_schema_version) === contract.schemaVersion &&

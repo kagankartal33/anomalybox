@@ -26,14 +26,15 @@ export async function submitAtelierLead(formData: FormData) {
     projectContext: String(formData.get("project_context") ?? ""),
     company: String(formData.get("company") ?? ""),
     recaptchaToken: String(formData.get("recaptcha_token") ?? "") || undefined,
-  }
-  if (!(await verifyRecaptcha(parsed.data.recaptchaToken, "atelier_request"))) {
-    redirect(`/atelier?error=${encodeURIComponent("Security verification failed. Please try again.")}#atelier-request`);
   });
 
   if (!parsed.success) {
     const message = parsed.error.issues[0]?.message ?? "Please complete the request form.";
     redirect(`/atelier?error=${encodeURIComponent(message)}#atelier-request`);
+  }
+
+  if (!(await verifyRecaptcha(parsed.data.recaptchaToken, "atelier_request"))) {
+    redirect(`/atelier?error=${encodeURIComponent("Security verification failed. Please try again.")}#atelier-request`);
   }
 
   const supabase = createSupabaseAdminClient();
@@ -75,7 +76,7 @@ export async function submitAtelierLead(formData: FormData) {
       "",
       "Project context:",
       projectContext,
-    ].join("\
+    ].join("\n"),
   });
 
   await supabase.from("atelier_leads").update({

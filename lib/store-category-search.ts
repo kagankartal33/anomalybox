@@ -45,9 +45,9 @@ export function normalized(value: string) {
     .replace(/[ıİğĞüÜşŞöÖçÇ]/g, (character) => turkishCharacterMap[character] ?? character)
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\\u0300-\\u036f]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/[_-]+/g, " ")
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
@@ -173,7 +173,7 @@ export function categorySearchScore(category: StoreCategory, query: string, cuis
   if (aliases.some((alias) => alias === needle)) score += 100;
   if (aliases.some((alias) => alias.includes(needle) || needle.includes(alias))) score += 70;
   if (haystack.includes(needle)) score += 35;
-  if (/\\b(yat|yatch|yacht|tekne|gulet|charter|mavi tur)\\b/.test(needle) && label === "yacht luxury travel") score += 160;
+  if (/\b(yat|yatch|yacht|tekne|gulet|charter|mavi tur)\b/.test(needle) && label === "yacht luxury travel") score += 160;
   if (cuisineQuery && restaurantSlug === category.slug) score += 90;
 
   return score;

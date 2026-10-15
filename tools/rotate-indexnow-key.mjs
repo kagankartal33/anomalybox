@@ -16,6 +16,6 @@ function run(args, input = "") {
 }
 
 run(["--yes", "vercel", "env", "rm", "INDEXNOW_KEY", "production", "--yes"]);
-run(["--yes", "vercel", "env", "add", "INDEXNOW_KEY", "production"], `${key}\
-fs.writeFileSync(path.join(process.cwd(), "public", `${key}.txt`), `${key}\
+run(["--yes", "vercel", "env", "add", "INDEXNOW_KEY", "production"], `${key}\n`);
+fs.writeFileSync(path.join(process.cwd(), "public", `${key}.txt`), `${key}\n`);
 console.log("IndexNow key rotated and matching public verification file created without printing the key.");

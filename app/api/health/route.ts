@@ -22,11 +22,6 @@ export async function GET() {
     : process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_")
       ? "test"
       : "unknown";
-  const paymentMode = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_")
-    ? "live"
-    : process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_")
-      ? "test"
-      : "unknown";
   const status = database === "ok" && payments === "ok" ? 200 : 503;
 
   return NextResponse.json(

@@ -1,6 +1,24 @@
 "use client";
 
-import { useState }
+import { useState, type ReactNode } from "react";
+import { CheckCircle2, ChevronDown, Clock, ListChecks, MessageSquare, Mic2, MonitorPlay, Music2, Scissors, Sparkles, Video } from "lucide-react";
+import type { CardSection, CardSectionBlock, ExecutionRange } from "@/lib/card-sections";
+import { compactText } from "@/lib/format";
+
+type FrameBoardMode = "shooting" | "editing";
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+}
+
+function asArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function cleanText(value: unknown): string {
+  return compactText(value, "").trim();
+}
+
 
 function fieldText(value: string | undefined) {
   return value && value.trim() ? value.trim() : "";
@@ -69,7 +87,7 @@ function RangeOverviewList({ ranges, mode }: { ranges: ExecutionRange[]; mode: F
                 <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-teal">
                   {isEditing ? "Edit range" : "Shooting range"}
                 </div>
-                <h4 className="mt-1 text-lg font-semibold leading-7 text-ink">{title}</h4>
+                <h4 className="mt-1 text-lg font-semibold leading-7 text-ink">{range.action || range.edit || range.time_range || "Segment"}</h4>
               </div>
               <span className="w-fit rounded-full bg-paper px-3 py-1 text-xs font-semibold text-ink/55">{String(index + 1).padStart(2, "0")}</span>
             </div>
@@ -146,60 +164,6 @@ function ExecutionRangeBoard({ ranges, mode }: { ranges: ExecutionRange[]; mode:
   );
 }
 
-function FrameCue({ cue }: { cue: ExecutionRange["visual_cue"] }) {
-  const labelMap: Record<ExecutionRange["visual_cue"], string> = {
-    close_up: "Close-up",
-    face_camera: "Face",
-    hand_action: "Hands",
-    product: "Product",
-    environment: "Setting",
-    text_overlay: "Text",
-    movement: "Move",
-    proof: "Proof",
-    payoff: "Payoff",
-  };
-
-  return (
-    <div className="relative grid aspect-video min-h-28 place-items-center overflow-hidden rounded-md border border-ink/10 bg-white shadow-sm">
-      <div className="absolute inset-3 rounded-md border border-dashed border-ink/12" />
-      <div className="absolute left-4 top-4 h-2 w-10 rounded-full bg-teal/20" />
-      <div className="absolute bottom-4 right-4 h-8 w-14 rounded-md border border-ink/15 bg-paper" />
-      <div className="grid h-16 w-16 place-items-center rounded-full border border-teal/20 bg-teal/10 text-xs font-semibold text-teal">
-        {labelMap[cue] ?? "Frame"}
-      </div>
-    </div>
-  );
-}
-
-function buildPerSecondFrames(section: CardSection) {
-  const payload = section.source_payload || {};
-  const frames = asArray(payload.per_second_frames)
-    .map((item) => asRecord(item))
-    .filter(Boolean)
-    .map((frame) => ({
-      second: Number(frame.second ?? 0),
-      shoot_frame: cleanText(frame.shoot_frame),
-      camera_action: cleanText(frame.camera_action),
-      pose_note: cleanText(frame.pose_note) || undefined,
-      b_roll_note: cleanText(frame.b_roll_note) || undefined,
-      on_screen_text: cleanText(frame.on_screen_text) || undefined,
-      voiceover_line: cleanText(frame.voiceover_line) || undefined,
-      personalization_slot: cleanText(frame.personalization_slot) || undefined,
-      edit_action: cleanText(frame.edit_action),
-      cut_point: cleanText(frame.cut_point) || undefined,
-      transition_style: cleanText(frame.transition_style) || undefined,
-      overlay_timing: cleanText(frame.overlay_timing) || undefined,
-      audio_cue: cleanText(frame.audio_cue) || undefined,
-      pacing_note: cleanText(frame.pacing_note) || undefined,
-      final_check: cleanText(frame.final_check) || undefined,
-      visual_cue: cleanText(frame.visual_cue) || "proof",
-    }))
-    .filter((frame) => Number.isFinite(frame.second))
-    .sort((a, b) => a.second - b.second) as PerSecondFrame[];
-
-  return frames;
-}
-
 function EventListDetail({ icon: Icon, label, values }: { icon: typeof Clock; label: string; values?: string[] }) {
   if (!values?.length) return null;
   return (
@@ -242,10 +206,7 @@ function SceneFlowPreview({ cardId }: { cardId?: string }) {
       onError={() => setFailed(true)}
     />
   );
-} from "react";
-import { ChevronDown, Clock, MessageSquare, Mic2, MonitorPlay, Sparkles, Video } from "lucide-react";
-import type { CardSection, CardSectionBlock, ExecutionRange } from "@/lib/card-sections";
-import { compactText } from "@/lib/format";
+}
 
 type SceneFlowEvent = {
   start: number;
@@ -260,24 +221,10 @@ type SceneFlowEvent = {
   broll?: string[];
 };
 
-type FrameBoardMode = "shooting" | "editing";
-
-function asRecord(value: unknown) {
-  return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
-}
-
-function asArray(value: unknown) {
-  return Array.isArray(value) ? value : [];
-}
-
-function cleanText(value: unknown) {
-  return compactText(value, "").trim();
-}
-
 function parseTimeRange(value: unknown, fallbackDuration: number) {
   const text = String(value ?? "")
-    .replace(/\\u2013|\\u2014/g, "-")
-    .replace(/\\s+/g, "")
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/\s+/g, "")
     .toLowerCase();
   const [startText, endText] = text.split(/-|to/);
   const start = Number.parseInt(startText || "0", 10);
@@ -751,13 +698,11 @@ function renderBlock(block: CardSectionBlock, index: number) {
           {block.items.map((item, itemIndex) => <li key={itemIndex}>{item}</li>)}
         </ul>
       ) : null}
-      {block.type === "caption_pack" ? <CaptionPackBoard block={block} /> : null}
-      {block.type === "safety" ? <SafetyBoard block={block} /> : null}
     </div>
   );
 }
 
-export function CardSections({ sections, showSummaries = true }: { sections: CardSection[]; cardId?: string; showSummaries?: boolean }) {
+export function CardSections({ sections, cardId, showSummaries = true }: { sections: CardSection[]; cardId?: string; showSummaries?: boolean }) {
   const [open, setOpen] = useState(sections[0]?.key ?? "");
 
   return (

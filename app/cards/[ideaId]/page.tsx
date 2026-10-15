@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { CardSections } from "@/components/CardSections";
 import { StatusPill } from "@/components/StatusPill";
-import { normalizeCardExecution, normalizeCreatorCardSections } from "@/lib/card-sections";
+import { normalizeCardSections } from "@/lib/card-sections";
 import { compactText } from "@/lib/format";
 import { requireUser } from "@/lib/auth";
 import { displayCardTitle } from "@/lib/card-display";
@@ -57,8 +57,7 @@ export default async function CardDetailPage({
   }
 
   const rawCard = card.card as Record<string, unknown>;
-  const sections = normalizeCreatorCardSections(rawCard);
-  const execution = normalizeCardExecution(rawCard);
+  const sections = normalizeCardSections(rawCard);
   const cardTitle = displayCardTitle(rawCard, card.title);
   const { data: cardReport } = await supabase
     .from("card_reports")

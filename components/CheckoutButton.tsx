@@ -11,26 +11,6 @@ declare global {
     };
   }
 }
-import Script from "next/script";
-
-declare global {
-  interface Window {
-    grecaptcha?: {
-      ready(callback: () => void): void;
-      execute(siteKey: string, options: { action: string }): Promise<string>;
-    };
-  }
-}
-import Script from "next/script";
-
-declare global {
-  interface Window {
-    grecaptcha?: {
-      ready(callback: () => void): void;
-      execute(siteKey: string, options: { action: string }): Promise<string>;
-    };
-  }
-}
 
 export function CheckoutButton({
   boxProductSlug,
@@ -60,28 +40,6 @@ export function CheckoutButton({
       });
     });
   }
-  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-
-  async function recaptchaToken() {
-    if (!recaptchaSiteKey) return undefined;
-    if (!window.grecaptcha) throw new Error("Security verification is still loading.");
-    return await new Promise<string>((resolve, reject) => {
-      window.grecaptcha?.ready(() => {
-        window.grecaptcha?.execute(recaptchaSiteKey, { action: "begin_checkout" }).then(resolve).catch(reject);
-      });
-    });
-  }
-  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-
-  async function recaptchaToken() {
-    if (!recaptchaSiteKey) return undefined;
-    if (!window.grecaptcha) throw new Error("Security verification is still loading.");
-    return await new Promise<string>((resolve, reject) => {
-      window.grecaptcha?.ready(() => {
-        window.grecaptcha?.execute(recaptchaSiteKey, { action: "begin_checkout" }).then(resolve).catch(reject);
-      });
-    });
-  }
 
   async function checkout() {
     setLoading(true);
@@ -96,8 +54,6 @@ export function CheckoutButton({
           category_slug: categorySlug,
           persona_slug: personaSlug,
           context_detail: contextDetail,
-          recaptcha_token: token,
-          recaptcha_token: token,
           recaptcha_token: token,
         }),
       });
@@ -124,7 +80,6 @@ export function CheckoutButton({
 
   return (
     <div>
-      {recaptchaSiteKey ? <Script src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`} strategy="afterInteractive" /> : null}
       {recaptchaSiteKey ? <Script src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`} strategy="afterInteractive" /> : null}
       <button
         className="focus-ring w-full rounded-md bg-ink px-4 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:bg-ink/30"

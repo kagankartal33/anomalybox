@@ -56,7 +56,7 @@ type AdapterOptions = {
 };
 
 function endpoint(baseUrl: string, suffix: string): string {
-  return `${baseUrl.replace(/\\\\/$/, "")}${suffix}`;
+  return `${baseUrl.replace(/\/$/, "")}${suffix}`;
 }
 
 function safeProviderUrl(value: string): string {
@@ -78,11 +78,11 @@ function safeProviderUrl(value: string): string {
       throw new ModelProviderError("configuration", "Provider credentials must be supplied through an environment variable");
     }
   }
-  return parsed.toString().replace(/\\\\/$/, "");
+  return parsed.toString().replace(/\/$/, "");
 }
 
 function stripJsonFence(value: string): string {
-  const trimmed = value.trim().replace(/^```(?:json)?\\\\s*/i, "").replace(/\\\\s*```$/, "");
+  const trimmed = value.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
   const firstObject = trimmed.indexOf("{");
   const firstArray = trimmed.indexOf("[");
   const start = [firstObject, firstArray].filter((index) => index >= 0).sort((a, b) => a - b)[0] ?? -1;
@@ -170,9 +170,13 @@ function responseText(payload: Record<string, unknown>, protocol: ProviderProtoc
 
 function requestFor(profile: ModelProviderProfile, request: StructuredGenerationRequest<unknown>, key: string, repair?: { text: string; issues: string }) {
   const protocol = profile.protocol;
-  const repairPrompt = repair
-    ? `${request.prompt}
+  const schemaText = JSON.stringify(request.jsonSchema);
+  const basePrompt = protocol === "json_text"
+    ? `${request.prompt}\n\nJSON Schema:\n${schemaText}`
     : request.prompt;
+  const repairPrompt = repair
+    ? `${basePrompt}\n\nThe previous output had validation issues:\n${repair.issues}\n\nPrevious output:\n${repair.text}\n\nReturn valid JSON matching the schema.`
+    : basePrompt;
   if (protocol === "openai_compatible") {
     const base = safeProviderUrl(profile.baseUrl ?? "https://api.openai.com/v1");
     const useResponses = profile.features?.api !== "chat_completions";
@@ -230,7 +234,7 @@ function requestFor(profile: ModelProviderProfile, request: StructuredGeneration
   return {
     url: safeProviderUrl(base),
     headers: { Authorization: `Bearer ${key}` },
-    body: { model: profile.model, system: request.system, prompt: `${repairPrompt}
+    body: { model: profile.model, system: request.system, prompt: repairPrompt, response_format: "json" },
   };
 }
 

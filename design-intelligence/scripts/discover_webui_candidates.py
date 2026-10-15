@@ -159,7 +159,7 @@ def main() -> int:
 def write_manifest(records: list[dict[str, Any]]) -> None:
     with MANIFEST.open("w", encoding="utf-8") as fh:
         for record in records:
-            fh.write(json.dumps(record, ensure_ascii=False) + "\
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
-import { CreativeDossierShelf, type CreatorBox } from "@/components/CreativeDossierShelf";
+import { CreativeDossierShelf, type CreatorBox } from "@/components/ViralBoxShelf";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { displayCardPremise, displayCardTitle } from "@/lib/card-display";

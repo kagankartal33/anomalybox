@@ -1,6 +1,6 @@
-import { ideaCardSchema } from "./schema.ts";
-import { hasEarlySponsorDisclosure, needsSponsorDisclosure, privacySafetyFlags } from "./content-safety.ts";
-import { parsePurchaseLane } from "../algorithmic-reason/compatibility.ts";
+import { ideaCardSchema } from "./schema";
+import { hasEarlySponsorDisclosure, needsSponsorDisclosure, privacySafetyFlags } from "./content-safety";
+import { parsePurchaseLane } from "../algorithmic-reason/compatibility";
 import {
   creativeRecipeSchema,
   hookAutomationStatus,
@@ -8,7 +8,7 @@ import {
   validateRecipeCompatibility,
   type RecipeEvidence,
   type CreativeRecipe,
-} from "../generation/creative-taxonomy.ts";
+} from "../generation/creative-taxonomy";
 
 export const QUALITY_GATE_VERSION = "quality-gate-v3.0.1-automatic";
 
@@ -88,60 +88,54 @@ type NormalizedCard = {
   rawText: string;
 };
 
-const META_LANGUAGE = /\\\\b(viral|algorithm|engagement bait|watch time|retention hack|content strategy|this reel|the viewer|creator-facing|quality score|training data|decision trace|creative recipe|taxonomy|genre id|vibe preset|emotion arc|proof device|payoff type)\\\\b/i;
-const GUARANTEE_LANGUAGE = /\\\\b(guaranteed|cures?|treats?\\\\b|diagnos(?:e|is)|risk[- ]free|no side effects|lose \\\\d+|make money fast|instant results?|always works?)\\\\b/i;
-const GENERIC_CTA = /\\\\b(follow for more|like and subscribe|smash (?:that )?like|save this for later|comment below)\\\\b/i;
-const PHYSICAL_ACTION = /\\\\b(open|close|place|pour|drop|cap|uncap|cut|slice|mix|blend|stir|hold|turn|walk|step|lift|lower|show|reveal|point|tap|press|wipe|swap|taste|bend|write|measure|compare|apply|remove|enter|exit|frame|pan|tilt|zoom|rack focus|capture)\\\\b/i;
+const META_LANGUAGE = /\b(viral|algorithm|engagement bait|watch time|retention hack|content strategy|this reel|the viewer|creator-facing|quality score|training data|decision trace|creative recipe|taxonomy|genre id|vibe preset|emotion arc|proof device|payoff type)\b/i;
+const GUARANTEE_LANGUAGE = /\b(guaranteed|cures?|treats?\b|diagnos(?:e|is)|risk[- ]free|no side effects|lose \d+|make money fast|instant results?|always works?)\b/i;
+const GENERIC_CTA = /\b(follow for more|like and subscribe|smash (?:that )?like|save this for later|comment below)\b/i;
+const PHYSICAL_ACTION = /\b(open|close|place|pour|drop|cap|uncap|cut|slice|mix|blend|stir|hold|turn|walk|step|lift|lower|show|reveal|point|tap|press|wipe|swap|taste|bend|write|measure|compare|apply|remove|enter|exit|frame|pan|tilt|zoom|rack focus|capture)\b/i;
 
-const CAMERA_LANGUAGE = /\\\\b(close-up|wide|medium|macro|overhead|handheld|tripod|static|tracking|pov|rack focus|push-in|locked)\\\\b/i;
-const SECOND_PERSON = /\\\\b(you|your|we|I|my|let's|here's|watch|look)\\\\b/i;
-const BANNED_RESIDUE = /\\\\b(lorem ipsum|insert (?:hook|cta|product)|placeholder|as an ai|category_layer_pack|premium completeness|human awareness score|quality gate|score_band|internal score|decision trace|training (?:data|profile|source)|dataset|inventory id|generator run|creative[-_ ]recipe|taxonomy[-_ ]version|genre[-_ ]id|vibe[-_ ]preset|emotion[-_ ]arc|proof[-_ ]device|payoff[-_ ]type)\\\\b/i;
-const VERTICAL_FRAME_DIRECTION = /\\\\b(9\\\\s*:\\\\s*16|vertical|portrait)\\\\b/i;
-const SAFE_ZONE_DIRECTION = /\\\\b(safe[- ]zone|interface[- ]safe|ui[- ]safe|keep (?:text|captions?|titles?|key action) (?:inside|within|clear of)|avoid (?:the )?(?:top|bottom|right) (?:ui|interface|controls?))\\\\b/i;
-const THIRD_PARTY_MEDIA_DIRECTION = /\\\\b(repost|re-upload|download(?:ed)? (?:clip|video|reel|audio)|reuse (?:a |the )?(?:viral|creator|someone else(?:'s)?) (?:clip|video|reel|audio)|rip(?:ped)? (?:audio|music)|use someone else(?:'s)? footage)\\\\b/i;
-const LICENSE_SENSITIVE_SOUND = /\\\\b(trending|viral|commercial|copyright(?:ed)?|licensed|chart|popular) (?:audio|sound|song|music|track)\\\\b/i;
-const SOUND_EXECUTION = /\\\\b(sound|audio|room tone|sizzle|click|tap|crack|pour|rustle|whisper|voice(?:over)?|listen|hear)\\\\b/i;
-const ENVIRONMENT_EXECUTION = /\\\\b(kitchen|bathroom|bedroom|studio|street|home|hotel|airport|gym|restaurant|office|desk|window|outdoor|indoor|workshop|store)\\\\b/i;
-const EDIT_TRANSITION_EXECUTION = /\\\\b(cut|transition|match cut|whip(?:-pan)?|speed ramp|wipe|split screen|jump cut|zoom|reveal)\\\\b/i;
-const SOUND_EXECUTION = /\\\\b(sound|audio|room tone|sizzle|click|tap|crack|pour|rustle|whisper|voice(?:over)?|listen|hear)\\\\b/i;
-const ENVIRONMENT_EXECUTION = /\\\\b(kitchen|bathroom|bedroom|studio|street|home|hotel|airport|gym|restaurant|office|desk|window|outdoor|indoor|workshop|store)\\\\b/i;
-const EDIT_TRANSITION_EXECUTION = /\\\\b(cut|transition|match cut|whip(?:-pan)?|speed ramp|wipe|split screen|jump cut|zoom|reveal)\\\\b/i;
-const SOUND_EXECUTION = /\\\\b(sound|audio|room tone|sizzle|click|tap|crack|pour|rustle|whisper|voice(?:over)?|listen|hear)\\\\b/i;
-const ENVIRONMENT_EXECUTION = /\\\\b(kitchen|bathroom|bedroom|studio|street|home|hotel|airport|gym|restaurant|office|desk|window|outdoor|indoor|workshop|store)\\\\b/i;
-const EDIT_TRANSITION_EXECUTION = /\\\\b(cut|transition|match cut|whip(?:-pan)?|speed ramp|wipe|split screen|jump cut|zoom|reveal)\\\\b/i;
-const SOUND_EXECUTION = /\\\\b(sound|audio|room tone|sizzle|click|tap|crack|pour|rustle|whisper|voice(?:over)?|listen|hear)\\\\b/i;
-const ENVIRONMENT_EXECUTION = /\\\\b(kitchen|bathroom|bedroom|studio|street|home|hotel|airport|gym|restaurant|office|desk|window|outdoor|indoor|workshop|store)\\\\b/i;
-const EDIT_TRANSITION_EXECUTION = /\\\\b(cut|transition|match cut|whip(?:-pan)?|speed ramp|wipe|split screen|jump cut|zoom|reveal)\\\\b/i;
+const CAMERA_LANGUAGE = /\b(close-up|wide|medium|macro|overhead|handheld|tripod|static|tracking|pov|rack focus|push-in|locked)\b/i;
+const SECOND_PERSON = /\b(you|your|we|I|my|let's|here's|watch|look)\b/i;
+const BANNED_RESIDUE = /\b(lorem ipsum|insert (?:hook|cta|product)|placeholder|as an ai|category_layer_pack|premium completeness|human awareness score|quality gate|score_band|internal score|decision trace|training (?:data|profile|source)|dataset|inventory id|generator run|creative[-_ ]recipe|taxonomy[-_ ]version|genre[-_ ]id|vibe[-_ ]preset|emotion[-_ ]arc|proof[-_ ]device|payoff[-_ ]type)\b/i;
+const VERTICAL_FRAME_DIRECTION = /\b(9\s*:\s*16|vertical|portrait)\b/i;
+const SAFE_ZONE_DIRECTION = /\b(safe[- ]zone|interface[- ]safe|ui[- ]safe|keep (?:text|captions?|titles?|key action) (?:inside|within|clear of)|avoid (?:the )?(?:top|bottom|right) (?:ui|interface|controls?))\b/i;
+const THIRD_PARTY_MEDIA_DIRECTION = /\b(repost|re-upload|download(?:ed)? (?:clip|video|reel|audio)|reuse (?:a |the )?(?:viral|creator|someone else(?:'s)?) (?:clip|video|reel|audio)|rip(?:ped)? (?:audio|music)|use someone else(?:'s)? footage)\b/i;
+const LICENSE_SENSITIVE_SOUND = /\b(trending|viral|commercial|copyright(?:ed)?|licensed|chart|popular) (?:audio|sound|song|music|track)\b/i;
+const SOUND_EXECUTION = /\b(sound|audio|room tone|sizzle|click|tap|crack|pour|rustle|whisper|voice(?:over)?|listen|hear)\b/i;
+const ENVIRONMENT_EXECUTION = /\b(kitchen|bathroom|bedroom|studio|street|home|hotel|airport|gym|restaurant|office|desk|window|outdoor|indoor|workshop|store)\b/i;
+const EDIT_TRANSITION_EXECUTION = /\b(cut|transition|match cut|whip(?:-pan)?|speed ramp|wipe|split screen|jump cut|zoom|reveal)\b/i;
 
 const LANE_TERMS: Record<string, RegExp> = {
-  beauty: /\\\\b(skincare|makeup|skin|lipstick|foundation|mascara|swatch|blush|serum|concealer|hair|nail)\\\\b/i,
-  food: /\\\\b(food|cook|bake|recipe|ingredient|flavou?r|taste|sauce|bread|meal|oven|pan|dough|pasta)\\\\b/i,
-  travel: /\\\\b(travel|trip|destination|hotel|flight|airport|luggage|tour|itinerary|passport|trail|station|museum)\\\\b/i,
-  entertainment_comedy: /\\\\b(joke|comedy|punchline|sketch|parody|absurd|misunderstanding|awkward|exaggerat\\\\w*|comic|character|reversal)\\\\b/i,
-  fitness_wellness_safe: /\\\\b(fitness|workout|exercise|stretch|mobility|squat|gym|dumbbell|reps|posture|breath|wellness|warm.up)\\\\b/i,
-  fashion: /\\\\b(fashion|outfit|garment|fabric|fit|cut|seam|hem|waist|sleeve|layer|drape|shoe|jacket|shirt|dress)\\\\b/i,
-  commerce_affiliate: /\\\\b(product|compare|test|use|feature|tradeoff|affiliate|sponsor|disclosure|checkout|device|tool)\\\\b/i,
-  creator_education: /\\\\b(camera|shot|frame|edit|timeline|caption|script|creator|record|clip|audio|lighting|brief)\\\\b/i,
-  lifestyle: /\\\\b(routine|home|desk|room|morning|evening|organize|habit|schedule|space|setup|daily)\\\\b/i,
-  luxury: /\\\\b(craft|material|finish|construction|leather|metal|stitch|detail|texture|service|object|fabric)\\\\b/i,
-  parenting_family: /\\\\b(parent|family|adult|child|home|routine|prepare|school|meal|play|bedtime|caregiver)\\\\b/i,
-  thought_leadership: /\\\\b(decision|source|evidence|tradeoff|framework|record|strategy|research|team|business|leadership|matrix)\\\\b/i,
+  beauty: /\b(skincare|makeup|skin|lipstick|foundation|mascara|swatch|blush|serum|concealer|hair|nail)\b/i,
+  food: /\b(food|cook|bake|recipe|ingredient|flavou?r|taste|sauce|bread|meal|oven|pan|dough|pasta)\b/i,
+  travel: /\b(travel|trip|destination|hotel|flight|airport|luggage|tour|itinerary|passport|trail|station|museum)\b/i,
+  entertainment_comedy: /\b(joke|comedy|punchline|sketch|parody|absurd|misunderstanding|awkward|exaggerat\w*|comic|character|reversal)\b/i,
+  fitness_wellness_safe: /\b(fitness|workout|exercise|stretch|mobility|squat|gym|dumbbell|reps|posture|breath|wellness|warm.up)\b/i,
+  fashion: /\b(fashion|outfit|garment|fabric|fit|cut|seam|hem|waist|sleeve|layer|drape|shoe|jacket|shirt|dress)\b/i,
+  commerce_affiliate: /\b(product|compare|test|use|feature|tradeoff|affiliate|sponsor|disclosure|checkout|device|tool)\b/i,
+  creator_education: /\b(camera|shot|frame|edit|timeline|caption|script|creator|record|clip|audio|lighting|brief)\b/i,
+  lifestyle: /\b(routine|home|desk|room|morning|evening|organize|habit|schedule|space|setup|daily)\b/i,
+  luxury: /\b(craft|material|finish|construction|leather|metal|stitch|detail|texture|service|object|fabric)\b/i,
+  parenting_family: /\b(parent|family|adult|child|home|routine|prepare|school|meal|play|bedtime|caregiver)\b/i,
+  thought_leadership: /\b(decision|source|evidence|tradeoff|framework|record|strategy|research|team|business|leadership|matrix)\b/i,
 };
 
 function affirmativeSentences(value: string): string {
-  return value.split(/(?<=[.!?;])\\\\s+|
+  return value.split(/(?<=[.!?;])\s+|\n+/)
+    .map((s) => s.trim())
+    .filter((s) => s && !/^\s*(?:please\s+)?(?:never\b|do not\b|don't\b|avoid\b)/i.test(s))
+    .join(" ");
 }
 
 function visualContentOverlap(plan: string, action: string): number {
   // Shared camera boilerplate, pronouns, and overlay copy are not evidence
   // that the scheduled objects or scene actually appear in the first image.
-  const boilerplate = /\\\\b(?:a|an|the|and|or|with|without|in|on|at|to|of|for|from|into|toward|beside|next|both|each|this|that|these|those|it|its|their|them|you|your|one|two|hold|show|place|frame|shot|camera|locked|static|wide|medium|close|up|macro|overhead|handheld|tripod|pov)\\\\b/gi;
+  const boilerplate = /\b(?:a|an|the|and|or|with|without|in|on|at|to|of|for|from|into|toward|beside|next|both|each|this|that|these|those|it|its|their|them|you|your|one|two|hold|show|place|frame|shot|camera|locked|static|wide|medium|close|up|macro|overhead|handheld|tripod|pov)\b/gi;
   return overlap(plan.replace(boilerplate, " "), action.replace(boilerplate, " "));
 }
 
 function hookDeliveryExecuted(step: Step | undefined, delivery: string): boolean {
   if (!step) return false;
-  const opening = `${step.action}
+  const opening = `${step.action} ${step.spokenLine ?? ""} ${step.editNote ?? ""}`;
   if (delivery === "visual_action") return Boolean(step.action && PHYSICAL_ACTION.test(step.action));
   if (["spoken", "dialogue"].includes(delivery)) return Boolean(step.spokenLine);
   if (delivery === "on_screen_text") return Boolean(step.onScreenText);
@@ -153,127 +147,68 @@ function hookDeliveryExecuted(step: Step | undefined, delivery: string): boolean
 }
 
 function proofDeviceExecuted(steps: Step[], proofDeviceId: string): boolean {
-  const execution = steps.map((step) => affirmativeSentences(`${step.action}
+  const execution = steps.map((step) => affirmativeSentences(`${step.action} ${step.spokenLine ?? ""}`)).join(" ");
   const visible = steps.some(visibleProof);
   const patterns: Record<string, RegExp> = {
-    controlled_side_by_side: /\\\\b(compare|both|side by side|split screen|versus|vs\\\\.)\\\\b/i,
-    live_demonstration: /\\\\b(apply|demonstrate|test|show|make|assemble|perform|use)\\\\b/i,
-    measured_readout: /\\\\b(measure|timer|readout|scale|number|receipt|count|temperature)\\\\b/i,
-    process_result: /\\\\b(process|finish(?:ed)?|result|after|reveal|show)\\\\b/i,
-    visible_consequence: /\\\\b(consequence|reaction|response|result|change|effect)\\\\b/i,
-    reversal_callback: /\\\\b(reverse|reversal|turn(?:ed)?|flip|callback|instead)\\\\b/i,
-    source_receipt: /\\\\b(source|receipt|document|citation|record|reference)\\\\b/i,
-    route_map: /\\\\b(route|map|itinerary|direction|stop|station)\\\\b/i,
-    sensory_result: /\\\\b(taste|texture|smell|sound|crisp|sizzle|feel)\\\\b/i,
-    form_reference: /\\\\b(form|posture|alignment|range|rep(?:s)?|mobility)\\\\b/i,
-    decision_matrix: /\\\\b(matrix|criteria|checklist|compare|tradeoff|decision)\\\\b/i,
-    before_after_state: /\\\\b(before|after|state|difference|change)\\\\b/i,
+    controlled_side_by_side: /\b(compare|both|side by side|split screen|versus|vs\.)\b/i,
+    live_demonstration: /\b(apply|demonstrate|test|show|make|assemble|perform|use)\b/i,
+    measured_readout: /\b(measure|timer|readout|scale|number|receipt|count|temperature)\b/i,
+    process_result: /\b(process|finish(?:ed)?|result|after|reveal|show)\b/i,
+    visible_consequence: /\b(consequence|reaction|response|result|change|effect)\b/i,
+    reversal_callback: /\b(reverse|reversal|turn(?:ed)?|flip|callback|instead)\b/i,
+    source_receipt: /\b(source|receipt|document|citation|record|reference)\b/i,
+    route_map: /\b(route|map|itinerary|direction|stop|station)\b/i,
+    sensory_result: /\b(taste|texture|smell|sound|crisp|sizzle|feel)\b/i,
+    form_reference: /\b(form|posture|alignment|range|rep(?:s)?|mobility)\b/i,
+    decision_matrix: /\b(matrix|criteria|checklist|compare|tradeoff|decision)\b/i,
+    before_after_state: /\b(before|after|state|difference|change)\b/i,
   };
   return visible && Boolean(patterns[proofDeviceId]?.test(execution));
 }
 
 function payoffTypeExecuted(step: Step | undefined, payoffTypeId: string): boolean {
   if (!step || !visiblyCompletesPayoff(step)) return false;
-  const execution = affirmativeSentences(`${step.action}
+  const execution = affirmativeSentences(`${step.action} ${step.spokenLine ?? ""} ${step.onScreenText ?? ""}`);
   const patterns: Record<string, RegExp> = {
-    visible_result: /\\\\b(result|finish(?:ed)?|show|reveal|display|difference)\\\\b/i,
-    side_by_side_decision: /\\\\b(side by side|both|compare|choice|choose|smoother|better|decision)\\\\b/i,
-    reversal_callback: /\\\\b(reverse|reversal|turn(?:ed)?|flip|instead)\\\\b/i,
-    before_after_state: /\\\\b(before|after|state|difference|change)\\\\b/i,
-    answer_reveal: /\\\\b(answer|reveal|resolve|correct)\\\\b/i,
-    usable_artifact: /\\\\b(checklist|template|plan|matrix|list|artifact|decision)\\\\b/i,
-    sensory_finish: /\\\\b(taste|texture|smell|sound|finish|feel)\\\\b/i,
-    mistake_correction: /\\\\b(correct|fix|replace|mistake|instead)\\\\b/i,
-    identity_resolution: /\\\\b(choose|decision|fit|style|identity|preference)\\\\b/i,
-    open_loop_close: /\\\\b(answer|resolve|reveal|close|result)\\\\b/i,
+    visible_result: /\b(result|finish(?:ed)?|show|reveal|display|difference)\b/i,
+    side_by_side_decision: /\b(side by side|both|compare|choice|choose|smoother|better|decision)\b/i,
+    reversal_callback: /\b(reverse|reversal|turn(?:ed)?|flip|instead)\b/i,
+    before_after_state: /\b(before|after|state|difference|change)\b/i,
+    answer_reveal: /\b(answer|reveal|resolve|correct)\b/i,
+    usable_artifact: /\b(checklist|template|plan|matrix|list|artifact|decision)\b/i,
+    sensory_finish: /\b(taste|texture|smell|sound|finish|feel)\b/i,
+    mistake_correction: /\b(correct|fix|replace|mistake|instead)\b/i,
+    identity_resolution: /\b(choose|decision|fit|style|identity|preference)\b/i,
+    open_loop_close: /\b(answer|resolve|reveal|close|result)\b/i,
   };
   return Boolean(patterns[payoffTypeId]?.test(execution));
 }
 
 function highConfidenceSafetyCodes(value: string): string[] {
   const codes: string[] = [];
-  const childCapture = /\\\\b(record|film|capture|show|display|reveal|share|publish|post)\\\\b/i.test(value)
-    && /\\\\b(child|kid|toddler|minor|student)\\\\b/i.test(value);
-  const privateChildDetail = /\\\\b(full face|name|school|location|address|bedroom|medical|health record|private message)\\\\b/i.test(value);
-  const childSafeguard = /\\\\b(parent(?:al)?|guardian) (?:permission|consent)\\\\b|\\\\b(blur|redact|fictional)\\\\b/i.test(value);
+  const childCapture = /\b(record|film|capture|show|display|reveal|share|publish|post)\b/i.test(value)
+    && /\b(child|kid|toddler|minor|student)\b/i.test(value);
+  const privateChildDetail = /\b(full face|name|school|location|address|bedroom|medical|health record|private message)\b/i.test(value);
+  const childSafeguard = /\b(parent(?:al)?|guardian) (?:permission|consent)\b|\b(blur|redact|fictional)\b/i.test(value);
   if (childCapture && privateChildDetail && !childSafeguard) codes.push("hard_child_privacy");
-  if (/\\\\b(child|kid|toddler|minor)\\\\b/i.test(value) && /\\\\b(distress|crying|meltdown|tantrum|humiliate|shame|scare)\\\\b/i.test(value)) codes.push("hard_child_distress");
-  if (/\\\\b(blindfold(?:ed)?|without (?:a )?spotter|hold (?:your )?breath|choke|strangle|set .{0,30} on fire|drive (?:as )?fast|jump from|dangerous challenge|eat (?:a )?(?:nonfood|detergent)|ingest (?:detergent|cleaner))\\\\b/i.test(value)) {
+  if (/\b(child|kid|toddler|minor)\b/i.test(value) && /\b(distress|crying|meltdown|tantrum|humiliate|shame|scare)\b/i.test(value)) codes.push("hard_child_distress");
+  if (/\b(blindfold(?:ed)?|without (?:a )?spotter|hold (?:your )?breath|choke|strangle|set .{0,30} on fire|drive (?:as )?fast|jump from|dangerous challenge|eat (?:a )?(?:nonfood|detergent)|ingest (?:detergent|cleaner))\b/i.test(value)) {
     codes.push("dangerous_physical_direction");
   }
   return codes;
 }
 
-function hookDeliveryExecuted(step: Step | undefined, delivery: string): boolean {
-  if (!step) return false;
-  const opening = `${step.action}
-  if (delivery === "visual_action") return Boolean(step.action && PHYSICAL_ACTION.test(step.action));
-  if (["spoken", "dialogue"].includes(delivery)) return Boolean(step.spokenLine);
-  if (delivery === "on_screen_text") return Boolean(step.onScreenText);
-  if (delivery === "sound") return SOUND_EXECUTION.test(opening);
-  if (delivery === "prop") return PHYSICAL_ACTION.test(step.action) && hasConcreteDetail(step.action);
-  if (delivery === "environment") return ENVIRONMENT_EXECUTION.test(opening);
-  if (delivery === "edit_transition") return EDIT_TRANSITION_EXECUTION.test(step.editNote);
-  return false;
-}
-
-function proofDeviceExecuted(steps: Step[], proofDeviceId: string): boolean {
-  const execution = steps.map((step) => affirmativeSentences(`${step.action}
-  const visible = steps.some(visibleProof);
-  const patterns: Record<string, RegExp> = {
-    controlled_side_by_side: /\\\\b(compare|both|side by side|split screen|versus|vs\\\\.)\\\\b/i,
-    live_demonstration: /\\\\b(apply|demonstrate|test|show|make|assemble|perform|use)\\\\b/i,
-    measured_readout: /\\\\b(measure|timer|readout|scale|number|receipt|count|temperature)\\\\b/i,
-    process_result: /\\\\b(process|finish(?:ed)?|result|after|reveal|show)\\\\b/i,
-    visible_consequence: /\\\\b(consequence|reaction|response|result|change|effect)\\\\b/i,
-    reversal_callback: /\\\\b(reverse|reversal|turn(?:ed)?|flip|callback|instead)\\\\b/i,
-    source_receipt: /\\\\b(source|receipt|document|citation|record|reference)\\\\b/i,
-    route_map: /\\\\b(route|map|itinerary|direction|stop|station)\\\\b/i,
-    sensory_result: /\\\\b(taste|texture|smell|sound|crisp|sizzle|feel)\\\\b/i,
-    form_reference: /\\\\b(form|posture|alignment|range|rep(?:s)?|mobility)\\\\b/i,
-    decision_matrix: /\\\\b(matrix|criteria|checklist|compare|tradeoff|decision)\\\\b/i,
-    before_after_state: /\\\\b(before|after|state|difference|change)\\\\b/i,
-  };
-  return visible && Boolean(patterns[proofDeviceId]?.test(execution));
-}
-
-function payoffTypeExecuted(step: Step | undefined, payoffTypeId: string): boolean {
-  if (!step || !visiblyCompletesPayoff(step)) return false;
-  const execution = affirmativeSentences(`${step.action}
-  const patterns: Record<string, RegExp> = {
-    visible_result: /\\\\b(result|finish(?:ed)?|show|reveal|display|difference)\\\\b/i,
-    side_by_side_decision: /\\\\b(side by side|both|compare|choice|choose|smoother|better|decision)\\\\b/i,
-    reversal_callback: /\\\\b(reverse|reversal|turn(?:ed)?|flip|instead)\\\\b/i,
-    before_after_state: /\\\\b(before|after|state|difference|change)\\\\b/i,
-    answer_reveal: /\\\\b(answer|reveal|resolve|correct)\\\\b/i,
-    usable_artifact: /\\\\b(checklist|template|plan|matrix|list|artifact|decision)\\\\b/i,
-    sensory_finish: /\\\\b(taste|texture|smell|sound|finish|feel)\\\\b/i,
-    mistake_correction: /\\\\b(correct|fix|replace|mistake|instead)\\\\b/i,
-    identity_resolution: /\\\\b(choose|decision|fit|style|identity|preference)\\\\b/i,
-    open_loop_close: /\\\\b(answer|resolve|reveal|close|result)\\\\b/i,
-  };
-  return Boolean(patterns[payoffTypeId]?.test(execution));
-}
-
-function highConfidenceSafetyCodes(value: string): string[] {
-  const codes: string[] = [];
-  const childCapture = /\\\\b(record|film|capture|show|display|reveal|share|publish|post)\\\\b/i.test(value)
-    && /\\\\b(child|kid|toddler|minor|student)\\\\b/i.test(value);
-  const privateChildDetail = /\\\\b(full face|name|school|location|address|bedroom|medical|health record|private message)\\\\b/i.test(value);
-  const childSafeguard = /\\\\b(parent(?:al)?|guardian) (?:permission|consent)\\\\b|\\\\b(blur|redact|fictional)\\\\b/i.test(value);
-  if (childCapture && privateChildDetail && !childSafeguard) codes.push("hard_child_privacy");
-  if (/\\\\b(child|kid|toddler|minor)\\\\b/i.test(value) && /\\\\b(distress|crying|meltdown|tantrum|humiliate|shame|scare)\\\\b/i.test(value)) codes.push("hard_child_distress");
-  if (/\\\\b(blindfold(?:ed)?|without (?:a )?spotter|hold (?:your )?breath|choke|strangle|set .{0,30} on fire|drive (?:as )?fast|jump from|dangerous challenge|eat (?:a )?(?:nonfood|detergent)|ingest (?:detergent|cleaner))\\\\b/i.test(value)) {
-    codes.push("dangerous_physical_direction");
+function minimumActionSeconds(value: string, editNote?: string): number {
+  const affirmativeCombined = affirmativeSentences(`${value} ${editNote ?? ""}`);
+  const words: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, fifteen: 15, twenty: 20, thirty: 30, sixty: 60 };
+  const matches = [...value.matchAll(/\b(\d+(?:\.\d+)?|one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|thirty|sixty)\s*(seconds?|minutes?)\b/gi)];
+  if (!matches.length) return 0;
+  if (/time.?lapse|jump cut|cut ahead|speed.?up|pre.?recorded/i.test(affirmativeCombined)) return 0;
+  const durations = matches.map((match) => (words[match[1].toLowerCase()] ?? Number(match[1])) * (/minute/i.test(match[2]) ? 60 : 1));
+  if (/simultaneous|parallel|same time|at once/i.test(value)) {
+    return Math.max(...durations);
   }
-  return codes;
-}
-
-function minimumActionSeconds(value: string): number {
-  const words: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, ten: 10, fifteen: 15, twenty: 20, thirty: 30, sixty: 60 };
-  const matches = [...value.matchAll(/\\\\b(\\\\d+(?:\\\\.\\\\d+)?|one|two|three|four|five|ten|fifteen|twenty|thirty|sixty)\\\\s*(seconds?|minutes?)\\\\b/gi)];
-  if (/time.?lapse|jump cut|cut ahead|speed.?up|pre.?recorded/i.test(value)) return 0;
-  return Math.max(0, ...matches.map((match) => (words[match[1].toLowerCase()] ?? Number(match[1])) * (/minute/i.test(match[2]) ? 60 : 1)));
+  return durations.reduce((sum, d) => sum + d, 0);
 }
 
 function record(value: unknown): Record<string, unknown> {
@@ -300,25 +235,25 @@ function expectedStepRange(duration: number): { min: number; max: number } | nul
 }
 
 function wordCount(value: string): number {
-  return value.split(/\\\\s+/).filter(Boolean).length;
+  return value.split(/\s+/).filter(Boolean).length;
 }
 
 function visibleProof(step: Step): boolean {
   const action = affirmativeSentences(step.action);
-  if (/\\\\b(without (?:testing|showing)|unopened|sealed|guess|might|later|tomorrow|soon|never show)\\\\b/i.test(action)) return false;
+  if (/\b(without (?:testing|showing)|unopened|sealed|guess|might|later|tomorrow|soon|never show)\b/i.test(action)) return false;
   // A prop (sample, timer, receipt) or promise of a test is not a performed test.
-  const performedTest = /\\\\b(compare|measure|test|demonstrate)\\\\b/i.test(action)
-    && !/\\\\b(?:promise|tease|announce|plan|prepare|pretend|describe|say|talk about)\\\\b/i.test(action);
-  const visibleResult = /\\\\b(?:show|reveal|capture|frame)\\\\b/i.test(action)
-    && /\\\\b(?:results?|finish(?:es)?|textures?|readout|receipt|cross.section|inside|difference|reversal|reaction|before.and.after|side by side|split screen)\\\\b/i.test(action);
+  const performedTest = /\b(compare|measure|test|demonstrate)\b/i.test(action)
+    && !/\b(?:promise|tease|announce|plan|prepare|pretend|describe|say|talk about)\b/i.test(action);
+  const visibleResult = /\b(?:show|reveal|capture|frame)\b/i.test(action)
+    && /\b(?:results?|finish(?:es)?|textures?|readout|receipt|cross.section|inside|difference|reversal|reaction|before.and.after|side by side|split screen)\b/i.test(action);
   return PHYSICAL_ACTION.test(action) && (performedTest || visibleResult);
 }
 
 function visiblyCompletesPayoff(step: Step): boolean {
   const action = affirmativeSentences(step.action);
-  if (/\\\\b(without (?:showing|revealing|comparing)|(?:promise|tease|withhold|hide) (?:the |a )?(?:result|answer|finish|comparison)|(?:result|answer|comparison) (?:later|tomorrow|soon))\\\\b/i.test(action)) return false;
-  return /\\\\b(show|reveal|compare|finish|choose|resolve|correct|complete|taste|display)\\\\b/i.test(action)
-    || (/\\\\b(hold|point)\\\\b/i.test(action) && /\\\\b(finish(?:ed)?|result|completed|comparison|answer|artifact|checklist|decision|texture|side by side)\\\\b/i.test(action));
+  if (/\b(without (?:showing|revealing|comparing)|(?:promise|tease|withhold|hide) (?:the |a )?(?:result|answer|finish|comparison)|(?:result|answer|comparison) (?:later|tomorrow|soon))\b/i.test(action)) return false;
+  return /\b(show|reveal|compare|finish|choose|resolve|correct|complete|taste|display)\b/i.test(action)
+    || (/\b(hold|point)\b/i.test(action) && /\b(finish(?:ed)?|result|completed|comparison|answer|artifact|checklist|decision|texture|side by side)\b/i.test(action));
 }
 
 function text(value: unknown): string {
@@ -340,16 +275,6 @@ function clamp(value: number, min = 0, max = 100): number {
 
 function round(value: number): number {
   return Math.round(value * 100) / 100;
-}
-
-function feedbackAdjustmentWithinCraftCapacity(dimensions: CraftDimensions, requested: number): number {
-  const bounded = clamp(Number.isFinite(requested) ? requested : 0, -5, 5);
-  if (bounded >= 0) {
-    const available = (15 - dimensions.filmability) + (10 - dimensions.naturalLanguage);
-    return round(Math.min(bounded, available));
-  }
-  const removable = dimensions.filmability + dimensions.naturalLanguage;
-  return round(Math.max(bounded, -removable));
 }
 
 function feedbackAdjustmentWithinCraftCapacity(dimensions: CraftDimensions, requested: number): number {
@@ -444,11 +369,11 @@ function overlap(left: string, right: string): number {
 
 function uniqueRatio(values: string[]): number {
   if (!values.length) return 0;
-  return new Set(values.map((value) => value.toLowerCase().replace(/\\\\s+/g, " "))).size / values.length;
+  return new Set(values.map((value) => value.toLowerCase().replace(/\s+/g, " "))).size / values.length;
 }
 
 function hasConcreteDetail(value: string): boolean {
-  return /\\\\b\\\\d+(?:\\\\.\\\\d+)?\\\\b/.test(value) || /\\\\b(mirror|counter|kitchen|studio|street|hotel|trail|gym|pan|bowl|brush|shoe|plate|window|door|bench|table|phone|camera|product|ingredient|boat|yacht|deck|room|restaurant|oven|glass|towel|mat|dumbbell|bottle|bag|screen|sample|swatch)\\\\b/i.test(value);
+  return /\b\d+(?:\.\d+)?\b/.test(value) || /\b(mirror|counter|kitchen|studio|street|hotel|trail|gym|pan|bowl|brush|shoe|plate|window|door|bench|table|phone|camera|product|ingredient|boat|yacht|deck|room|restaurant|oven|glass|towel|mat|dumbbell|bottle|bag|screen|sample|swatch)\b/i.test(value);
 }
 
 export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options = {}): QualityV22Result {
@@ -499,7 +424,7 @@ export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options =
   const shotCount = card.steps.filter((step) => CAMERA_LANGUAGE.test(step.shot)).length;
   const proofCount = card.steps.filter(visibleProof).length;
   const spoken = card.steps.map((step) => step.spokenLine).filter(Boolean);
-  const spokenWordCounts = spoken.map((line) => line.split(/\\\\s+/).filter(Boolean).length);
+  const spokenWordCounts = spoken.map((line) => line.split(/\s+/).filter(Boolean).length);
   const spokenRates = card.steps
     .filter((step) => step.spokenLine)
     .map((step) => wordCount(step.spokenLine) / Math.max(1, step.end - step.start));
@@ -537,20 +462,13 @@ export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options =
     hookExecution -= 5;
     hardGateCodes.push("first_frame_plan_mismatch");
   }
-  if (recipe?.success && firstStep && (
-    (["spoken", "dialogue"].includes(recipe.data.hookDeliveryId) && !firstStep.spokenLine)
-    || (recipe.data.hookDeliveryId === "on_screen_text" && !firstStep.onScreenText)
-  )) {
+  if (recipe?.success && firstStep && !hookDeliveryExecuted(firstStep, recipe.data.hookDeliveryId)) {
     hookExecution -= 5;
     hardGateCodes.push("hook_delivery_missing");
   }
 
   let proofPayoffIntegrity = 15;
   if (!proofCount) { proofPayoffIntegrity -= 8; hardGateCodes.push("missing_proof_beat"); }
-  if (recipe?.success && !proofDeviceExecuted(card.steps, recipe.data.proofDeviceId)) {
-    proofPayoffIntegrity -= 6;
-    hardGateCodes.push("recipe_proof_not_executed");
-  }
   if (recipe?.success && !proofDeviceExecuted(card.steps, recipe.data.proofDeviceId)) {
     proofPayoffIntegrity -= 6;
     hardGateCodes.push("recipe_proof_not_executed");
@@ -567,6 +485,10 @@ export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options =
   if (!finalStep || !visiblyCompletesPayoff(finalStep)) {
     proofPayoffIntegrity -= 6;
     hardGateCodes.push("payoff_not_visibly_completed");
+  }
+  if (recipe?.success && !payoffTypeExecuted(finalStep, recipe.data.payoffTypeId)) {
+    proofPayoffIntegrity -= 6;
+    hardGateCodes.push("recipe_payoff_not_executed");
   }
 
   let laneSpecificity = 12;
@@ -592,7 +514,7 @@ export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options =
       emotionVibeCoherence -= 4;
       issueCodes.push("vibe_execution_underspecified");
     }
-    const audioDirection = affirmativeSentences([soundPlan, ...card.notes, ...card.steps.flatMap((step) => [step.action, step.shot, step.editNote, step.performanceNote])].join("
+    const audioDirection = affirmativeSentences([soundPlan, ...card.notes, ...card.steps.flatMap((step) => [step.action, step.shot, step.editNote, step.performanceNote])].join(" "));
     if (LICENSE_SENSITIVE_SOUND.test(audioDirection) && options.recipeEvidence?.audioLicense !== true) {
       hardGateCodes.push("audio_license_unverified");
     }
@@ -618,21 +540,16 @@ export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options =
 
   let safetyAndEvidence = 8;
   const explicitSafetyFlags = [...(options.safetyFlags ?? []), ...privacySafetyFlags(input)];
-  const claims = affirmativeSentences([card.title, card.concept, card.takeaway, card.why, ...card.requiredItems, ...card.steps.flatMap((step) => [step.purpose, step.goal, step.action, step.shot, step.spokenLine, step.onScreenText, step.editNote, step.performanceNote]), ...card.notes].join("
-  if (GUARANTEE_LANGUAGE.test(claims) || /\\\\b(heals?|reverses?|prevents?|clinically proven|burns? fat)\\\\b/i.test(claims)) { safetyAndEvidence -= 8; hardGateCodes.push("unsafe_or_unbounded_claim"); }
+  const claims = affirmativeSentences([card.title, card.concept, card.takeaway, card.why, ...card.requiredItems, ...card.steps.flatMap((step) => [step.purpose, step.goal, step.action, step.shot, step.spokenLine, step.onScreenText, step.editNote, step.performanceNote]), ...card.notes].join(" "));
+  if (GUARANTEE_LANGUAGE.test(claims) || /\b(heals?|reverses?|prevents?|clinically proven|burns? fat)\b/i.test(claims)) { safetyAndEvidence -= 8; hardGateCodes.push("unsafe_or_unbounded_claim"); }
   hardGateCodes.push(...explicitSafetyFlags.filter((flag) => flag.startsWith("hard_") || flag.includes("review") || flag === "missing_sponsor_disclosure" || flag === "missing_claim_boundary" || flag === "missing_claim_evidence"));
   if (needsSponsorDisclosure(input) && !hasEarlySponsorDisclosure(input)) {
     safetyAndEvidence -= 5;
     hardGateCodes.push("sponsor_disclosure_missing");
   }
-  if (/\\\\b(shame|humiliate|panic|rage bait|make them angry|terrify|body anxiety|medical fear|fake scarcity|only \\\\d+ left|child distress)\\\\b/i.test(claims)) {
+  if (/\b(shame|humiliate|panic|rage bait|make them angry|terrify|body anxiety|medical fear|fake scarcity|only \d+ left|child distress)\b/i.test(claims)) {
     safetyAndEvidence -= 8;
     hardGateCodes.push("manipulative_emotion_or_harm");
-  }
-  const highConfidenceSafety = highConfidenceSafetyCodes(claims);
-  if (highConfidenceSafety.length) {
-    safetyAndEvidence -= 8;
-    hardGateCodes.push(...highConfidenceSafety);
   }
   const highConfidenceSafety = highConfidenceSafetyCodes(claims);
   if (highConfidenceSafety.length) {

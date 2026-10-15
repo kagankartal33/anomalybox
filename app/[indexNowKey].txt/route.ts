@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 
-export async function GET(
-  _request: Request,
-  context: { params: Promise<{ indexNowKey: string }> },
-) {
+export async function GET(request: Request) {
   const expected = process.env.INDEXNOW_KEY?.trim();
-  const { indexNowKey } = await context.params;
-  if (!expected || indexNowKey !== expected) {
+  const url = new URL(request.url);
+  const key = url.pathname.replace(/^\//, "").replace(/\.txt$/, "");
+  if (!expected || key !== expected) {
     return new NextResponse("Not found", { status: 404 });
   }
   return new NextResponse(expected, {

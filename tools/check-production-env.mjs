@@ -20,8 +20,7 @@ const envFile = envFileArgIndex >= 0 ? process.argv[envFileArgIndex + 1] : ".env
 
 function loadDotEnv(path) {
   if (!path || !fs.existsSync(path)) return false;
-  for (const line of fs.readFileSync(path, "utf8").split(/\
-?\
+  for (const line of fs.readFileSync(path, "utf8").split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
     const index = trimmed.indexOf("=");
@@ -34,7 +33,7 @@ function loadDotEnv(path) {
 }
 
 function isLocalUrl(value) {
-  return /^https?:\\/\\/(localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0|\\[?::1\\]?)(:\\d+)?/i.test(value);
+  return /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|\[?::1\]?)(:\d+)?/i.test(value);
 }
 
 function isPlaceholder(value) {
@@ -132,7 +131,7 @@ if (process.env.RESEND_API_KEY && !/^re_/.test(process.env.RESEND_API_KEY)) {
   warnings.push("RESEND_API_KEY does not look like a Resend key.");
 }
 
-if (process.env.EMAIL_FROM && !/.+<[^@\\s]+@[^@\\s]+\\.[^@\\s]+>/.test(process.env.EMAIL_FROM) && !/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(process.env.EMAIL_FROM)) {
+if (process.env.EMAIL_FROM && !/.+<[^@\s]+@[^@\s]+\.[^@\s]+>/.test(process.env.EMAIL_FROM) && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(process.env.EMAIL_FROM)) {
   warnings.push("EMAIL_FROM should be an email address or 'Name <email@example.com>'.");
 }
 
@@ -163,8 +162,8 @@ for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);
 
 if (errors.length) {
-  console.error(`\
+  console.error(`\nEnv preflight failed with ${errors.length} issue(s).`);
   process.exit(1);
 }
 
-console.log("\
+console.log("\nEnv preflight passed.");

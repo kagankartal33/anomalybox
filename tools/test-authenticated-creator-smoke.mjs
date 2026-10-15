@@ -16,8 +16,7 @@ import { createClient } from "@supabase/supabase-js";
 
 function loadDotEnv(path = ".env.local") {
   if (!fs.existsSync(path)) return;
-  for (const line of fs.readFileSync(path, "utf8").split(/\
-?\
+  for (const line of fs.readFileSync(path, "utf8").split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
     const index = trimmed.indexOf("=");
@@ -182,7 +181,7 @@ async function createSmokeCard(admin, userId) {
     idea_id: candidate.id,
     title: cardPayload.title,
     card: cardPayload,
-    markdown: `# ${cardPayload.title}\
+    markdown: `# ${cardPayload.title}\n\n${cardPayload.one_sentence_premise}`,
   });
 
   const inventory = await maybeSingleOrThrow(
@@ -328,7 +327,7 @@ assert.match(card.body, />Shot</i, "card detail should expose shot direction");
 assert.doesNotMatch(card.body, /Use this idea in your own words/i, "card detail should not show old raw Say copy");
 assert.doesNotMatch(card.body, /Read this as set direction/i, "card detail should not show old set-direction helper copy");
 assert.doesNotMatch(card.body, /You do not have access/i, "card detail should not deny access");
-assert.doesNotMatch(card.body, /\\b(score_band|training|dataset|internal_rank_score)\\b/i, "card detail should not expose internal terms");
+assert.doesNotMatch(card.body, /\b(score_band|training|dataset|internal_rank_score)\b/i, "card detail should not expose internal terms");
 
 console.log(`Authenticated creator smoke passed for ${email}`);
 console.log(`Vault: ${baseUrl}/boxes`);

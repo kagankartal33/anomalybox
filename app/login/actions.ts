@@ -41,8 +41,6 @@ export async function signUpWithPassword(formData: FormData) {
   const password = String(formData.get("password") ?? "");
   const displayName = String(formData.get("display_name") ?? "");
   const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
-  const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
   const next = safeNextPath(String(formData.get("next") ?? ""), "/onboarding");
   if (password.length < 8) {
     redirect(`/login?error=${encodeURIComponent("Password must be at least 8 characters.")}&next=${encodeURIComponent(next)}`);

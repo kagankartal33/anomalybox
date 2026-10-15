@@ -120,7 +120,7 @@ const cuisineTerms = [
 ];
 
 function normalized(value: string) {
-  return value.toLowerCase().replace(/[_-]+/g, " ").replace(/\\s+/g, " ").trim();
+  return value.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function titleCase(value: string) {

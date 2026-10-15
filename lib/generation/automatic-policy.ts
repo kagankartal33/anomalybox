@@ -1,4 +1,4 @@
-import { ideaCardSchema } from "../idea-card/schema.ts";
+import { ideaCardSchema } from "../idea-card/schema";
 
 export const AUTOMATIC_POLICY_VERSION = "automatic-card-policy-v3.1";
 // Bump whenever an automatic acceptance or publication invariant changes.
@@ -58,7 +58,7 @@ export function semanticDocument(value: unknown): string {
     fields.push(step.purpose, step.goal, step.action ?? step.visual_action, step.spokenLine ?? step.voiceover ?? step.spoken_line, step.shot ?? step.shot_type, step.onScreenText ?? step.on_screen_text, step.editNote ?? step.edit_note);
   }
   const flatten = (item: unknown): string[] => Array.isArray(item) ? item.flatMap(flatten) : typeof item === "string" ? [item.trim()] : [];
-  return fields.flatMap(flatten).filter(Boolean).join("
+  return fields.flatMap(flatten).filter(Boolean).join("\n");
 }
 
 export function modelContract(row: unknown): Record<string, unknown> {

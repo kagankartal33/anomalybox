@@ -12,7 +12,10 @@ import {
   Video,
 } from "lucide-react";
 import { PremiumIcon } from "@/components/PremiumIcon";
-import { CreativeDossierVisual } from "@/components/CreativeDossierVisual";
+import { JsonLd } from "@/components/JsonLd";
+import { ProductBoxVisual } from "@/components/ProductBoxVisual";
+import { siteUrl } from "@/lib/env";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/seo-metadata";
 
 const bentoItems = [
   {
@@ -40,13 +43,7 @@ const bentoItems = [
 export default function AnomalyBoxLanding() {
   return (
     <main className="min-h-screen bg-[#F7F4ED] text-ink">
-      <JsonLd data={{
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        name: "Anomaly Box",
-        url: siteUrl(),
-        description: "Private, execution-ready creative direction for creators.",
-      }} />
+      <JsonLd data={[organizationJsonLd(siteUrl()), websiteJsonLd(siteUrl())]} />
       <header className="sticky top-0 z-20 border-b border-ink/10 bg-[#FBF9F5]/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-4 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="flex items-center gap-2 font-semibold focus-ring">

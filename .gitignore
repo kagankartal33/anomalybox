@@ -19,3 +19,4 @@ tmp-*
 # Local-only reference renders
 sceneflowboard.png
 editassemblyguide.png
+.vercel

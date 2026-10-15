@@ -136,10 +136,10 @@ def main() -> int:
     ROOT.joinpath("manifests").mkdir(parents=True, exist_ok=True)
     with APPROVED.open("w", encoding="utf-8") as fh:
         for record in approved:
-            fh.write(json.dumps(record, ensure_ascii=False) + "\
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
     with REJECTED.open("w", encoding="utf-8") as fh:
         for record in rejected:
-            fh.write(json.dumps(record, ensure_ascii=False) + "\
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
     with PROVENANCE.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(
             fh,

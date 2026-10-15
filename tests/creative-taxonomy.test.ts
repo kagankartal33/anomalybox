@@ -61,7 +61,7 @@ const collisionB: CreativeRecipe = {
   vibePresetId: "clean_editorial",
   payoffTypeId: "mistake_correction",
 };
-assert.equal(legacyCreativeRecipeId(collisionA), "creative-taxonomy-v1:913fe2a8");
+assert.equal(legacyCreativeRecipeId(collisionA), "creative-taxonomy-v1:5609873e");
 assert.equal(legacyCreativeRecipeId(collisionA), legacyCreativeRecipeId(collisionB), "Fixture reproduces the old 32-bit collision");
 assert.notEqual(creativeRecipeId(collisionA), creativeRecipeId(collisionB), "Different recipes must never share a persistent identity");
 assert.equal(creativeRecipeId({ ...collisionA, ...{ hookTypeId: collisionA.hookTypeId } }), creativeRecipeId(collisionA));

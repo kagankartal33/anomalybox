@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Bell, Boxes, LayoutDashboard, LogOut, Package, UserRound } from "lucide-react";
+import { Bell, Boxes, Gem, LayoutDashboard, LogIn, LogOut, Package, UserRound } from "lucide-react";
+import { PremiumIcon } from "@/components/PremiumIcon";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {

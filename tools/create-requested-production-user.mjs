@@ -39,7 +39,7 @@ const apiKeysRaw = execFileSync(
   ],
   { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
 );
-const apiKeys = JSON.parse(apiKeysRaw.replace(/^\\uFEFF/, ""));
+const apiKeys = JSON.parse(apiKeysRaw.replace(/^\uFEFF/, ""));
 const serviceRoleKey =
   apiKeys.find((key) => key.type === "secret" && key.secret_jwt_template?.role === "service_role")?.api_key ??
   apiKeys.find((key) => key.id === "service_role")?.api_key;

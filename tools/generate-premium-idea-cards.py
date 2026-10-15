@@ -302,7 +302,7 @@ def create_contact_sheet(paths: list[Path]) -> Path:
 
 
 def write_index(paths: list[Path]) -> None:
-    cards_html = "\
+    cards_html = "\n".join(
         f'<article><img src="cards/{path.name}" alt="Premium idea card {i:02d}"><h2>{i:02d}. {IDEAS[i-1]["title"]}</h2><p>{IDEAS[i-1]["premise"]}</p></article>'
         for i, path in enumerate(paths, start=1)
     )

@@ -124,11 +124,6 @@ assert.equal(saturatedPositiveFeedback.feedbackAdjustment, 0, "Feedback cannot a
 const negativeExecutionFeedback = evaluate(baseCard, { feedbackAdjustment: -5 });
 assert.equal(negativeExecutionFeedback.feedbackAdjustment, -5);
 assert.equal(negativeExecutionFeedback.adjustedScore, negativeExecutionFeedback.craftScore - 5);
-const saturatedPositiveFeedback = evaluate(baseCard, { feedbackAdjustment: 5 });
-assert.equal(saturatedPositiveFeedback.feedbackAdjustment, 0, "Feedback cannot add points beyond filmability and natural-language caps");
-const negativeExecutionFeedback = evaluate(baseCard, { feedbackAdjustment: -5 });
-assert.equal(negativeExecutionFeedback.feedbackAdjustment, -5);
-assert.equal(negativeExecutionFeedback.adjustedScore, negativeExecutionFeedback.craftScore - 5);
 
 const missingVerticalFormat = evaluate({
   ...baseCard,
@@ -205,16 +200,6 @@ for (const delivery of ["sound", "prop", "environment", "edit_transition"] as co
   assert.ok(missingOpeningDelivery.hardGateCodes.includes("hook_delivery_missing"));
 }
 
-const beforeAfterRecipe = { ...automaticRecipe, proofDeviceId: "before_after_state" as const };
-const wrongProofDevice = evaluate(baseCard, { creativeRecipe: beforeAfterRecipe, concept: { ...automaticConcept, recipe: beforeAfterRecipe } });
-assert.equal(wrongProofDevice.decision, "reject", "A recipe proof device must occur in the filmed steps");
-assert.ok(wrongProofDevice.hardGateCodes.includes("recipe_proof_not_executed"));
-
-const artifactPayoffRecipe = { ...automaticRecipe, payoffTypeId: "usable_artifact" as const };
-const wrongPayoffType = evaluate(baseCard, { creativeRecipe: artifactPayoffRecipe, concept: { ...automaticConcept, recipe: artifactPayoffRecipe } });
-assert.equal(wrongPayoffType.decision, "reject", "A recipe payoff type must occur in the final filmed step");
-assert.ok(wrongPayoffType.hardGateCodes.includes("recipe_payoff_not_executed"));
-
 const generic = evaluate({ ...baseCard, category: "", personaSlug: "", steps: baseCard.steps.map((step) => ({ ...step, action: "Be energetic and make the scene engaging", shot: "Film this" })) });
 assert.notEqual(generic.decision, "approve");
 assert.ok(generic.issueCodes.includes("weak_physical_actions"));
@@ -247,27 +232,6 @@ assert.ok(sponsorReview.hardGateCodes.includes("sponsor_disclosure_missing"));
 const privacyRisk = evaluate(baseCard, { safetyFlags: ["hard_privacy_violation"] });
 assert.equal(privacyRisk.decision, "reject");
 assert.ok(privacyRisk.hardGateCodes.includes("hard_privacy_violation"));
-
-const childPrivacyRisk = evaluate({
-  ...baseCard,
-  steps: baseCard.steps.map((step, index) => index === 2 ? { ...step, action: "Film the child's full face and school name, then post the clip." } : step),
-});
-assert.equal(childPrivacyRisk.decision, "reject");
-assert.ok(childPrivacyRisk.hardGateCodes.includes("hard_child_privacy"));
-
-const childDistressRisk = evaluate({
-  ...baseCard,
-  steps: baseCard.steps.map((step, index) => index === 2 ? { ...step, action: "Show the toddler's crying meltdown for the reaction." } : step),
-});
-assert.equal(childDistressRisk.decision, "reject");
-assert.ok(childDistressRisk.hardGateCodes.includes("hard_child_distress"));
-
-const dangerousDirection = evaluate({
-  ...baseCard,
-  steps: baseCard.steps.map((step, index) => index === 2 ? { ...step, action: "Hold your breath during the dangerous challenge, then reveal the result." } : step),
-});
-assert.equal(dangerousDirection.decision, "reject");
-assert.ok(dangerousDirection.hardGateCodes.includes("dangerous_physical_direction"));
 
 const childPrivacyRisk = evaluate({
   ...baseCard,

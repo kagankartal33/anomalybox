@@ -77,7 +77,7 @@ def sha(value: str) -> str:
 
 
 def clean(value: Any, limit: int = 2200) -> str:
-    return re.sub(r"\\s+", " ", str(value or "")).strip()[:limit]
+    return re.sub(r"\s+", " ", str(value or "")).strip()[:limit]
 
 
 def num(value: Any) -> float:
@@ -97,9 +97,9 @@ def safe_get(row: dict[str, Any], *names: str) -> Any:
 
 def risk_for(raw: str, nsfw: bool = False) -> str:
     n = raw.lower()
-    if nsfw or re.search(r"\\b(nsfw|explicit|porn|suicide|self harm|weapon|kill|murder|rape)\\b", n):
+    if nsfw or re.search(r"\b(nsfw|explicit|porn|suicide|self harm|weapon|kill|murder|rape)\b", n):
         return "restricted"
-    if re.search(r"\\b(health|medical|doctor|finance|investment|crypto|legal|child|kid|baby|politic|hate|offensive)\\b", n):
+    if re.search(r"\b(health|medical|doctor|finance|investment|crypto|legal|child|kid|baby|politic|hate|offensive)\b", n):
         return "medium"
     return "low"
 
@@ -108,15 +108,15 @@ def feature_flags(raw: str, family: str) -> list[str]:
     n = raw.lower()
     flags = []
     checks = [
-        ("question_hook", r"\\?|\\bwhat\\b|\\bwhy\\b|\\bhow\\b|\\bwhich\\b|\\bwho\\b"),
-        ("confession_frame", r"\\bi\\b|\\bmy\\b|\\bconfession\\b|\\boffmychest\\b"),
-        ("mistake_payoff", r"\\btifu\\b|\\bfucked up\\b|\\bmistake\\b|\\bwrong\\b|\\bforgot\\b"),
-        ("setup_payoff", r"\\bjoke\\b|\\bfunny\\b|\\bpunchline\\b|\\blaugh\\b"),
-        ("debate_trigger", r"\\bshould\\b|\\bwould you\\b|\\bopinion\\b|\\bcontroversial\\b"),
-        ("comment_reaction", r"\\bcomment\\b|\\breply\\b|\\blike\\b"),
-        ("story_arc", r"\\bthen\\b|\\bwhen\\b|\\bafter\\b|\\bbecause\\b|\\bfinally\\b"),
-        ("curiosity_gap", r"\\bsecret\\b|\\bwhy\\b|\\bnever\\b|\\bno one\\b|\\bactually\\b"),
-        ("relatable_pain", r"\\bembarrass\\b|\\bawkward\\b|\\banxiety\\b|\\bpanic\\b|\\bregret\\b"),
+        ("question_hook", r"\?|\bwhat\b|\bwhy\b|\bhow\b|\bwhich\b|\bwho\b"),
+        ("confession_frame", r"\bi\b|\bmy\b|\bconfession\b|\boffmychest\b"),
+        ("mistake_payoff", r"\btifu\b|\bfucked up\b|\bmistake\b|\bwrong\b|\bforgot\b"),
+        ("setup_payoff", r"\bjoke\b|\bfunny\b|\bpunchline\b|\blaugh\b"),
+        ("debate_trigger", r"\bshould\b|\bwould you\b|\bopinion\b|\bcontroversial\b"),
+        ("comment_reaction", r"\bcomment\b|\breply\b|\blike\b"),
+        ("story_arc", r"\bthen\b|\bwhen\b|\bafter\b|\bbecause\b|\bfinally\b"),
+        ("curiosity_gap", r"\bsecret\b|\bwhy\b|\bnever\b|\bno one\b|\bactually\b"),
+        ("relatable_pain", r"\bembarrass\b|\bawkward\b|\banxiety\b|\bpanic\b|\bregret\b"),
     ]
     for label, pattern in checks:
         if re.search(pattern, n):
@@ -205,7 +205,7 @@ def abstract_observation(source: dict[str, Any], row: dict[str, Any], row_index:
     if risk == "restricted":
         weight -= 0.22
     weight = round(max(0.12, min(0.96, weight)), 4)
-    raw_hash = sha(re.sub(r"\\s+", " ", raw.lower()).strip())
+    raw_hash = sha(re.sub(r"\s+", " ", raw.lower()).strip())
     content_hash = sha(f"hf_raw_v2|{source['repo']}|{source['family']}|{row_index}|{raw_hash}")
     text = (
         f"{source['family']} {source['intent']} observation. "
@@ -273,7 +273,7 @@ def deterministic_bucket(content_hash: str) -> float:
     return int(content_hash[:12], 16) / float(0xFFFFFFFFFFFF)
 
 
-def select_rows(source: dict[str, Any], max_rows: int, max_scan_rows: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def select_rows(source: dict[str, Any], max_rows: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     top_target = max(1, int(max_rows * 0.7))
     sample_target = max_rows - top_target
     top_heap: list[tuple[float, str, dict[str, Any]]] = []
@@ -282,8 +282,6 @@ def select_rows(source: dict[str, Any], max_rows: int, max_scan_rows: int) -> tu
     scanned = kept = duplicates = 0
     restricted = 0
     for index, row in enumerate(iter_source_rows(source), 1):
-        if max_scan_rows > 0 and index > max_scan_rows:
-            break
         scanned += 1
         obs = abstract_observation(source, row, index)
         if not obs:
@@ -320,23 +318,22 @@ def select_rows(source: dict[str, Any], max_rows: int, max_scan_rows: int) -> tu
         "scanned": scanned,
         "eligible": kept,
         "selected": min(len(rows), max_rows),
-        "max_scan_rows": max_scan_rows,
         "duplicates": duplicates,
         "restricted": restricted,
     }
 
 
 def main() -> None:
+    global RAW_DIR
     parser = argparse.ArgumentParser()
     parser.add_argument("--raw-dir", default=str(RAW_DIR))
     parser.add_argument("--out-dir", default=str(OUT_DIR))
     parser.add_argument("--max-rows-per-source", type=int, default=50000)
-    parser.add_argument("--max-scan-rows-per-source", type=int, default=250000)
     parser.add_argument("--output-name", default="hf_social_training_v2_prepared.jsonl")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
 
-    raw_dir = Path(args.raw_dir).resolve()
+    RAW_DIR = Path(args.raw_dir).resolve()
     out_dir = Path(args.out_dir).resolve()
     output_path = out_dir / args.output_name
     manifest_path = out_dir / args.output_name.replace(".jsonl", ".manifest.json")
@@ -344,7 +341,7 @@ def main() -> None:
     sources = []
     for source in SOURCES:
         adjusted = dict(source)
-        adjusted["path"] = Path(str(source["path"]).replace(str(ROOT / "dataset" / "huggingface" / "raw"), str(raw_dir)))
+        adjusted["path"] = Path(str(source["path"]).replace(str(ROOT / "dataset" / "huggingface" / "raw"), str(RAW_DIR)))
         if not Path(adjusted["path"]).exists():
             raise SystemExit(f"Missing downloaded source: {adjusted['path']}")
         sources.append(adjusted)
@@ -352,7 +349,6 @@ def main() -> None:
     plan = {
         "mode": "prepare_downloaded_hf",
         "max_rows_per_source": args.max_rows_per_source,
-        "max_scan_rows_per_source": args.max_scan_rows_per_source,
         "output_path": str(output_path),
         "sources": [{"repo": s["repo"], "family": s["family"], "path": str(s["path"])} for s in sources],
         "apply": args.apply,
@@ -366,10 +362,10 @@ def main() -> None:
     stats = []
     with output_path.open("w", encoding="utf-8") as f:
         for source in sources:
-            rows, source_stats = select_rows(source, args.max_rows_per_source, args.max_scan_rows_per_source)
+            rows, source_stats = select_rows(source, args.max_rows_per_source)
             stats.append(source_stats)
             for row in rows:
-                f.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\
+                f.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
                 total += 1
     manifest = {
         **plan,

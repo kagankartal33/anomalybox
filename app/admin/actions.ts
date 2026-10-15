@@ -18,6 +18,10 @@ const CreateCreatorInput = z.object({
   niche: z.string().trim().max(160),
 });
 
+const ManualDecision = z.enum(["ready_to_post", "minor_revisions", "needs_reshoot", "brand_safety_blocked"]);
+const CheckStatus = z.enum(["pass", "partial", "missing", "not_applicable"]);
+const CardReportDecision = z.enum(["reject", "accept_no_replace", "accept_replace"]);
+
 const CardReportDecisionInput = z.object({
   reportId: z.string().uuid(),
   userId: z.string().uuid(),
@@ -33,10 +37,6 @@ const GiftBoxInput = z.object({
   categorySlug: z.string().min(1).max(120).regex(/^[a-z0-9_/-]+$/),
   personaSlug: z.string().min(1).max(120).regex(/^[a-z0-9_/-]+$/),
 });
-
-const ManualDecision = z.enum(["ready_to_post", "minor_revisions", "needs_reshoot", "brand_safety_blocked"]);
-const CheckStatus = z.enum(["pass", "partial", "missing", "not_applicable"]);
-const CardReportDecision = z.enum(["reject", "accept_no_replace", "accept_replace"]);
 
 const ManualReviewInput = z.object({
   reviewId: z.string().uuid(),

@@ -6,9 +6,8 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { generationProvenance } from "@/lib/generation/provenance";
-import { generationProvenance } from "@/lib/generation/provenance";
 
-const RatingInput = z.object({
+const goldRatingInputSchema = z.object({
   ideaId: z.string().uuid(),
   decision: z.enum(["approve", "refine", "reject"]),
   rank: z.coerce.number().int().min(1).max(5),
