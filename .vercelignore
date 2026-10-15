@@ -25,3 +25,13 @@ mcps
 .netlify
 .git
 .env.production.local
+
+# Never upload local env files, credentials or CLI state
+.env
+.env.*
+!.env.example
+.vercel
+supabase/.temp
+tools/push-env.ps1
+__pycache__
+tsconfig.tsbuildinfo
