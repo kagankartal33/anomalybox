@@ -1,6 +1,6 @@
 param(
-  [string]$LocalCategoryFile = ".\\instagram_tum_kategoriler_birlesik.md",
-  [string]$OutputSql = ".\\supabase\\seeds\\instagram_categories.sql",
+  [string]$LocalCategoryFile = ".\instagram_tum_kategoriler_birlesik.md",
+  [string]$OutputSql = ".\supabase\seeds\instagram_categories.sql",
   [string]$SourceUrl = "https://thepennymatters.com/instagram-categories-list/"
 )
 
@@ -13,9 +13,9 @@ function Convert-Slug([string]$Name) {
   $s = $s -replace ([string][char]0x2018), ""
   $s = $s.Replace("'", "")
   $s = $s -replace "&", " and "
-  $s = $s -replace "\\+", " plus "
+  $s = $s -replace "\+", " plus "
   $s = $s -replace "/", " "
-  $s = $s -replace "\\([^)]*\\)", " "
+  $s = $s -replace "\([^)]*\)", " "
   $s = $s -replace "[^a-z0-9]+", "_"
   $s = ($s.Trim("_") -replace "_+", "_")
   if ([string]::IsNullOrWhiteSpace($s)) {
@@ -69,7 +69,7 @@ function LayersFor([string]$Name, [string]$Family) {
 }
 
 function Add-Category($Map, [string]$Name, [string]$Source, [string]$Group, [string]$Family, [string]$PreferredSlug = "") {
-  $clean = (($Name -replace "\\s+", " ").Trim())
+  $clean = (($Name -replace "\s+", " ").Trim())
   if (-not $clean) {
     return
   }
@@ -112,11 +112,11 @@ function Add-Category($Map, [string]$Name, [string]$Source, [string]$Group, [str
 $map = [ordered]@{}
 
 $html = (Invoke-WebRequest -Uri $SourceUrl -UseBasicParsing -TimeoutSec 30).Content
-$tds = [regex]::Matches($html, "<td[^>]*>([\\s\\S]*?)</td>", "IgnoreCase")
+$tds = [regex]::Matches($html, "<td[^>]*>([\s\S]*?)</td>", "IgnoreCase")
 foreach ($match in $tds) {
   $value = $match.Groups[1].Value -replace "<[^>]+>", " "
   $value = [System.Net.WebUtility]::HtmlDecode($value)
-  $value = ($value -replace "\\s+", " ").Trim()
+  $value = ($value -replace "\s+", " ").Trim()
   if ($value -and $value.Length -lt 90 -and $value -notmatch "^[0-9]+$") {
     Add-Category $map $value "the_penny_matters_2026" "Instagram Business Categories" "instagram_business"
   }
@@ -125,13 +125,13 @@ foreach ($match in $tds) {
 $currentGroup = $null
 Get-Content -Path $LocalCategoryFile -Encoding UTF8 | ForEach-Object {
   $line = $_.Trim()
-  if ($line -match "^##\\s+\\d+\\.\\s+(.+)$") {
+  if ($line -match "^##\s+\d+\.\s+(.+)$") {
     $currentGroup = $Matches[1].Trim()
     return
   }
-  if ($line -match "^-\\s+(.+)$") {
+  if ($line -match "^-\s+(.+)$") {
     $name = $Matches[1].Trim()
-    if ($name -notmatch "^artifacts klas|^https?://|^\\*\\*") {
+    if ($name -notmatch "^artifacts klas|^https?://|^\*\*") {
       Add-Category $map $name "local_influencer_niches" $currentGroup "creator_content"
     }
   }

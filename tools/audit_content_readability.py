@@ -63,6 +63,7 @@ def main() -> int:
                     package_paragraphs[paragraph].append(rel)
 
     difficult = sorted((score, rel) for score, rel in rows if score < 40)
+    hard_failures = [(score, rel) for score, rel in difficult if score < 35]
     repeated = sorted(
         ((len(set(owners)), paragraph, sorted(set(owners))) for paragraph, owners in package_paragraphs.items() if len(set(owners)) >= 3),
         reverse=True,
@@ -74,8 +75,10 @@ def main() -> int:
         print(f"- {score:.1f}: {rel}")
     print(f"SEO-package paragraphs repeated across 3+ pages: {len(repeated)}")
     for count, paragraph, owners in repeated[:100]:
-        print(f"- {count} files: {paragraph[:110]} :: {', '.join(owners[:4])}")
-    return 1 if repeated else 0
+        line = f"- {count} files: {paragraph[:110]} :: {', '.join(owners[:4])}"
+        print(line.encode("ascii", "backslashreplace").decode("ascii"))
+    print(f"readability hard failures below 35: {len(hard_failures)}")
+    return 1 if repeated or hard_failures else 0
 
 
 if __name__ == "__main__":

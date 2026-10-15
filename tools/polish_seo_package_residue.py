@@ -14,11 +14,10 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "content" / "seo-package"
 
 PUBLICATION_BLOCK = re.compile(
-    r"\n*(?:"
-    r"Before indexing[^\n]+"
-    r"|The evidence module on this page[^\n]+"
-    r"|The named editor[^\n]+"
-    r")\n*",
+    r"\n## Publication evidence[^\n]*\n\n"
+    r"Before indexing[^\n]*\n\n"
+    r"The evidence module on this page[^\n]*\n\n"
+    r"The named editor[^\n]*\n?",
     re.IGNORECASE,
 )
 
@@ -43,15 +42,12 @@ def replace_angle(match: re.Match[str]) -> str:
 
 def main() -> int:
     changed = 0
-    if not CONTENT_DIR.exists():
-        print("content/seo-package does not exist, skipping.")
-        return 0
     for path in sorted(CONTENT_DIR.glob("*.md")):
         original = path.read_text(encoding="utf-8")
         polished = original.replace("Page focus:", "Project:")
-        polished = PUBLICATION_BLOCK.sub("\n\n", polished)
+        polished = PUBLICATION_BLOCK.sub("\n", polished)
         polished = ANGLE_CTA.sub(replace_angle, polished)
-        polished = re.sub(r"\n{3,}", "\n\n", polished)
+        polished = re.sub(r"\n{3,}", "\n\n", polished).rstrip() + "\n"
         if polished != original:
             path.write_text(polished, encoding="utf-8", newline="\n")
             changed += 1

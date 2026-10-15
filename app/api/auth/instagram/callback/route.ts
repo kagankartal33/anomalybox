@@ -15,13 +15,13 @@ export async function GET(request: Request) {
   const expectedState = cookieStore.get("vb_meta_state")?.value;
 
   if (!code || !state || state !== expectedState) {
-    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram bağlantısı doğrulanamadı")}`);
+    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram connection failed")}`);
   }
 
   const appId = env.metaAppId();
   const appSecret = env.metaAppSecret();
   if (!appId || !appSecret) {
-    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Meta app secret env eksik")}`);
+    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram is not configured")}`);
   }
 
   const { user } = await requireUser();
@@ -34,7 +34,14 @@ export async function GET(request: Request) {
   const tokenResponse = await fetch(tokenUrl);
   const tokenPayload = await tokenResponse.json();
   if (!tokenResponse.ok || !tokenPayload.access_token) {
-    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Meta token alınamadı")}`);
+    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Failed to connect Instagram")}`);
+  }
+
+  let encryptedToken: string;
+  try {
+    encryptedToken = encryptLinkedAccountToken(String(tokenPayload.access_token));
+  } catch {
+    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram token encryption is not configured")}`);
   }
 
   const supabase = createSupabaseAdminClient();
@@ -42,9 +49,9 @@ export async function GET(request: Request) {
     user_id: user.id,
     provider: "instagram",
     provider_account_id: tokenPayload.user_id ? String(tokenPayload.user_id) : null,
-    access_token_encrypted: encryptLinkedAccountToken(String(tokenPayload.access_token)),
+    access_token_encrypted: encryptedToken,
     scopes: ["instagram_basic", "pages_show_list"],
-    metadata: { connected_via: "meta_oauth", token_type: tokenPayload.token_type ?? null },
+    metadata: { connected_via: "meta_oauth", token_type: tokenPayload.token_type ?? null, token_storage: "aes-256-gcm:v1" },
   }, { onConflict: "user_id,provider" });
 
   return NextResponse.redirect(`${siteUrl()}/onboarding?instagram=connected`);

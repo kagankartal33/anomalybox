@@ -1,0 +1,31 @@
+{
+  "imports": {
+    "../../../lib/algorithmic-reason/analyzer": "../../../lib/algorithmic-reason/analyzer.ts",
+    "../../../lib/algorithmic-reason/compatibility": "../../../lib/algorithmic-reason/compatibility.ts",
+    "../../../lib/algorithmic-reason/enrich-card": "../../../lib/algorithmic-reason/enrich-card.ts",
+    "../../../lib/algorithmic-reason/fit": "../../../lib/algorithmic-reason/fit.ts",
+    "../../../lib/algorithmic-reason/taxonomy": "../../../lib/algorithmic-reason/taxonomy.ts",
+    "../../../lib/algorithmic-reason/types": "../../../lib/algorithmic-reason/types.ts",
+    "../../../lib/generation/automatic-policy": "../../../lib/generation/automatic-policy.ts",
+    "../../../lib/generation/concept-ranking": "../../../lib/generation/concept-ranking.ts",
+    "../../../lib/generation/creative-taxonomy": "../../../lib/generation/creative-taxonomy.ts",
+    "../../../lib/idea-card/ai-residue": "../../../lib/idea-card/ai-residue.ts",
+    "../../../lib/idea-card/banned-phrases": "../../../lib/idea-card/banned-phrases.ts",
+    "../../../lib/idea-card/duration-planner": "../../../lib/idea-card/duration-planner.ts",
+    "../../../lib/idea-card/quality": "../../../lib/idea-card/quality.ts",
+    "../../../lib/idea-card/quality-v2-2": "../../../lib/idea-card/quality-v2-2.ts",
+    "../../../lib/idea-card/schema": "../../../lib/idea-card/schema.ts",
+    "../../../lib/idea-card/stages": "../../../lib/idea-card/stages.ts",
+    "../../../lib/idea-card/text": "../../../lib/idea-card/text.ts",
+    "../../../lib/idea-card/time": "../../../lib/idea-card/time.ts",
+    "../../../lib/idea-card/types": "../../../lib/idea-card/types.ts",
+    "@/lib/algorithmic-reason": "../../../lib/algorithmic-reason/index.ts",
+    "@/lib/algorithmic-reason/compatibility": "../../../lib/algorithmic-reason/compatibility.ts",
+    "@/lib/algorithmic-reason/fit": "../../../lib/algorithmic-reason/fit.ts",
+    "@/lib/algorithmic-reason/taxonomy": "../../../lib/algorithmic-reason/taxonomy.ts",
+    "@/lib/card-display": "../../../lib/card-display.ts",
+    "@/lib/card-sections": "../../../lib/card-sections.ts",
+    "@/lib/format": "../../../lib/format.ts",
+    "zod": "npm:zod@3.25.76"
+  }
+}

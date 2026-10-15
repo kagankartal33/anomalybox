@@ -650,8 +650,8 @@ insert into public.creator_personas (slug, name, description, tags, sort_order, 
 on conflict (slug) do update set name = excluded.name, description = excluded.description, tags = excluded.tags, sort_order = excluded.sort_order, metadata = excluded.metadata, enabled = excluded.enabled, updated_at = now();
 
 insert into public.box_products (slug, name, price_usd_cents, idea_count, allocation, metadata, enabled) values
-('viral_box_500','Classic Red Dossier',50000,2,'{"low":1,"high":1}'::jsonb,'{"visible_to_creator":true,"shows_scores":false,"display_name":"Classic Red Dossier","short_description":"2 private creator cards calibrated to your lane, creator mode, and production style."}'::jsonb,true),
-('premium_viral_box_1000','Signature Purple Dossier',100000,5,'{"low":2,"mid":1,"high":2}'::jsonb,'{"visible_to_creator":true,"shows_scores":false,"display_name":"Signature Purple Dossier","short_description":"5 private strategy cards with deeper execution direction, brand-lift framing, and launch-ready creative angles."}'::jsonb,true)
+('viral_box_500','Classic Red Dossier',900,2,'{"high":2}'::jsonb,'{"visible_to_creator":true,"shows_scores":false,"display_name":"Classic Red Dossier","short_description":"2 campaign-ready creative briefs calibrated to your lane, creator mode, and production style."}'::jsonb,true),
+('premium_viral_box_1000','Signature Purple Dossier',1900,5,'{"high":5}'::jsonb,'{"visible_to_creator":true,"shows_scores":false,"display_name":"Signature Purple Dossier","short_description":"5 campaign-ready creative briefs with deeper production direction, brand-lift framing, and launch-ready creative angles."}'::jsonb,true)
 on conflict (slug) do update set name = excluded.name, price_usd_cents = excluded.price_usd_cents, idea_count = excluded.idea_count, allocation = excluded.allocation, metadata = excluded.metadata, enabled = excluded.enabled, updated_at = now();
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)

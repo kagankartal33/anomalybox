@@ -32,7 +32,6 @@ export async function submitAtelierLead(formData: FormData) {
     const message = parsed.error.issues[0]?.message ?? "Please complete the request form.";
     redirect(`/atelier?error=${encodeURIComponent(message)}#atelier-request`);
   }
-
   if (!(await verifyRecaptcha(parsed.data.recaptchaToken, "atelier_request"))) {
     redirect(`/atelier?error=${encodeURIComponent("Security verification failed. Please try again.")}#atelier-request`);
   }

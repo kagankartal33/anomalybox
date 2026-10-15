@@ -1,4 +1,4 @@
-# Supabase Architecture
+﻿# Supabase Architecture
 
 ## Amac
 
@@ -56,8 +56,6 @@ admin selects category + persona
 | `dataset_training_observations` | Dataset klasorunden gelen dedupe edilmis internal training observation katmani |
 | `dataset_named_entity_provenance` | Unlu/influencer/channel/brand isimlerini hashlenmis internal provenance olarak tutar |
 | `dataset_category_candidates` | Dataset kaynakli eksik kategori adaylari ve onayli kategori ekleme kayitlari |
-
-| `media_training_review_queue` | Unknown rights, public figure, minor/privacy, sponsor/claim ve copyright risk review kuyruğu |
 
 ## Inventory Rules
 
@@ -179,3 +177,45 @@ Bu veri sadece internal prompt/scoring yardimcisidir; influencer UI'da pattern i
 Layer policy tarafinda da `policy_slug`, `quality_rules` ve internal metadata gosterilmez; creator karti yalnizca `category_layer_pack` icindeki uygulanmis layerlari ve pratik fayda cumlelerini kullanir.
 
 Dataset full training reset gerektirmeyen additive bir akistir. `tools/train-from-dataset.ps1` tum `dataset/` klasorunu tarar, duplicate dosyalari ve satirlari eler, isimleri hashlenmis provenance'a cevirir, weighted training example/trend/eval sinyali uretir ve `2026-v2-dataset` compiled profile'ini aktif eder. Gercek unlu veya influencer isimleri creator-facing kartlara cikmaz.
+
+## Production Scaling Profile
+
+ViralBox icin Supabase ana database olarak kalir; agir isler web request icinde calismaz.
+
+Recommended production shape:
+
+| Katman | Tercih |
+|---|---|
+| Database/Auth/RLS | Supabase Postgres + Supabase Auth |
+| Profile avatars | Supabase Storage private/public bucket as configured |
+| Buy/open/read creator app | Next.js server routes + Supabase SSR client |
+| Stripe webhook/delivery | Server route veya Edge Function, service role only |
+| Generator/import/scoring/top-up | Railway worker veya dedicated background worker |
+| Durable jobs | `internal_background_jobs` table; daha buyuk hacimde Supabase Queues/pgmq |
+| Monitoring | Supabase dashboard + `pg_stat_statements` + Sentry/PostHog |
+
+Scale rules:
+
+- Web app sadece kisa request islerini yapar: auth, store, checkout, box open, card read, card report.
+- 1K+ fikir import, 10K+ stock top-up, Quality Gate batch ve training compile isleri background worker'a gider.
+- Worker job'lari idempotent olmalidir: `idempotency_key`, `purchase_id`, `external_batch_id` veya batch id tekrar calistiginda stok sisirmemeli.
+- Creator-facing tablolar RLS ile user-owned kalir. Internal tablolar sadece service role ile kullanilir.
+- `idea_inventory` purchase/delivery sorgulari `idea_inventory_available_delivery_idx` uzerinden calismalidir.
+- Stock top-up sayimlari regex yerine `like 'stock\_cards\_%' escape '\'` predicate'ini kullanir; bu `idea_inventory_stock_cards_route_idx` partial indexini kullanir.
+- Admin batch/scoring sayfalari limit/offset veya cursor ile calismali; 400K+ `idea_candidates`, `idea_scores`, `idea_quality_checks` satirini tek request'te cekmemelidir.
+
+Operational checks:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\supabase-scale-health.ps1
+supabase db lint --local
+```
+
+Compute guidance:
+
+- Early paid launch: Supabase Pro, en az Small compute.
+- Batch generation gunleri veya 100K+ aktif inventory: Medium compute.
+- Yuksek satis/webhook + ayni anda generator/import: Large compute veya worker saatlerinde gecici compute upgrade.
+- Disk IO % yukselirse once query/index incelenir, sonra compute/disk throughput artirilir.
+
+Kaynak notu: Supabase compute/disk ayri olceklenir; docs, compute upgrade kararindan once connection count ve query performance incelemesini onerir. Supabase Queues Postgres-native durable queue olarak arka plan isleri icin kullanilabilir. Private Storage bucket'lar RLS ve signed URL ile erisilir.

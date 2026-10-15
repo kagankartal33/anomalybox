@@ -1,0 +1,34 @@
+{
+  "job_id": "job_c33127b0b004",
+  "page_id": "AB-025",
+  "slug": "content-ideas-when-stuck",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:content-ideas-when-stuck:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:07Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:07Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:07Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "near_duplicate:instagram-content-block:0.767",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

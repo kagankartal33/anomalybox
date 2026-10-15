@@ -28,21 +28,6 @@ from public.idea_box_deliveries
 where id in (select id from tmp_viralbox_test_deliveries)
   and purchase_id is not null;
 
-delete from public.creator_video_review_events
-where review_id in (
-  select id from public.creator_video_reviews
-  where idea_id in (select id from tmp_viralbox_test_ideas)
-);
-
-delete from public.creator_video_review_checks
-where idea_id in (select id from tmp_viralbox_test_ideas);
-
-delete from public.creator_video_review_attempts
-where idea_id in (select id from tmp_viralbox_test_ideas);
-
-delete from public.creator_video_reviews
-where idea_id in (select id from tmp_viralbox_test_ideas);
-
 delete from public.idea_box_items
 where delivery_id in (select id from tmp_viralbox_test_deliveries)
    or idea_id in (select id from tmp_viralbox_test_ideas);

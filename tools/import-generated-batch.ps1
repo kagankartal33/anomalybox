@@ -8,7 +8,7 @@ param(
 
   [switch]$Publish,
 
-  [int]$QualityFloor = 55,
+  [int]$QualityFloor = 80,
 
   [int]$MaxReuseCount = 1
 )

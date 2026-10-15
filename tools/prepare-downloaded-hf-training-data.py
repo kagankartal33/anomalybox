@@ -14,8 +14,9 @@ import pyarrow.parquet as pq
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_DIR = ROOT / "dataset" / "huggingface" / "raw"
-OUT_DIR = ROOT / "dataset" / "huggingface"
+ARCHIVE = Path(r"C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive")
+RAW_DIR = ARCHIVE / "dataset" / "huggingface" / "raw"
+OUT_DIR = ARCHIVE / "dataset" / "huggingface"
 
 
 SOURCES = [
@@ -97,9 +98,19 @@ def safe_get(row: dict[str, Any], *names: str) -> Any:
 
 def risk_for(raw: str, nsfw: bool = False) -> str:
     n = raw.lower()
-    if nsfw or re.search(r"\b(nsfw|explicit|porn|suicide|self harm|weapon|kill|murder|rape)\b", n):
+    # Hard restricted: sexual minors, self-harm, sexual violence, gore challenges
+    if nsfw or re.search(
+        r"\b(nsfw|explicit|porn|onlyfans|suicide|self[-\s]?harm|kill\s+myself|"
+        r"weapon|murder|rape|molest|pedophil|child\s*porn|cp\b|"
+        r"school\s*shoot|beheading|snuff)\b",
+        n,
+    ):
         return "restricted"
-    if re.search(r"\b(health|medical|doctor|finance|investment|crypto|legal|child|kid|baby|politic|hate|offensive)\b", n):
+    if re.search(
+        r"\b(health|medical|doctor|diagnos|finance|investment|crypto|legal advice|"
+        r"\bchild\b|\bkid\b|\bbaby\b|politic|hate|offensive|slur)\b",
+        n,
+    ):
         return "medium"
     return "low"
 
@@ -186,8 +197,21 @@ def abstract_observation(source: dict[str, Any], row: dict[str, Any], row_index:
     raw = raw_text_for(source, row)
     if len(raw) < 25:
         return None
+    # Drop deleted/removed Reddit bodies and empty shells
+    if re.search(r"\[removed\]|\[deleted\]", raw, re.I):
+        return None
+    # Light PII strip before hashing (emails / phones / bare handles)
+    raw = re.sub(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b", " ", raw)
+    raw = re.sub(r"\b(?:\+?\d[\d\-\s().]{8,}\d)\b", " ", raw)
+    raw = re.sub(r"(?<!\w)@[\w.]{2,40}", " ", raw)
+    raw = re.sub(r"\s+", " ", raw).strip()
+    if len(raw) < 25:
+        return None
     nsfw = str(safe_get(row, "subreddit.nsfw") or "").lower() in {"true", "1", "yes"}
     risk = risk_for(raw, nsfw)
+    # Secure mode: do not promote restricted rows even as training examples
+    if risk == "restricted":
+        return None
     flags = feature_flags(raw, source["family"])
     metrics = source_metrics(source, row)
     engagement = (
@@ -273,7 +297,7 @@ def deterministic_bucket(content_hash: str) -> float:
     return int(content_hash[:12], 16) / float(0xFFFFFFFFFFFF)
 
 
-def select_rows(source: dict[str, Any], max_rows: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def select_rows(source: dict[str, Any], max_rows: int, max_scan_rows: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     top_target = max(1, int(max_rows * 0.7))
     sample_target = max_rows - top_target
     top_heap: list[tuple[float, str, dict[str, Any]]] = []
@@ -282,6 +306,8 @@ def select_rows(source: dict[str, Any], max_rows: int) -> tuple[list[dict[str, A
     scanned = kept = duplicates = 0
     restricted = 0
     for index, row in enumerate(iter_source_rows(source), 1):
+        if max_scan_rows > 0 and index > max_scan_rows:
+            break
         scanned += 1
         obs = abstract_observation(source, row, index)
         if not obs:
@@ -318,22 +344,23 @@ def select_rows(source: dict[str, Any], max_rows: int) -> tuple[list[dict[str, A
         "scanned": scanned,
         "eligible": kept,
         "selected": min(len(rows), max_rows),
+        "max_scan_rows": max_scan_rows,
         "duplicates": duplicates,
         "restricted": restricted,
     }
 
 
 def main() -> None:
-    global RAW_DIR
     parser = argparse.ArgumentParser()
     parser.add_argument("--raw-dir", default=str(RAW_DIR))
     parser.add_argument("--out-dir", default=str(OUT_DIR))
     parser.add_argument("--max-rows-per-source", type=int, default=50000)
+    parser.add_argument("--max-scan-rows-per-source", type=int, default=250000)
     parser.add_argument("--output-name", default="hf_social_training_v2_prepared.jsonl")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
 
-    RAW_DIR = Path(args.raw_dir).resolve()
+    raw_dir = Path(args.raw_dir).resolve()
     out_dir = Path(args.out_dir).resolve()
     output_path = out_dir / args.output_name
     manifest_path = out_dir / args.output_name.replace(".jsonl", ".manifest.json")
@@ -341,7 +368,7 @@ def main() -> None:
     sources = []
     for source in SOURCES:
         adjusted = dict(source)
-        adjusted["path"] = Path(str(source["path"]).replace(str(ROOT / "dataset" / "huggingface" / "raw"), str(RAW_DIR)))
+        adjusted["path"] = Path(str(source["path"]).replace(str(RAW_DIR), str(raw_dir)))
         if not Path(adjusted["path"]).exists():
             raise SystemExit(f"Missing downloaded source: {adjusted['path']}")
         sources.append(adjusted)
@@ -349,6 +376,7 @@ def main() -> None:
     plan = {
         "mode": "prepare_downloaded_hf",
         "max_rows_per_source": args.max_rows_per_source,
+        "max_scan_rows_per_source": args.max_scan_rows_per_source,
         "output_path": str(output_path),
         "sources": [{"repo": s["repo"], "family": s["family"], "path": str(s["path"])} for s in sources],
         "apply": args.apply,
@@ -362,7 +390,7 @@ def main() -> None:
     stats = []
     with output_path.open("w", encoding="utf-8") as f:
         for source in sources:
-            rows, source_stats = select_rows(source, args.max_rows_per_source)
+            rows, source_stats = select_rows(source, args.max_rows_per_source, args.max_scan_rows_per_source)
             stats.append(source_stats)
             for row in rows:
                 f.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")

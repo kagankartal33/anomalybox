@@ -44,13 +44,13 @@ create table if not exists public.idea_model_profiles (
   updated_at timestamptz not null default now(),
   constraint idea_model_profiles_safe_base_url_check check (
     base_url is null or (
-      (base_url ~ '^https://' or base_url ~ '^http://(localhost|127\\\\.0\\\\.0\\\\.1|\\\\[::1\\\\])(?::[0-9]+)?(?:/|$)') and
+      (base_url ~ '^https://' or base_url ~ '^http://(localhost|127\.0\.0\.1|\[::1\])(?::[0-9]+)?(?:/|$)') and
       base_url !~ '://[^/]*@' and
       base_url !~* '[?&](api[_-]?key|key|token|secret|password|authorization)='
     )
   ),
   constraint idea_model_profiles_safe_features_check check (
-    features::text !~* '"(api[_-]?key|secret|password|authorization|bearer[_-]?token|access[_-]?token)"\\\\s*:'
+    features::text !~* '"(api[_-]?key|secret|password|authorization|bearer[_-]?token|access[_-]?token)"\s*:'
   )
 );
 

@@ -30,12 +30,12 @@ export function resolveQualityDecision(
   secondOpinionRequired: boolean,
 ): QualityDecision {
   if (decision === "reject") return "reject";
-  return secondOpinionRequired ? "human_review_required" : decision;
+  return secondOpinionRequired ? "refine" : decision;
 }
 
 export function candidateStatusForQualityDecision(decision: QualityDecision) {
   if (decision === "approve") return "ready";
   if (decision === "refine") return "needs_refinement";
   if (decision === "reject") return "blocked";
-  return "human_review_required";
+  return "needs_refinement";
 }

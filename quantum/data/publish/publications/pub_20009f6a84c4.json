@@ -1,0 +1,21 @@
+{
+  "publication_id": "pub_20009f6a84c4",
+  "version_id": "ver_ee502e3dd14c",
+  "site_id": "anomalybox",
+  "page_id": "AB-003",
+  "slug": "faceless-content-ideas",
+  "path": "/content-ideas/faceless-content-ideas",
+  "content_version": 1,
+  "content_hash": "sha256:494a6281f484fc4bf29f7923ab001c6e53a83d3f04d12906d38e15bcbf12bd99",
+  "idempotency_key": "anomalybox:/content-ideas/faceless-content-ideas:v1",
+  "cms_record_id": "cms_1f2371be01ba",
+  "status": "published",
+  "published_by": "batch",
+  "published_at": "2026-08-05T20:28:31Z",
+  "read_back_ok": true,
+  "read_back_at": "2026-08-05T20:28:31Z",
+  "read_back_hash": "sha256:494a6281f484fc4bf29f7923ab001c6e53a83d3f04d12906d38e15bcbf12bd99",
+  "read_back_error": "",
+  "error": "",
+  "rolled_back_from": null
+}

@@ -1,0 +1,34 @@
+{
+  "job_id": "job_950d002dd26f",
+  "page_id": "AB-089",
+  "slug": "content-strategy-for-small-creators",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:content-strategy-for-small-creators:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:25Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:25Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:26Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "near_duplicate:content-strategy-for-creators:0.782",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

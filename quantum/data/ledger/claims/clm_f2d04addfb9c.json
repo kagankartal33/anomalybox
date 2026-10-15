@@ -1,0 +1,19 @@
+{
+  "claim_id": "clm_f2d04addfb9c",
+  "statement": "Shoot-ready direction systems emphasize proof, constraints, and claim-safe language.",
+  "claim_type": "factual",
+  "risk_level": "low",
+  "required_support": 1,
+  "supporting_sources": [
+    {
+      "source_id": "src_166c371731a1",
+      "evidence_span": "Shoot-ready direction systems emphasize proof, constraints, and claim-safe language.",
+      "support_strength": 0.9
+    }
+  ],
+  "contradicting_sources": [],
+  "confidence": 0.9,
+  "valid_until": null,
+  "verification_status": "verified",
+  "page_id": "AB-033"
+}

@@ -4,6 +4,10 @@
  */
 const base = new URL(process.env.SITE_AUDIT_BASE || "https://anomalybox.com");
 const concurrency = Number(process.env.SITE_AUDIT_CONCURRENCY || 10);
+const intentionalTerminologyPaths = new Set([
+]);
+const forbiddenPublicCopy = /SEO operator rules|Zero-Click Summary|not random keyword stuffing|Source Ledger ID|Anti-AI Burstiness|Originality Gate|publish-ready|field notes?|SEO package|editorial draft|reader(?:’|')s job|inside this article|not generic motivation|Page focus:|Publication evidence|must verify live|physical cards|physical dossier|private dossiers?|dossier boxes/i;
+const forbiddenMetadataCopy = /publish-ready|field notes?|proof standards|clear steps, examples|2026 AEO|maximum AI extraction|not generic motivation|SEO package|editorial draft/i;
 
 function decode(value) {
   return value
@@ -11,7 +15,9 @@ function decode(value) {
     .replace(/&quot;/g, '"')
     .replace(/&#39;|&apos;/g, "'")
     .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">");
+    .replace(/&gt;/g, ">")
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number.parseInt(code, 10)));
 }
 
 function textContent(value) {
@@ -68,7 +74,10 @@ const sitemapResponse = await fetch(new URL("/sitemap.xml", base), {
 });
 if (!sitemapResponse.ok) throw new Error(`sitemap fetch failed: ${sitemapResponse.status}`);
 const sitemap = await sitemapResponse.text();
-const urls = [...new Set([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => decode(match[1])))];
+const urls = [...new Set([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => {
+  const listed = new URL(decode(match[1]));
+  return new URL(`${listed.pathname}${listed.search}`, base).href;
+}))];
 const pages = await mapLimit(urls, fetchPage);
 
 const findings = {
@@ -77,6 +86,7 @@ const findings = {
   metadataErrors: [],
   canonicalErrors: [],
   duplicateRelatedGuides: [],
+  duplicateH2Headings: [],
   unresolvedMarkdown: [],
   missingImageAlt: [],
   internalLanguage: [],
@@ -95,15 +105,24 @@ for (const page of pages) {
   const canonical = canonicalHref(page.html);
   const h1Count = (page.html.match(/<h1\b/gi) || []).length;
   const relatedCount = (page.html.match(/<h2\b[^>]*>\s*Related guides\s*<\/h2>/gi) || []).length;
+  const h2Texts = (page.html.match(/<h2\b[^>]*>[\s\S]*?<\/h2>/gi) || []).map((tag) => textContent(tag).toLowerCase());
   const visible = textContent(page.html.replace(/<script\b[\s\S]*?<\/script>/gi, " ").replace(/<style\b[\s\S]*?<\/style>/gi, " "));
 
   if (!title) findings.metadataErrors.push(`missing title: ${page.url}`);
   if (!description) findings.metadataErrors.push(`missing description: ${page.url}`);
+  if (title && (title.length < 20 || title.length > 78)) findings.metadataErrors.push(`title length ${title.length}: ${page.url}`);
+  if (description && (description.length < 80 || description.length > 170)) findings.metadataErrors.push(`description length ${description.length}: ${page.url}`);
+  if (forbiddenMetadataCopy.test(`${title} ${description}`)) findings.metadataErrors.push(`metadata residue: ${page.url}`);
   if (h1Count !== 1) findings.headingErrors.push(`H1 count ${h1Count}: ${page.url}`);
   if (!canonical) findings.canonicalErrors.push(`missing canonical: ${page.url}`);
   if (relatedCount > 1) findings.duplicateRelatedGuides.push(`${relatedCount} sections: ${page.url}`);
+  const duplicateH2 = [...new Set(h2Texts.filter((heading, index) => heading && h2Texts.indexOf(heading) !== index))];
+  if (duplicateH2.length > 0) findings.duplicateH2Headings.push(`${duplicateH2.join(", ")}: ${page.url}`);
   if (/\[[^\]]+\]\((?:\/|https?:\/\/)[^)]+\)/.test(visible)) findings.unresolvedMarkdown.push(page.url);
-  if (/SEO operator rules|Zero-Click Summary|not random keyword stuffing|Source Ledger ID|Anti-AI Burstiness|Originality Gate/i.test(visible)) {
+  if (
+    !intentionalTerminologyPaths.has(new URL(page.url).pathname.replace(/\/$/, ""))
+    && forbiddenPublicCopy.test(visible)
+  ) {
     findings.internalLanguage.push(page.url);
   }
 
@@ -111,7 +130,9 @@ for (const page of pages) {
   if (description) descriptions.set(description, [...(descriptions.get(description) || []), page.url]);
 
   for (const tag of page.html.match(/<img\b[^>]*>/gi) || []) {
-    if (!attribute(tag, "alt").trim()) findings.missingImageAlt.push(page.url);
+    const decorative = attribute(tag, "aria-hidden").toLowerCase() === "true"
+      || attribute(tag, "role").toLowerCase() === "presentation";
+    if (!attribute(tag, "alt").trim() && !decorative) findings.missingImageAlt.push(page.url);
   }
   for (const tag of page.html.match(/<a\b[^>]*>/gi) || []) {
     const href = attribute(tag, "href");
@@ -149,5 +170,5 @@ for (const [name, items] of Object.entries(findings)) {
   for (const item of unique.slice(0, 15)) console.log(`  - ${item}`);
 }
 
-const hardFailures = findings.httpErrors.length + findings.brokenInternalLinks.length;
+const hardFailures = Object.values(findings).reduce((sum, items) => sum + items.length, 0);
 process.exitCode = hardFailures > 0 ? 1 : 0;

@@ -12,7 +12,7 @@ from pathlib import Path
 DATASET_VERSION = "card-sft-v3.1"
 CURRICULUM_VERSION = "card-curriculum-v2"
 PROMPT_VERSION = "idea-card-premium-v3.0.0-automatic"
-QUALITY_GATE_VERSION = "quality-gate-v3.0.0-automatic"
+QUALITY_GATE_VERSION = "quality-gate-v3.0.1-automatic"
 SPLIT_METHOD = "source_family_sha256_80_10_10_v1"
 CATEGORIES = (
     "beauty", "fashion", "commerce_affiliate", "creator_education", "entertainment_comedy",

@@ -1,0 +1,32 @@
+task_completion:
+  task_id: "P15-T001 lifecycle experiments"
+  specification_version: "4.0"
+  status: "implemented_verified_local"
+  summary: >
+    Implemented P15 content lifecycle decision tree (refresh/merge/redirect/retire)
+    with optional CMS unpublish, and experiment registration with Section 19
+    governance gates (invalid types, stats constraints, min runtime, one-per-slug).
+  changed_files:
+    - "quantum/lifecycle.py"
+    - "quantum/experiments.py"
+    - "tools/quantum/lifecycle_cli.py"
+    - "tests/quantum/test_lifecycle.py"
+    - "tests/quantum/test_experiments.py"
+    - "Makefile"
+    - "docs/implementation-audit/P15-completion.md"
+    - "docs/implementation-audit/TASK_COMPLETION_LATEST.yaml"
+  verification_commands:
+    - "python -m unittest discover -s tests/quantum -v  # 39 tests OK"
+    - "python tools/quantum/lifecycle_cli.py export"
+  evidence_artifacts:
+    - "docs/implementation-audit/P15-completion.md"
+    - "quantum/data/lifecycle/snapshot.json"
+    - "quantum/data/experiments/snapshot.json"
+  unresolved:
+    - "Section 45 production graduation not passed"
+    - "P16 observability not implemented"
+    - "Lifecycle not auto-wired into job state machine transitions"
+    - "No admin UI for lifecycle/experiments yet"
+  next_task_id: "P16-T001"
+  next_objective: "Traces, metrics, alerts, backup/restore, degraded modes"
+  release_language: "development_complete_local_gates_green"

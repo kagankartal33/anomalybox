@@ -60,31 +60,6 @@ begin
   return released;
 end $$;
 
-create or replace function public.guard_automatic_generation_run() returns trigger
-language plpgsql set search_path=public as $$
-begin
-  if new.prompt_version<>'idea-card-premium-v3.0.0-automatic' then return new; end if;
-  perform 1 from public.idea_generation_batches where id=new.generation_batch_id for update;
-  if new.request_key is null or new.requested_count<>1 or new.candidate_multiplier<>5
-    or new.taxonomy_version is distinct from 'creative-taxonomy-v1' then
-    raise exception 'V3 generation requires request_key, requested_count=1, candidate_multiplier=5 and creative-taxonomy-v1';
-  end if;
-  if exists(select 1 from public.idea_generation_runs where generation_batch_id=new.generation_batch_id and request_key=new.request_key) then
-    raise exception 'Generation request already exists' using errcode='23505';
-  end if;
-  perform public.reconcile_idea_generation_batch(new.generation_batch_id);
-  if exists(select 1 from public.idea_generation_runs where generation_batch_id=new.generation_batch_id and status in ('queued','running')) then
-    raise exception 'Generation batch is busy' using errcode='55P03';
-  end if;
-  if (select count(*) from public.idea_candidates where generation_batch_id=new.generation_batch_id)
-    >= (select target_count from public.idea_generation_batches where id=new.generation_batch_id) then
-    raise exception 'Generation batch target already filled';
-  end if;
-  new.stage:=case when new.status='queued' then 'queued' else 'normalize' end;
-  new.heartbeat_at:=now(); new.lease_expires_at:=now()+interval '10 minutes';
-  return new;
-end $$;
-
 create or replace function public.reconcile_idea_generation_run(p_run_id uuid, p_force boolean default false)
 returns jsonb language plpgsql security invoker set search_path = public as $$
 declare result public.idea_generation_runs%rowtype; imported_n integer; refined_n integer; rejected_n integer;
@@ -142,6 +117,31 @@ begin
     reconciled:=reconciled+1;
   end loop;
   return reconciled;
+end $$;
+
+create or replace function public.guard_automatic_generation_run() returns trigger
+language plpgsql set search_path=public as $$
+begin
+  if new.prompt_version<>'idea-card-premium-v3.0.0-automatic' then return new; end if;
+  perform 1 from public.idea_generation_batches where id=new.generation_batch_id for update;
+  if new.request_key is null or new.requested_count<>1 or new.candidate_multiplier<>5
+    or new.taxonomy_version is distinct from 'creative-taxonomy-v1' then
+    raise exception 'V3 generation requires request_key, requested_count=1, candidate_multiplier=5 and creative-taxonomy-v1';
+  end if;
+  if exists(select 1 from public.idea_generation_runs where generation_batch_id=new.generation_batch_id and request_key=new.request_key) then
+    raise exception 'Generation request already exists' using errcode='23505';
+  end if;
+  perform public.reconcile_idea_generation_batch(new.generation_batch_id);
+  if exists(select 1 from public.idea_generation_runs where generation_batch_id=new.generation_batch_id and status in ('queued','running')) then
+    raise exception 'Generation batch is busy' using errcode='55P03';
+  end if;
+  if (select count(*) from public.idea_candidates where generation_batch_id=new.generation_batch_id)
+    >= (select target_count from public.idea_generation_batches where id=new.generation_batch_id) then
+    raise exception 'Generation batch target already filled';
+  end if;
+  new.stage:=case when new.status='queued' then 'queued' else 'normalize' end;
+  new.heartbeat_at:=now(); new.lease_expires_at:=now()+interval '10 minutes';
+  return new;
 end $$;
 
 create or replace function public.reserve_idea_creative_signature(
@@ -223,7 +223,7 @@ begin
     raise exception 'Generated card contract or creative signature is invalid' using errcode='23514';
   end if;
   if jsonb_array_length(p_card->'steps')=0 then raise exception 'Generated card needs steps' using errcode='23514'; end if;
-  payload_hash:=encode(sha256(convert_to(p_candidate::text || E'
+  payload_hash:=encode(sha256(convert_to(p_candidate::text || E'\n' || p_card::text,'UTF8')),'hex');
   select * into existing from public.idea_candidates
     where generation_batch_id=batch.id and external_idea_id=incoming.external_idea_id for update;
   if found then

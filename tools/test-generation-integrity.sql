@@ -1,11 +1,11 @@
-\\\\set ON_ERROR_STOP on
+\set ON_ERROR_STOP on
 -- Local Supabase only. Fixtures and all state changes are rolled back.
 begin;
 
 do $hash_contract$
 declare
   card jsonb := '{"id":"storage-id","one_sentence_premise":"legacy premise excluded from content only","schemaVersion":2,"title":"Hash control","conceptSummary":"Compare the visible finish under one light.","viewerTakeaway":"Choose the finish you can see.","steps":[{"purpose":"Open the comparison.","goal":"Show both samples.","action":"Hold both samples side by side.","spokenLine":"Same light.","shot":"Locked close-up.","onScreenText":"Before","editNote":"Cut to the result."},{"purpose":"Reveal the result.","goal":"Show the visible difference.","action":"Show the before and after result.","spokenLine":"The difference is visible.","shot":"Macro.","onScreenText":"After","editNote":"End on the comparison."}]}'::jsonb;
-  expected_document text := E'Hash control
+  expected_document text := E'Hash control\nCompare the visible finish under one light.\nChoose the finish you can see.\nOpen the comparison.\nShow both samples.\nHold both samples side by side.\nSame light.\nLocked close-up.\nBefore\nCut to the result.\nReveal the result.\nShow the visible difference.\nShow the before and after result.\nThe difference is visible.\nMacro.\nAfter\nEnd on the comparison.';
 begin
   if public.automatic_card_content_hash(card) <> 'fd277d4a59ae737f91118931d880ebf405635683515b055a4a260fe7d29f9aec' then
     raise exception 'Database content hash drifted from TypeScript'; end if;

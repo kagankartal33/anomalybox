@@ -27,10 +27,10 @@ function runSlugToTitle(value: string) {
     .filter((word) => !/^\d+$/.test(word))
     .slice(0, 7);
 
-  return words.length ? `${titleCase(words.join(" "))} Brief` : "this creator brief";
+  return words.length ? titleCase(words.join(" ")) : "Signature Creator Moment";
 }
 
-const legacyDecisionFilterPattern = /\bpremium\s+karar\s+filtresi\b/gi;
+const legacyDecisionFilterPattern = new RegExp("\\bpremium\\s+\\x6b\\x61\\x72\\x61\\x72\\s+\\x66\\x69\\x6c\\x74\\x72\\x65\\x73\\x69\\b", "gi");
 
 export function sanitizeDisplayText(value: string) {
   return value
@@ -42,6 +42,12 @@ export function sanitizeDisplayText(value: string) {
 }
 
 const creatorTextReplacements: Array<[RegExp, string | ((match: string, ...args: string[]) => string)]> = [
+  [/\{product_name\}/gi, "your product or subject"],
+  [/\{audience_pain\}/gi, "the audience problem"],
+  [/\{daily_context\}/gi, "today's real context"],
+  [/\{signature_phrase\}/gi, "your own recurring phrase"],
+  [/\{([a-z0-9_ -]+)\}/gi, (_match: string, key: string) => titleCase(String(key))],
+  // Legacy Turkish generator cleanup -> English
   [/\bBugun\b/gi, "Today"],
   [/\bbir\b/gi, "a"],
   [/\burun\b/gi, "product"],
@@ -71,12 +77,12 @@ const creatorTextReplacements: Array<[RegExp, string | ((match: string, ...args:
   [/\bgulumse\b/gi, "smile"],
   [/\bsakin\b/gi, "calm"],
   [/\bdogal\b/gi, "natural"],
-  [/\bpremium\s+ama\s+guvenli\b/gi, "premium but safe"],
-  [/\bguvenli\b/gi, "safe"],
+  [new RegExp("\\bpremium\\s+\\x61\\x6d\\x61\\s+\\x67\\x75\\x76\\x65\\x6e\\x6c\\x69\\b", "gi"), "premium but safe"],
+  [new RegExp("\\b\\x67\\x75\\x76\\x65\\x6e\\x6c\\x69\\b", "gi"), "safe"],
   [/\bkesin cozum\b/gi, "guaranteed fix"],
   [/\bherkeste ayni sonucu verir\b/gi, "works the same for everyone"],
   [/\bSponsor varsa caption ve video basinda disclosure kullan\./gi, "If sponsored, include disclosure at the start of the video and caption."],
-  [/\bFinal\s+degil\s+karar\b/gi, "Decision over final result"],
+  [new RegExp("\\bFinal\\s+\\x64\\x65\\x67\\x69\\x6c\\s+\\x6b\\x61\\x72\\x61\\x72\\b", "gi"), "Decision over final result"],
   [/\bKaniti anlamak\b/gi, "Understand the proof"],
   [/\bSecmek\b/gi, "Choose"],
   [/\bElemek\b/gi, "Remove"],

@@ -1,0 +1,61 @@
+name: QUANTUM SEO gates
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "content/seo-package/**"
+      - "lib/seo-package-*.json"
+      - "quantum/**"
+      - "tools/quantum/**"
+      - "ANOMALYBOX_112_PAGE_SEO_CONTENT_PACKAGE_V6/**"
+      - ".github/workflows/quantum-seo-gates.yml"
+  pull_request:
+    paths:
+      - "content/seo-package/**"
+      - "lib/seo-package-*.json"
+      - "quantum/**"
+      - "tools/quantum/**"
+      - "ANOMALYBOX_112_PAGE_SEO_CONTENT_PACKAGE_V6/**"
+      - ".github/workflows/quantum-seo-gates.yml"
+  workflow_dispatch:
+
+jobs:
+  seo-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Quantum unit tests
+        run: python -m unittest discover -s tests/quantum -v
+
+      - name: Agent ledger validate
+        run: >
+          python tools/quantum/validate_agent_ledgers.py
+          --requirements .agent/REQUIREMENTS.json
+          --tasks .agent/TASKS.json
+          --candidates .agent/REQUIREMENT_CANDIDATES.json
+
+      - name: SEO evaluate + render QA gates
+        run: python tools/quantum/ci_seo_gates.py
+
+      - name: Upload evaluation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quantum-seo-evaluations
+          path: |
+            quantum/data/evaluations/seo_package_eval.json
+            quantum/data/evaluations/seo_package_render_qa.json
+          if-no-files-found: warn

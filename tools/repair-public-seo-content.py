@@ -9,17 +9,12 @@ import json
 import re
 from pathlib import Path
 
+from polish_public_metadata import build_description
+
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "lib" / "seo-package-registry.json"
 PACKAGE_CONTENT = ROOT / "content" / "seo-package"
-PACKAGE_SOURCE = ROOT / "ANOMALYBOX_112_PAGE_SEO_CONTENT_PACKAGE_V6" / "ANOMALYBOX_112_PAGE_SEO_CONTENT_PACKAGE_V6" / "pages"
-
-
-def clean_description(value: str, title: str) -> str:
-    value = re.sub(r"[.…]+$", "", value.strip()).strip()
-    if len(value) < 110:
-        value = f"{value or title}: practical examples, clear steps, and production decisions for creators."
-    return value[:158].rstrip(" ,.;:")
+PACKAGE_SOURCE = ROOT / "archive" / "source-packs" / "ANOMALYBOX_112_PAGE_SEO_CONTENT_PACKAGE_V6" / "ANOMALYBOX_112_PAGE_SEO_CONTENT_PACKAGE_V6" / "pages"
 
 
 def clean_alt(value: str, title: str) -> str:
@@ -44,7 +39,8 @@ def main() -> int:
     payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
     pages = payload.get("pages", [])
     for page in pages:
-        page["description"] = clean_description(str(page.get("description", "")), str(page.get("title", "")))
+        markdown = (PACKAGE_CONTENT / f"{page['slug']}.md").read_text(encoding="utf-8")
+        page["description"] = build_description(page, markdown)
         page["imageAlt"] = clean_alt(str(page.get("imageAlt", "")), str(page.get("title", "")))
 
     REGISTRY.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -63,7 +59,7 @@ def main() -> int:
             continue
         original = article.read_text(encoding="utf-8")
         updated = repair_marker(original)
-        updated = re.sub(r"(meta_description:\s*['\"]?[^\n'\"]+?)[.…]+(['\"]?)", r"\1\2", updated)
+        updated = re.sub(r"(meta_description:\s*['\"]?[^\n]*?)[.…]+(['\"]?)\s*$", r"\1\2", updated, flags=re.M)
         if updated != original:
             article.write_text(updated, encoding="utf-8")
 

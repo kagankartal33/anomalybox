@@ -1,5 +1,253 @@
 import { compactText, normalizeCreatorText, titleCase } from "@/lib/format";
 
+type JsonRecord = Record<string, unknown>;
+
+export type CardSectionBlock =
+  | { type: "text"; title: string; body: string }
+  | { type: "list"; title: string; items: string[] }
+  | { type: "key_value"; title: string; rows: Array<{ label: string; value: string }> }
+  | { type: "timeline"; title: string; items: Array<{ time?: string; title: string; body?: string; meta?: string[] }> }
+  | { type: "shot_list"; title: string; items: Array<{ time?: string; title: string; action?: string; note?: string; overlay?: string }> }
+  | { type: "execution_ranges"; title: string; mode: "shooting" | "editing"; ranges: ExecutionRange[] }
+  | {
+      type: "edit_assembly";
+      title: string;
+      clipOrder: string[];
+      cutPoints: string[];
+      transitionStyle: string[];
+      textOverlayTiming: string[];
+      voiceoverSync: string[];
+      musicSoundCue: string[];
+      pacingNotes: string[];
+      finalChecklist: string[];
+    }
+  | {
+      type: "caption_pack";
+      title: string;
+      captions: string[];
+      onScreenText: string[];
+      cta?: string;
+      pinnedComment?: string;
+      audienceQuestion?: string;
+      storyPoll?: string;
+      storyOptions?: string[];
+      followupFrame?: string;
+    }
+  | {
+      type: "safety";
+      title: string;
+      disclosure?: string;
+      claimBoundary?: string;
+      doNotSay: string[];
+      evidenceNote?: string;
+      saferAlternative?: string;
+    };
+
+export type CardSection = {
+  key: string;
+  title: string;
+  short_summary: string;
+  how_to_do_it: string;
+  what_good_looks_like: string;
+  common_mistakes: string[];
+  example_execution: string;
+  source_payload: Record<string, unknown>;
+  checklist_items: string[];
+  blocks: CardSectionBlock[];
+};
+
+const noGuidance = "No dedicated guidance for this section.";
+
+export type CanonicalExecutionBeat = {
+  time_range: string;
+  start: number;
+  end: number;
+  purpose: string;
+  primary_action: string;
+  shot?: string;
+  voiceover?: string;
+  on_screen_text?: string;
+  edit_move?: string;
+  supporting_b_roll: string[];
+  pose_camera_note?: string;
+  safety_note?: string;
+};
+
+export type PerSecondFrame = {
+  second: number;
+  shoot_frame: string;
+  camera_action: string;
+  pose_note?: string;
+  b_roll_note?: string;
+  on_screen_text?: string;
+  voiceover_line?: string;
+  personalization_slot?: string;
+  edit_action: string;
+  cut_point?: string;
+  transition_style?: string;
+  overlay_timing?: string;
+  audio_cue?: string;
+  pacing_note?: string;
+  final_check?: string;
+  visual_cue: "close_up" | "face_camera" | "hand_action" | "product" | "environment" | "text_overlay" | "movement" | "proof" | "payoff";
+};
+
+export type ExecutionRange = {
+  time_range: string;
+  start: number;
+  end: number;
+  purpose: string;
+  action: string;
+  camera: string;
+  say?: string;
+  say_tone?: string;
+  on_screen_text_required: boolean;
+  creator_touch?: string;
+  edit: string;
+  shoot_summary: string;
+  edit_summary: string;
+  shoot_direction: string;
+  camera_direction?: string;
+  pose_micro_behavior?: string;
+  setting_or_broll?: string;
+  spoken_line?: string;
+  on_screen_text?: string;
+  edit_direction: string;
+  cut_point?: string;
+  transition_style?: string;
+  overlay_timing?: string;
+  audio_cue?: string;
+  pacing_note?: string;
+  final_check?: string;
+  creator_customization?: string;
+  visual_cue: PerSecondFrame["visual_cue"];
+};
+
+export type NormalizedCardExecution = {
+  beats: CanonicalExecutionBeat[];
+  per_second_frames: PerSecondFrame[];
+  execution_ranges: ExecutionRange[];
+  supplemental_b_roll: string[];
+  edit_notes: Array<{ label: string; value: string }>;
+  edit_assembly_guide: {
+    clipOrder: string[];
+    cutPoints: string[];
+    transitionStyle: string[];
+    textOverlayTiming: string[];
+    voiceoverSync: string[];
+    musicSoundCue: string[];
+    pacingNotes: string[];
+    finalChecklist: string[];
+  };
+  example_story: {
+    title: string;
+    paragraphs: string[];
+    steps: Array<{ label: string; body: string }>;
+  };
+};
+
+const labelOverrides: Record<string, string> = {
+  avoid: "Avoid",
+  avoid_over_advertising: "Avoid over-advertising",
+  audience_aftertaste: "Audience aftertaste",
+  audience_question: "Audience question",
+  body: "Body",
+  brand_equity: "Brand equity",
+  camera_attention: "Camera attention",
+  claim_boundary: "Claim boundary",
+  color_language: "Color language",
+  cta: "CTA",
+  delivery_style: "Delivery style",
+  disclosure_text: "Disclosure text",
+  do_not_say: "Do not say",
+  evidence_note: "Evidence note",
+  expression: "Expression",
+  eye_contact: "Eye contact",
+  face: "Face",
+  facial_expression: "Facial expression",
+  followup_frame: "Follow-up frame",
+  framing: "Framing",
+  hands: "Hands",
+  lighting: "Lighting",
+  location_options: "Location options",
+  mood: "Mood",
+  movement: "Movement",
+  opening_visual: "Opening visual",
+  partnership_signal: "Partnership signal",
+  payoff_visual: "Payoff visual",
+  pacing_notes: "Pacing notes",
+  poll_options: "Poll options",
+  poll_question: "Poll question",
+  product_handling: "Product handling",
+  production_versions: "Production versions",
+  reply_strategy: "Reply strategy",
+  safer_alternative_phrase: "Safer alternative",
+  scene_arc: "Scene arc",
+  shoot_time_minutes: "Shoot time",
+  sound_cue: "Sound cue",
+  smile_timing: "Smile timing",
+  solo_creator_friendly: "Solo creator friendly",
+  soundscape: "Soundscape",
+  visual_texture: "Visual texture",
+  why_it_fits_creator: "Why it fits this creator",
+};
+
+function pick(card: Record<string, unknown>, keys: string[]) {
+  return Object.fromEntries(keys.filter((key) => card[key] != null).map((key) => [key, card[key]]));
+}
+
+function asRecord(value: unknown): JsonRecord | null {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as JsonRecord : null;
+}
+
+function asArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function asCleanText(value: unknown, fallback = "") {
+  const text = compactText(value, "").trim();
+  return text ? normalizeCreatorText(text) : fallback;
+}
+
+function asCleanList(value: unknown) {
+  if (Array.isArray(value)) {
+    return value.map((item) => asCleanText(item)).filter(Boolean);
+  }
+  const text = asCleanText(value);
+  return text ? [text] : [];
+}
+
+function normalizedTokens(value: string) {
+  return normalizeCreatorText(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]+/g, " ")
+    .split(/\s+/)
+    .filter((token) => token.length > 2)
+    .filter((token) => !["the", "and", "for", "with", "this", "that", "your", "you", "into", "from"].includes(token));
+}
+
+function tokenOverlap(a: string, b: string) {
+  const left = new Set(normalizedTokens(a));
+  const right = new Set(normalizedTokens(b));
+  if (!left.size || !right.size) return 0;
+  let hits = 0;
+  left.forEach((token) => {
+    if (right.has(token)) hits += 1;
+  });
+  return hits / Math.min(left.size, right.size);
+}
+
+function actionFamily(value: string) {
+  const text = value.toLowerCase();
+  if (/\b(reveal|show|display|open|hold up)\b/.test(text)) return "reveal";
+  if (/\b(save|screenshot|hold|checklist)\b/.test(text)) return "save";
+  if (/\b(comment|ask|question|reply|poll)\b/.test(text)) return "comment";
+  if (/\b(cut|transition|edit|pace|freeze)\b/.test(text)) return "edit";
+  if (/\b(compare|filter|remove|choose|sort|select)\b/.test(text)) return "decision";
+  if (/\b(proof|evidence|detail|close-up|closeup)\b/.test(text)) return "proof";
+  return normalizedTokens(value).slice(0, 3).join("_") || "action";
+}
+
 function visualCueFor(value: string): PerSecondFrame["visual_cue"] {
   const text = value.toLowerCase();
   if (/\b(close|macro|detail|texture|proof)\b/.test(text)) return "close_up";
@@ -13,11 +261,197 @@ function visualCueFor(value: string): PerSecondFrame["visual_cue"] {
   return "proof";
 }
 
-function editAssemblyBlock(execution: NormalizedCardExecution): CardSectionBlock {
+function normalizeListField(record: JsonRecord | null, keys: string[]) {
+  if (!record) return [];
+  for (const key of keys) {
+    const values = asCleanList(record[key]);
+    if (values.length) return uniqueText(values);
+  }
+  return [];
+}
+
+function parseTime(value: unknown, fallbackStart: number, fallbackDuration = 4) {
+  const text = String(value ?? "")
+    .replace(/\u2013|\u2014/g, "-")
+    .replace(/\s+/g, "")
+    .toLowerCase();
+  if (text.includes("last")) {
+    return { start: Math.max(0, fallbackStart), end: Math.max(fallbackStart + 3, fallbackStart + fallbackDuration), label: "last 3s" };
+  }
+  const [startText, endText] = text.split(/-|to/);
+  const start = Number.parseInt(startText || `${fallbackStart}`, 10);
+  let end = endText ? Number.parseInt(endText, 10) : start + fallbackDuration;
+  const safeStart = Number.isFinite(start) ? Math.max(0, start) : fallbackStart;
+  if (!Number.isFinite(end) || end <= safeStart) end = safeStart + fallbackDuration;
+  return { start: safeStart, end, label: `${safeStart}-${end}s` };
+}
+
+function rangesOverlap(a: { start: number; end: number }, b: { start: number; end: number }) {
+  return Math.max(a.start, b.start) <= Math.min(a.end, b.end) || Math.abs(a.start - b.start) <= 2;
+}
+
+function uniqueText(values: string[]) {
+  const result: string[] = [];
+  values.forEach((value) => {
+    const text = asCleanText(value);
+    if (!text) return;
+    if (result.some((existing) => existing.toLowerCase() === text.toLowerCase() || tokenOverlap(existing, text) >= 0.82)) return;
+    result.push(text);
+  });
+  return result;
+}
+
+function personalizationInstructions(value: unknown) {
+  const slots = asRecord(value);
+  if (!slots) return [];
+  const instructions: Record<string, string> = {
+    product_name: "Add your product, place, service, or subject here.",
+    audience_pain: "Name the audience problem in one short phrase.",
+    daily_context: "Use today's real context so the moment feels specific.",
+    signature_phrase: "Add your own recurring phrase if it fits naturally.",
+  };
+
+  return uniqueText(Object.keys(slots).map((key) => instructions[key] ?? `Customize ${labelFor(key).toLowerCase()} with your own detail.`));
+}
+
+function pickInstructionForSecond(values: string[], second: number, totalSeconds: number) {
+  if (!values.length) return "";
+  return pickBySecond(values, second, totalSeconds);
+}
+
+function beatText(beat: CanonicalExecutionBeat) {
+  return [
+    beat.purpose,
+    beat.primary_action,
+    beat.shot,
+    beat.voiceover,
+    beat.on_screen_text,
+    beat.edit_move,
+    ...beat.supporting_b_roll,
+  ].filter(Boolean).join(" ");
+}
+
+function findBeat(beats: CanonicalExecutionBeat[], range: { start: number; end: number }, actionText = "") {
+  const family = actionFamily(actionText);
+  return beats.find((beat) => rangesOverlap(beat, range) && (!actionText || actionFamily(beat.primary_action) === family || tokenOverlap(beatText(beat), actionText) >= 0.35))
+    ?? beats.find((beat) => rangesOverlap(beat, range));
+}
+
+export function normalizeCardExecution(cardValue: unknown): NormalizedCardExecution {
+  const card = (cardValue && typeof cardValue === "object" && !Array.isArray(cardValue) ? cardValue : {}) as JsonRecord;
+  const sceneScript = asArray(card.scene_script);
+  const beats: CanonicalExecutionBeat[] = [];
+
+  sceneScript.forEach((item, index) => {
+    const scene = asRecord(item);
+    const range = parseTime(scene?.second ?? scene?.time, index * 7, 5);
+    const purpose = asCleanText(scene?.purpose ?? scene?.beat ?? scene?.title, `Beat ${index + 1}`);
+    const voiceover = asCleanText(scene?.voiceover ?? asCleanList(scene?.spoken_lines).join(" "));
+    const onScreen = asCleanText(scene?.on_screen_text ?? scene?.overlay);
+    beats.push({
+      time_range: range.label,
+      start: range.start,
+      end: range.end,
+      purpose,
+      primary_action: voiceover || onScreen || purpose,
+      voiceover: voiceover || undefined,
+      on_screen_text: onScreen || undefined,
+      supporting_b_roll: [],
+    });
+  });
+
+  if (!beats.length) {
+    const blueprint = asRecord(card.video_blueprint);
+    const range = parseTime("0-8", 0, 8);
+    beats.push({
+      time_range: range.label,
+      start: range.start,
+      end: range.end,
+      purpose: "opening",
+      primary_action: asCleanText(blueprint?.opening_visual ?? card.one_sentence_premise, "Open with the strongest visual proof."),
+      supporting_b_roll: [],
+    });
+  }
+
+  asArray(card.shot_list).forEach((item, index) => {
+    const shot = asRecord(item);
+    if (!shot) return;
+    const range = parseTime(shot.second ?? shot.time, index * 7, 4);
+    const action = asCleanText(shot.action);
+    const target = findBeat(beats, range, action) ?? beats[Math.min(index, beats.length - 1)];
+    target.start = Math.min(target.start, range.start);
+    target.end = Math.max(target.end, range.end);
+    target.time_range = `${target.start}-${target.end}s`;
+    target.shot = target.shot || asCleanText(shot.shot ?? shot.type ?? shot.title) || undefined;
+    if (action && tokenOverlap(target.primary_action, action) < 0.72) target.primary_action = target.primary_action || action;
+    const overlay = asCleanText(shot.overlay ?? shot.on_screen_text);
+    if (overlay && (!target.on_screen_text || tokenOverlap(target.on_screen_text, overlay) < 0.72)) target.on_screen_text = target.on_screen_text ?? overlay;
+  });
+
+  asArray(card.editing_timeline).forEach((item, index) => {
+    const edit = asRecord(item);
+    if (!edit) return;
+    const range = parseTime(edit.second ?? edit.time, index * 7, 4);
+    const editMove = asCleanText(edit.edit ?? edit.action ?? edit.note);
+    const target = findBeat(beats, range, editMove) ?? beats[Math.min(index, beats.length - 1)];
+    if (editMove && tokenOverlap(beatText(target), editMove) < 0.72) target.edit_move = target.edit_move || editMove;
+  });
+
+  const supplementalBroll: string[] = [];
+  asArray(card.b_roll_plan).forEach((item) => {
+    const broll = asRecord(item);
+    const text = asCleanText([broll?.shot, broll?.note].filter(Boolean).join(" "));
+    if (!text) return;
+    const target = beats.find((beat) => tokenOverlap(beatText(beat), text) >= 0.38);
+    if (target) {
+      target.supporting_b_roll = uniqueText([...target.supporting_b_roll, text]).slice(0, 2);
+    } else if (!supplementalBroll.some((existing) => tokenOverlap(existing, text) >= 0.62)) {
+      supplementalBroll.push(text);
+    }
+  });
+
+  const pose = asRecord(card.pose_direction);
+  const micro = asRecord(card.micro_behavior_guide);
+  const camera = asRecord(card.camera_direction);
+  const poseNote = asCleanText(pose?.expression ?? micro?.facial_expression ?? camera?.framing);
+  if (poseNote) beats[0].pose_camera_note = poseNote;
+
+  const safety = asRecord(card.brand_safety);
+  const safetyNote = asCleanText(safety?.claim_boundary ?? safety?.disclosure_text);
+  if (safetyNote) beats[beats.length - 1].safety_note = safetyNote;
+
+  beats.sort((a, b) => a.start - b.start || a.end - b.end);
+  const dedupedBeats: CanonicalExecutionBeat[] = [];
+  beats.forEach((beat) => {
+    const existing = dedupedBeats.find((item) => rangesOverlap(item, beat) && (actionFamily(item.primary_action) === actionFamily(beat.primary_action) || tokenOverlap(beatText(item), beatText(beat)) >= 0.68));
+    if (!existing) {
+      dedupedBeats.push({ ...beat, supporting_b_roll: uniqueText(beat.supporting_b_roll) });
+      return;
+    }
+    existing.start = Math.min(existing.start, beat.start);
+    existing.end = Math.max(existing.end, beat.end);
+    existing.time_range = `${existing.start}-${existing.end}s`;
+    existing.shot = existing.shot || beat.shot;
+    existing.voiceover = existing.voiceover || beat.voiceover;
+    existing.on_screen_text = existing.on_screen_text || beat.on_screen_text;
+    existing.edit_move = existing.edit_move || beat.edit_move;
+    existing.pose_camera_note = existing.pose_camera_note || beat.pose_camera_note;
+    existing.safety_note = existing.safety_note || beat.safety_note;
+    existing.supporting_b_roll = uniqueText([...existing.supporting_b_roll, ...beat.supporting_b_roll]).slice(0, 2);
+  });
+
+  const editingNotes = keyValueRows(card.editing_notes);
+  const editAssembly = buildEditAssemblyGuide(card, dedupedBeats, editingNotes);
+  const perSecondFrames = buildPerSecondFrames(card, dedupedBeats, editAssembly);
+  const executionRanges = buildExecutionRanges(card, dedupedBeats, editAssembly);
   return {
-    type: "edit_assembly",
-    title: "Edit Assembly Guide",
-    ...execution.edit_assembly_guide,
+    beats: dedupedBeats,
+    per_second_frames: perSecondFrames,
+    execution_ranges: executionRanges,
+    supplemental_b_roll: uniqueText(supplementalBroll).slice(0, 6),
+    edit_notes: editingNotes,
+    edit_assembly_guide: editAssembly,
+    example_story: buildExampleStory(card, dedupedBeats),
   };
 }
 
@@ -276,33 +710,37 @@ function buildExecutionRanges(card: JsonRecord, beats: CanonicalExecutionBeat[],
       broll,
       beat.edit_move,
     ].filter(Boolean).join(" ");
+    const purpose = normalizePurpose(beat.purpose, index);
+    const camera = beat.shot ? `Frame for ${beat.shot.toLowerCase()}; keep the movement controlled and readable.` : "Keep the camera steady and make the action easy to read.";
+    const edit = beat.edit_move || clipOrder || `Place this ${purpose.toLowerCase()} clip here and keep it tight.`;
+    const creatorTouch = customizationInstructions[index % Math.max(1, customizationInstructions.length)] || undefined;
 
     const normalizedRange = {
       time_range,
       start: beat.start,
       end: beat.end,
-      purpose: normalizePurpose(beat.purpose, index),
+      purpose,
       action: beat.pose_camera_note || beat.primary_action || beat.shot || "Capture the clearest visual for this part.",
-      camera: beat.shot ? `Frame for ${beat.shot.toLowerCase()}; keep the movement controlled and readable.` : "Keep the camera steady and make the action easy to read.",
+      camera,
       say: beat.voiceover || undefined,
-      say_tone: beat.voiceover ? inferSayTone(beat.voiceover, beat.purpose) : undefined,
+      say_tone: beat.voiceover ? inferSayTone(beat.voiceover, purpose) : undefined,
       on_screen_text_required: false,
-      creator_touch: customizationInstructions[index % Math.max(1, customizationInstructions.length)] || undefined,
-      edit: beat.edit_move || clipOrder || `Place this ${normalizePurpose(beat.purpose, index).toLowerCase()} clip here and keep it tight.`,
+      creator_touch: creatorTouch,
+      edit,
       shoot_direction: beat.shot || beat.primary_action || "Capture the clearest visual for this part.",
-      camera_direction: beat.shot ? `Frame for ${beat.shot.toLowerCase()}; keep the movement controlled and readable.` : "Keep the camera steady and make the action easy to read.",
+      camera_direction: camera,
       pose_micro_behavior: beat.pose_camera_note || undefined,
       setting_or_broll: broll || undefined,
       spoken_line: beat.voiceover || undefined,
       on_screen_text: beat.on_screen_text || undefined,
-      edit_direction: beat.edit_move || clipOrder || `Place this ${normalizePurpose(beat.purpose, index).toLowerCase()} clip here and keep it tight.`,
+      edit_direction: edit,
       cut_point: cutPoint,
       transition_style: transition,
       overlay_timing: overlayTiming || undefined,
       audio_cue: editAssembly.musicSoundCue[index] ?? editAssembly.musicSoundCue[0],
       pacing_note: editAssembly.pacingNotes[index] ?? editAssembly.pacingNotes[0],
       final_check: index === safeBeats.length - 1 ? (editAssembly.finalChecklist[0] ?? "The ending must make the next action obvious.") : undefined,
-      creator_customization: customizationInstructions[index % Math.max(1, customizationInstructions.length)] || undefined,
+      creator_customization: creatorTouch,
       visual_cue: visualCueFor(seed),
     } satisfies Omit<ExecutionRange, "shoot_summary" | "edit_summary">;
     return {
@@ -360,7 +798,7 @@ function explicitPerSecondFrames(card: JsonRecord): PerSecondFrame[] {
         b_roll_note: asCleanText(frame.b_roll_note ?? frame.b_roll) || undefined,
         on_screen_text: asCleanText(frame.on_screen_text ?? frame.overlay) || undefined,
         voiceover_line: asCleanText(frame.voiceover_line ?? frame.voiceover) || undefined,
-        personalization_slot: customization && !/\\{[a-z0-9_ -]+\\}/i.test(String(frame.personalization_slot ?? frame.customization ?? "")) ? customization : undefined,
+        personalization_slot: customization && !/\{[a-z0-9_ -]+\}/i.test(String(frame.personalization_slot ?? frame.customization ?? "")) ? customization : undefined,
         edit_action: edit || "Keep this second only if it advances the beat.",
         cut_point: asCleanText(frame.cut_point) || undefined,
         transition_style: asCleanText(frame.transition_style ?? frame.transition) || undefined,
@@ -459,231 +897,6 @@ function buildPerSecondFrames(card: JsonRecord, beats: CanonicalExecutionBeat[],
   return deduped;
 }
 
-function normalizeListField(record: JsonRecord | null, keys: string[]) {
-  if (!record) return [];
-  for (const key of keys) {
-    const values = asCleanList(record[key]);
-    if (values.length) return uniqueText(values);
-  }
-  return [];
-}
-
-function normalizedTokens(value: string) {
-  return normalizeCreatorText(value)
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]+/g, " ")
-    .split(/\s+/)
-    .filter((token) => token.length > 2)
-    .filter((token) => !["the", "and", "for", "with", "this", "that", "your", "you", "into", "from"].includes(token));
-}
-
-function tokenOverlap(a: string, b: string) {
-  const left = new Set(normalizedTokens(a));
-  const right = new Set(normalizedTokens(b));
-  if (!left.size || !right.size) return 0;
-  let hits = 0;
-  left.forEach((token) => {
-    if (right.has(token)) hits += 1;
-  });
-  return hits / Math.min(left.size, right.size);
-}
-
-function actionFamily(value: string) {
-  const text = value.toLowerCase();
-  if (/\b(reveal|show|display|open|hold up)\b/.test(text)) return "reveal";
-  if (/\b(save|screenshot|hold|checklist)\b/.test(text)) return "save";
-  if (/\b(comment|ask|question|reply|poll)\b/.test(text)) return "comment";
-  if (/\b(cut|transition|edit|pace|freeze)\b/.test(text)) return "edit";
-  if (/\b(compare|filter|remove|choose|sort|select)\b/.test(text)) return "decision";
-  if (/\b(proof|evidence|detail|close-up|closeup)\b/.test(text)) return "proof";
-  return normalizedTokens(value).slice(0, 3).join("_") || "action";
-}
-
-function parseTime(value: unknown, fallbackStart: number, fallbackDuration = 4) {
-  const text = String(value ?? "")
-    .replace(/[\u2013\u2014]/g, "-")
-    .replace(/\s+/g, "")
-    .toLowerCase();
-  if (text.includes("last")) {
-    return { start: Math.max(0, fallbackStart), end: Math.max(fallbackStart + 3, fallbackStart + fallbackDuration), label: "last 3s" };
-  }
-  const [startText, endText] = text.split(/-|to/);
-  const start = Number.parseInt(startText || `${fallbackStart}`, 10);
-  let end = endText ? Number.parseInt(endText, 10) : start + fallbackDuration;
-  const safeStart = Number.isFinite(start) ? Math.max(0, start) : fallbackStart;
-  if (!Number.isFinite(end) || end <= safeStart) end = safeStart + fallbackDuration;
-  return { start: safeStart, end, label: `${safeStart}-${end}s` };
-}
-
-function rangesOverlap(a: { start: number; end: number }, b: { start: number; end: number }) {
-  return Math.max(a.start, b.start) <= Math.min(a.end, b.end) || Math.abs(a.start - b.start) <= 2;
-}
-
-function uniqueText(values: string[]) {
-  const result: string[] = [];
-  values.forEach((value) => {
-    const text = asCleanText(value);
-    if (!text) return;
-    if (result.some((existing) => existing.toLowerCase() === text.toLowerCase() || tokenOverlap(existing, text) >= 0.82)) return;
-    result.push(text);
-  });
-  return result;
-}
-
-function personalizationInstructions(value: unknown) {
-  const slots = asRecord(value);
-  if (!slots) return [];
-  const instructions: Record<string, string> = {
-    product_name: "Add your product, place, service, or subject here.",
-    audience_pain: "Name the audience problem in one short phrase.",
-    daily_context: "Use today's real context so the moment feels specific.",
-    signature_phrase: "Add your own recurring phrase if it fits naturally.",
-  };
-
-  return uniqueText(Object.keys(slots).map((key) => instructions[key] ?? `Customize ${labelFor(key).toLowerCase()} with your own detail.`));
-}
-
-function pickInstructionForSecond(values: string[], second: number, totalSeconds: number) {
-  if (!values.length) return "";
-  return pickBySecond(values, second, totalSeconds);
-}
-
-function beatText(beat: CanonicalExecutionBeat) {
-  return [
-    beat.purpose,
-    beat.primary_action,
-    beat.shot,
-    beat.voiceover,
-    beat.on_screen_text,
-    beat.edit_move,
-    ...beat.supporting_b_roll,
-  ].filter(Boolean).join(" ");
-}
-
-function findBeat(beats: CanonicalExecutionBeat[], range: { start: number; end: number }, actionText = "") {
-  const family = actionFamily(actionText);
-  return beats.find((beat) => rangesOverlap(beat, range) && (!actionText || actionFamily(beat.primary_action) === family || tokenOverlap(beatText(beat), actionText) >= 0.35))
-    ?? beats.find((beat) => rangesOverlap(beat, range));
-}
-
-export function normalizeCardExecution(cardValue: unknown): NormalizedCardExecution {
-  const card = (cardValue && typeof cardValue === "object" && !Array.isArray(cardValue) ? cardValue : {}) as JsonRecord;
-  const sceneScript = asArray(card.scene_script);
-  const beats: CanonicalExecutionBeat[] = [];
-
-  sceneScript.forEach((item, index) => {
-    const scene = asRecord(item);
-    const range = parseTime(scene?.second ?? scene?.time, index * 7, 5);
-    const purpose = asCleanText(scene?.purpose ?? scene?.beat ?? scene?.title, `Beat ${index + 1}`);
-    const voiceover = asCleanText(scene?.voiceover ?? asCleanList(scene?.spoken_lines).join(" "));
-    const onScreen = asCleanText(scene?.on_screen_text ?? scene?.overlay);
-    beats.push({
-      time_range: range.label,
-      start: range.start,
-      end: range.end,
-      purpose,
-      primary_action: voiceover || onScreen || purpose,
-      voiceover: voiceover || undefined,
-      on_screen_text: onScreen || undefined,
-      supporting_b_roll: [],
-    });
-  });
-
-  if (!beats.length) {
-    const blueprint = asRecord(card.video_blueprint);
-    const range = parseTime("0-8", 0, 8);
-    beats.push({
-      time_range: range.label,
-      start: range.start,
-      end: range.end,
-      purpose: "opening",
-      primary_action: asCleanText(blueprint?.opening_visual ?? card.one_sentence_premise, "Open with the strongest visual proof."),
-      supporting_b_roll: [],
-    });
-  }
-
-  asArray(card.shot_list).forEach((item, index) => {
-    const shot = asRecord(item);
-    if (!shot) return;
-    const range = parseTime(shot.second ?? shot.time, index * 7, 4);
-    const action = asCleanText(shot.action);
-    const target = findBeat(beats, range, action) ?? beats[Math.min(index, beats.length - 1)];
-    target.start = Math.min(target.start, range.start);
-    target.end = Math.max(target.end, range.end);
-    target.time_range = `${target.start}-${target.end}s`;
-    target.shot = target.shot || asCleanText(shot.shot ?? shot.type ?? shot.title) || undefined;
-    if (action && tokenOverlap(target.primary_action, action) < 0.72) target.primary_action = target.primary_action || action;
-    const overlay = asCleanText(shot.overlay ?? shot.on_screen_text);
-    if (overlay && (!target.on_screen_text || tokenOverlap(target.on_screen_text, overlay) < 0.72)) target.on_screen_text = target.on_screen_text ?? overlay;
-  });
-
-  asArray(card.editing_timeline).forEach((item, index) => {
-    const edit = asRecord(item);
-    if (!edit) return;
-    const range = parseTime(edit.second ?? edit.time, index * 7, 4);
-    const editMove = asCleanText(edit.edit ?? edit.action ?? edit.note);
-    const target = findBeat(beats, range, editMove) ?? beats[Math.min(index, beats.length - 1)];
-    if (editMove && tokenOverlap(beatText(target), editMove) < 0.72) target.edit_move = target.edit_move || editMove;
-  });
-
-  const supplementalBroll: string[] = [];
-  asArray(card.b_roll_plan).forEach((item) => {
-    const broll = asRecord(item);
-    const text = asCleanText([broll?.shot, broll?.note].filter(Boolean).join(" "));
-    if (!text) return;
-    const target = beats.find((beat) => tokenOverlap(beatText(beat), text) >= 0.38);
-    if (target) {
-      target.supporting_b_roll = uniqueText([...target.supporting_b_roll, text]).slice(0, 2);
-    } else if (!supplementalBroll.some((existing) => tokenOverlap(existing, text) >= 0.62)) {
-      supplementalBroll.push(text);
-    }
-  });
-
-  const pose = asRecord(card.pose_direction);
-  const micro = asRecord(card.micro_behavior_guide);
-  const camera = asRecord(card.camera_direction);
-  const poseNote = asCleanText(pose?.expression ?? micro?.facial_expression ?? camera?.framing);
-  if (poseNote) beats[0].pose_camera_note = poseNote;
-
-  const safety = asRecord(card.brand_safety);
-  const safetyNote = asCleanText(safety?.claim_boundary ?? safety?.disclosure_text);
-  if (safetyNote) beats[beats.length - 1].safety_note = safetyNote;
-
-  beats.sort((a, b) => a.start - b.start || a.end - b.end);
-  const dedupedBeats: CanonicalExecutionBeat[] = [];
-  beats.forEach((beat) => {
-    const existing = dedupedBeats.find((item) => rangesOverlap(item, beat) && (actionFamily(item.primary_action) === actionFamily(beat.primary_action) || tokenOverlap(beatText(item), beatText(beat)) >= 0.68));
-    if (!existing) {
-      dedupedBeats.push({ ...beat, supporting_b_roll: uniqueText(beat.supporting_b_roll) });
-      return;
-    }
-    existing.start = Math.min(existing.start, beat.start);
-    existing.end = Math.max(existing.end, beat.end);
-    existing.time_range = `${existing.start}-${existing.end}s`;
-    existing.shot = existing.shot || beat.shot;
-    existing.voiceover = existing.voiceover || beat.voiceover;
-    existing.on_screen_text = existing.on_screen_text || beat.on_screen_text;
-    existing.edit_move = existing.edit_move || beat.edit_move;
-    existing.pose_camera_note = existing.pose_camera_note || beat.pose_camera_note;
-    existing.safety_note = existing.safety_note || beat.safety_note;
-    existing.supporting_b_roll = uniqueText([...existing.supporting_b_roll, ...beat.supporting_b_roll]).slice(0, 2);
-  });
-
-  const editingNotes = keyValueRows(card.editing_notes);
-  const editAssembly = buildEditAssemblyGuide(card, dedupedBeats, editingNotes);
-  const perSecondFrames = buildPerSecondFrames(card, dedupedBeats, editAssembly);
-  const executionRanges = buildExecutionRanges(card, dedupedBeats, editAssembly);
-  return {
-    beats: dedupedBeats,
-    per_second_frames: perSecondFrames,
-    execution_ranges: executionRanges,
-    supplemental_b_roll: uniqueText(supplementalBroll).slice(0, 6),
-    edit_notes: editingNotes,
-    edit_assembly_guide: editAssembly,
-    example_story: buildExampleStory(card, dedupedBeats),
-  };
-}
-
 function buildEditAssemblyGuide(card: JsonRecord, beats: CanonicalExecutionBeat[], editingNotes: Array<{ label: string; value: string }>) {
   const explicit = asRecord(card.edit_assembly_guide);
   const clipOrder = normalizeListField(explicit, ["clip_order", "clipOrder"]);
@@ -741,247 +954,54 @@ function keyValueRows(value: unknown) {
     .filter((row) => row.value);
 }
 
+function shortenBriefLine(value: string, max = 120) {
+  const text = asCleanText(value);
+  if (!text) return "";
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const at = cut.lastIndexOf(" ");
+  return `${(at > 60 ? cut.slice(0, at) : cut).trim()}…`;
+}
+
 function buildExampleStory(card: JsonRecord, beats: CanonicalExecutionBeat[]) {
   const summary = asRecord(card.idea_summary);
   const blueprint = asRecord(card.video_blueprint);
   const hook = asRecord(card.hook_performance_pack);
-  const opening = beats[0]?.primary_action || asCleanText(blueprint?.opening_visual);
-  const proof = beats.find((beat) => /proof|trust|detail/i.test(beat.purpose))?.primary_action || beats[Math.min(2, beats.length - 1)]?.primary_action;
-  const payoff = beats[beats.length - 1]?.primary_action || asCleanText(blueprint?.payoff_visual);
-  const premise = asCleanText(summary?.premise ?? card.one_sentence_premise, "The creator turns a familiar decision into a clear, saveable moment.");
-  const firstLine = asCleanText(hook?.first_line_hook ?? asCleanList(hook?.hook_options)[0]);
+  const opening = shortenBriefLine(
+    beats[0]?.primary_action || asCleanText(blueprint?.opening_visual) || asCleanText(hook?.first_line_hook ?? asCleanList(hook?.hook_options)[0]),
+    110,
+  );
+  const proof = shortenBriefLine(
+    beats.find((beat) => /proof|trust|detail|middle|turn/i.test(beat.purpose))?.primary_action
+      || beats[Math.min(2, Math.max(0, beats.length - 1))]?.primary_action
+      || "",
+    110,
+  );
+  const payoff = shortenBriefLine(
+    beats[beats.length - 1]?.primary_action || asCleanText(blueprint?.payoff_visual),
+    110,
+  );
+  const premise = shortenBriefLine(
+    asCleanText(summary?.creator_takeaway)
+      || asCleanText(summary?.premise)
+      || asCleanText(card.one_sentence_premise)
+      || "One clear decision the viewer can understand in a few seconds.",
+    140,
+  );
 
+  // Plain language only — no long narrative. Creator should get the card in under 10 seconds.
   return {
     title: "Creative Brief Summary",
     paragraphs: uniqueText([
-      `Imagine the Reel opening with this line: "${firstLine || opening}". The creator starts with one specific visual instead of explaining the whole idea upfront.`,
-      `${premise} The middle of the video shows the real decision: ${proof || "one proof detail, one boundary, and one visible choice"}.`,
-      `The ending lands on ${payoff || "a clear save or comment moment"}. The viewer should understand the action, the proof, and the final shot without needing extra explanation.`,
+      premise ? `Idea: ${premise}` : "",
     ]),
     steps: [
-      { label: "Opening", body: opening || "Start with the strongest visual decision." },
-      { label: "Tension", body: premise },
-      { label: "Proof", body: proof || "Show the smallest useful proof detail." },
-      { label: "Payoff", body: payoff || "End with a saveable decision or precise comment question." },
+      { label: "Idea", body: premise || "One clear, shootable decision." },
+      { label: "Open with", body: opening || "The strongest first visual or line." },
+      { label: "Show next", body: proof || "The one proof or choice that makes it real." },
+      { label: "End with", body: payoff || "A clear save, reply, or final action." },
     ],
   };
-}
-
-type JsonRecord = Record<string, unknown>;
-
-export type CardSectionBlock =
-  | { type: "text"; title: string; body: string }
-  | { type: "list"; title: string; items: string[] }
-  | { type: "key_value"; title: string; rows: Array<{ label: string; value: string }> }
-  | { type: "timeline"; title: string; items: Array<{ time?: string; title: string; body?: string; meta?: string[] }> }
-  | { type: "shot_list"; title: string; items: Array<{ time?: string; title: string; action?: string; note?: string; overlay?: string }> }
-  | { type: "execution_ranges"; title: string; mode: "shooting" | "editing"; ranges: ExecutionRange[] }
-  | {
-      type: "edit_assembly";
-      title: string;
-      clipOrder: string[];
-      cutPoints: string[];
-      transitionStyle: string[];
-      textOverlayTiming: string[];
-      voiceoverSync: string[];
-      musicSoundCue: string[];
-      pacingNotes: string[];
-      finalChecklist: string[];
-    }
-  | {
-      type: "caption_pack";
-      title: string;
-      captions: string[];
-      onScreenText: string[];
-      cta?: string;
-      pinnedComment?: string;
-      audienceQuestion?: string;
-      storyPoll?: string;
-      storyOptions?: string[];
-      followupFrame?: string;
-    }
-  | {
-      type: "safety";
-      title: string;
-      disclosure?: string;
-      claimBoundary?: string;
-      doNotSay: string[];
-      evidenceNote?: string;
-      saferAlternative?: string;
-    };
-
-export type CardSection = {
-  key: string;
-  title: string;
-  short_summary: string;
-  how_to_do_it: string;
-  what_good_looks_like: string;
-  common_mistakes: string[];
-  example_execution: string;
-  source_payload: Record<string, unknown>;
-  checklist_items: string[];
-  blocks: CardSectionBlock[];
-};
-
-const noGuidance = "No dedicated guidance for this section.";
-
-export type CanonicalExecutionBeat = {
-  time_range: string;
-  start: number;
-  end: number;
-  purpose: string;
-  primary_action: string;
-  shot?: string;
-  voiceover?: string;
-  on_screen_text?: string;
-  edit_move?: string;
-  supporting_b_roll: string[];
-  pose_camera_note?: string;
-  safety_note?: string;
-};
-
-export type PerSecondFrame = {
-  second: number;
-  shoot_frame: string;
-  camera_action: string;
-  pose_note?: string;
-  b_roll_note?: string;
-  on_screen_text?: string;
-  voiceover_line?: string;
-  personalization_slot?: string;
-  edit_action: string;
-  cut_point?: string;
-  transition_style?: string;
-  overlay_timing?: string;
-  audio_cue?: string;
-  pacing_note?: string;
-  final_check?: string;
-  visual_cue: "close_up" | "face_camera" | "hand_action" | "product" | "environment" | "text_overlay" | "movement" | "proof" | "payoff";
-};
-
-export type ExecutionRange = {
-  time_range: string;
-  start: number;
-  end: number;
-  purpose: string;
-  action: string;
-  camera: string;
-  say?: string;
-  say_tone?: string;
-  on_screen_text_required: boolean;
-  creator_touch?: string;
-  edit: string;
-  shoot_summary: string;
-  edit_summary: string;
-  shoot_direction: string;
-  camera_direction?: string;
-  pose_micro_behavior?: string;
-  setting_or_broll?: string;
-  spoken_line?: string;
-  on_screen_text?: string;
-  edit_direction: string;
-  cut_point?: string;
-  transition_style?: string;
-  overlay_timing?: string;
-  audio_cue?: string;
-  pacing_note?: string;
-  final_check?: string;
-  creator_customization?: string;
-  visual_cue: PerSecondFrame["visual_cue"];
-};
-
-export type NormalizedCardExecution = {
-  beats: CanonicalExecutionBeat[];
-  per_second_frames: PerSecondFrame[];
-  execution_ranges: ExecutionRange[];
-  supplemental_b_roll: string[];
-  edit_notes: Array<{ label: string; value: string }>;
-  edit_assembly_guide: {
-    clipOrder: string[];
-    cutPoints: string[];
-    transitionStyle: string[];
-    textOverlayTiming: string[];
-    voiceoverSync: string[];
-    musicSoundCue: string[];
-    pacingNotes: string[];
-    finalChecklist: string[];
-  };
-  example_story: {
-    title: string;
-    paragraphs: string[];
-    steps: Array<{ label: string; body: string }>;
-  };
-};
-
-const labelOverrides: Record<string, string> = {
-  avoid: "Avoid",
-  avoid_over_advertising: "Avoid over-advertising",
-  audience_aftertaste: "Audience aftertaste",
-  audience_question: "Audience question",
-  body: "Body",
-  brand_equity: "Brand equity",
-  camera_attention: "Camera attention",
-  claim_boundary: "Claim boundary",
-  color_language: "Color language",
-  cta: "CTA",
-  delivery_style: "Delivery style",
-  disclosure_text: "Disclosure text",
-  do_not_say: "Do not say",
-  evidence_note: "Evidence note",
-  expression: "Expression",
-  eye_contact: "Eye contact",
-  face: "Face",
-  facial_expression: "Facial expression",
-  followup_frame: "Follow-up frame",
-  framing: "Framing",
-  hands: "Hands",
-  lighting: "Lighting",
-  location_options: "Location options",
-  mood: "Mood",
-  movement: "Movement",
-  opening_visual: "Opening visual",
-  partnership_signal: "Partnership signal",
-  payoff_visual: "Payoff visual",
-  pacing_notes: "Pacing notes",
-  poll_options: "Poll options",
-  poll_question: "Poll question",
-  product_handling: "Product handling",
-  production_versions: "Production versions",
-  reply_strategy: "Reply strategy",
-  safer_alternative_phrase: "Safer alternative",
-  scene_arc: "Scene arc",
-  shoot_time_minutes: "Shoot time",
-  sound_cue: "Sound cue",
-  smile_timing: "Smile timing",
-  solo_creator_friendly: "Solo creator friendly",
-  soundscape: "Soundscape",
-  visual_texture: "Visual texture",
-  why_it_fits_creator: "Why it fits this creator",
-};
-
-function pick(card: Record<string, unknown>, keys: string[]) {
-  return Object.fromEntries(keys.filter((key) => card[key] != null).map((key) => [key, card[key]]));
-}
-
-function asRecord(value: unknown): JsonRecord | null {
-  return value && typeof value === "object" && !Array.isArray(value) ? value as JsonRecord : null;
-}
-
-function asArray(value: unknown): unknown[] {
-  return Array.isArray(value) ? value : [];
-}
-
-function asCleanText(value: unknown, fallback = "") {
-  const text = compactText(value, "").trim();
-  return text ? normalizeCreatorText(text) : fallback;
-}
-
-function asCleanList(value: unknown) {
-  if (Array.isArray(value)) {
-    return value.map((item) => asCleanText(item)).filter(Boolean);
-  }
-  const text = asCleanText(value);
-  return text ? [text] : [];
 }
 
 function hasPayload(payload: Record<string, unknown>) {
@@ -1080,6 +1100,14 @@ function editSupportBlock(execution: NormalizedCardExecution): CardSectionBlock 
   return { type: "list", title: "Cut and Pacing Notes", items: editMoves };
 }
 
+function editAssemblyBlock(execution: NormalizedCardExecution): CardSectionBlock {
+  return {
+    type: "edit_assembly",
+    title: "Edit Assembly Guide",
+    ...execution.edit_assembly_guide,
+  };
+}
+
 function sectionBlocks(key: string, card: JsonRecord): CardSectionBlock[] {
   const blocks: Array<CardSectionBlock | null> = [];
   const execution = normalizeCardExecution(card);
@@ -1160,17 +1188,48 @@ function section(
   };
 }
 
-export function normalizeCardSections(cardValue: unknown): CardSection[] {
+export function normalizeAdminCardSections(cardValue: unknown): CardSection[] {
   const card = (cardValue && typeof cardValue === "object" && !Array.isArray(cardValue) ? cardValue : {}) as Record<string, unknown>;
   return [
-    section(card, "scene_flow", "Scene Flow", ["video_blueprint", "scene_script", "shot_list"], "How the Reel moves from first-second attention into proof, payoff, and a clear viewer action.", "Shoot the beats in order. Each scene should have one job: attention, trust, proof, payoff, or CTA.", "The viewer understands the premise immediately, sees the proof without confusion, and knows why to save or comment.", ["Opening with context instead of a visual hook", "Letting the proof section run too long", "Ending without a clear action"], "Open with the strongest visual, explain the premise in one clean line, show proof or a turn, then finish with a save/comment CTA."),
-    section(card, "pose_micro_behavior", "Pose & Micro Behavior", ["pose_direction", "micro_behavior_guide", "camera_direction"], "How the creator should look, move, hold objects, use eye contact, and keep the delivery natural.", "Match facial expression, hand movement, framing, and camera attention to the tone of the idea.", "The creator feels relaxed, premium, and trustworthy without looking overly scripted or promotional.", ["Staring into camera for the entire video", "Holding the product like an ad placement", "Overacting a simple proof moment"], "Look to camera for the hook, shift attention to the action or object during proof, then return calmly for the final CTA."),
-    section(card, "b_roll", "B-roll", ["b_roll_plan", "shot_list"], "Supporting close-ups, movement shots, and atmosphere details that make the idea feel premium and real.", "Give each supporting shot a job: proof, setting, realism, texture, transition, or payoff.", "The video feels visually rich, but every shot still helps the viewer understand the idea.", ["Repeating the same angle", "Using pretty shots with no purpose", "Skipping the small proof details"], "Add a close-up, a hand movement, an environment detail, a preparation moment, and one real-life imperfection."),
-    section(card, "edit_timeline", "Edit Timeline", ["editing_timeline", "editing_notes"], "The second-by-second rhythm that protects retention and keeps the idea easy to follow.", "Cut quickly at the start, slow down only when proof matters, and keep the payoff clean.", "The video starts fast, clarifies in the middle, and ends with a reason to save, share, or comment.", ["Wasting the first second", "Letting the explanation flatten the pace", "Hiding the payoff too late"], "0-2s visual interruption, 3-8s premise, 9-20s proof or turn, final seconds CTA."),
-    section(card, "caption_comment", "Caption & Comment", ["caption_pack", "comment_engine", "story_followup"], "Caption options, pinned comment logic, and follow-up prompts designed to increase saves, replies, and story continuation.", "Choose the caption that matches the finished edit, then use the pinned comment to make the viewer answer something specific.", "The caption makes the video easier to understand on replay, and the comment prompt feels easy to answer.", ["Using a generic comment question", "Putting too much text on screen", "Writing a caption that repeats the video word-for-word"], "Use a short caption that frames the decision, then pin a question that asks the audience what they would choose or remove."),
-    section(card, "brand_lift", "Brand Lift", ["brand_lift_statement", "strategic_value", "creator_presence_mode", "atmosphere_direction"], "What this idea adds to the creator's public taste, authority, relatability, or premium positioning.", "Carry the suggested mood, creator presence, and atmosphere into every shot and line.", "The viewer remembers the creator's judgment, standards, and taste, not only the tactic.", ["Treating the idea as only a content trick", "Mixing premium and relatable tones without intention", "Forcing a product pitch into a brand moment"], "Let the idea show your standards: calm judgment, taste, and a specific point of view."),
-    section(card, "brand_safety", "Brand Safety", ["brand_safety"], "Sponsor, disclosure, claim, and wording boundaries that keep the video credible and post-ready.", "Use disclosure when needed, avoid guaranteed-result language, and keep claims tied to your real context.", "The post feels trustworthy, premium, and safe for a brand partner to stand behind.", ["Hiding disclosure", "Promising universal results", "Making claims without evidence"], "Say 'in my context this is the safer choice' instead of 'this works for everyone.'"),
+    section(card, "scene_flow", "Scene Flow", ["video_blueprint", "scene_script", "shot_list", "b_roll_plan", "pose_direction", "micro_behavior_guide", "camera_direction", "editing_timeline", "editing_notes", "edit_assembly_guide", "personalization_slots"], "The Audience Insight: How the Reel captures attention fast and delivers a clear, saveable payoff.", "Signature Execution Blueprint: Shoot the beats in order. Each scene has one job: attention, trust, proof, payoff, or CTA.", "The Elevated Outcome: Viewer gets the premise instantly, sees proof without confusion, knows exactly why to save or comment.", ["Opening with context instead of a visual hook", "Letting the proof section run too long", "Ending without a clear action"], "Open with the strongest visual, explain the premise in one clean line, show proof or a turn, then finish with a save/comment CTA."),
+    section(card, "pose_micro_behavior", "Pose & Micro Behavior", ["pose_direction", "micro_behavior_guide", "camera_direction"], "The Audience Insight: How natural movement and eye contact build trust and premium presence.", "Signature Execution Blueprint: Match facial expression, hand movement, framing, and camera attention to the tone of the idea.", "The Elevated Outcome: Creator feels relaxed, premium, and trustworthy without looking scripted.", ["Staring into camera for the entire video", "Holding the product like an ad placement", "Overacting a simple proof moment"], "Look to camera for the hook, shift attention to the action or object during proof, then return calmly for the final CTA."),
+    section(card, "b_roll", "B-roll", ["b_roll_plan", "shot_list"], "The Audience Insight: Supporting shots that make the story feel real and premium without distraction.", "Signature Execution Blueprint: Give each supporting shot a job: proof, setting, realism, texture, transition, or payoff.", "The Elevated Outcome: Video feels visually rich, every shot helps the viewer understand the idea.", ["Repeating the same angle", "Using pretty shots with no purpose", "Skipping the small proof details"], "Add a close-up, a hand movement, an environment detail, a preparation moment, and one real-life imperfection."),
+    section(card, "edit_timeline", "Edit Timeline", ["editing_timeline", "editing_notes"], "The Audience Insight: Precise rhythm that protects attention and makes the idea easy to follow.", "Signature Execution Blueprint: Cut quickly at the start, slow only when proof matters, keep payoff clean.", "The Elevated Outcome: Video starts fast, clarifies in the middle, ends with reason to save/share/comment.", ["Wasting the first second", "Letting the explanation flatten the pace", "Hiding the payoff too late"], "0-2s visual interruption, 3-8s premise, 9-20s proof or turn, final seconds CTA."),
+    section(card, "caption_comment", "Caption & Comment", ["caption_pack", "comment_engine", "story_followup"], "The Audience Insight: Caption and comment prompts that drive saves, replies, and continuation.", "Signature Execution Blueprint: Choose caption matching the edit, use pinned comment to prompt specific viewer answer.", "The Elevated Outcome: Caption frames the decision, comment prompt is easy to answer.", ["Using a generic comment question", "Putting too much text on screen", "Writing a caption that repeats the video word-for-word"], "Use a short caption that frames the decision, then pin a question that asks the audience what they would choose or remove."),
+    section(card, "brand_lift", "Brand Lift", ["brand_lift_statement", "strategic_value", "creator_presence_mode", "atmosphere_direction"], "The Audience Insight: How the idea builds your taste, authority, and premium positioning.", "Signature Execution Blueprint: Carry the suggested mood, presence, and atmosphere into every shot and line.", "The Elevated Outcome: Viewer remembers your judgment and standards, not just the tactic.", ["Treating the idea as only a content trick", "Mixing premium and relatable tones without intention", "Forcing a product pitch into a brand moment"], "Let the idea show your standards: calm judgment, taste, and a specific point of view."),
+    section(card, "brand_safety", "Brand Safety", ["brand_safety"], "The Audience Insight: Boundaries that keep the video credible and brand-safe.", "Signature Execution Blueprint: Use disclosure when needed, avoid guarantees, tie claims to real context.", "The Elevated Outcome: Post feels trustworthy and safe for partners.", ["Hiding disclosure", "Promising universal results", "Making claims without evidence"], "Say 'in my context this is the safer choice' instead of 'this works for everyone.'"),
   ];
 }
 
-export const normalizeAdminCardSections = normalizeCardSections;
+export function normalizeCreatorCardSections(cardValue: unknown): CardSection[] {
+  const card = (cardValue && typeof cardValue === "object" && !Array.isArray(cardValue) ? cardValue : {}) as Record<string, unknown>;
+  // Creator-facing sections only. Caption & Audience Prompt is intentionally omitted from the site UI.
+  const creatorSections = [
+    section(card, "scene_flow", "Scene Flow", ["video_blueprint", "scene_script", "shot_list", "b_roll_plan", "pose_direction", "micro_behavior_guide", "camera_direction", "editing_timeline", "editing_notes", "edit_assembly_guide", "personalization_slots"], "Shoot and assemble the Reel from this one execution board.", "Follow the beats from top to bottom, then use the edit guide to assemble the final cut.", "The Reel is clear, shootable, and easy to edit without guessing what comes next.", ["Repeating the same action in two clips", "Adding extra context before the hook", "Letting the edit slow down before the payoff"], "Shoot each beat once, keep only the strongest clip, then assemble the timeline in the order shown."),
+    section(card, "edit_timeline", "Edit Assembly Guide", ["editing_timeline", "editing_notes", "edit_assembly_guide", "scene_script", "shot_list", "b_roll_plan"], "Assemble the Reel in the exact order, cut rhythm, and overlay timing.", "Follow the clip order, cut points, transition style, and final checklist before exporting.", "The final edit feels clean, intentional, and easy to follow.", ["Using every take instead of the strongest take", "Adding decorative transitions that slow the premise", "Letting overlays arrive after the viewer needs them"], "Build the edit from the clip order, cut at the listed moments, then check the final assembly list before posting."),
+    section(card, "brand_safety", "Posting Safety", ["brand_safety"], "Keep claims, sponsor language, and disclosures credible before publishing.", "Use the boundary language when the post includes a result, recommendation, partner, or claim.", "The post feels trustworthy to viewers and usable for brand partners.", ["Promising a guaranteed result", "Hiding a sponsorship disclosure", "Turning a personal context into a universal claim"], "Frame claims around your context and use clear disclosure when needed."),
+  ];
+  return creatorSections
+    .map((item) => {
+      let blocks = item.blocks.filter((block) => {
+        if (item.key === "scene_flow") {
+          return block.type === "execution_ranges" && block.mode === "shooting";
+        }
+        if (item.key === "edit_timeline") {
+          return block.type === "edit_assembly" || (block.type === "execution_ranges" && block.mode === "editing");
+        }
+        if (item.key === "brand_safety") return block.type === "safety";
+        return false;
+      });
+
+      // One board only: prefer edit_assembly mock over editing ranges when both exist.
+      if (item.key === "edit_timeline" && blocks.some((b) => b.type === "edit_assembly")) {
+        blocks = blocks.filter((b) => b.type === "edit_assembly");
+      }
+
+      return { ...item, blocks };
+    })
+    .filter((item) => item.blocks.length > 0);
+}
+
+export const normalizeCardSections = normalizeAdminCardSections;

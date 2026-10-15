@@ -7,7 +7,6 @@ import { requireAdmin } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { checkInventoryForBox } from "@/lib/inventory";
 import { notifyUser } from "@/lib/notifications";
-import { creatorReportFromChecks } from "@/lib/admin-review";
 import { siteUrl } from "@/lib/env";
 
 const CreateCreatorInput = z.object({
@@ -18,8 +17,13 @@ const CreateCreatorInput = z.object({
   niche: z.string().trim().max(160),
 });
 
-const ManualDecision = z.enum(["ready_to_post", "minor_revisions", "needs_reshoot", "brand_safety_blocked"]);
-const CheckStatus = z.enum(["pass", "partial", "missing", "not_applicable"]);
+const GiftBoxInput = z.object({
+  userId: z.string().uuid(),
+  boxProductSlug: z.enum(["viral_box_500", "premium_viral_box_1000"]),
+  categorySlug: z.string().min(1).max(120).regex(/^[a-z0-9_/-]+$/),
+  personaSlug: z.string().min(1).max(120).regex(/^[a-z0-9_/-]+$/),
+});
+
 const CardReportDecision = z.enum(["reject", "accept_no_replace", "accept_replace"]);
 
 const CardReportDecisionInput = z.object({
@@ -31,43 +35,6 @@ const CardReportDecisionInput = z.object({
   adminPrivateNote: z.string().trim().max(5000),
 });
 
-const GiftBoxInput = z.object({
-  userId: z.string().uuid(),
-  boxProductSlug: z.enum(["viral_box_500", "premium_viral_box_1000"]),
-  categorySlug: z.string().min(1).max(120).regex(/^[a-z0-9_/-]+$/),
-  personaSlug: z.string().min(1).max(120).regex(/^[a-z0-9_/-]+$/),
-});
-
-const ManualReviewInput = z.object({
-  reviewId: z.string().uuid(),
-  attemptId: z.string().uuid(),
-  userId: z.string().uuid(),
-  ideaId: z.string().uuid(),
-  finalDecision: ManualDecision,
-  overallFeedback: z.string().trim().max(5000),
-  adminPrivateNotes: z.string().trim().max(5000),
-});
-
-const ManualReviewCheckInput = z.object({
-  attempt_id: z.string().uuid(),
-  review_id: z.string().uuid(),
-  user_id: z.string().uuid(),
-  idea_id: z.string().uuid(),
-  section: z.string().min(1).max(120),
-  check_key: z.string().min(1).max(180).regex(/^[a-zA-Z0-9_.:-]+$/),
-  label: z.string().min(1).max(180),
-  source_card_path: z.string().max(2000),
-  is_required: z.boolean(),
-  status: CheckStatus,
-  evidence_summary: z.string().trim().max(2000),
-  revision_advice: z.string().trim().max(2000),
-  confidence: z.number().min(0).max(100),
-  internal_evidence: z.object({
-    creator_visible: z.literal(false),
-    admin_private_note: z.string().trim().max(2000),
-  }),
-});
-
 function firstIssue(error: z.ZodError) {
   return error.issues[0]?.message ?? "Invalid form input";
 }
@@ -76,13 +43,21 @@ function adminUsersError(message: string): never {
   redirect(`/admin/users?error=${encodeURIComponent(message)}`);
 }
 
-function adminReviewError(reviewId: string, message: string): never {
-  redirect(`/admin/reviews/${reviewId || "unknown"}?error=${encodeURIComponent(message)}`);
-}
-
 function adminCardReportError(reportId: string, message: string): never {
   redirect(`/admin/card-reports/${reportId || "unknown"}?error=${encodeURIComponent(message)}`);
 }
+
+function adminAtelierError(message: string): never {
+  redirect(`/admin/atelier-leads?error=${encodeURIComponent(message)}`);
+}
+
+const AtelierLeadStatus = z.enum(["new", "contacted", "qualified", "closed", "archived"]);
+const AtelierLeadStatusInput = z.object({
+  leadId: z.string().uuid(),
+  status: AtelierLeadStatus,
+  adminNote: z.string().trim().max(2000).optional(),
+});
+
 
 export async function createCreatorUser(formData: FormData) {
   await requireAdmin();
@@ -183,88 +158,6 @@ export async function sendGiftBox(formData: FormData) {
   redirect(`/admin/users?gift=sent`);
 }
 
-export async function saveManualReview(formData: FormData) {
-  await requireAdmin();
-  const supabase = createSupabaseAdminClient();
-  const parsed = ManualReviewInput.safeParse({
-    reviewId: String(formData.get("review_id") ?? ""),
-    attemptId: String(formData.get("attempt_id") ?? ""),
-    userId: String(formData.get("user_id") ?? ""),
-    ideaId: String(formData.get("idea_id") ?? ""),
-    finalDecision: String(formData.get("final_decision") ?? "minor_revisions"),
-    overallFeedback: String(formData.get("overall_feedback") ?? ""),
-    adminPrivateNotes: String(formData.get("admin_private_notes") ?? ""),
-  });
-  const rawReviewId = String(formData.get("review_id") ?? "");
-  if (!parsed.success) adminReviewError(rawReviewId, firstIssue(parsed.error));
-
-  const { reviewId, attemptId, userId, ideaId, finalDecision, overallFeedback, adminPrivateNotes } = parsed.data;
-  const keys = formData.getAll("check_key").map(String);
-
-  if (!keys.length) adminReviewError(reviewId, "Manual review checklist is empty.");
-
-  const rows = keys.map((key) => {
-    const row = ManualReviewCheckInput.safeParse({
-      attempt_id: attemptId,
-      review_id: reviewId,
-      user_id: userId,
-      idea_id: ideaId,
-      section: String(formData.get(`section_${key}`) ?? ""),
-      check_key: key,
-      label: String(formData.get(`label_${key}`) ?? key),
-      source_card_path: String(formData.get(`source_${key}`) ?? key),
-      is_required: String(formData.get(`required_${key}`) ?? "true") === "true",
-      status: String(formData.get(`status_${key}`) ?? "missing"),
-      evidence_summary: String(formData.get(`evidence_${key}`) ?? ""),
-      revision_advice: String(formData.get(`advice_${key}`) ?? ""),
-      confidence: 0,
-      internal_evidence: { creator_visible: false, admin_private_note: String(formData.get(`private_${key}`) ?? "") },
-    });
-    if (!row.success) adminReviewError(reviewId, firstIssue(row.error));
-    return row.data;
-  });
-
-  if (finalDecision === "ready_to_post") {
-    const failed = rows.filter((row) => row.is_required && !["pass", "not_applicable"].includes(row.status));
-    if (failed.length) redirect(`/admin/reviews/${reviewId}?error=${encodeURIComponent("Ready to post requires every critical item to be pass or not applicable.")}`);
-  }
-
-  await supabase.from("creator_video_review_checks").upsert(rows, { onConflict: "attempt_id,check_key" });
-  const status = finalDecision === "ready_to_post" ? "ready_to_post" : finalDecision === "brand_safety_blocked" ? "blocked" : "revision_requested";
-  const report = creatorReportFromChecks(finalDecision, overallFeedback, rows);
-  const now = new Date().toISOString();
-
-  await supabase.from("creator_video_review_attempts").update({
-    status,
-    final_decision: finalDecision,
-    creator_feedback: overallFeedback,
-    admin_private_notes: adminPrivateNotes,
-    reviewed_at: now,
-  }).eq("id", attemptId);
-
-  await supabase.from("creator_video_reviews").update({
-    status,
-    final_decision: finalDecision,
-    creator_report: report,
-    admin_private_notes: adminPrivateNotes,
-    reviewed_at: now,
-    completed_at: status === "ready_to_post" || status === "blocked" ? now : null,
-  }).eq("id", reviewId);
-
-  const { data: authUser } = await supabase.auth.admin.getUserById(userId);
-  await notifyUser({
-    userId,
-    email: authUser.user?.email,
-    type: "review_feedback_ready",
-    title: status === "ready_to_post" ? "Your video is ready to post" : "Video review feedback is ready",
-    body: overallFeedback || "Open your review result to see the checklist and feedback.",
-    href: `${siteUrl()}/reviews/${reviewId}`,
-    metadata: { review_id: reviewId, attempt_id: attemptId, final_decision: finalDecision },
-  });
-
-  redirect(`/admin/reviews/${reviewId}?saved=1`);
-}
-
 export async function saveCardReportDecision(formData: FormData) {
   const { user: adminUser } = await requireAdmin();
   const supabase = createSupabaseAdminClient();
@@ -351,4 +244,66 @@ export async function saveCardReportDecision(formData: FormData) {
   revalidatePath(`/admin/card-reports/${reportId}`);
   revalidatePath(`/cards/${hrefIdeaId}`);
   redirect(`/admin/card-reports/${reportId}?saved=1`);
+}
+
+export async function updateAtelierLeadStatus(formData: FormData) {
+  const { user: adminUser } = await requireAdmin();
+  const parsed = AtelierLeadStatusInput.safeParse({
+    leadId: String(formData.get("lead_id") ?? ""),
+    status: String(formData.get("status") ?? ""),
+    adminNote: String(formData.get("admin_note") ?? "") || undefined,
+  });
+  if (!parsed.success) adminAtelierError(firstIssue(parsed.error));
+
+  const { leadId, status, adminNote } = parsed.data;
+  const supabase = createSupabaseAdminClient();
+  const { data: existing, error: loadError } = await supabase
+    .from("atelier_leads")
+    .select("id,status,metadata")
+    .eq("id", leadId)
+    .maybeSingle();
+  if (loadError || !existing) adminAtelierError(loadError?.message ?? "Atelier lead could not be found.");
+
+  const previousStatus = String(existing.status ?? "new");
+  const previousMetadata = (existing.metadata && typeof existing.metadata === "object" && !Array.isArray(existing.metadata)
+    ? existing.metadata
+    : {}) as Record<string, unknown>;
+  const previousHistory = Array.isArray(previousMetadata.status_history) ? previousMetadata.status_history : [];
+  const now = new Date().toISOString();
+
+  const metadata = {
+    ...previousMetadata,
+    creator_visible: false,
+    last_status_change: {
+      from: previousStatus,
+      to: status,
+      at: now,
+      by: adminUser.id,
+      note: adminNote || null,
+    },
+    status_history: [
+      ...previousHistory,
+      {
+        from: previousStatus,
+        to: status,
+        at: now,
+        by: adminUser.id,
+        note: adminNote || null,
+      },
+    ].slice(-20),
+  };
+
+  const { error } = await supabase
+    .from("atelier_leads")
+    .update({
+      status,
+      metadata,
+      updated_at: now,
+    })
+    .eq("id", leadId);
+  if (error) adminAtelierError(error.message);
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/atelier-leads");
+  redirect(`/admin/atelier-leads?updated=${encodeURIComponent(leadId)}&status=${encodeURIComponent(status)}`);
 }

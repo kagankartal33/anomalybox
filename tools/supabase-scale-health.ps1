@@ -34,7 +34,7 @@ select
 from public.creator_personas p
 left join public.idea_inventory inv
   on inv.persona_id = p.id
- and (inv.metadata ->> 'external_batch_id') like 'stock\\_cards\\_%' escape '\\'
+ and (inv.metadata ->> 'external_batch_id') like 'stock\_cards\_%' escape '\'
 left join public.categories c on c.id = inv.category_id
 where p.enabled
 group by p.slug

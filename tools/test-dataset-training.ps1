@@ -72,9 +72,9 @@ with metrics as (
   join public.viral_training_sources source on source.id = example.source_id
   where source.slug = '$SourceSlug'
     and (
-      example.title ~* '(master_training|bookcomedy|codex_comedy|x-post-generator|anna.?s archive|isbn|\\.md|\\.json|\\.db|\\.docx|\\.epub|\\.pdf|\\.azw3)'
-      or example.abstracted_mechanism ~* '(master_training|bookcomedy|codex_comedy|x-post-generator|anna.?s archive|isbn|\\.md|\\.json|\\.db|\\.docx|\\.epub|\\.pdf|\\.azw3)'
-      or example.reusable_pattern ~* '(master_training|bookcomedy|codex_comedy|x-post-generator|anna.?s archive|isbn|\\.md|\\.json|\\.db|\\.docx|\\.epub|\\.pdf|\\.azw3)'
+      example.title ~* '(master_training|bookcomedy|codex_comedy|x-post-generator|anna.?s archive|isbn|\.md|\.json|\.db|\.docx|\.epub|\.pdf|\.azw3)'
+      or example.abstracted_mechanism ~* '(master_training|bookcomedy|codex_comedy|x-post-generator|anna.?s archive|isbn|\.md|\.json|\.db|\.docx|\.epub|\.pdf|\.azw3)'
+      or example.reusable_pattern ~* '(master_training|bookcomedy|codex_comedy|x-post-generator|anna.?s archive|isbn|\.md|\.json|\.db|\.docx|\.epub|\.pdf|\.azw3)'
     )
 )
 select * from metrics order by metric;
@@ -84,9 +84,9 @@ $output = Invoke-DbSql -Sql $assertSql
 $text = $output -join "`n"
 
 function Get-Metric([string]$Name) {
-  $line = $output | Where-Object { $_ -match "^\\s*$Name\\s+\\|" } | Select-Object -First 1
+  $line = $output | Where-Object { $_ -match "^\s*$Name\s+\|" } | Select-Object -First 1
   if (-not $line) { throw "Metric not found: $Name`n$text" }
-  return [int](($line -split "\\|")[1].Trim())
+  return [int](($line -split "\|")[1].Trim())
 }
 
 if ((Get-Metric "active_compile") -ne 1) { throw "Expected active compile $CompileVersion" }
@@ -103,7 +103,7 @@ from public.training_profile_for_scope('$category', 'instagram_reels', 8);
 "@
 
   $profileOutput = Invoke-DbSql -Sql $profileSql
-  if (($profileOutput -join "`n") -notmatch "\\b[1-9][0-9]*\\b") {
+  if (($profileOutput -join "`n") -notmatch "\b[1-9][0-9]*\b") {
     throw "training_profile_for_scope returned no rows for $category"
   }
 }

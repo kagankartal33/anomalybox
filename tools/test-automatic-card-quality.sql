@@ -1,4 +1,4 @@
-\\\\set ON_ERROR_STOP on
+\set ON_ERROR_STOP on
 -- Local PostgreSQL/Supabase only. Every fixture and corpus change rolls back.
 begin;
 do $test$

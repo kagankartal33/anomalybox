@@ -378,8 +378,8 @@ try {
   for ($offset = 0; $offset -lt $IdeaCount; $offset += $safePublishChunkSize) {
     $isFinalChunk = ($offset + $safePublishChunkSize) -ge $IdeaCount
     $publishChunk = Invoke-JsonPostWithRetry -Uri "$FunctionsBaseUrl/admin-generation-batches/$($batch.id)/publish-inventory" -Context "publish chunk offset=$offset limit=$safePublishChunkSize" -Body @{
-      quality_floor = 45
-      editorial_quality_floor = 78
+      quality_floor = 80
+      editorial_quality_floor = 80
       max_reuse_count = 1
       limit = $safePublishChunkSize
       offset = $offset

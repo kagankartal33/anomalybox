@@ -1,0 +1,1015 @@
+{
+  "count": 112,
+  "pass": 112,
+  "fail": 0,
+  "results": [
+    {
+      "slug": "instagram-content-ideas",
+      "path": "/content-ideas/instagram-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1128,
+      "graph_links": 5
+    },
+    {
+      "slug": "instagram-reels-ideas",
+      "path": "/reels/instagram-reels-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 853,
+      "graph_links": 5
+    },
+    {
+      "slug": "faceless-content-ideas",
+      "path": "/content-ideas/faceless-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1043,
+      "graph_links": 5
+    },
+    {
+      "slug": "ugc-content-ideas",
+      "path": "/content-ideas/ugc-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1078,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-strategy-for-creators",
+      "path": "/resources/content-strategy-for-creators",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 733,
+      "graph_links": 5
+    },
+    {
+      "slug": "beauty-content-ideas",
+      "path": "/content-ideas/beauty-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1033,
+      "graph_links": 5
+    },
+    {
+      "slug": "fashion-luxury-content-ideas",
+      "path": "/content-ideas/fashion-luxury-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1041,
+      "graph_links": 5
+    },
+    {
+      "slug": "travel-content-ideas",
+      "path": "/content-ideas/travel-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1067,
+      "graph_links": 5
+    },
+    {
+      "slug": "food-content-ideas",
+      "path": "/content-ideas/food-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1045,
+      "graph_links": 5
+    },
+    {
+      "slug": "fitness-content-ideas",
+      "path": "/content-ideas/fitness-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 991,
+      "graph_links": 5
+    },
+    {
+      "slug": "parenting-content-ideas",
+      "path": "/content-ideas/parenting-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1096,
+      "graph_links": 5
+    },
+    {
+      "slug": "education-content-ideas",
+      "path": "/content-ideas/education-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1093,
+      "graph_links": 5
+    },
+    {
+      "slug": "comedy-content-ideas",
+      "path": "/content-ideas/comedy-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1071,
+      "graph_links": 5
+    },
+    {
+      "slug": "thought-leadership-content-ideas",
+      "path": "/content-ideas/thought-leadership-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1070,
+      "graph_links": 5
+    },
+    {
+      "slug": "ecommerce-content-ideas",
+      "path": "/content-ideas/ecommerce-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1085,
+      "graph_links": 5
+    },
+    {
+      "slug": "repeatable-content-system",
+      "path": "/resources/repeatable-content-system",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 705,
+      "graph_links": 5
+    },
+    {
+      "slug": "idea-to-shoot-ready-brief",
+      "path": "/resources/idea-to-shoot-ready-brief",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1094,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-brief-vs-creative-brief-vs-production-brief",
+      "path": "/resources/content-brief-vs-creative-brief-vs-production-brief",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 756,
+      "graph_links": 5
+    },
+    {
+      "slug": "batch-content-without-burnout",
+      "path": "/resources/batch-content-without-burnout",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1023,
+      "graph_links": 5
+    },
+    {
+      "slug": "private-creative-direction-instagram-creators",
+      "path": "/resources/private-creative-direction-instagram-creators",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 522,
+      "graph_links": 5
+    },
+    {
+      "slug": "what-to-post-on-instagram",
+      "path": "/resources/what-to-post-on-instagram",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 676,
+      "graph_links": 5
+    },
+    {
+      "slug": "i-dont-know-what-to-post-on-instagram",
+      "path": "/resources/i-dont-know-what-to-post-on-instagram",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 731,
+      "graph_links": 4
+    },
+    {
+      "slug": "running-out-of-content-ideas",
+      "path": "/resources/running-out-of-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 818,
+      "graph_links": 5
+    },
+    {
+      "slug": "how-to-never-run-out-of-content-ideas",
+      "path": "/resources/how-to-never-run-out-of-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 678,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-ideas-when-stuck",
+      "path": "/resources/content-ideas-when-stuck",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 822,
+      "graph_links": 5
+    },
+    {
+      "slug": "how-to-come-up-with-content-ideas",
+      "path": "/resources/how-to-come-up-with-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 846,
+      "graph_links": 5
+    },
+    {
+      "slug": "how-to-find-content-ideas",
+      "path": "/resources/how-to-find-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 803,
+      "graph_links": 5
+    },
+    {
+      "slug": "instagram-content-block",
+      "path": "/resources/instagram-content-block",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 795,
+      "graph_links": 5
+    },
+    {
+      "slug": "creative-block-content-creator",
+      "path": "/resources/creative-block-content-creator",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 802,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-creator-burnout",
+      "path": "/resources/content-creator-burnout",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 587,
+      "graph_links": 4
+    },
+    {
+      "slug": "social-media-burnout-creator",
+      "path": "/resources/social-media-burnout-creator",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 705,
+      "graph_links": 4
+    },
+    {
+      "slug": "instagram-burnout",
+      "path": "/resources/instagram-burnout",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 734,
+      "graph_links": 4
+    },
+    {
+      "slug": "reels-burnout",
+      "path": "/reels/reels-burnout",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 736,
+      "graph_links": 4
+    },
+    {
+      "slug": "content-fatigue",
+      "path": "/resources/content-fatigue",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 709,
+      "graph_links": 4
+    },
+    {
+      "slug": "creator-fatigue",
+      "path": "/resources/creator-fatigue",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 710,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-creation-overwhelm",
+      "path": "/resources/content-creation-overwhelm",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 647,
+      "graph_links": 4
+    },
+    {
+      "slug": "content-creation-decision-fatigue",
+      "path": "/resources/content-creation-decision-fatigue",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 714,
+      "graph_links": 4
+    },
+    {
+      "slug": "why-is-content-creation-so-hard",
+      "path": "/resources/why-is-content-creation-so-hard",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 746,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-creation-takes-too-much-time",
+      "path": "/resources/content-creation-takes-too-much-time",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 735,
+      "graph_links": 5
+    },
+    {
+      "slug": "how-to-create-content-consistently",
+      "path": "/resources/how-to-create-content-consistently",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 595,
+      "graph_links": 4
+    },
+    {
+      "slug": "how-to-stay-consistent-on-instagram",
+      "path": "/resources/how-to-stay-consistent-on-instagram",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 663,
+      "graph_links": 4
+    },
+    {
+      "slug": "how-to-batch-content",
+      "path": "/resources/how-to-batch-content",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 654,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-creation-workflow",
+      "path": "/resources/content-creation-workflow",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 601,
+      "graph_links": 4
+    },
+    {
+      "slug": "content-planning-workflow",
+      "path": "/resources/content-planning-workflow",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 604,
+      "graph_links": 4
+    },
+    {
+      "slug": "content-bank-ideas",
+      "path": "/resources/content-bank-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 649,
+      "graph_links": 4
+    },
+    {
+      "slug": "how-to-build-a-content-bank",
+      "path": "/resources/how-to-build-a-content-bank",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 542,
+      "graph_links": 4
+    },
+    {
+      "slug": "minimum-viable-content-strategy",
+      "path": "/resources/minimum-viable-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 721,
+      "graph_links": 5
+    },
+    {
+      "slug": "sustainable-content-strategy",
+      "path": "/resources/sustainable-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 659,
+      "graph_links": 5
+    },
+    {
+      "slug": "instagram-reels-shot-list",
+      "path": "/reels/instagram-reels-shot-list",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 680,
+      "graph_links": 5
+    },
+    {
+      "slug": "reels-script-template",
+      "path": "/templates/reels-script-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 739,
+      "graph_links": 3
+    },
+    {
+      "slug": "short-form-video-script-template",
+      "path": "/templates/short-form-video-script-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 680,
+      "graph_links": 3
+    },
+    {
+      "slug": "instagram-creative-brief-template",
+      "path": "/templates/instagram-creative-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 639,
+      "graph_links": 4
+    },
+    {
+      "slug": "social-media-creative-brief-template",
+      "path": "/templates/social-media-creative-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 651,
+      "graph_links": 3
+    },
+    {
+      "slug": "reels-creative-brief-template",
+      "path": "/templates/reels-creative-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 687,
+      "graph_links": 3
+    },
+    {
+      "slug": "content-creator-brief-template",
+      "path": "/templates/content-creator-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 643,
+      "graph_links": 3
+    },
+    {
+      "slug": "ugc-shot-list",
+      "path": "/resources/ugc-shot-list",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 843,
+      "graph_links": 5
+    },
+    {
+      "slug": "ugc-video-script-template",
+      "path": "/templates/ugc-video-script-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 694,
+      "graph_links": 3
+    },
+    {
+      "slug": "ugc-creative-brief-template",
+      "path": "/templates/ugc-creative-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 694,
+      "graph_links": 4
+    },
+    {
+      "slug": "influencer-brief-template",
+      "path": "/templates/influencer-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 698,
+      "graph_links": 3
+    },
+    {
+      "slug": "content-production-brief-template",
+      "path": "/templates/content-production-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 765,
+      "graph_links": 3
+    },
+    {
+      "slug": "video-production-brief-template",
+      "path": "/templates/video-production-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 714,
+      "graph_links": 3
+    },
+    {
+      "slug": "shoot-plan-template",
+      "path": "/templates/shoot-plan-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 785,
+      "graph_links": 5
+    },
+    {
+      "slug": "b-roll-shot-list",
+      "path": "/resources/b-roll-shot-list",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 795,
+      "graph_links": 5
+    },
+    {
+      "slug": "product-video-script-template",
+      "path": "/templates/product-video-script-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 686,
+      "graph_links": 3
+    },
+    {
+      "slug": "beauty-content-strategy",
+      "path": "/creator-lanes/beauty-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 683,
+      "graph_links": 4
+    },
+    {
+      "slug": "beauty-reels-ideas",
+      "path": "/creator-lanes/beauty-reels-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 906,
+      "graph_links": 3
+    },
+    {
+      "slug": "makeup-content-ideas",
+      "path": "/creator-lanes/makeup-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1109,
+      "graph_links": 5
+    },
+    {
+      "slug": "beauty-product-video-ideas",
+      "path": "/creator-lanes/beauty-product-video-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 662,
+      "graph_links": 3
+    },
+    {
+      "slug": "skincare-content-strategy",
+      "path": "/creator-lanes/skincare-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 682,
+      "graph_links": 4
+    },
+    {
+      "slug": "skincare-content-ideas",
+      "path": "/creator-lanes/skincare-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1108,
+      "graph_links": 5
+    },
+    {
+      "slug": "skincare-reels-ideas",
+      "path": "/creator-lanes/skincare-reels-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 917,
+      "graph_links": 3
+    },
+    {
+      "slug": "skincare-product-video-ideas",
+      "path": "/creator-lanes/skincare-product-video-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 656,
+      "graph_links": 3
+    },
+    {
+      "slug": "fashion-content-strategy",
+      "path": "/creator-lanes/fashion-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 741,
+      "graph_links": 5
+    },
+    {
+      "slug": "fashion-reels-ideas",
+      "path": "/creator-lanes/fashion-reels-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 931,
+      "graph_links": 3
+    },
+    {
+      "slug": "outfit-reels-ideas",
+      "path": "/creator-lanes/outfit-reels-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 627,
+      "graph_links": 3
+    },
+    {
+      "slug": "luxury-content-strategy",
+      "path": "/creator-lanes/luxury-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 740,
+      "graph_links": 5
+    },
+    {
+      "slug": "travel-content-strategy",
+      "path": "/creator-lanes/travel-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 691,
+      "graph_links": 4
+    },
+    {
+      "slug": "travel-reels-ideas",
+      "path": "/creator-lanes/travel-reels-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 950,
+      "graph_links": 3
+    },
+    {
+      "slug": "hotel-collaboration-content-ideas",
+      "path": "/creator-lanes/hotel-collaboration-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1084,
+      "graph_links": 5
+    },
+    {
+      "slug": "travel-video-shot-list",
+      "path": "/creator-lanes/travel-video-shot-list",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 793,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-strategy-for-founders",
+      "path": "/creator-lanes/content-strategy-for-founders",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 690,
+      "graph_links": 4
+    },
+    {
+      "slug": "founder-content-ideas",
+      "path": "/creator-lanes/founder-content-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 1109,
+      "graph_links": 5
+    },
+    {
+      "slug": "founder-reels-ideas",
+      "path": "/creator-lanes/founder-reels-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 908,
+      "graph_links": 3
+    },
+    {
+      "slug": "thought-leadership-content-strategy",
+      "path": "/creator-lanes/thought-leadership-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 695,
+      "graph_links": 4
+    },
+    {
+      "slug": "ecommerce-content-strategy",
+      "path": "/creator-lanes/ecommerce-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 660,
+      "graph_links": 5
+    },
+    {
+      "slug": "product-reels-ideas",
+      "path": "/creator-lanes/product-reels-ideas",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 922,
+      "graph_links": 3
+    },
+    {
+      "slug": "product-video-shot-list",
+      "path": "/creator-lanes/product-video-shot-list",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 792,
+      "graph_links": 5
+    },
+    {
+      "slug": "product-launch-content-plan",
+      "path": "/creator-lanes/product-launch-content-plan",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 617,
+      "graph_links": 3
+    },
+    {
+      "slug": "content-strategy-for-small-creators",
+      "path": "/creator-personas/content-strategy-for-small-creators",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 766,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-strategy-for-busy-creators",
+      "path": "/creator-personas/content-strategy-for-busy-creators",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 704,
+      "graph_links": 4
+    },
+    {
+      "slug": "faceless-content-strategy",
+      "path": "/creator-personas/faceless-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 600,
+      "graph_links": 5
+    },
+    {
+      "slug": "content-ideas-for-camera-shy-creators",
+      "path": "/creator-personas/content-ideas-for-camera-shy-creators",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 684,
+      "graph_links": 3
+    },
+    {
+      "slug": "ugc-content-strategy",
+      "path": "/creator-personas/ugc-content-strategy",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 688,
+      "graph_links": 4
+    },
+    {
+      "slug": "content-strategy-for-experts",
+      "path": "/creator-personas/content-strategy-for-experts",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 715,
+      "graph_links": 5
+    },
+    {
+      "slug": "brand-ready-creator",
+      "path": "/creator-personas/brand-ready-creator",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 670,
+      "graph_links": 3
+    },
+    {
+      "slug": "creator-brief-workflow-for-brand-teams",
+      "path": "/creator-personas/creator-brief-workflow-for-brand-teams",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 598,
+      "graph_links": 3
+    },
+    {
+      "slug": "creative-direction-for-content-creators",
+      "path": "/services/creative-direction-for-content-creators",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 715,
+      "graph_links": 3
+    },
+    {
+      "slug": "content-strategist-for-instagram",
+      "path": "/services/content-strategist-for-instagram",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 642,
+      "graph_links": 3
+    },
+    {
+      "slug": "instagram-content-strategy-service",
+      "path": "/services/instagram-content-strategy-service",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 675,
+      "graph_links": 3
+    },
+    {
+      "slug": "custom-instagram-content-plan",
+      "path": "/services/custom-instagram-content-plan",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 604,
+      "graph_links": 3
+    },
+    {
+      "slug": "content-planning-service-for-creators",
+      "path": "/services/content-planning-service-for-creators",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 638,
+      "graph_links": 3
+    },
+    {
+      "slug": "personal-brand-creative-direction",
+      "path": "/services/personal-brand-creative-direction",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 653,
+      "graph_links": 3
+    },
+    {
+      "slug": "reels-creative-direction",
+      "path": "/services/reels-creative-direction",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 625,
+      "graph_links": 3
+    },
+    {
+      "slug": "ugc-creative-strategy-service",
+      "path": "/services/ugc-creative-strategy-service",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 669,
+      "graph_links": 3
+    },
+    {
+      "slug": "reels-shot-list-template",
+      "path": "/tools/reels-shot-list-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 583,
+      "graph_links": 3
+    },
+    {
+      "slug": "ugc-brief-template",
+      "path": "/tools/ugc-brief-template",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 662,
+      "graph_links": 4
+    },
+    {
+      "slug": "creator-brief-scorecard",
+      "path": "/tools/creator-brief-scorecard",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 652,
+      "graph_links": 3
+    },
+    {
+      "slug": "creator-mode-selector",
+      "path": "/tools/creator-mode-selector",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 600,
+      "graph_links": 3
+    },
+    {
+      "slug": "brand-ready-creator-checklist",
+      "path": "/tools/brand-ready-creator-checklist",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 642,
+      "graph_links": 3
+    },
+    {
+      "slug": "content-concept-stress-test",
+      "path": "/tools/content-concept-stress-test",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 647,
+      "graph_links": 3
+    },
+    {
+      "slug": "content-pillar-builder",
+      "path": "/tools/content-pillar-builder",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 667,
+      "graph_links": 3
+    },
+    {
+      "slug": "creator-decision-fatigue-report",
+      "path": "/tools/creator-decision-fatigue-report",
+      "pass": true,
+      "fails": [],
+      "warns": [],
+      "word_count": 626,
+      "graph_links": 3
+    }
+  ]
+}

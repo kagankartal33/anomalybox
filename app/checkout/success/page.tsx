@@ -9,9 +9,9 @@ export default async function CheckoutSuccessPage({
 }: {
   searchParams: Promise<{ session_id?: string }>;
 }) {
-  const { user } = await requireUser();
   const { session_id: sessionId } = await searchParams;
   if (!sessionId) redirect("/store");
+  const { user } = await requireUser(`/checkout/success?session_id=${encodeURIComponent(sessionId)}`);
 
   let result;
   try {

@@ -1,16 +1,16 @@
-# ViralBox MVP App Deployment
+# Anomaly Box MVP App Deployment
 
-## Railway Web App
+## Vercel Web App
 
-Deploy the repository root as a Next.js app. Railway should run:
+Deploy the repository root as a Next.js app on **Vercel**.
 
 ```powershell
-npm install
-npm run build
-npm run start
+npx vercel login
+npx vercel link
+npx vercel deploy --prod --yes
 ```
 
-Required Railway env:
+Required Vercel Production env:
 
 ```text
 NEXT_PUBLIC_SUPABASE_URL=
@@ -30,24 +30,28 @@ ADMIN_INTERNAL_SECRET=
 
 `SUPABASE_SERVICE_ROLE_KEY`, Stripe secrets, Resend key, Meta app secret, `LINKED_ACCOUNT_TOKEN_SECRET`, and internal tokens must remain server-only. Do not expose them with `NEXT_PUBLIC_`.
 
-## Supabase Production
-
-Apply migrations and deploy existing Edge Functions:
+Verify production env:
 
 ```powershell
-supabase link --project-ref <project-ref>
-supabase db push
-supabase functions deploy admin-generation-batches
-supabase functions deploy deliver-idea-box
-supabase functions deploy inventory-health
-supabase functions deploy creator-video-reviews
+node tools/check-vercel-production-env.mjs
+npm run audit:env:production
 ```
 
-Set Auth redirect URLs to the Railway domain:
+## Supabase Production
+
+Apply the stock-only production schema (not the full training migration tree):
+
+```powershell
+npx supabase db query --linked --file supabase\production\schema_stock_only.sql
+supabase functions deploy deliver-idea-box
+supabase functions deploy inventory-health
+```
+
+Set Auth redirect URLs to the production domain:
 
 ```text
-https://<railway-domain>/auth/callback
-https://<railway-domain>/api/auth/instagram/callback
+https://anomalybox.com/auth/callback
+https://anomalybox.com/api/auth/instagram/callback
 ```
 
 ## Stripe
@@ -64,7 +68,13 @@ Do not create ATELIER BLACK BOX as a checkout product for MVP. It is contact-onl
 Create a webhook endpoint:
 
 ```text
-https://<railway-domain>/api/stripe/webhook
+https://anomalybox.com/api/stripe/webhook
+```
+
+Or the durable Supabase function endpoint:
+
+```text
+https://psqqqhcfmfojrqsvzzzb.supabase.co/functions/v1/stripe-webhook
 ```
 
 Subscribe at minimum to:
@@ -75,100 +85,24 @@ checkout.session.completed
 
 The checkout route checks inventory before creating a Stripe session. If a category/persona does not have enough low/mid/high stock, payment is not started.
 
+Stripe production helper:
+
+```powershell
+npm run stripe:setup
+# after live activation:
+npm run stripe:setup:live
+```
+
 ## Google And Meta OAuth
 
 Google login uses Supabase Auth. Configure Google as an external provider in the Supabase dashboard and add this authorized redirect/callback:
 
 ```text
-https://<your-domain>/auth/callback
+https://anomalybox.com/auth/callback
 ```
 
-Meta/Instagram is not the primary login method. It is a connected social account flow. Configure a Meta app and set:
+Instagram connect (optional) uses:
 
 ```text
-META_APP_ID=
-META_APP_SECRET=
-META_REDIRECT_URI=https://<your-domain>/api/auth/instagram/callback
-LINKED_ACCOUNT_TOKEN_SECRET=<long random production secret>
+https://anomalybox.com/api/auth/instagram/callback
 ```
-
-Meta OAuth redirect URI in the Meta dashboard must exactly match `META_REDIRECT_URI`. Requested scopes in code are:
-
-```text
-instagram_basic,pages_show_list
-```
-
-Instagram access tokens are stored encrypted with AES-256-GCM. If `LINKED_ACCOUNT_TOKEN_SECRET` is missing, the Instagram connect callback fails safely instead of storing a plaintext token.
-
-## ATELIER BLACK BOX Leads
-
-`ATELIER BLACK BOX` is contact-only. Requests are saved to `public.atelier_leads` through the server-side form on `/atelier`.
-
-Admin route:
-
-```text
-/admin/atelier-leads
-```
-
-The leads table is not exposed to `anon` or `authenticated`; admin reads use server-side service role after `profiles.role = 'admin'` is verified.
-
-## Admin Setup
-
-Create a normal Supabase Auth user, then set:
-
-```sql
-update public.profiles
-set role = 'admin'
-where id = '<user-id>';
-```
-
-Admin dashboard routes:
-
-```text
-/admin
-/admin/inventory
-/admin/users
-/admin/atelier-leads
-/admin/reviews/:reviewId
-```
-
-## Review Video Retention
-
-Creator review videos are not training data. Raw storage objects are intended to expire after 30 days.
-
-Dry run:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\cleanup-review-videos.ps1
-```
-
-Apply:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\cleanup-review-videos.ps1 -Apply
-```
-
-## Local Verification
-
-```powershell
-npm run typecheck
-npm run lint
-npm run build
-npm run audit:leaks
-npm run audit:readiness
-npm audit --omit=dev
-supabase migration up --local --yes
-supabase db lint --local
-powershell -ExecutionPolicy Bypass -File .\\tools\\test-generator-flow.ps1
-powershell -ExecutionPolicy Bypass -File .\\tools\\test-creator-video-review.ps1
-powershell -ExecutionPolicy Bypass -File .\\tools\\test-dataset-training.ps1 `
-  -CompileVersion 2026-v7-book-train-cinema `
-  -SourceSlug book_train_cinema_v1 `
-  -TrendSource book_train_cinema_v1 `
-  -EvalPrefix book_train_eval `
-  -ProfileCategories entertainment_comedy,creator_education,lifestyle `
-  -MinObservations 1000 `
-  -MinDatasetExamples 500
-```
-
-`tools/test-all.ps1 -SkipQualityGate` covers the same fast backend regression flow. On Windows it can occasionally finish all assertions and still wait on Supabase process cleanup; check the log before treating a timeout as a product failure.

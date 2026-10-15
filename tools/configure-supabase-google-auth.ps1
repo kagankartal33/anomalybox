@@ -1,7 +1,7 @@
 param(
   [string]$ProjectRef = "psqqqhcfmfojrqsvzzzb",
-  [string]$GoogleOAuthFile = "C:\\Users\\Kagan\\AppData\\Local\\Temp\\anomaa.txt",
-  [string]$SupabasePatFile = "C:\\Users\\Kagan\\AppData\\Local\\Temp\\anomaly-supabase-pat.txt"
+  [string]$GoogleOAuthFile = "C:\Users\Kagan\AppData\Local\Temp\anomaa.txt",
+  [string]$SupabasePatFile = "C:\Users\Kagan\AppData\Local\Temp\anomaly-supabase-pat.txt"
 )
 
 $ErrorActionPreference = "Stop"
@@ -18,14 +18,14 @@ $googleText = Read-SecretFile $GoogleOAuthFile
 $clientId = $null
 $clientSecret = $null
 
-if ($googleText -match '(?m)^\\s*GOOGLE_OAUTH_CLIENT_ID\\s*=\\s*"?([^"\\
+if ($googleText -match '(?m)^\s*GOOGLE_OAUTH_CLIENT_ID\s*=\s*"?([^"\r\n\s]+)"?\s*$') {
   $clientId = $Matches[1]
 }
-if (-not $clientId -and $googleText -match '([A-Za-z0-9_-]+\\.apps\\.googleusercontent\\.com)') {
+if (-not $clientId -and $googleText -match '([A-Za-z0-9_-]+\.apps\.googleusercontent\.com)') {
   $clientId = $Matches[1]
 }
 
-if ($googleText -match '(?m)^\\s*GOOGLE_OAUTH_CLIENT_SECRET\\s*=\\s*"?([^"\\
+if ($googleText -match '(?m)^\s*GOOGLE_OAUTH_CLIENT_SECRET\s*=\s*"?([^"\r\n\s]+)"?\s*$') {
   $clientSecret = $Matches[1]
 }
 if (-not $clientSecret -and $googleText -match '(GOCSPX-[A-Za-z0-9_-]+)') {

@@ -15,36 +15,6 @@ function Invoke-DbSqlFile {
     Get-Content -LiteralPath $SqlPath -Raw | psql $DatabaseUrl -v ON_ERROR_STOP=1 -P pager=off
     return
   }
-
-if ($invalidTitles.Count -gt 0) {
-  $summary | ConvertTo-Json -Depth 6
-  $invalidTitles | Select-Object -First 25 | Format-Table -AutoSize
-  throw "Finalist import title validation failed."
-}
-
-$invalidTitles = @()
-$seenTitles = @{}
-foreach ($record in $records) {
-  $title = [string]$record.card.title
-  $issue = Test-PremiumTitleQuality -Value $title
-  if ($issue) {
-    $invalidTitles += [pscustomobject]@{
-      category_slug = $record.category_slug
-      persona_slug = $record.persona_slug
-      title = $title
-      issue = $issue
-    }
-  } elseif ($seenTitles.ContainsKey($title)) {
-    $invalidTitles += [pscustomobject]@{
-      category_slug = $record.category_slug
-      persona_slug = $record.persona_slug
-      title = $title
-      issue = "duplicate title in finalist import"
-    }
-  } else {
-    $seenTitles[$title] = $true
-  }
-}
   Get-Content -LiteralPath $SqlPath -Raw | docker exec -i $DbContainer psql -U postgres -d postgres -v ON_ERROR_STOP=1 -P pager=off
 }
 
@@ -57,8 +27,8 @@ function Test-PremiumTitleQuality {
   param([AllowNull()][string]$Value)
   if ([string]::IsNullOrWhiteSpace($Value)) { return "missing title" }
   if ($Value.Length -gt 52) { return "title longer than 52 characters" }
-  if ($Value -match '\\b(Brief|Ritual|Report|Memo|Audit|Dossier|File|Sheet|SOP|Framework|Blueprint|AI|Algorithm|Engine|Model|Prompt|Agent|Neural|Autopilot|System|Quality Gate|score|score_band|training|dataset|inventory)\\b') { return "technical or document-style title language" }
-  if ($Value -match 'run_\\d{8}_\\d{6}|\\b\\d{3,}\\b') { return "raw id or number suffix" }
+  if ($Value -match '\b(Brief|Ritual|Report|Memo|Audit|Dossier|File|Sheet|SOP|Framework|Blueprint|AI|Algorithm|Engine|Model|Prompt|Agent|Neural|Autopilot|System|Quality Gate|score|score_band|training|dataset|inventory)\b') { return "technical or document-style title language" }
+  if ($Value -match 'run_\d{8}_\d{6}|\b\d{3,}\b') { return "raw id or number suffix" }
   return ""
 }
 
@@ -89,6 +59,30 @@ foreach ($group in $groups) {
   }
 }
 
+$invalidTitles = @()
+$seenTitles = @{}
+foreach ($record in $records) {
+  $title = [string]$record.card.title
+  $issue = Test-PremiumTitleQuality -Value $title
+  if ($issue) {
+    $invalidTitles += [pscustomobject]@{
+      category_slug = $record.category_slug
+      persona_slug = $record.persona_slug
+      title = $title
+      issue = $issue
+    }
+  } elseif ($seenTitles.ContainsKey($title)) {
+    $invalidTitles += [pscustomobject]@{
+      category_slug = $record.category_slug
+      persona_slug = $record.persona_slug
+      title = $title
+      issue = "duplicate title in finalist import"
+    }
+  } else {
+    $seenTitles[$title] = $true
+  }
+}
+
 $summary = [ordered]@{
   input_path = $InputPath
   finalist_records = $records.Count
@@ -103,6 +97,12 @@ if ($invalidGroups.Count -gt 0) {
   $summary | ConvertTo-Json -Depth 6
   $invalidGroups | Select-Object -First 25 | Format-Table -AutoSize
   throw "Finalist import validation failed."
+}
+
+if ($invalidTitles.Count -gt 0) {
+  $summary | ConvertTo-Json -Depth 6
+  $invalidTitles | Select-Object -First 25 | Format-Table -AutoSize
+  throw "Finalist import title validation failed."
 }
 
 if (-not $Apply) {

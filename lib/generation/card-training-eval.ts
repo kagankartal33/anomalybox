@@ -1,6 +1,6 @@
-import { cardTrainingTarget, type CardSftRow } from "./card-training-dataset";
-import { evaluateIdeaCardV22 } from "../idea-card/quality-v2-2";
-import { objectRecord } from "./automatic-policy";
+import { cardTrainingTarget, type CardSftRow } from "./card-training-dataset.ts";
+import { evaluateIdeaCardV22 } from "../idea-card/quality-v2-2.ts";
+import { objectRecord } from "./automatic-policy.ts";
 
 /** Diagnostic generation eval, never a substitute for provider qualification. */
 export function evaluateCardTrainingSamples(expected: CardSftRow[], samples: unknown[]) {

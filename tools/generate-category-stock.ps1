@@ -5,17 +5,25 @@ param(
   [int]$LimitCategories = 0,
   [string]$FunctionsBaseUrl = "http://127.0.0.1:55321/functions/v1",
   [string]$AdminToken = "local-admin-token",
-  [int]$QualityFloor = 45,
+  [int]$QualityFloor = 80,
   [int]$MaxReuseCount = 1,
   [int]$ScoreChunkSize = 100,
   [int]$PublishChunkSize = 100,
   [int]$MaxTopUpAttempts = 8,
   [switch]$TopUpExistingStock,
   [switch]$KeepServer,
+  [switch]$FixtureMode,
   [switch]$DryRun
 )
 
 $ErrorActionPreference = "Stop"
+if (-not $FixtureMode) {
+  throw "generate-category-stock.ps1 is a deterministic fixture/fallback tool only. Pass -FixtureMode explicitly; use POST /admin/generation-batches/:id/generate for publishable generation."
+}
+$functionsUri = [Uri]$FunctionsBaseUrl
+if ($functionsUri.Host -notin @("localhost", "127.0.0.1", "::1")) {
+  throw "generate-category-stock.ps1 may only target a local fixture runtime. Remote inventory publication is disabled."
+}
 $toolRoot = Split-Path -Parent $PSCommandPath
 . (Join-Path $toolRoot "local-functions.ps1")
 
@@ -142,7 +150,7 @@ function New-PremiumCardTitle {
     'Quiet Proof Ritual' { "Proof Signal"; break }
     'Micro-Authority Checklist' { "Trust Marker"; break }
     'Founder Taste Audit' { "Taste Decision"; break }
-    'Hidden Decision Map' { "Hidden Choice"; break }
+    'Choice Map' { "Hidden Choice"; break }
     'Premium Mistake Reveal' { "Polished Mistake"; break }
     'Audience Choice Split' { "Audience Vote"; break }
     'Local Context Lens' { "Local Signal"; break }
@@ -204,7 +212,7 @@ function Get-PersonaForCategory {
   if (& $has @("tech", "technology", "science", "ai", "software", "tool", "tools", "data", "security", "privacy")) { return "science_tech_explainer" }
   if (& $has @("business", "startup", "founder", "operator", "career", "sales", "marketing", "entrepreneur", "leadership")) { return "founder_operator" }
   if (& $has @("preschool", "kindergarten", "university", "college", "academy", "education", "school", "coach", "consult", "course", "book", "author")) { return "science_tech_explainer" }
-  if ($slugText -match '\\b(content|creator|social|influencer)\\b') { return "creator_teacher" }
+  if ($slugText -match '\b(content|creator|social|influencer)\b') { return "creator_teacher" }
   if ((& $has @("supply", "store", "shop", "retail", "product", "commerce", "affiliate", "market")) -and -not (& $has @("hotel", "travel", "tourism"))) { return "product_reviewer" }
   if ((& $has @("supply", "store", "shop", "retail", "product", "commerce", "affiliate", "market")) -and (& $has @("restaurant", "food", "sporting", "outdoor"))) { return "product_reviewer" }
   if (& $has @("comedy", "entertainment", "meme", "theater", "music", "creator", "artist")) { return "comedy_observer" }
@@ -285,12 +293,12 @@ function New-PremiumIdea {
   $categorySlug = [string]$Category.slug
   $categoryName = [string]$Category.name
   $family = [string]$Category.family
-  $categoryTitleSource = if ($categoryName -match '[^\\u0000-\\u007F]') { $categorySlug } else { $categoryName }
+  $categoryTitleSource = if ($categoryName -match '[^\u0000-\u007F]') { $categorySlug } else { $categoryName }
   $categoryTitle = Get-CreatorSafeCategoryTitle -Slug $categorySlug -DefaultTitle (ConvertTo-TitleText $categoryTitleSource)
   $personaProfile = Get-PersonaProfile -Slug $Persona
   $personaDisplay = [string]$personaProfile.display
   $scenarioNames = @(
-    "Hidden Decision Map",
+    "Choice Map",
     "Three-Part Save Filter",
     "Quiet Proof Signal",
     "Premium Mistake Reveal",
@@ -379,9 +387,9 @@ function New-PremiumIdea {
     }
   }
   $candidateBeats = switch ($targetBand) {
-    "low" { @("visual hook", "proof detail") }
-    "mid" { @("visual hook", "premise", "proof detail", "save CTA") }
-    default { @("visual hook", "premise", "proof detail", "decision boundary", "payoff", "comment prompt", "save CTA") }
+    "low" { @("visual hook", "concrete proof beat") }
+    "mid" { @("visual hook", "premise", "concrete proof beat", "save CTA") }
+    default { @("visual hook", "premise", "concrete proof beat", "decision boundary", "payoff", "comment prompt", "save CTA") }
   }
   $externalId = "{0}_{1}_{2}" -f (ConvertTo-SlugText $BatchId), (ConvertTo-SlugText $categorySlug), $variant
   $safeCategoryPhrase = if ($family -eq "instagram_business") { "$categoryTitle experience" } else { "$categoryTitle content" }
@@ -421,8 +429,8 @@ function New-PremiumIdea {
       brand_lift_statement = "$($personaProfile.brand) This idea turns $safeCategoryPhrase into a distinctive audience promise instead of a generic post."
       premium_decision_note = "This card is built as a complete premium execution system: hook, proof, scene plan, visual direction, caption logic, safety boundaries, and platform variants."
       idea_summary = @{
-        premise = "The creator reveals the hidden decision behind a polished $safeCategoryPhrase moment using a $settingAngle and a $proofAngle."
-        target_emotion = "The audience feels invited into a smarter, more premium way to choose when $tensionAngle is handled clearly."
+        premise = "The creator shows the one choice behind a polished $safeCategoryPhrase result using a $settingAngle and a $proofAngle."
+        target_emotion = "The audience feels invited into a smarter, calmer way to choose when $tensionAngle is handled clearly."
         creator_takeaway = "Show the decision process, not only the final result."
       }
       why_it_can_work = @{
@@ -444,8 +452,8 @@ function New-PremiumIdea {
       }
       hook_performance_pack = @{
         hook_options = @(
-          "The part that looks effortless is actually one small $proofAngle.",
-          "Before you copy the final result, look at this $settingAngle filter.",
+        "The part that looks effortless is actually one small $proofAngle.",
+        "Before you copy the final result, look at this $creativeLane filter.",
           "This is the $decisionLens I would save first.",
           "The premium version is not louder; it is more selective about $tensionAngle.",
           "Which option would you remove from this setup?"
@@ -460,21 +468,21 @@ function New-PremiumIdea {
       video_blueprint = @{
         duration_seconds = 38
         opening_visual = "$firstVisual Use the $laneObject and the $settingAngle as the visual anchor."
-        scene_arc = "Final curiosity -> hidden decision -> $proofAngle -> boundary -> saveable payoff."
+        scene_arc = "Final curiosity -> choice that shaped it -> $proofAngle -> boundary -> saveable payoff."
         payoff_visual = "Creator holds or points to a three-step decision filter on screen."
       }
       scene_script = @(
-        @{ second = "0-3"; purpose = "attention"; voiceover = "The part that looks effortless is actually one small $proofAngle."; spoken_lines = @("Watch the decision before the result."); on_screen_text = "The hidden decision" },
-        @{ second = "4-10"; purpose = "premise"; voiceover = "For this $categoryTitle moment, I start from the $creativeLane and the $settingAngle instead of adding more noise."; spoken_lines = @("I start here."); on_screen_text = "One filter first" },
-        @{ second = "11-24"; purpose = "proof"; voiceover = "Here is the proof detail: $proofAngle, what I kept, what I removed, and why it fits this context."; spoken_lines = @("This is the boundary."); on_screen_text = "Keep / remove / why" },
+        @{ second = "0-3"; purpose = "attention"; voiceover = "The part that looks effortless is actually one small $proofAngle."; spoken_lines = @("Watch the choice before the result."); on_screen_text = "Choice first" },
+        @{ second = "4-10"; purpose = "premise"; voiceover = "I start from the $creativeLane and the $settingAngle instead of adding more noise."; spoken_lines = @("I start here."); on_screen_text = "One filter first" },
+        @{ second = "11-24"; purpose = "proof"; voiceover = "Here is what I checked: $proofAngle, what I kept, what I removed, and why it fits this context."; spoken_lines = @("This is the boundary."); on_screen_text = "Keep / remove / why" },
         @{ second = "25-34"; purpose = "payoff"; voiceover = "Save this if you want a cleaner way to make the same decision."; spoken_lines = @("Save the filter, not just the final shot."); on_screen_text = "Save the filter" },
-        @{ second = "35-38"; purpose = "comment"; voiceover = "Tell me which option you would remove first."; spoken_lines = @("What would you remove?"); on_screen_text = "Comment your first remove" }
+        @{ second = "35-38"; purpose = "comment"; voiceover = "Tell me which option you would remove first."; spoken_lines = @("Which option would you remove first?"); on_screen_text = "Your first remove" }
       )
       shot_list = @(
-        @{ second = "0-2"; shot = "Tight final reveal"; action = "Show the polished result for one second, then interrupt it from the $settingAngle."; overlay = "Not the final. The decision." },
+        @{ second = "0-2"; shot = "Tight final reveal"; action = "Show the polished result for one second, then interrupt it from the $settingAngle."; overlay = "Not the final. The choice." },
         @{ second = "3-8"; shot = "Overhead decision table"; action = "Place three options in frame and remove one with a clear gesture."; overlay = "Keep / remove / why" },
         @{ second = "9-20"; shot = "Medium creator frame"; action = "Explain the context boundary in one sentence."; overlay = "Context matters" },
-        @{ second = "21-32"; shot = "Detail proof close-up"; action = "Show the $proofAngle that supports the choice."; overlay = "Proof detail" },
+        @{ second = "21-32"; shot = "Detail proof close-up"; action = "Show the $proofAngle that supports the choice."; overlay = "What I checked" },
         @{ second = "33-38"; shot = "Checklist payoff"; action = "Hold the $laneObject and three-step filter long enough to screenshot."; overlay = "Save this filter" }
       )
       b_roll_plan = @(
@@ -489,10 +497,10 @@ function New-PremiumIdea {
         face = "Calm, focused, and slightly knowing."
         hands = "Use slow sorting gestures; avoid frantic pointing or constant product pushing."
         body = "Relaxed shoulders, slight angle to camera, stable posture."
-        expression = "Confident but not exaggerated; let the proof carry the energy."
+        expression = "Confident but not exaggerated; keep the face calm while the object work does the convincing."
       }
       micro_behavior_guide = @{
-        facial_expression = "Soft confidence with a small recognition moment after the proof detail."
+        facial_expression = "Soft confidence with a small recognition moment after the keep/remove choice."
         eye_contact = "Look into the lens for the hook and CTA; look down during proof and sorting."
         product_handling = "Hold objects low and steady so the decision feels natural."
         camera_attention = "Return to camera when explaining the boundary."
@@ -510,7 +518,7 @@ function New-PremiumIdea {
         sound = "Soft premium bed with light object sounds and clear voiceover."
       }
       editing_timeline = @(
-        @{ second = "0-2"; beat = "pattern interrupt"; edit = "Cut from the polished final to the hidden decision." },
+        @{ second = "0-2"; beat = "pattern interrupt"; edit = "Cut from the polished final to the choice that shaped it." },
         @{ second = "3-8"; beat = "premise"; edit = "Name the filter and show the options." },
         @{ second = "9-20"; beat = "proof turn"; edit = "Show what was kept, removed, and why." },
         @{ second = "21-34"; beat = "payoff"; edit = "Reveal the clean decision and the three-step filter." },
@@ -518,11 +526,11 @@ function New-PremiumIdea {
       )
       caption_pack = @{
         caption_options = @(
-          "The premium part is the $creativeLane you can explain.",
+          "The useful part is the $creativeLane you can explain.",
           "Save this before you copy the final shot from the $settingAngle.",
           "Less noise, clearer context, better $categoryTitle decisions around $tensionAngle."
         )
-        on_screen_text = @("The hidden decision", "Keep / remove / why", "Save the filter")
+        on_screen_text = @("Choice first", "Keep / remove / why", "Save the filter")
         cta = "Save this $creativeLane filter and use it before your next $categoryTitle decision."
       }
       comment_engine = @{
@@ -537,10 +545,10 @@ function New-PremiumIdea {
       }
       variant_pack = @{
         reels = "38-second decision-filter Reel with hook, proof, payoff, and comment CTA."
-        story = "Three-frame Story: poll, proof detail, checklist."
+        story = "Three-frame Story: poll, keep/remove check, checklist."
         carousel = "Five-slide decision filter with one proof example per slide."
         youtube_shorts = "Faster voiceover version with the same decision and proof structure."
-        short_15s = "Final shot, hidden decision, one proof detail, save CTA."
+        short_15s = "Final shot, the choice behind it, one checked detail, save CTA."
       }
       brand_safety = @{
         disclosure_text = "If sponsored, use a clear #ad disclosure at the start of the caption and video."
@@ -615,7 +623,7 @@ join public.categories c on c.id = inv.category_id
 join public.creator_personas p on p.id = inv.persona_id
 where c.slug = '$safeCategory'
   and p.slug = '$safePersona'
-  and (inv.metadata->>'external_batch_id') like 'stock\\_cards\\_%' escape '\\';
+  and (inv.metadata->>'external_batch_id') like 'stock\_cards\_%' escape '\';
 "@
   $raw = Invoke-DbSql -Sql $sql | Select-Object -First 1
   if ([string]::IsNullOrWhiteSpace($raw)) { return 0 }
@@ -628,7 +636,7 @@ select c.slug || '|' || p.slug as route_key, count(inv.id)
 from public.idea_inventory inv
 join public.categories c on c.id = inv.category_id
 join public.creator_personas p on p.id = inv.persona_id
-where (inv.metadata->>'external_batch_id') like 'stock\\_cards\\_%' escape '\\'
+where (inv.metadata->>'external_batch_id') like 'stock\_cards\_%' escape '\'
 group by c.slug, p.slug;
 "@
   $map = @{}

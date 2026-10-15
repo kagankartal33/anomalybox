@@ -1,0 +1,34 @@
+{
+  "job_id": "job_1900e06d5c1d",
+  "page_id": "AB-009",
+  "slug": "food-content-ideas",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:food-content-ideas:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:03Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:03Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:03Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "reject_score",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

@@ -1,0 +1,34 @@
+{
+  "job_id": "job_a4d0ef7d845a",
+  "page_id": "AB-014",
+  "slug": "thought-leadership-content-ideas",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:thought-leadership-content-ideas:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:04Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:04Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:04Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "reject_score",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

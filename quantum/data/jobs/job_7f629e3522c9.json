@@ -1,0 +1,34 @@
+{
+  "job_id": "job_7f629e3522c9",
+  "page_id": "AB-098",
+  "slug": "content-strategist-for-instagram",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:content-strategist-for-instagram:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:28Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:28Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:28Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "near_duplicate:reels-creative-direction:0.837",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

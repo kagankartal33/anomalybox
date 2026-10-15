@@ -1,6 +1,7 @@
 param(
-  [string]$InputDir = ".\\Book-Train",
-  [string]$OutDir = ".\\dataset\\book_train\\prepared",
+  # Sources live outside the app tree after training archive move.
+  [string]$InputDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\Book-Train",
+  [string]$OutDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\dataset\book_train\prepared",
   [int]$MaxChunksPerBook = 12000,
   [int]$MinChunkChars = 300,
   [int]$MaxChunkChars = 1800,
@@ -20,7 +21,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $prepareArgs = @(
-  ".\\tools\\prepare-book-train-data.py",
+  ".\tools\prepare-book-train-data.py",
   "--input-dir", $InputDir,
   "--out-dir", $OutDir,
   "--output-name", $OutputName,
@@ -68,7 +69,7 @@ if (-not $KeepExistingSourceObservations) {
   docker exec -i $dbContainer psql -U postgres -d postgres -v ON_ERROR_STOP=1 -P pager=off -c "delete from public.dataset_training_observations where metadata ->> 'source_slug' = '$safeSourceSlug';"
 }
 
-& .\\tools\\train-from-dataset.ps1 `
+& .\tools\train-from-dataset.ps1 `
   -DatasetPath $OutDir `
   -Mode book_train `
   -SourceSlug $SourceSlug `

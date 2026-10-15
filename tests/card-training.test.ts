@@ -88,9 +88,7 @@ assert.equal(goodEval.diagnostic_passed, true);
 assert.equal(goodEval.model_qualified, false);
 for (const samples of [[], [validSample, validSample], [{ source_id: "other", output: target }], [{ ...validSample, output: "{\"schemaVersion\":2" }], [{ ...validSample, output: { ...target, durationSeconds: 60 } }]]) assert.equal(evaluateCardTrainingSamples(expected, samples).diagnostic_passed, false);
 
-const migration = (fs.existsSync("supabase/migrations/20260831150000_card_training_curriculum.sql")
-  ? fs.readFileSync("supabase/migrations/20260831150000_card_training_curriculum.sql", "utf8")
-  : "")
+const migration = fs.readFileSync("supabase/migrations/20260831150000_card_training_curriculum.sql", "utf8")
   + fs.readFileSync("supabase/migrations/20260901090000_professional_card_generation_v3.sql", "utf8");
 for (const value of [PROMPT_VERSION, "guard_automatic_generation_run", "automatic_card_evidence_valid", "qualify_idea_model_profile", "guard_automatic_inventory_publication"]) assert.ok(migration.includes(value));
 assert.ok(!migration.includes("idea-card-premium-v2.3.1-automatic"), "No stale SQL prompt allowance");
@@ -134,7 +132,7 @@ try {
       "from huggingface_hub import try_to_load_from_cache",
       "from transformers import AutoTokenizer",
       "cached = try_to_load_from_cache('Qwen/Qwen2.5-1.5B-Instruct', 'tokenizer_config.json')",
-      "revision = re.search(r'snapshots[/\\\\\\\\\\\\\\\\]([a-f0-9]{40})', str(cached)).group(1)",
+      "revision = re.search(r'snapshots[/\\\\]([a-f0-9]{40})', str(cached)).group(1)",
       "tokenizer = AutoTokenizer.from_pretrained('Qwen/Qwen2.5-1.5B-Instruct', revision=revision, trust_remote_code=False, local_files_only=True)",
       "_,splits = load_verified_dataset(Path(sys.argv[1]), require_ready=False)",
       "encoded = encode_response_only(splits['test'][0], tokenizer, 4096)",

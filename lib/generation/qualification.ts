@@ -1,29 +1,7 @@
 import { DURATION_PLANNER_VERSION } from "../idea-card/duration-planner";
-import { AUTOMATIC_QUALIFICATION_MODE, GENERATION_PIPELINE_VERSION, independentCritic, modelContract, objectRecord, stableJson } from "./automatic-policy";
+import { AUTOMATIC_QUALIFICATION_MODE, GENERATION_PIPELINE_VERSION, independentCritic, modelContract, objectRecord, stableJson } from "./automatic-policy.ts";
 import { CONCEPT_RANKER_VERSION } from "./concept-ranking";
 import { CREATIVE_SCHEDULER_VERSION } from "./creative-taxonomy";
-
-export const QUALIFICATION_CATEGORIES = [
-  "beauty",
-  "entertainment_comedy",
-  "travel",
-  "fitness_wellness_safe",
-  "food",
-] as const;
-
-export type QualificationCategory = typeof QUALIFICATION_CATEGORIES[number];
-
-export function automaticQualificationPass(metrics: Record<string, unknown>): boolean {
-  if (!metrics || typeof metrics !== "object") return false;
-  if (metrics.qualification_mode !== AUTOMATIC_QUALIFICATION_MODE) return false;
-  if (!metrics.regression_passed) return false;
-  if (Number(metrics.evaluated_count ?? 0) <= 0) return false;
-  if (Number(metrics.safe_approve_rate ?? 0) < 0.6) return false;
-  if (Number(metrics.banned_residue_rate ?? 1) > 0.05) return false;
-  if (Number(metrics.duplicate_rate_078 ?? 1) > 0.1) return false;
-  if (Number(metrics.exact_duration_max_share ?? 1) > 0.25) return false;
-  return true;
-}
 
 export type QualificationContract = {
   promptVersion: string;
@@ -35,13 +13,12 @@ export function profileMatchesQualificationContract(
   profile: Record<string, unknown>,
   contract: QualificationContract,
 ) {
-  const metrics = profile.qualification_metrics as Record<string, unknown> | undefined;
   return profile.qualification_status === "approved" &&
-    metrics?.qualification_mode === AUTOMATIC_QUALIFICATION_MODE &&
-    metrics?.pipeline_version === GENERATION_PIPELINE_VERSION &&
-    metrics?.scheduler_version === CREATIVE_SCHEDULER_VERSION &&
-    metrics?.concept_ranker_version === CONCEPT_RANKER_VERSION &&
-    metrics?.duration_planner_version === DURATION_PLANNER_VERSION &&
+    (profile.qualification_metrics as Record<string, unknown> | undefined)?.qualification_mode === AUTOMATIC_QUALIFICATION_MODE &&
+    (profile.qualification_metrics as Record<string, unknown> | undefined)?.pipeline_version === GENERATION_PIPELINE_VERSION &&
+    (profile.qualification_metrics as Record<string, unknown> | undefined)?.scheduler_version === CREATIVE_SCHEDULER_VERSION &&
+    (profile.qualification_metrics as Record<string, unknown> | undefined)?.concept_ranker_version === CONCEPT_RANKER_VERSION &&
+    (profile.qualification_metrics as Record<string, unknown> | undefined)?.duration_planner_version === DURATION_PLANNER_VERSION &&
     profile.enabled === true &&
     profile.qualified_prompt_version === contract.promptVersion &&
     Number(profile.qualified_schema_version) === contract.schemaVersion &&
@@ -86,4 +63,57 @@ export function isQualificationGoldEligible(
     rating.provider === expected.provider &&
     rating.model === expected.model &&
     rating.prompt_version === expected.promptVersion;
+}
+export const AUTOMATIC_REGRESSION_VERSION = "automatic-quality-regression-v3";
+export const QUALIFICATION_CATEGORIES = [
+  "beauty",
+  "fashion",
+  "commerce_affiliate",
+  "creator_education",
+  "entertainment_comedy",
+  "fitness_wellness_safe",
+  "food",
+  "lifestyle",
+  "luxury",
+  "parenting_family",
+  "thought_leadership",
+  "travel",
+] as const;
+
+/** @deprecated Use QUALIFICATION_CATEGORIES. Kept for V2 tooling compatibility. */
+export const PILOT_CATEGORIES = QUALIFICATION_CATEGORIES;
+
+function automaticQualityThresholdsPass(metrics: Record<string, unknown>, expectedCount: number): boolean {
+  const finite = (name: string, min: number, max = Number.MAX_SAFE_INTEGER) => typeof metrics[name] === "number" && Number.isFinite(metrics[name]) && Number(metrics[name]) >= min && Number(metrics[name]) <= max;
+  return finite("evaluated_count", expectedCount, expectedCount)
+    && finite("schema_pass_rate", 0.99, 1) && finite("taxonomy_pass_rate", 0.99, 1)
+    && finite("recipe_adherence_rate", 0.98, 1) && finite("safe_approve_rate", 0.55, 1)
+    && finite("approved_average", 90, 100) && finite("duplicate_rate_078", 0, 0.03)
+    && finite("banned_residue_rate", 0, 0.005) && finite("creator_residue_rate", 0, 0.005)
+    && finite("duration_fit_rate", 0.95, 1)
+    && finite("exact_duration_max_share", 0, 0.2) && finite("timing_template_duplicate_rate", 0, 0)
+    && finite("approved_critic_pass_rate", 1, 1)
+    && finite("approved_hook_first_frame_rate", 1, 1) && finite("approved_proof_payoff_rate", 1, 1)
+    && metrics.creative_distribution_passed === true
+    && metrics.embedded_count === metrics.evaluated_count && metrics.critic_record_count === metrics.evaluated_count
+    && metrics.current_gate_count === metrics.evaluated_count && metrics.fresh_snapshot_count === metrics.evaluated_count;
+}
+
+export function automaticQualificationPass(metrics: Record<string, unknown>): boolean {
+  const counts = objectRecord(metrics.category_counts);
+  const categoryKeys = Object.keys(counts);
+  const categoryMetrics = objectRecord(metrics.category_metrics);
+  return metrics.qualification_mode === AUTOMATIC_QUALIFICATION_MODE
+    && metrics.pipeline_version === GENERATION_PIPELINE_VERSION
+    && metrics.scheduler_version === CREATIVE_SCHEDULER_VERSION
+    && metrics.concept_ranker_version === CONCEPT_RANKER_VERSION
+    && metrics.duration_planner_version === DURATION_PLANNER_VERSION
+    && metrics.regression_version === AUTOMATIC_REGRESSION_VERSION && metrics.regression_passed === true
+    && metrics.regression_case_count === 72
+    && automaticQualityThresholdsPass(metrics, 600)
+    && categoryKeys.length === QUALIFICATION_CATEGORIES.length
+    && categoryKeys.every((category) => (QUALIFICATION_CATEGORIES as readonly string[]).includes(category))
+    && Object.keys(categoryMetrics).length === QUALIFICATION_CATEGORIES.length
+    && QUALIFICATION_CATEGORIES.every((category) => counts[category] === 50
+      && automaticQualityThresholdsPass(objectRecord(categoryMetrics[category]), 50));
 }

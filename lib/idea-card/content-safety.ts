@@ -9,7 +9,7 @@ function stringFields(value: unknown): string[] {
 }
 
 function affirmativeClauses(value: string): string[] {
-  return value.replace(/[’‘]/g, "'").split(/(?<=[.!?;])\s+|\n+/)
+  return value.replace(/[’‘]/g, "'").split(/(?<=[.!?;])\s+|\n|\bbut\b/i)
     .filter(clause => !/^\s*(?:please\s+)?(?:never\b|do not\b|don't\b|avoid\b)/i.test(clause));
 }
 

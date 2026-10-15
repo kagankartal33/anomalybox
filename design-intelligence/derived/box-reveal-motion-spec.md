@@ -34,7 +34,7 @@ The box reveal must make a purchased ViralBox feel private, premium, and intenti
 
 ## Visual Quality
 
-- $500 red: warm red body, darker red shell, cream ribbon.
-- $1000 purple: deep purple shell, royal purple body, lavender ribbon.
+- Classic Red: warm red body, darker red shell, cream ribbon.
+- Signature Purple: deep purple shell, royal purple body, lavender ribbon.
 - Shadows should be soft and layered.
 - Avoid bouncing, spinning, confetti, glitter overload, and abrupt transforms.

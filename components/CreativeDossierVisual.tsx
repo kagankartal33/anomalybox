@@ -45,10 +45,10 @@ export function CreativeDossierVisual({
   size = "md",
 }: CreativeDossierVisualProps) {
   const dossier = dossierByVariant[variant];
-  const displayLabel = label ?? (available ? `${itemCount} briefs available` : "secured creative dossier");
+  const displayLabel = label ?? (available ? `${itemCount} briefs available` : "private shoot brief");
   const alt = available
-    ? `${dossier.name} Anomaly Box creative dossier with ${itemCount} private briefs available`
-    : `${dossier.name} Anomaly Box secured creative dossier in a production studio`;
+    ? `${dossier.name} Anomaly Box creative brief package with ${itemCount} briefs available`
+    : `${dossier.name} Anomaly Box creative brief package secured in a production studio`;
 
   return (
     <div

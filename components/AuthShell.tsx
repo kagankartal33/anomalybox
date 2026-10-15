@@ -37,9 +37,11 @@ export function AuthShell({
 
         <div className="flex items-center px-6 py-10 sm:px-10 lg:px-12">
           <div className="w-full">
-            <Link href="/" className="focus-ring inline-flex rounded-sm">
-              <Image src={premiumAssets.brand.logo} alt="Anomaly Box" width={180} height={42} className="h-10 w-auto" />
-            </Link>
+            <nav aria-label="Brand navigation">
+              <Link href="/" className="focus-ring inline-flex rounded-sm">
+                <Image src={premiumAssets.brand.logo} alt="Anomaly Box" width={240} height={56} className="h-12 sm:h-14 w-auto" />
+              </Link>
+            </nav>
             <p className="mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-plum">{eyebrow}</p>
             <h1 className="mt-3 text-3xl font-semibold leading-tight sm:text-4xl">{title}</h1>
             <p className="mt-3 max-w-md leading-7 text-ink/65">{description}</p>

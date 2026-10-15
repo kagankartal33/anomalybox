@@ -419,7 +419,7 @@ begin
       v_idea,
       v_title,
       v_payload,
-      '# ' || v_title || E'\\\
+      '# ' || v_title || E'\\n\\n' || v_premise
     );
 
     insert into public.idea_inventory (

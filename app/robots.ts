@@ -2,69 +2,29 @@ import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/env";
 
 export default function robots(): MetadataRoute.Robots {
-  const base = siteUrl();
+  const url = siteUrl();
+  const privatePaths = [
+    "/admin",
+    "/api",
+    "/auth",
+    "/profile",
+    "/boxes",
+    "/cards",
+    "/onboarding",
+    "/checkout",
+    "/login",
+    "/forgot-password",
+    "/reset-password",
+  ];
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/admin",
-          "/admin/",
-          "/api/",
-          "/profile",
-          "/profile/",
-          "/boxes",
-          "/boxes/",
-          "/cards/",
-          "/reviews/",
-          "/onboarding",
-          "/onboarding/",
-          "/checkout/",
-          "/reset-password",
-          "/forgot-password",
-          "/auth/",
-        ],
-      },
-      {
-        userAgent: "Googlebot",
-        allow: "/",
-        disallow: [
-          "/admin/",
-          "/api/",
-          "/profile/",
-          "/boxes/",
-          "/cards/",
-          "/reviews/",
-          "/onboarding/",
-          "/checkout/",
-          "/reset-password",
-          "/forgot-password",
-          "/auth/",
-        ],
-      },
-      {
-        userAgent: "Bingbot",
-        allow: "/",
-        disallow: [
-          "/admin/",
-          "/api/",
-          "/profile/",
-          "/boxes/",
-          "/cards/",
-          "/reviews/",
-          "/onboarding/",
-          "/checkout/",
-          "/reset-password",
-          "/forgot-password",
-          "/auth/",
-        ],
+        disallow: privatePaths,
       },
     ],
-    sitemap: [
-      `${base}/sitemap.xml`,
-      `${base}/feed.xml`,
-    ],
-    host: base,
+    sitemap: `${url}/sitemap.xml`,
+    host: url,
   };
 }

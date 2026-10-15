@@ -3,8 +3,8 @@
 ## ViralBox Product Visuals
 
 - Treat each ViralBox like a luxury digital product object, not a shipping carton.
-- $500 box: controlled red palette, warmer, classic, confident.
-- $1000 box: controlled purple palette, deeper, more exclusive, more editorial.
+- Classic Red box: controlled red palette, warmer, classic, confident.
+- Signature Purple box: controlled purple palette, deeper, more exclusive, more editorial.
 - Use one focal object per card or hero. Avoid cluttered piles of cards.
 - Cards should feel like private strategy cards: crisp paper, slight depth, restrained shadows, no fake handwritten notes.
 - Avoid stock creator photos unless they clearly show the actual product, app state, or workflow.

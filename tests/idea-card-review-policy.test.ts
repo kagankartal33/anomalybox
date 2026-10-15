@@ -15,10 +15,10 @@ assert.ok(
   "multiple classifier findings must materially lower brand safety",
 );
 assert.equal(resolveQualityDecision("approve", false), "approve");
-assert.equal(resolveQualityDecision("approve", true), "human_review_required");
-assert.equal(resolveQualityDecision("refine", true), "human_review_required");
+assert.equal(resolveQualityDecision("approve", true), "refine");
+assert.equal(resolveQualityDecision("refine", true), "refine");
 assert.equal(resolveQualityDecision("reject", true), "reject");
 assert.equal(candidateStatusForQualityDecision("approve"), "ready");
-assert.equal(candidateStatusForQualityDecision("human_review_required"), "human_review_required");
+assert.equal(candidateStatusForQualityDecision("human_review_required"), "needs_refinement");
 
 console.log("idea-card review policy fixtures passed");

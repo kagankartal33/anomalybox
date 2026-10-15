@@ -1,0 +1,21 @@
+{
+  "publication_id": "pub_70dd3a1e7675",
+  "version_id": "ver_d29152f02ffb",
+  "site_id": "anomalybox",
+  "page_id": "instagram-content-ideas",
+  "slug": "instagram-content-ideas",
+  "path": "/content-ideas/instagram-content-ideas",
+  "content_version": 2,
+  "content_hash": "sha256:5acfd81910db0b36ad0928345d1897acb4b9799a1317fcd9c71544ae974e1726",
+  "idempotency_key": "anomalybox:/content-ideas/instagram-content-ideas:v2",
+  "cms_record_id": "cms_8efe46445269",
+  "status": "rolled_back",
+  "published_by": "demo",
+  "published_at": "2026-08-05T20:28:40Z",
+  "read_back_ok": true,
+  "read_back_at": "2026-08-05T20:28:40Z",
+  "read_back_hash": "sha256:5acfd81910db0b36ad0928345d1897acb4b9799a1317fcd9c71544ae974e1726",
+  "read_back_error": "",
+  "error": "",
+  "rolled_back_from": null
+}

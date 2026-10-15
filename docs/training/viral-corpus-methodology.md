@@ -61,20 +61,6 @@ dataset/*.md + dataset/*.ipynb + dataset/**/*.csv
 
 Celebrity, influencer, channel and brand names in these files are used only as internal hashed provenance. They teach category fit, creator tier, viral mechanism and missing category discovery, but generator output must not imitate or name them.
 
-Media/Reels training adds a multimodal craft layer without turning videos into copyable source material:
-
-```text
-upload/Reels URL/manual transcript + caption + admin notes
--> media_training_assets duplicate hash checks
--> media_training_observations pattern extraction
--> rights/safety/copy-risk review
--> dataset_training_observations source_kind media_video/media_reels_url/media_transcript
--> viral_training_examples + trend_signals + generator_eval_cases
--> compiled profile 2026-v4-media-training
-```
-
-This layer teaches Reels tempo, first-second visual hooks, shot taxonomy, scene rhythm, creator presence, caption/comment engines, save triggers and brand-safety boundaries. It does not teach exact captions, poses, scenes, source links, creator names, public figure names, copyrighted audio or raw video surfaces.
-
 ## Compiled Training Profile
 
 Ham ornekler generator'a dogrudan kopya malzeme olarak verilmez. `viral_training_compile.sql` her reset/retrain sirasinda tum ornekleri yeniden derler:
@@ -100,7 +86,6 @@ Kategori icin exact training sinyali yoksa fonksiyon ayni platformdaki global pa
 |---|---|
 | Pattern only | Yuzey, karakter, soz, kisi, marka veya birebir format kopyalanmaz |
 | Anti-copy | Eski viral ornek sadece mekanizma olarak kullanilir |
-
 | Negative examples | Tehlikeli challenge'lar generator icin yasak sinyaldir |
 | Platform-native | Pattern Reels, Story, Carousel veya Shorts davranisina uyarlanir |
 | Premium adaptation | High-profile influencer icin brand lift, sponsor guvenligi ve itibar etkisi eklenir |
@@ -176,8 +161,7 @@ Tehlikeli viral formatlar egitimde yasak ornek olarak tutulur. Generator:
 Mevcut orneklerle egitimi tekrar calistirmak icin:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\
-etrain-viral-corpus.ps1
+powershell -ExecutionPolicy Bypass -File .\tools\retrain-viral-corpus.ps1
 ```
 
 Bu komut local database'i resetler, seedleri yukler, compiled training profile'i olusturur, lint calistirir ve temel training sayilarini raporlar.
@@ -185,6 +169,5 @@ Bu komut local database'i resetler, seedleri yukler, compiled training profile'i
 Dataset klasorundeki tum verilerle additive egitim icin:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\train-from-dataset.ps1 -DatasetPath .\\dataset -Apply -CompileVersion 2026-v2-dataset
+powershell -ExecutionPolicy Bypass -File .\tools\train-from-dataset.ps1 -DatasetPath .\dataset -Apply -CompileVersion 2026-v2-dataset
 ```
-

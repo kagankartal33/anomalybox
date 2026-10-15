@@ -1,4 +1,4 @@
-# API Contracts
+﻿# API Contracts
 
 Bu sozlesme yeni stok modeline gore gunceldir: fikirler influencer satin aldigi anda uretilmez. Admin/generator once fikirleri batch olarak uretir, skorlar ve `idea_inventory` stok havuzuna publish eder. Influencer sadece satin aldigi kutudan kendisine atanmis fikir kartlarini gorur.
 
@@ -59,86 +59,6 @@ where namespace = 'training.compiled_profile'
 Exact kategori profili yoksa fonksiyon `quality_vector.scope = global_platform_fallback` ile genel platform profilinden sonuc dondurur; generator bunu long-tail kategoriye creator context ve kategori metadata'siyle yeniden uyarlar.
 `category_layer_policy_for_scope` sonucu generator'a kategoriye gore required/optional/premium layer listesini ve pratik etki talimatlarini verir. `policy_slug`, `quality_rules` ve internal metadata creator-facing karta yazilmaz; kart sadece uygulanmis layerlari ve creator'a faydasini anlatan `category_layer_pack` alanini gosterir.
 
-## Admin Media Training API
-
-Bu endpointler `supabase/functions/admin-media-training/index.ts` icindedir ve `ADMIN_API_TOKEN` veya `INTERNAL_API_TOKEN` ister. Amaç ham videoyu kopyalamak degil; upload, Reels URL, caption, transcript ve admin notlarindan soyut Reels mekanizmasi cikarmaktir.
-
-### `POST /admin-media-training`
-
-Media training kaynagi olusturur.
-
-```json
-{
-  "external_source_id": "media_beauty_luxury_june",
-  "title": "Beauty luxury Reels review batch",
-  "category_slug": "beauty",
-  "persona_slug": "luxury_editor",
-  "platform": "instagram_reels",
-  "language": "tr"
-}
-```
-
-### `POST /admin-media-training/:id/assets`
-
-Bir kaynaga upload metadata, Instagram Reels URL veya manual transcript ekler. Upload dosyalari private `training-media` bucket'ina konur; ilk API versiyonu binary upload'u degil, storage path ve metadata kaydini alir.
-
-```json
-{
-  "assets": [
-    {
-      "source_type": "upload",
-      "storage_path": "training-media/batch/video.mp4",
-      "file_hash": "sha256...",
-      "caption": "string",
-      "transcript": "string",
-      "admin_notes": "string",
-      "rights_status": "owned",
-      "training_use": "pattern_only",
-      "frame_metadata": {
-        "sampled_frames": ["0s", "1s", "2s", "9s", "payoff", "cta"],
-        "opening_visual": "product close-up"
-      }
-    },
-    {
-      "source_type": "instagram_reels_url",
-      "source_url": "https://www.instagram.com/reel/...",
-      "caption": "string",
-      "transcript": "string",
-      "rights_status": "permissioned",
-      "training_use": "pattern_only"
-    }
-  ]
-}
-```
-
-Duplicate kontrolu file hash, normalized URL hash ve normalized transcript/caption hash ile yapilir.
-
-### `POST /admin-media-training/:id/analyze`
-
-Frame metadata, caption, transcript ve admin notlarindan `media_training_observations` uretir. Cikarilan alanlar pattern-only tutulur: `hook_pattern`, `first_second_visual`, `scene_rhythm`, `shot_taxonomy`, `caption_mechanism`, `comment_trigger`, `save_trigger`, `creator_presence_mode`, `category_layer_signals`, `derived_pattern_ids`, `copy_risk`, `risk_level` ve `training_weight`.
-
-`rights_status = 'unknown'`, public figure, minor/privacy veya copyrighted clip/audio riski varsa observation promote edilmez; `media_training_review_queue` icine duser.
-
-### `POST /admin-media-training/:id/promote-training`
-
-Approved observation'lari training hattina tasir:
-
-```json
-{
-  "compile_version": "2026-v4-media-training"
-}
-```
-
-Promote sonucunda:
-
-- `dataset_training_observations.source_kind` `media_video`, `media_reels_url` veya `media_transcript` olur.
-- `viral_training_examples` kaynagi `media_training_v1` olur.
-- `trend_signals.source = 'media_training_v1'` yazilir.
-- `generator_eval_cases.slug like 'media_eval_%'` leak guard case'leri olusur.
-- `compile_viral_training_profile('2026-v4-media-training')` aktif profile'i yeniler.
-
-Creator-facing output'a source URL, dosya adi, exact caption, exact transcript, creator name, public figure name veya birebir sahne yazilmaz.
-
 ### `POST /admin/generation-batches`
 
 Batch kaydi olusturur.
@@ -175,7 +95,7 @@ JSONL dosyalarini veya direct payload fikirlerini import eder. Hatali satirlar b
   "files": [
     {
       "name": "ideas_0001.jsonl",
-      "content": "{"external_idea_id":"beauty_luxury_editor_000001","title":"..."}\
+      "content": "{\"external_idea_id\":\"beauty_luxury_editor_000001\",\"title\":\"...\"}\n"
     }
   ]
 }
@@ -202,6 +122,9 @@ Direct mode icin ayni endpoint:
           "target_emotion": "string",
           "creator_takeaway": "string"
         },
+        "why_it_works": "string — creator-facing save/share reason",
+        "hook_id": "reverse_prescription",
+        "shoot_format": "talking_head|voiceover|hands_only|pov|screen_recording|object_led|text_led|interview",
         "why_it_can_work": {
           "share_trigger": "string",
           "save_trigger": "string",
@@ -210,7 +133,7 @@ Direct mode icin ayni endpoint:
         "brand_lift_statement": "Bu fikir creator'i ... olarak konumlandirir.",
         "premium_decision_note": "Bu fikrin premium kutuya neden girdigini anlatan kisa stratejik not.",
         "creator_presence_mode": {
-          "mode": "Editorial Insider|Calm Expert Editor|Relatable Confidant|High-Status Minimalist",
+          "mode": "Editorial Insider|Calm Expert Editor|Relatable Confidant|High-Status Minimalist|Faceless Curator|Busy Founder Creator",
           "delivery_style": "string",
           "why_it_fits_creator": "string",
           "avoid": "string"
@@ -493,63 +416,5 @@ Creator UI asla su alanlari gostermez:
 
 RLS satir seviyesini korur; kolon seviyesinde de `assigned_band`, `idea_inventory`, `allocation` ve benzeri internal alanlara authenticated grant verilmez.
 
-## Creator Video Manual Review
+Creator kart yuzeyi `idea_cards` uzerinden Scene Flow / Shoot Plan / Edit Assembly gibi uygulama bolumlerini gosterir. Kart kalite geri bildirimi `card reports` yolu ile yurutulur.
 
-Creator videosu training datasina yazilmaz. Bu akis sadece satin alinmis kartin uygulanip uygulanmadigini adminin manuel kontrol etmesi icindir.
-
-Creator endpoints:
-
-```http
-POST /functions/v1/creator-video-reviews
-POST /functions/v1/creator-video-reviews/:reviewId/attempts/:attemptId/submit
-POST /functions/v1/creator-video-reviews/:reviewId/attempts
-GET /functions/v1/creator-video-reviews
-GET /functions/v1/creator-video-reviews/:reviewId
-```
-
-Admin endpoints `x-admin-token` ister:
-
-```http
-GET /functions/v1/creator-video-reviews/admin?status=under_review
-GET /functions/v1/creator-video-reviews/admin/creator-video-reviews/:reviewId
-POST /functions/v1/creator-video-reviews/admin/creator-video-reviews/:reviewId/attempts/:attemptId/manual-review
-```
-
-Creator detay response'u video status, attempt history, admin feedback, checklist sonucunu ve `card_sections` alanini dondurur. `card_sections` uygulamada accordion/tab olarak render edilir:
-
-```json
-{
-  "key": "scene_flow",
-  "title": "Sahne Akisi",
-  "short_summary": "string",
-  "how_to_do_it": "string",
-  "what_good_looks_like": "string",
-  "common_mistakes": ["string"],
-  "example_execution": "string",
-  "source_payload": {},
-  "checklist_items": []
-}
-```
-
-Admin detay response'u ayni kart sekmelerine ek olarak `admin_review_guide` ve `checklist_template` dondurur. Admin her checklist maddesini `pass`, `partial`, `missing` veya `not_applicable` isaretler ve creator'a gorunen feedback yazar.
-
-Manual review body:
-
-```json
-{
-  "final_decision": "minor_revisions",
-  "overall_feedback": "Ilk saniyedeki hook daha netlestirilmeli.",
-  "admin_private_notes": "creator'a gosterilmez",
-  "checks": [
-    {
-      "check_key": "hook_first_second_visual",
-      "status": "missing",
-      "evidence_summary": "Ilk saniyede gorsel hook net degil.",
-      "revision_advice": "Final goruntuden karar masasina daha sert bir cut ekle.",
-      "admin_private_note": "creator'a gosterilmez"
-    }
-  ]
-}
-```
-
-Status lifecycle: `pending_upload` -> `under_review` -> `revision_requested` veya `ready_to_post`; ciddi brand safety durumunda `blocked`. Eksik varsa creator ayni review thread altinda yeni attempt yukler; eski attempt ve feedback gecmisi korunur. `POST /:reviewId/analyze` manual review modunda `410` doner.

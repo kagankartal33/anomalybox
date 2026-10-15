@@ -1,0 +1,275 @@
+{
+  "generated_at": "2026-08-10T01:26:39.378Z",
+  "pipeline": "viral_idea_cards",
+  "source_export": "production_exports/mvp_finalists_20260705_222400/finalist_cards.jsonl",
+  "cards_scanned": 35,
+  "parse_errors": 0,
+  "parse_error_samples": [],
+  "rates": {
+    "legacy_adapted": 1,
+    "blocking_quality_errors": 1,
+    "red_gate_failures": 1,
+    "leak_signal": 0,
+    "banned_phrase_cards_v2": 1,
+    "red_gates_passed": 0,
+    "schema_v2_band_high": 0,
+    "schema_v2_band_mid": 0,
+    "schema_v2_band_low": 1
+  },
+  "schema_v2_score": {
+    "mean": 50,
+    "p50": 50,
+    "p90": 50,
+    "min": 50,
+    "max": 50
+  },
+  "editorial_quality_score": {
+    "mean": 88.17114285714288,
+    "p50": 87.68,
+    "p90": 91.15,
+    "min": 86.23,
+    "max": 91.15,
+    "present": 35
+  },
+  "by_category": {
+    "beauty": 7,
+    "fashion": 7,
+    "travel": 7,
+    "lifestyle": 7,
+    "food": 7
+  },
+  "by_inventory_band": {
+    "low": 15,
+    "high": 13,
+    "mid": 7
+  },
+  "by_schema_v2_band": {
+    "low": 35
+  },
+  "top_issue_codes": {
+    "BANNED_VAGUE_PHRASE": 266,
+    "DUPLICATE_FIELD_TEXT": 170,
+    "UNSUPPORTED_SCHEMA_VERSION": 35
+  },
+  "top_banned_phrases": {
+    "proof detail": 105,
+    "here is the proof detail": 105,
+    "carry the energy": 70,
+    "let the proof carry": 70,
+    "hidden decision": 35,
+    "content moment": 35,
+    "beauty moment": 21,
+    "for this beauty moment": 21,
+    "food moment": 21,
+    "for this food moment": 21
+  },
+  "north_star_targets": {
+    "approve_rate_safe_candidates": 0.55,
+    "editorial_mean_approved": 88,
+    "semantic_dupe_ge_0_78_share": 0.05,
+    "banned_phrase_hit_rate": 0.01,
+    "gold_gate_agreement": 0.85,
+    "scorer_human_spearman": 0.6
+  },
+  "notes": [
+    "schema_v2_score uses lib/idea-card/quality.scoreIdeaCard after adaptLegacyIdeaCard.",
+    "inventory rank / QG editorial come from export metadata when present.",
+    "scoreCandidate hash bonus is NOT re-simulated here; see admin-generation-batches scoreCandidate for production rank path.",
+    "This baseline is offline finalist-only unless --export points elsewhere."
+  ],
+  "sample_red_gate_failures": [
+    {
+      "line": 1,
+      "idea_id": "3cca4b85-f1a0-421e-8e04-fdb3a05265e1",
+      "category": "beauty",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 10 banned vague phrases."
+      ]
+    },
+    {
+      "line": 2,
+      "idea_id": "8982a4cc-2157-4f12-8a5c-45101b3aed93",
+      "category": "beauty",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 10 banned vague phrases."
+      ]
+    },
+    {
+      "line": 3,
+      "idea_id": "26632a29-4923-48eb-a6c0-b07edfb8886d",
+      "category": "beauty",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 10 banned vague phrases."
+      ]
+    },
+    {
+      "line": 4,
+      "idea_id": "670cb275-a975-4ea3-8358-2030d5ff37a8",
+      "category": "beauty",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 10 banned vague phrases."
+      ]
+    },
+    {
+      "line": 5,
+      "idea_id": "f206dbdd-32e2-4362-be78-b453c11dcf94",
+      "category": "beauty",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 10 banned vague phrases."
+      ]
+    },
+    {
+      "line": 6,
+      "idea_id": "6f31f23f-0131-457f-8eeb-4a0e2701cf8e",
+      "category": "beauty",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Anti-AI Gate] Card contains 10 banned vague phrases."
+      ]
+    },
+    {
+      "line": 7,
+      "idea_id": "494e8a4a-81a8-444e-9e52-608a62b4e6cb",
+      "category": "beauty",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 10 banned vague phrases."
+      ]
+    },
+    {
+      "line": 8,
+      "idea_id": "f468a291-0c30-4477-aab9-45f2f763d2cd",
+      "category": "fashion",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 6 banned vague phrases."
+      ]
+    },
+    {
+      "line": 9,
+      "idea_id": "30b90f09-704b-4aab-aaba-dd067315394d",
+      "category": "fashion",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 6 banned vague phrases."
+      ]
+    },
+    {
+      "line": 10,
+      "idea_id": "2286d0f8-8d58-41a6-9985-76fca218c9b2",
+      "category": "fashion",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 6 banned vague phrases."
+      ]
+    },
+    {
+      "line": 11,
+      "idea_id": "d09431d1-bc71-4138-bbcb-abd761dcb2f0",
+      "category": "fashion",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 6 banned vague phrases."
+      ]
+    },
+    {
+      "line": 12,
+      "idea_id": "6f7ae301-5ce3-47ba-9332-4474ba5805a1",
+      "category": "fashion",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 6 banned vague phrases."
+      ]
+    },
+    {
+      "line": 13,
+      "idea_id": "ff932e8b-8fcf-49e4-b249-1a65f51d7e5c",
+      "category": "fashion",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Anti-AI Gate] Card contains 6 banned vague phrases."
+      ]
+    },
+    {
+      "line": 14,
+      "idea_id": "595f8e3f-9b98-4732-9e19-b83aa6fab303",
+      "category": "fashion",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 6 banned vague phrases."
+      ]
+    },
+    {
+      "line": 15,
+      "idea_id": "70ca13ba-a7d6-4d79-86fe-df6c214ee086",
+      "category": "travel",
+      "failures": [
+        "[Structural Error] Near-identical text also appears at steps.0.performanceNote. (steps.0.action)",
+        "[Structural Error] Near-identical text also appears at steps.1.spokenLine. (steps.1.action)",
+        "[Structural Error] Near-identical text also appears at steps.2.spokenLine. (steps.2.action)",
+        "[Structural Error] Near-identical text also appears at steps.3.spokenLine. (steps.3.action)",
+        "[Structural Error] Near-identical text also appears at steps.4.spokenLine. (steps.4.action)",
+        "[Anti-AI Gate] Card contains 6 banned vague phrases."
+      ]
+    }
+  ]
+}

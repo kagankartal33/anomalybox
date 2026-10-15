@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/methodology" },
 };
 
+export const revalidate = 300;
+
 const stages = [
   ["Goal", "Define the useful audience outcome and the strategic reason the content should exist."],
   ["Action", "Translate the idea into visible behavior that a creator can perform or capture."],

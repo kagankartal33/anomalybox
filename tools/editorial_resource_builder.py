@@ -96,7 +96,7 @@ LANE_GUIDANCE = {
         "audience": "creators and teams comparing direction systems",
         "friction": "a planning product creates more work when buyers cannot see what decisions it resolves before shoot day",
         "principle": "show the artifact, the handoff and the production decision it replaces",
-        "proofs": ["a real card or dossier spread", "a strategist-to-creator handoff", "a shot completed from the written direction", "a clear comparison of workflow steps"],
+        "proofs": ["a real Creator Vault brief", "a strategist-to-creator handoff", "a shot completed from the written direction", "a clear comparison of workflow steps"],
         "measures": ["faster handoff", "fewer clarification messages", "more complete shoots", "better fit between tier and job"],
         "cautions": ["Describe the contents without inventing results.", "Do not present colour as the only difference between tiers.", "Show what remains the creator's decision.", "Keep product claims aligned with the actual service."],
     },
@@ -154,6 +154,8 @@ def lower_first(value: str) -> str:
 def build_editorial_article(inp) -> str:
     """Return a 600-1,200 word, reader-facing article for an ArticleInput."""
     guide = LANE_GUIDANCE.get(inp.lane, LANE_GUIDANCE["strategy"])
+    topic_base = re.sub(r"\s+in\s+\d{4}$", "", inp.title.split(":", 1)[0], flags=re.I)
+    topic_ref = " ".join(topic_base.split()[:7]).rstrip("&,- ")
     sections = list(inp.sections[:4]) or ["Define the goal", "Choose the evidence", "Plan the sequence", "Review the result"]
     while len(sections) < 4:
         sections.append(["Choose the evidence", "Plan the sequence", "Review the result"][len(sections) - 1])
@@ -163,36 +165,33 @@ def build_editorial_article(inp) -> str:
     caution_by_section = [stable_pick(guide["cautions"], inp.slug, f"caution-{i}") for i in range(4)]
 
     intro = (
-        f"{opener} For **{inp.title}**, the useful question is how to turn the promise into choices "
-        f"someone can apply without a second round of interpretation. {inp.description.rstrip('.')}. "
-        f"This guide is written for {guide['audience']} who want a clear starting point, believable evidence "
-        f"and a process that still works under real time and production limits."
+        f"{opener} **{inp.title}** has one practical aim: {lower_first(inp.description.rstrip('.'))}. "
+        f"This guide helps {guide['audience']} decide what to show, what to keep consistent and what to leave out "
+        f"when time, access or production capacity is limited."
     )
 
     quick = (
-        f"Start **{inp.title}** by deciding what the audience should understand or do, then choose the evidence "
-        f"that can honestly support that outcome. Use **{sections[0]}** to set direction, "
-        f"**{sections[1]}** to make the idea concrete, and **{sections[2]}** to keep execution consistent. "
-        f"The governing principle is simple: {guide['principle']}."
+        f"For **{inp.title}**, decide the audience outcome and credible evidence first. Use **{sections[0]}** to set direction, "
+        f"**{sections[1]}** to make it concrete, and **{sections[2]}** to keep execution consistent. "
+        f"The core principle is: {guide['principle']}."
     )
 
     problem = (
-        f"{guide['friction'].capitalize()}. That is why adding more hooks, tools or visual references often "
-        f"fails to improve the final result. The missing piece is usually a decision about what must be seen, "
-        f"what can be claimed and what the audience should take away.\n\n"
-        f"For this topic, keep the scope narrow enough to finish. A complete small version of "
-        f"**{lower_first(sections[0])}** is more useful than an ambitious plan whose proof, timing or owner remains unclear."
+        f"{guide['friction'].capitalize()}. Adding more hooks, tools or visual references rarely fixes that on its own. "
+        f"The missing piece is usually a decision about what must be seen, what can be claimed and what the audience "
+        f"should take away. The practical goal is to {lower_first(inp.description.rstrip('.'))}.\n\n"
+        f"Keep the scope narrow enough to finish. A complete small version of **{lower_first(sections[0])}**, supported by "
+        f"**{lower_first(sections[1])}**, is more useful than an ambitious plan whose proof, timing or owner remains unclear."
     )
 
     rows = []
     for i, section in enumerate(sections):
         rows.append(
-            f"| **{section}** | Define one observable choice | {proof_by_section[i]} | {caution_by_section[i]} |"
+            f"| **{section}** | Set one visible choice | {proof_by_section[i]} | {caution_by_section[i]} |"
         )
     table = (
         "| Decision | What to settle | Evidence | Guardrail |\n"
-        "| :--- | :--- | :--- | :--- |\n"
-        + "\n".join(rows)
+        "| :--- | :--- | :--- | :--- |\n" + "\n".join(rows)
     )
 
     section_blocks = []
@@ -202,38 +201,61 @@ def build_editorial_article(inp) -> str:
         "Keep the choice stable long enough to judge it fairly.",
         "Use the final pass to remove ambiguity, not to add another idea.",
     ]
+    decision_leads = [
+        "Treat this as the decision that makes the evidence possible.",
+        "Set the default before adding stylistic choices.",
+        "Resolve the practical version before planning variations.",
+        "Write the choice so it can survive a handoff.",
+        "Start with the boundary, then define the preferred version.",
+        "Keep the decision small enough to test in one pass.",
+        "Tie the choice to something the audience can verify.",
+        "Use the real constraint to shape the default.",
+    ]
+    evidence_leads = [
+        "Test the decision with",
+        "Use the following as the evidence check:",
+        "The clearest check is",
+        "Confirm the choice through",
+        "Review the result against",
+        "Make the decision visible with",
+        "Support the point with",
+        "Before moving on, verify it through",
+    ]
     for i, section in enumerate(sections):
         measure = stable_pick(guide["measures"], inp.slug, f"measure-{i}")
+        decision_lead = stable_pick(decision_leads, inp.slug, f"decision-lead-{i}")
+        evidence_lead = stable_pick(evidence_leads, inp.slug, f"evidence-lead-{i}")
         section_blocks.append(
             f"### {i + 1}. {section}\n\n"
-            f"{transitions[i]} In **{inp.title}**, {lower_first(section)} should lead to a choice another person "
-            f"can recognise in the finished work. Write the default in plain language, then note the one condition "
-            f"that would justify changing it.\n\n"
-            f"Use {proof_by_section[i]} as the check. If that evidence is unavailable, narrow the promise instead "
-            f"of compensating with stronger adjectives. {caution_by_section[i]} A successful pass should improve {measure}."
+            f"{decision_lead} For **{lower_first(section)}**, {transitions[i].lower()} "
+            f"Write one default and the single condition that would justify changing it.\n\n"
+            f"{evidence_lead} {proof_by_section[i]}. If it is unavailable, narrow the promise. "
+            f"{caution_by_section[i]} A successful pass should produce {measure} before you move to **{lower_first(sections[(i + 1) % len(sections)])}**."
         )
 
+    method_blocks = "\n\n".join(section_blocks)
+
     script = (
-        f"Use this as a starting point, then replace every bracket with a detail from the real situation:\n\n"
+        f"Use this draft to connect **{lower_first(sections[0])}** with **{lower_first(sections[3])}**, then replace every bracket with a real detail:\n\n"
         f"- **Opening:** “If you are trying to [desired outcome], start with {lower_first(sections[0])}.”\n"
         f"- **Context:** “The common problem is [specific friction], which makes [consequence] harder to avoid.”\n"
         f"- **Method:** “First, [action based on {lower_first(sections[1])}]. Then, [action based on {lower_first(sections[2])}].”\n"
         f"- **Evidence:** “Here is {proof_by_section[2]} so you can see what changed.”\n"
         f"- **Next action:** “Use this check before your next [relevant task].”\n\n"
-        f"Read the script aloud once. Remove any line the images, example or page already communicates. The final wording "
-        f"should sound like the creator or brand, not like a universal formula."
+        f"Read it aloud while checking **{lower_first(sections[0])}** and **{lower_first(sections[3])}**. Remove lines the images or example already communicate. "
+        f"The wording should sound like the creator or brand."
     )
 
     first_pass = (
-        f"1. Write the outcome of **{inp.title}** in one sentence using the actual audience and situation.\n"
+        f"1. Write the audience outcome in one sentence.\n"
         f"2. Turn **{sections[0]}** into one default choice and one boundary.\n"
         f"3. Prepare {proof_by_section[1]} before production or publishing begins.\n"
         f"4. Complete **{sections[2]}** without adding a second promise.\n"
-        f"5. Review the result for {stable_pick(guide['measures'], inp.slug, 'final-measure')} and record one change for the next pass."
+        f"5. Review {stable_pick(guide['measures'], inp.slug, 'final-measure')} and record one change."
     )
 
     measurement = (
-        f"Judge the method against the job it is meant to do. Useful signals for this topic include "
+        f"Judge the method by whether **{lower_first(sections[2])}** improves. Useful signals include "
         f"{', '.join(guide['measures'][:3])}. Compare similar pieces or work periods; a single spike is not enough "
         f"to prove a repeatable system. Keep the format stable while testing one meaningful variable at a time."
     )
@@ -247,13 +269,12 @@ def build_editorial_article(inp) -> str:
         f"and one proof moment; remove decorative work that does not help the audience understand the result.\n\n"
         f"### How do I keep the result from feeling generic?\n\n"
         f"Use details from the real situation: the actual constraint, product state, location, audience question or decision. "
-        f"Keep **{sections[3]}** tied to that evidence. Specific context creates distinction more reliably than a louder hook."
+        f"Keep **{sections[3]}** tied to evidence gathered during **{lower_first(sections[0])}**. Specific context creates distinction more reliably than a louder hook."
     )
 
     next_step = (
-        f"Apply the first pass to one real piece of work before expanding the system. If the unresolved problem is still "
-        f"creative direction rather than execution, [explore the AnomalyBox dossier options](/store) and choose the level "
-        f"that matches the decisions you need resolved."
+        f"Apply **{lower_first(sections[0])}** and **{lower_first(sections[3])}** to real work before expanding the system. If creative direction is still unresolved, "
+        f"[explore the AnomalyBox dossier options](/store) and choose the level that fits the decisions you need resolved."
     )
 
     article = f"""# {inp.title}
@@ -274,7 +295,7 @@ def build_editorial_article(inp) -> str:
 
 ## How to put the method into practice
 
-{chr(10).join(section_blocks)}
+{method_blocks}
 
 ## A script you can adapt
 
@@ -300,3 +321,21 @@ def build_editorial_article(inp) -> str:
     if not 600 <= words(article) <= 1200:
         raise ValueError(f"{inp.slug}: editorial article has {words(article)} words")
     return article
+
+
+def add_topic_specific_example(article: str, inp) -> str:
+    """Add a compact worked example when the originality gate requests review."""
+    guide = LANE_GUIDANCE.get(inp.lane, LANE_GUIDANCE["strategy"])
+    sections = list(inp.sections[:4])
+    proof = stable_pick(guide["proofs"], inp.slug, "review-proof")
+    caution = stable_pick(guide["cautions"], inp.slug, "review-caution")
+    example = f"""## A worked example
+
+Picture {guide['audience']} testing **{inp.title}** on one real deliverable. They define **{sections[0]}** and capture {proof} before adding polish. **{sections[1]}** stays visible in the draft, while **{sections[2]}** is judged against the original promise rather than taste alone. {caution} During review, **{sections[3]}** decides what stays, what needs one revision and what should be removed next time. The small scope proves the method under a real constraint before the format expands.
+
+"""
+    marker = "## Frequently asked questions"
+    expanded = article.replace(marker, example + marker, 1) if marker in article else article.rstrip() + "\n\n" + example
+    if words(expanded) > 1200:
+        raise ValueError(f"{inp.slug}: review example pushes article to {words(expanded)} words")
+    return expanded

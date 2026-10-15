@@ -608,7 +608,7 @@ try {
 
   $publishResult = Invoke-JsonPost `
     -Uri "$FunctionsBaseUrl/admin-generation-batches/$($batch.id)/publish-inventory" `
-    -Body @{ quality_floor = 55; max_reuse_count = 1 }
+    -Body @{ quality_floor = 80; max_reuse_count = 1; editorial_quality_floor = 80 }
 
   if ([int]$importResult.imported -ne 2) {
     throw "Expected 2 imported ideas, got $($importResult.imported)"

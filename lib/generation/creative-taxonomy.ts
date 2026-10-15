@@ -33,34 +33,6 @@ export const CONTENT_GENRE_IDS = [
   "interview_exchange",
 ] as const;
 
-type VibePreset = {
-  energy: "low" | "measured" | "high";
-  tempo: string;
-  tone: string;
-  light: string;
-  sound: string;
-  editBoundary: string;
-};
-
-export const VIBE_PRESETS: Readonly<Record<(typeof VIBE_PRESET_IDS)[number], VibePreset>> = {
-  clean_editorial: { energy: "measured", tempo: "deliberate", tone: "clear and composed", light: "soft neutral key light", sound: "clean speech and restrained room tone", editBoundary: "straight cuts; no decorative effects" },
-  quiet_luxury: { energy: "low", tempo: "unhurried", tone: "specific and understated", light: "soft directional light with controlled highlights", sound: "close natural detail with minimal music", editBoundary: "hold material details; avoid status spectacle" },
-  warm_confessional: { energy: "measured", tempo: "conversational", tone: "candid and humane", light: "warm practical light", sound: "intimate natural voice", editBoundary: "few cuts; retain believable pauses" },
-  dry_deadpan: { energy: "low", tempo: "precise", tone: "literal and restrained", light: "even observational light", sound: "dry delivery with real object sounds", editBoundary: "hard cuts only where the consequence changes" },
-  playful_chaos: { energy: "high", tempo: "brisk but readable", tone: "playful, never humiliating", light: "bright available light", sound: "layered real reactions without clipping", editBoundary: "controlled escalation; preserve continuity" },
-  tactile_asmr: { energy: "low", tempo: "patient", tone: "sensory and concrete", light: "raking light that reveals texture", sound: "licensed or original close-mic object sound", editBoundary: "long enough holds to perceive texture" },
-  cinematic_wonder: { energy: "measured", tempo: "expansive", tone: "observant, not grandiose", light: "motivated environmental light", sound: "original ambience with restrained score", editBoundary: "reveal scale through shot progression, not effects" },
-  documentary_observational: { energy: "measured", tempo: "event-led", tone: "factual and present", light: "available natural light", sound: "location sound and intelligible speech", editBoundary: "chronology stays honest; label time jumps" },
-  raw_bts: { energy: "measured", tempo: "working pace", tone: "direct and transparent", light: "available work light", sound: "real setup sound", editBoundary: "keep useful imperfections; disclose resets" },
-  bright_utility: { energy: "measured", tempo: "efficient", tone: "helpful and concrete", light: "bright even task light", sound: "crisp instruction and real action sound", editBoundary: "cut on completed actions, not every word" },
-  precise_neutral: { energy: "low", tempo: "methodical", tone: "bounded and exact", light: "matched controlled light", sound: "neutral voice with low ambience", editBoundary: "comparison conditions must remain identical" },
-  cozy_domestic: { energy: "low", tempo: "comfortable", tone: "familiar and grounded", light: "soft home practicals", sound: "gentle room tone and natural speech", editBoundary: "preserve spatial and prop continuity" },
-  high_energy_challenge: { energy: "high", tempo: "fast with action room", tone: "committed but safe", light: "clear high-output task light", sound: "original rhythm and audible action", editBoundary: "no dangerous compression or fake countdown" },
-  minimal_suspense: { energy: "low", tempo: "progressive", tone: "curious without fear", light: "controlled contrast with visible detail", sound: "subtle original tension bed or room tone", editBoundary: "open loop must close; no fake threat" },
-  street_spontaneous: { energy: "high", tempo: "responsive", tone: "present and consent-aware", light: "available exterior light", sound: "clear location sound", editBoundary: "avoid identifiable bystanders and private details" },
-  calm_expert: { energy: "low", tempo: "assured", tone: "specific, sourced and non-absolute", light: "soft functional light", sound: "clean natural voice", editBoundary: "use inserts only to show evidence" },
-};
-
 export const HOOK_DELIVERY_IDS = [
   "visual_action",
   "spoken",
@@ -116,6 +88,34 @@ export const VIBE_PRESET_IDS = [
   "street_spontaneous",
   "calm_expert",
 ] as const;
+
+type VibePreset = {
+  energy: "low" | "measured" | "high";
+  tempo: string;
+  tone: string;
+  light: string;
+  sound: string;
+  editBoundary: string;
+};
+
+export const VIBE_PRESETS: Readonly<Record<(typeof VIBE_PRESET_IDS)[number], VibePreset>> = {
+  clean_editorial: { energy: "measured", tempo: "deliberate", tone: "clear and composed", light: "soft neutral key light", sound: "clean speech and restrained room tone", editBoundary: "straight cuts; no decorative effects" },
+  quiet_luxury: { energy: "low", tempo: "unhurried", tone: "specific and understated", light: "soft directional light with controlled highlights", sound: "close natural detail with minimal music", editBoundary: "hold material details; avoid status spectacle" },
+  warm_confessional: { energy: "measured", tempo: "conversational", tone: "candid and humane", light: "warm practical light", sound: "intimate natural voice", editBoundary: "few cuts; retain believable pauses" },
+  dry_deadpan: { energy: "low", tempo: "precise", tone: "literal and restrained", light: "even observational light", sound: "dry delivery with real object sounds", editBoundary: "hard cuts only where the consequence changes" },
+  playful_chaos: { energy: "high", tempo: "brisk but readable", tone: "playful, never humiliating", light: "bright available light", sound: "layered real reactions without clipping", editBoundary: "controlled escalation; preserve continuity" },
+  tactile_asmr: { energy: "low", tempo: "patient", tone: "sensory and concrete", light: "raking light that reveals texture", sound: "licensed or original close-mic object sound", editBoundary: "long enough holds to perceive texture" },
+  cinematic_wonder: { energy: "measured", tempo: "expansive", tone: "observant, not grandiose", light: "motivated environmental light", sound: "original ambience with restrained score", editBoundary: "reveal scale through shot progression, not effects" },
+  documentary_observational: { energy: "measured", tempo: "event-led", tone: "factual and present", light: "available natural light", sound: "location sound and intelligible speech", editBoundary: "chronology stays honest; label time jumps" },
+  raw_bts: { energy: "measured", tempo: "working pace", tone: "direct and transparent", light: "available work light", sound: "real setup sound", editBoundary: "keep useful imperfections; disclose resets" },
+  bright_utility: { energy: "measured", tempo: "efficient", tone: "helpful and concrete", light: "bright even task light", sound: "crisp instruction and real action sound", editBoundary: "cut on completed actions, not every word" },
+  precise_neutral: { energy: "low", tempo: "methodical", tone: "bounded and exact", light: "matched controlled light", sound: "neutral voice with low ambience", editBoundary: "comparison conditions must remain identical" },
+  cozy_domestic: { energy: "low", tempo: "comfortable", tone: "familiar and grounded", light: "soft home practicals", sound: "gentle room tone and natural speech", editBoundary: "preserve spatial and prop continuity" },
+  high_energy_challenge: { energy: "high", tempo: "fast with action room", tone: "committed but safe", light: "clear high-output task light", sound: "original rhythm and audible action", editBoundary: "no dangerous compression or fake countdown" },
+  minimal_suspense: { energy: "low", tempo: "progressive", tone: "curious without fear", light: "controlled contrast with visible detail", sound: "subtle original tension bed or room tone", editBoundary: "open loop must close; no fake threat" },
+  street_spontaneous: { energy: "high", tempo: "responsive", tone: "present and consent-aware", light: "available exterior light", sound: "clear location sound", editBoundary: "avoid identifiable bystanders and private details" },
+  calm_expert: { energy: "low", tempo: "assured", tone: "specific, sourced and non-absolute", light: "soft functional light", sound: "clean natural voice", editBoundary: "use inserts only to show evidence" },
+};
 
 export const PROOF_DEVICE_IDS = [
   "controlled_side_by_side",
@@ -336,19 +336,14 @@ function stableHash(value: string): number {
     hash ^= value.charCodeAt(index);
     hash = Math.imul(hash, 16777619);
   }
+  // FNV's low bits preserve patterns when several equal-sized axes are chosen
+  // with modulo. Avalanche first so genre/vibe and other pairs are independent.
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x7feb352d);
+  hash ^= hash >>> 15;
+  hash = Math.imul(hash, 0x846ca68b);
+  hash ^= hash >>> 16;
   return hash >>> 0;
-}
-
-/** Prompt-safe execution direction. It contains no scores or performance claims. */
-export function creativeDirectionForRecipe(recipe: CreativeRecipe) {
-  return {
-    firstFrame: `${recipe.hookDeliveryId} delivery must visibly establish the ${recipe.promiseTypeId} promise immediately`,
-    emotionBeats: recipe.emotionArcId.split("_to_"),
-    vibe: VIBE_PRESETS[recipe.vibePresetId],
-    evidence: `${recipe.proofDeviceId} must occur on camera before the ${recipe.payoffTypeId} payoff`,
-    audienceAction: recipe.audienceActionId,
-    production: { shootFormat: recipe.shootFormat, presenceMode: recipe.presenceMode },
-  };
 }
 
 function hookFamily(recipe: CreativeRecipe): string {
@@ -510,17 +505,8 @@ function candidateRecipes(input: RecipeScheduleInput): CreativeRecipe[] {
     ? AUDIENCE_ACTION_IDS
     : AUDIENCE_ACTION_IDS.filter((value) => value !== "disclosed_commercial_action");
   const candidates: CreativeRecipe[] = [];
-  const sampleHash = (value: string): number => {
-    let hash = stableHash(value);
-    hash ^= hash >>> 16;
-    hash = Math.imul(hash, 0x85ebca6b);
-    hash ^= hash >>> 13;
-    hash = Math.imul(hash, 0xc2b2ae35);
-    hash ^= hash >>> 16;
-    return hash >>> 0;
-  };
   const pick = <T>(values: readonly T[], index: number, axis: string): T =>
-    values[sampleHash(`${input.lane}:${axis}:${input.seed}:${index}`) % values.length];
+    values[stableHash(`${input.lane}:${input.seed}:${index}:${axis}`) % values.length];
   // Independent, axis-salted sampling prevents the modular correlations that
   // made marginal distributions look healthy while pair combinations repeated.
   for (let index = 0; index < 256; index += 1) {
@@ -608,6 +594,12 @@ export function analyzeCreativeDistribution(recipes: CreativeRecipe[]): Creative
     vibe: maxShare(recipes.map((recipe) => recipe.vibePresetId)),
     payoff: maxShare(recipes.map((recipe) => recipe.payoffTypeId)),
   };
+  const pairUniqueCounts = {
+    genreVibe: new Set(recipes.map((recipe) => `${recipe.genreId}|${recipe.vibePresetId}`)).size,
+    hookGenre: new Set(recipes.map((recipe) => `${recipe.hookTypeId}|${recipe.genreId}`)).size,
+    emotionPayoff: new Set(recipes.map((recipe) => `${recipe.emotionArcId}|${recipe.payoffTypeId}`)).size,
+    formatProof: new Set(recipes.map((recipe) => `${recipe.shootFormat}|${recipe.proofDeviceId}`)).size,
+  };
   const issueCodes: string[] = [];
   if (total >= 50 && maxShares.hookType > 0.12) issueCodes.push("hook_type_concentration");
   if (total >= 50 && maxShares.hookFamily > 0.25) issueCodes.push("hook_family_concentration");
@@ -617,12 +609,6 @@ export function analyzeCreativeDistribution(recipes: CreativeRecipe[]): Creative
   if (total >= 50 && maxShares.payoff > 0.2) issueCodes.push("payoff_concentration");
   const uniqueSignatures = new Set(recipes.map(creativeRecipeId)).size;
   if (uniqueSignatures !== total) issueCodes.push("creative_signature_duplicate");
-  const pairUniqueCounts = {
-    genreVibe: new Set(recipes.map((recipe) => `${recipe.genreId}|${recipe.vibePresetId}`)).size,
-    hookGenre: new Set(recipes.map((recipe) => `${recipe.hookTypeId}|${recipe.genreId}`)).size,
-    emotionPayoff: new Set(recipes.map((recipe) => `${recipe.emotionArcId}|${recipe.payoffTypeId}`)).size,
-    formatProof: new Set(recipes.map((recipe) => `${recipe.shootFormat}|${recipe.proofDeviceId}`)).size,
-  };
   if (total >= 50 && pairUniqueCounts.genreVibe < 20) issueCodes.push("genre_vibe_pair_coverage_low");
   if (total >= 50 && pairUniqueCounts.emotionPayoff < 24) issueCodes.push("emotion_payoff_pair_coverage_low");
   if (total >= 50 && pairUniqueCounts.formatProof < 12) issueCodes.push("format_proof_pair_coverage_low");
@@ -644,4 +630,16 @@ export function recipeMatchesConcept(recipe: CreativeRecipe, concept: { hookId?:
   const parsed = creativeRecipeSchema.safeParse(concept.recipe);
   return parsed.success && creativeRecipeId(parsed.data) === creativeRecipeId(recipe) &&
     concept.hookId === recipe.hookTypeId && concept.shootFormat === recipe.shootFormat;
+}
+
+/** Prompt-safe execution direction. It contains no scores or performance claims. */
+export function creativeDirectionForRecipe(recipe: CreativeRecipe) {
+  return {
+    firstFrame: `${recipe.hookDeliveryId} delivery must visibly establish the ${recipe.promiseTypeId} promise immediately`,
+    emotionBeats: recipe.emotionArcId.split("_to_"),
+    vibe: VIBE_PRESETS[recipe.vibePresetId],
+    evidence: `${recipe.proofDeviceId} must occur on camera before the ${recipe.payoffTypeId} payoff`,
+    audienceAction: recipe.audienceActionId,
+    production: { shootFormat: recipe.shootFormat, presenceMode: recipe.presenceMode },
+  };
 }

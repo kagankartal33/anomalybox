@@ -7,11 +7,11 @@ It does not fine-tune a model, clone datasets, or store third-party HTML/CSS/JS 
 ## Refresh Workflow
 
 ```powershell
-python .\\design-intelligence\\scripts\\discover_webui_candidates.py --max-records 120 --offsets 0 500 1500 3000
-python .\\design-intelligence\\scripts\\discover_websight_patterns.py --max-records 60
-python .\\design-intelligence\\scripts\\score_reference_candidates.py --approve-limit 40
-python .\\design-intelligence\\scripts\\export_approved_references.py --max-downloads 20
-python .\\design-intelligence\\scripts\\build_design_playbook.py
+python .\design-intelligence\scripts\discover_webui_candidates.py --max-records 120 --offsets 0 500 1500 3000
+python .\design-intelligence\scripts\discover_websight_patterns.py --max-records 60
+python .\design-intelligence\scripts\score_reference_candidates.py --approve-limit 40
+python .\design-intelligence\scripts\export_approved_references.py --max-downloads 20
+python .\design-intelligence\scripts\build_design_playbook.py
 ```
 
 Use larger limits only when needed. Do not run `snapshot_download`, `git clone`, `git lfs`, or bulk Parquet downloads for this pack.

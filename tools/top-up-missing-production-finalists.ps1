@@ -2,7 +2,7 @@ param(
   [Parameter(Mandatory = $true)][string]$MissingRoutesPath,
   [int]$GenerationCardsPerMissingCategory = 24,
   [int]$ChunkSize = 25,
-  [int]$QualityFloor = 45,
+  [int]$QualityFloor = 80,
   [switch]$DryRun
 )
 
@@ -37,7 +37,7 @@ for ($offset = 0; $offset -lt $slugs.Count; $offset += $ChunkSize) {
   $chunk = @($slugs[$offset..([Math]::Min($offset + $ChunkSize - 1, $slugs.Count - 1))])
   $categoryArg = $chunk -join ","
   Write-Host "Generating finalist stock for missing categories $($offset + 1)-$([Math]::Min($offset + $ChunkSize, $slugs.Count)) of $($slugs.Count)"
-  powershell -ExecutionPolicy Bypass -File .\\tools\\generate-category-stock.ps1 `
+  powershell -ExecutionPolicy Bypass -File .\tools\generate-category-stock.ps1 `
     -CategorySlugs $categoryArg `
     -CardsPerCategory $GenerationCardsPerMissingCategory `
     -QualityFloor $QualityFloor `

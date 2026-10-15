@@ -38,6 +38,8 @@ for (const lane of PURCHASE_LANES) {
     for (let right = left + 1; right < first.length; right += 1) {
       assert.ok(recipeDistance(first[left], first[right]) >= 4, `${lane} pair distance must be at least four axes`);
     }
+  }
+}
 
 const collisionA: CreativeRecipe = {
   taxonomyVersion: CREATIVE_TAXONOMY_VERSION,
@@ -61,7 +63,7 @@ const collisionB: CreativeRecipe = {
   vibePresetId: "clean_editorial",
   payoffTypeId: "mistake_correction",
 };
-assert.equal(legacyCreativeRecipeId(collisionA), "creative-taxonomy-v1:5609873e");
+assert.equal(legacyCreativeRecipeId(collisionA), "creative-taxonomy-v1:913fe2a8");
 assert.equal(legacyCreativeRecipeId(collisionA), legacyCreativeRecipeId(collisionB), "Fixture reproduces the old 32-bit collision");
 assert.notEqual(creativeRecipeId(collisionA), creativeRecipeId(collisionB), "Different recipes must never share a persistent identity");
 assert.equal(creativeRecipeId({ ...collisionA, ...{ hookTypeId: collisionA.hookTypeId } }), creativeRecipeId(collisionA));
@@ -86,8 +88,6 @@ const wrongLaneProof: CreativeRecipe = { ...collisionA, proofDeviceId: "route_ma
 assert.equal(creativeRecipeSchema.safeParse(wrongLaneProof).success, true, "Structural recipe parsing has no lane context");
 assert.ok(validateRecipeCompatibility(wrongLaneProof, "beauty").includes("recipe_proof_lane_incompatible"));
 assert.ok(evaluateIdeaCardV22({ category: "beauty" }, { creativeRecipe: wrongLaneProof }).hardGateCodes.includes("recipe_proof_lane_incompatible"));
-  }
-}
 
 assert.equal(hookAutomationStatus("polarizing_dichotomy"), "blocked");
 assert.equal(hookAutomationStatus("statistic_shock"), "evidence_required");

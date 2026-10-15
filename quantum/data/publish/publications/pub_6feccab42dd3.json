@@ -1,0 +1,21 @@
+{
+  "publication_id": "pub_6feccab42dd3",
+  "version_id": "ver_8d9132926f9b",
+  "site_id": "anomalybox",
+  "page_id": "AB-002",
+  "slug": "instagram-reels-ideas",
+  "path": "/reels/instagram-reels-ideas",
+  "content_version": 1,
+  "content_hash": "sha256:a0556ba678b6d75d960f35490f4be9fc305c26859c40a79994b59c99bd9910e2",
+  "idempotency_key": "anomalybox:/reels/instagram-reels-ideas:v1",
+  "cms_record_id": "cms_588f2e3389a2",
+  "status": "published",
+  "published_by": "batch",
+  "published_at": "2026-08-05T20:28:31Z",
+  "read_back_ok": true,
+  "read_back_at": "2026-08-05T20:28:31Z",
+  "read_back_hash": "sha256:a0556ba678b6d75d960f35490f4be9fc305c26859c40a79994b59c99bd9910e2",
+  "read_back_error": "",
+  "error": "",
+  "rolled_back_from": null
+}

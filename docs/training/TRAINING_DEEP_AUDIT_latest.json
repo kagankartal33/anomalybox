@@ -1,0 +1,249 @@
+﻿{
+    "generated_at":  "2026-08-10T15:24:56.2722569Z",
+    "compile_version":  "2026-v10-6h-secure",
+    "grade":  "C",
+    "pass":  true,
+    "critical_issues":  [
+
+                        ],
+    "metrics":  {
+                    "real_viral_seed":  "1000",
+                    "use_eval_only":  "1902",
+                    "use_negative":  "393",
+                    "avg_patterns":  "6.06",
+                    "distinct_patterns_affinity":  "40",
+                    "active_compilations":  "1",
+                    "affinity":  "30064",
+                    "medium_risk":  "3969",
+                    "low_risk":  "53207",
+                    "copy_medium":  "1713",
+                    "compiled_profile_enabled":  "1",
+                    "pattern_rules":  "40",
+                    "copy_high":  "55837",
+                    "avg_generator_value":  "0.7049",
+                    "eval_cases":  "818",
+                    "examples":  "57596",
+                    "restricted":  "420",
+                    "copy_low":  "46",
+                    "empty_patterns":  "0",
+                    "features":  "57596",
+                    "use_pattern_only":  "55301",
+                    "avg_premium_fit":  "0.7143"
+                },
+    "rates":  {
+                  "empty_pattern_rate":  0,
+                  "restricted_rate":  0.007292,
+                  "copy_high_rate":  0.96946,
+                  "pattern_only_rate":  0.960153
+              },
+    "scope_profile_counts":  {
+                                 "fitness_wellness_safe":  12,
+                                 "beauty":  12,
+                                 "entertainment_comedy":  12,
+                                 "fitness":  12,
+                                 "travel":  12,
+                                 "comedy":  12,
+                                 "food":  12,
+                                 "fashion":  12
+                             },
+    "scope_types":  {
+                        "fitness_wellness_safe":  "exact_category",
+                        "beauty":  "exact_category",
+                        "entertainment_comedy":  "exact_category",
+                        "fitness":  "global_platform_fallback",
+                        "travel":  "exact_category",
+                        "comedy":  "global_platform_fallback",
+                        "food":  "exact_category",
+                        "fashion":  "exact_category"
+                    },
+    "top_categories":  [
+                           {
+                               "category":  "lifestyle",
+                               "affinity_rows":  106,
+                               "avg_weight":  0.6995,
+                               "sum_examples":  58877
+                           },
+                           {
+                               "category":  "entertainment_comedy",
+                               "affinity_rows":  109,
+                               "avg_weight":  0.6349,
+                               "sum_examples":  58160
+                           },
+                           {
+                               "category":  "creator_education",
+                               "affinity_rows":  139,
+                               "avg_weight":  0.6926,
+                               "sum_examples":  53865
+                           },
+                           {
+                               "category":  "product_reviews",
+                               "affinity_rows":  9,
+                               "avg_weight":  0.8044,
+                               "sum_examples":  34726
+                           },
+                           {
+                               "category":  "fashion",
+                               "affinity_rows":  82,
+                               "avg_weight":  0.7576,
+                               "sum_examples":  25181
+                           },
+                           {
+                               "category":  "commerce_affiliate",
+                               "affinity_rows":  108,
+                               "avg_weight":  0.7166,
+                               "sum_examples":  25025
+                           },
+                           {
+                               "category":  "beauty",
+                               "affinity_rows":  65,
+                               "avg_weight":  0.7555,
+                               "sum_examples":  17749
+                           },
+                           {
+                               "category":  "travel",
+                               "affinity_rows":  66,
+                               "avg_weight":  0.7301,
+                               "sum_examples":  8870
+                           },
+                           {
+                               "category":  "celebrity_fan_lore",
+                               "affinity_rows":  53,
+                               "avg_weight":  0.712,
+                               "sum_examples":  8649
+                           },
+                           {
+                               "category":  "food",
+                               "affinity_rows":  62,
+                               "avg_weight":  0.7322,
+                               "sum_examples":  8240
+                           },
+                           {
+                               "category":  "comedy_worldbuilding",
+                               "affinity_rows":  36,
+                               "avg_weight":  0.6353,
+                               "sum_examples":  6084
+                           },
+                           {
+                               "category":  "book_launch_content",
+                               "affinity_rows":  33,
+                               "avg_weight":  0.6272,
+                               "sum_examples":  5438
+                           },
+                           {
+                               "category":  "bureaucratic_comedy",
+                               "affinity_rows":  41,
+                               "avg_weight":  0.6246,
+                               "sum_examples":  5276
+                           },
+                           {
+                               "category":  "literary_lifestyle",
+                               "affinity_rows":  22,
+                               "avg_weight":  0.6104,
+                               "sum_examples":  3735
+                           },
+                           {
+                               "category":  "fitness_wellness_safe",
+                               "affinity_rows":  44,
+                               "avg_weight":  0.6885,
+                               "sum_examples":  3198
+                           }
+                       ],
+    "top_patterns":  [
+                         {
+                             "pattern_id":  "VTP-027",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1204
+                         },
+                         {
+                             "pattern_id":  "VTP-008",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1204
+                         },
+                         {
+                             "pattern_id":  "VTP-026",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1204
+                         },
+                         {
+                             "pattern_id":  "VTP-040",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1204
+                         },
+                         {
+                             "pattern_id":  "VTP-021",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1204
+                         },
+                         {
+                             "pattern_id":  "VTP-003",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1201
+                         },
+                         {
+                             "pattern_id":  "VTP-018",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1200
+                         },
+                         {
+                             "pattern_id":  "VTP-039",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1200
+                         },
+                         {
+                             "pattern_id":  "VTP-001",
+                             "category":  "commerce_affiliate",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9057,
+                             "example_count":  1200
+                         },
+                         {
+                             "pattern_id":  "VTP-033",
+                             "category":  "fashion",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9041,
+                             "example_count":  58
+                         },
+                         {
+                             "pattern_id":  "VTP-036",
+                             "category":  "beauty",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9009,
+                             "example_count":  103
+                         },
+                         {
+                             "pattern_id":  "VTP-006",
+                             "category":  "beauty",
+                             "platform":  "instagram_reels",
+                             "signal_weight":  0.9009,
+                             "example_count":  103
+                         }
+                     ],
+    "issues":  [
+                   "comedy_slug_uses_global_fallback_use_entertainment_comedy",
+                   "fitness_slug_uses_global_fallback_use_fitness_wellness_safe",
+                   "copy_risk_nearly_constant_high_not_discriminative"
+               ],
+    "recommendations":  [
+                            "Map generator comedy -\u003e entertainment_comedy",
+                            "Map generator fitness -\u003e fitness_wellness_safe",
+                            "Run eval-lora-idea-card-generation.py before wiring LoRA",
+                            "Fix book craft feature upsert if re-applying book package",
+                            "Consider downweighting commerce_affiliate affinity bias"
+                        ]
+}

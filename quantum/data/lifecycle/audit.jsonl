@@ -1,0 +1,2 @@
+{"at": "2026-08-05T21:10:56Z", "event": "lifecycle_decided", "record_id": "life_c1a5de72b7ba", "slug": "demo-stale", "action": "refresh_evidence", "actor": "cli"}
+{"at": "2026-08-05T21:10:56Z", "event": "lifecycle_applied", "record_id": "life_c1a5de72b7ba", "action": "refresh_evidence", "actor": "cli", "target": null}

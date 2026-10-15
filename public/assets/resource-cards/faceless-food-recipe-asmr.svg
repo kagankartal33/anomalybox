@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#451A03" />
+      <stop offset="100%" stop-color="#78350F" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FBBF24" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#FBBF24" stop-opacity="0.2" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-opacity="0.11" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bgGrad)" />
+  <rect width="800" height="450" fill="url(#grid)" />
+
+  <!-- Abstract Geometry -->
+  <circle cx="306" cy="105" r="293" fill="#FBBF24" opacity="0.15" />
+  <rect x="500" y="50" width="220" height="220" rx="24" fill="none" stroke="#FBBF24" stroke-width="2" opacity="0.3" transform="rotate(11 610 160)" />
+
+  <!-- Content Container -->
+  <g transform="translate(60, 220)">
+    <!-- Accent Pill -->
+    <rect x="0" y="-120" width="180" height="32" rx="16" fill="url(#accentGrad)" />
+    <text x="16" y="-99" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" letter-spacing="1.5">ANOMALYBOX DOSSIER</text>
+
+    <!-- Title Lines -->
+    <text x="0" y="-30" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">FACELESS FOOD RECIPE</text>
+    <text x="0" y="15" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="700" fill="#FBBF24" letter-spacing="-0.5">ASMR FILMING GUIDE</text>
+    
+    <!-- Footer Subtitle -->
+    <text x="0" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500" fill="#94A3B8" letter-spacing="0.5">Physical Creative Direction &amp; Shoot-Ready Specification</text>
+  </g>
+
+  <!-- Decorative Corner Icon -->
+  <g transform="translate(710, 360)">
+    <circle cx="20" cy="20" r="24" fill="#FBBF24" opacity="0.2"/>
+    <path d="M12 20 L28 20 M20 12 L20 28" stroke="#FBBF24" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

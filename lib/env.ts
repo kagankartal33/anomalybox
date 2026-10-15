@@ -1,40 +1,51 @@
 function readEnv(name: string, fallback?: string) {
-  const value = process.env[name] ?? fallback;
+  const raw = process.env[name]?.trim();
+  const value = raw && !raw.includes("[SENSITIVE]") ? raw : fallback;
   if (!value) throw new Error(`Missing required env: ${name}`);
   return value;
 }
 
-export function siteUrl(): string {
-  const custom = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (custom && !custom.includes("localhost") && !custom.includes("127.0.0.1")) {
-    return custom.replace(/\/$/, "");
+function optionalEnv(name: string, fallback: string): string;
+function optionalEnv(name: string, fallback?: string): string | undefined;
+function optionalEnv(name: string, fallback?: string) {
+  const raw = process.env[name]?.trim();
+  return raw && !raw.includes("[SENSITIVE]") ? raw : fallback;
+}
+
+export function siteUrl() {
+  const url = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (url && (url.startsWith("http://") || url.startsWith("https://")) && !url.includes("[SENSITIVE]")) {
+    return url;
   }
-  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() || process.env.VERCEL_URL?.trim();
-  if (vercel) {
-    return `https://${vercel.replace(/\/$/, "")}`;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   }
-  const netlify = process.env.URL?.trim();
-  if (netlify && !netlify.includes("localhost")) {
-    return netlify.replace(/\/$/, "");
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
   }
-  if (process.env.NODE_ENV === "production") {
-    return "https://anomalybox.com";
-  }
-  return custom || "http://localhost:3000";
+  return "https://anomalybox.com";
 }
 
 export const env = {
   supabaseUrl: () => readEnv("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:58321"),
-  supabaseAnonKey: () => readEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
-  supabaseServiceRoleKey: () => readEnv("SUPABASE_SERVICE_ROLE_KEY"),
+  supabaseAnonKey: () =>
+    readEnv(
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0",
+    ),
+  supabaseServiceRoleKey: () =>
+    readEnv(
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU",
+    ),
   stripeSecretKey: () => readEnv("STRIPE_SECRET_KEY"),
   stripeWebhookSecret: () => readEnv("STRIPE_WEBHOOK_SECRET"),
-  resendApiKey: () => process.env.RESEND_API_KEY,
-  emailFrom: () => process.env.EMAIL_FROM ?? "Anomaly Box <notifications@anomalybox.com>",
+  resendApiKey: () => optionalEnv("RESEND_API_KEY"),
+  emailFrom: () => optionalEnv("EMAIL_FROM", "Anomaly Box <notifications@anomalybox.com>"),
   atelierInbox: () => "support@anomalybox.com",
-  siteUrl: () => siteUrl(),
-  metaAppId: () => process.env.META_APP_ID,
-  metaAppSecret: () => process.env.META_APP_SECRET,
-  metaRedirectUri: () => process.env.META_REDIRECT_URI ?? `${siteUrl()}/api/auth/instagram/callback`,
+  metaAppId: () => optionalEnv("META_APP_ID"),
+  metaAppSecret: () => optionalEnv("META_APP_SECRET"),
+  metaRedirectUri: () => optionalEnv("META_REDIRECT_URI", `${siteUrl()}/api/auth/instagram/callback`),
   linkedAccountTokenSecret: () => readEnv("LINKED_ACCOUNT_TOKEN_SECRET"),
 };
+

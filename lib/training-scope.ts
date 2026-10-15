@@ -1,23 +1,23 @@
-import { parsePurchaseLane, PURCHASE_LANES } from "./algorithmic-reason/compatibility";
+/**
+ * Product category slugs → training affinity scopes.
+ * Keep in sync with supabase/functions/admin-generation-batches resolveTrainingScopeSlug.
+ */
+const TRAINING_SCOPE_ALIASES: Record<string, string> = {
+  comedy: "entertainment_comedy",
+  entertainment: "entertainment_comedy",
+  humor: "entertainment_comedy",
+  funny: "entertainment_comedy",
+  fitness: "fitness_wellness_safe",
+  wellness: "fitness_wellness_safe",
+  gym: "fitness_wellness_safe",
+  health: "fitness_wellness_safe",
+};
 
-export function resolveTrainingScopeSlug(slug: string): string {
-  const direct = parsePurchaseLane(slug);
-  if (direct) return direct;
-  const normalized = slug.toLowerCase().replace(/[_-]+/g, " ");
-  for (const lane of PURCHASE_LANES) {
-    const laneWords = lane.replace(/_/g, " ");
-    if (normalized.includes(laneWords)) return lane;
-  }
-  if (/beauty|skincare|makeup|cosmetics/.test(normalized)) return "beauty";
-  if (/fashion|clothing|outfit|style/.test(normalized)) return "fashion";
-  if (/food|dining|restaurant|recipe|cooking/.test(normalized)) return "food";
-  if (/travel|trip|tour|hotel|vacation/.test(normalized)) return "travel";
-  if (/fitness|workout|gym|wellness/.test(normalized)) return "fitness_wellness_safe";
-  if (/comedy|funny|humor|sketch/.test(normalized)) return "entertainment_comedy";
-  if (/luxury|yacht|jewelry/.test(normalized)) return "luxury";
-  if (/parent|family|kids/.test(normalized)) return "parenting_family";
-  if (/business|leadership|career|strategy/.test(normalized)) return "thought_leadership";
-  if (/creator|content|youtube|reels|camera/.test(normalized)) return "creator_education";
-  if (/commerce|shop|affiliate|product/.test(normalized)) return "commerce_affiliate";
-  return "lifestyle";
+export function resolveTrainingScopeSlug(categorySlug: string): string {
+  const raw = String(categorySlug ?? "").trim().toLowerCase();
+  return TRAINING_SCOPE_ALIASES[raw] ?? raw;
+}
+
+export function trainingScopeAliases(): Readonly<Record<string, string>> {
+  return TRAINING_SCOPE_ALIASES;
 }

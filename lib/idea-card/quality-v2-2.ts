@@ -1,6 +1,6 @@
-import { ideaCardSchema } from "./schema";
-import { hasEarlySponsorDisclosure, needsSponsorDisclosure, privacySafetyFlags } from "./content-safety";
-import { parsePurchaseLane } from "../algorithmic-reason/compatibility";
+import { ideaCardSchema } from "./schema.ts";
+import { hasEarlySponsorDisclosure, needsSponsorDisclosure, privacySafetyFlags } from "./content-safety.ts";
+import { parsePurchaseLane } from "../algorithmic-reason/compatibility.ts";
 import {
   creativeRecipeSchema,
   hookAutomationStatus,
@@ -8,7 +8,7 @@ import {
   validateRecipeCompatibility,
   type RecipeEvidence,
   type CreativeRecipe,
-} from "../generation/creative-taxonomy";
+} from "../generation/creative-taxonomy.ts";
 
 export const QUALITY_GATE_VERSION = "quality-gate-v3.0.1-automatic";
 
@@ -92,7 +92,6 @@ const META_LANGUAGE = /\b(viral|algorithm|engagement bait|watch time|retention h
 const GUARANTEE_LANGUAGE = /\b(guaranteed|cures?|treats?\b|diagnos(?:e|is)|risk[- ]free|no side effects|lose \d+|make money fast|instant results?|always works?)\b/i;
 const GENERIC_CTA = /\b(follow for more|like and subscribe|smash (?:that )?like|save this for later|comment below)\b/i;
 const PHYSICAL_ACTION = /\b(open|close|place|pour|drop|cap|uncap|cut|slice|mix|blend|stir|hold|turn|walk|step|lift|lower|show|reveal|point|tap|press|wipe|swap|taste|bend|write|measure|compare|apply|remove|enter|exit|frame|pan|tilt|zoom|rack focus|capture)\b/i;
-
 const CAMERA_LANGUAGE = /\b(close-up|wide|medium|macro|overhead|handheld|tripod|static|tracking|pov|rack focus|push-in|locked)\b/i;
 const SECOND_PERSON = /\b(you|your|we|I|my|let's|here's|watch|look)\b/i;
 const BANNED_RESIDUE = /\b(lorem ipsum|insert (?:hook|cta|product)|placeholder|as an ai|category_layer_pack|premium completeness|human awareness score|quality gate|score_band|internal score|decision trace|training (?:data|profile|source)|dataset|inventory id|generator run|creative[-_ ]recipe|taxonomy[-_ ]version|genre[-_ ]id|vibe[-_ ]preset|emotion[-_ ]arc|proof[-_ ]device|payoff[-_ ]type)\b/i;
@@ -120,140 +119,32 @@ const LANE_TERMS: Record<string, RegExp> = {
 };
 
 function affirmativeSentences(value: string): string {
-  return value.split(/(?<=[.!?;])\s+|\n+/)
-    .map((s) => s.trim())
-    .filter((s) => s && !/^\s*(?:please\s+)?(?:never\b|do not\b|don't\b|avoid\b)/i.test(s))
-    .join(" ");
+  return value.replace(/[\u2018\u2019]/g, "'").split(/(?<=[.!?;])\s+|\n|\bbut\b/i).filter((sentence) => !/^\s*(?:please\s+)?(?:never\b|do not\b|don't\b|avoid\b|no medical claim\b|this is not medical advice\b)/i.test(sentence)).join(" ");
 }
 
-function visualContentOverlap(plan: string, action: string): number {
-  // Shared camera boilerplate, pronouns, and overlay copy are not evidence
-  // that the scheduled objects or scene actually appear in the first image.
-  const boilerplate = /\b(?:a|an|the|and|or|with|without|in|on|at|to|of|for|from|into|toward|beside|next|both|each|this|that|these|those|it|its|their|them|you|your|one|two|hold|show|place|frame|shot|camera|locked|static|wide|medium|close|up|macro|overhead|handheld|tripod|pov)\b/gi;
-  return overlap(plan.replace(boilerplate, " "), action.replace(boilerplate, " "));
-}
-
-function hookDeliveryExecuted(step: Step | undefined, delivery: string): boolean {
-  if (!step) return false;
-  const opening = `${step.action} ${step.spokenLine ?? ""} ${step.editNote ?? ""}`;
-  if (delivery === "visual_action") return Boolean(step.action && PHYSICAL_ACTION.test(step.action));
-  if (["spoken", "dialogue"].includes(delivery)) return Boolean(step.spokenLine);
-  if (delivery === "on_screen_text") return Boolean(step.onScreenText);
-  if (delivery === "sound") return SOUND_EXECUTION.test(opening);
-  if (delivery === "prop") return PHYSICAL_ACTION.test(step.action) && hasConcreteDetail(step.action);
-  if (delivery === "environment") return ENVIRONMENT_EXECUTION.test(opening);
-  if (delivery === "edit_transition") return EDIT_TRANSITION_EXECUTION.test(step.editNote);
-  return false;
-}
-
-function proofDeviceExecuted(steps: Step[], proofDeviceId: string): boolean {
-  const execution = steps.map((step) => affirmativeSentences(`${step.action} ${step.spokenLine ?? ""}`)).join(" ");
-  const visible = steps.some(visibleProof);
-  const patterns: Record<string, RegExp> = {
-    controlled_side_by_side: /\b(compare|both|side by side|split screen|versus|vs\.)\b/i,
-    live_demonstration: /\b(apply|demonstrate|test|show|make|assemble|perform|use)\b/i,
-    measured_readout: /\b(measure|timer|readout|scale|number|receipt|count|temperature)\b/i,
-    process_result: /\b(process|finish(?:ed)?|result|after|reveal|show)\b/i,
-    visible_consequence: /\b(consequence|reaction|response|result|change|effect)\b/i,
-    reversal_callback: /\b(reverse|reversal|turn(?:ed)?|flip|callback|instead)\b/i,
-    source_receipt: /\b(source|receipt|document|citation|record|reference)\b/i,
-    route_map: /\b(route|map|itinerary|direction|stop|station)\b/i,
-    sensory_result: /\b(taste|texture|smell|sound|crisp|sizzle|feel)\b/i,
-    form_reference: /\b(form|posture|alignment|range|rep(?:s)?|mobility)\b/i,
-    decision_matrix: /\b(matrix|criteria|checklist|compare|tradeoff|decision)\b/i,
-    before_after_state: /\b(before|after|state|difference|change)\b/i,
-  };
-  return visible && Boolean(patterns[proofDeviceId]?.test(execution));
-}
-
-function payoffTypeExecuted(step: Step | undefined, payoffTypeId: string): boolean {
-  if (!step || !visiblyCompletesPayoff(step)) return false;
-  const execution = affirmativeSentences(`${step.action} ${step.spokenLine ?? ""} ${step.onScreenText ?? ""}`);
-  const patterns: Record<string, RegExp> = {
-    visible_result: /\b(result|finish(?:ed)?|show|reveal|display|difference)\b/i,
-    side_by_side_decision: /\b(side by side|both|compare|choice|choose|smoother|better|decision)\b/i,
-    reversal_callback: /\b(reverse|reversal|turn(?:ed)?|flip|instead)\b/i,
-    before_after_state: /\b(before|after|state|difference|change)\b/i,
-    answer_reveal: /\b(answer|reveal|resolve|correct)\b/i,
-    usable_artifact: /\b(checklist|template|plan|matrix|list|artifact|decision)\b/i,
-    sensory_finish: /\b(taste|texture|smell|sound|finish|feel)\b/i,
-    mistake_correction: /\b(correct|fix|replace|mistake|instead)\b/i,
-    identity_resolution: /\b(choose|decision|fit|style|identity|preference)\b/i,
-    open_loop_close: /\b(answer|resolve|reveal|close|result)\b/i,
-  };
-  return Boolean(patterns[payoffTypeId]?.test(execution));
-}
-
-function highConfidenceSafetyCodes(value: string): string[] {
-  const codes: string[] = [];
-  const childCapture = /\b(record|film|capture|show|display|reveal|share|publish|post)\b/i.test(value)
-    && /\b(child|kid|toddler|minor|student)\b/i.test(value);
-  const privateChildDetail = /\b(full face|name|school|location|address|bedroom|medical|health record|private message)\b/i.test(value);
-  const childSafeguard = /\b(parent(?:al)?|guardian) (?:permission|consent)\b|\b(blur|redact|fictional)\b/i.test(value);
-  if (childCapture && privateChildDetail && !childSafeguard) codes.push("hard_child_privacy");
-  if (/\b(child|kid|toddler|minor)\b/i.test(value) && /\b(distress|crying|meltdown|tantrum|humiliate|shame|scare)\b/i.test(value)) codes.push("hard_child_distress");
-  if (/\b(blindfold(?:ed)?|without (?:a )?spotter|hold (?:your )?breath|choke|strangle|set .{0,30} on fire|drive (?:as )?fast|jump from|dangerous challenge|eat (?:a )?(?:nonfood|detergent)|ingest (?:detergent|cleaner))\b/i.test(value)) {
-    codes.push("dangerous_physical_direction");
-  }
-  return codes;
-}
-
-function minimumActionSeconds(value: string, editNote?: string): number {
-  const affirmativeCombined = affirmativeSentences(`${value} ${editNote ?? ""}`);
-  const words: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, fifteen: 15, twenty: 20, thirty: 30, sixty: 60 };
-  const matches = [...value.matchAll(/\b(\d+(?:\.\d+)?|one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|thirty|sixty)\s*(seconds?|minutes?)\b/gi)];
-  if (!matches.length) return 0;
-  if (/time.?lapse|jump cut|cut ahead|speed.?up|pre.?recorded/i.test(affirmativeCombined)) return 0;
-  const durations = matches.map((match) => (words[match[1].toLowerCase()] ?? Number(match[1])) * (/minute/i.test(match[2]) ? 60 : 1));
-  if (/simultaneous|parallel|same time|at once/i.test(value)) {
-    return Math.max(...durations);
-  }
-  return durations.reduce((sum, d) => sum + d, 0);
+function minimumActionSeconds(value: string, editNote: string): number {
+  const words: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60 };
+  const action = affirmativeSentences(value);
+  const direction = affirmativeSentences(`${value}\n${editNote}`);
+  // Compression belongs in the edit direction too. Merely mentioning a
+  // forbidden time-lapse cannot make a real-time physical wait fit the slot.
+  const mustRemainContinuous = /\b(real[- ]time|continuous shot|uncut|no (?:jump[- ]?)?cuts?|without (?:any )?cuts?)\b/i.test(direction);
+  const compressionClauses = direction.split(/(?<=[.!?;])\s+|\n/i).filter((clause) => !/\b(?:no|not|never|avoid)\s+(?:(?:any|a|the|use|using)\s+){0,3}(?:time.?lapse|jump[- ]?cut|cut ahead|speed.?up|pre.?recorded)/i.test(clause));
+  if (!mustRemainContinuous && compressionClauses.some((clause) => /\b(time.?lapse|jump[- ]?cut|cut ahead|speed.?up|pre.?recorded)\b/i.test(clause))) return 0;
+  const matches = [...action.matchAll(/\b(\d+(?:\.\d+)?|(?:twenty|thirty|forty|fifty|sixty)(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)[ -]*(seconds?|minutes?)\b/gi)];
+  const durations = matches.map((match) => {
+    const count = /^\d/.test(match[1]) ? Number(match[1]) : match[1].toLowerCase().split(/[- ]/).reduce((sum, part) => sum + (words[part] ?? 0), 0);
+    return count * (/minute/i.test(match[2]) ? 60 : 1);
+  });
+  const sequential = !/\b(simultaneously|at the same time|in parallel)\b/i.test(action)
+    && matches.some((match, index) => index > 0 && /\b(?:then|followed by|after that)\b|^\s*$/i.test(action.slice(matches[index - 1].index! + matches[index - 1][0].length, match.index)));
+  return sequential ? durations.reduce((sum, duration) => sum + duration, 0) : Math.max(0, ...durations);
 }
 
 function record(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
     ? value as Record<string, unknown>
     : {};
-}
-
-function durationProfile(duration: number): "quick" | "single" | "story" | "deep" | null {
-  if (duration >= 12 && duration <= 18) return "quick";
-  if (duration >= 19 && duration <= 27) return "single";
-  if (duration >= 28 && duration <= 39) return "story";
-  if (duration >= 40 && duration <= 60) return "deep";
-  return null;
-}
-
-function expectedStepRange(duration: number): { min: number; max: number } | null {
-  const profile = durationProfile(duration);
-  if (profile === "quick") return { min: 3, max: 4 };
-  if (profile === "single") return { min: 4, max: 5 };
-  if (profile === "story") return { min: 5, max: 6 };
-  if (profile === "deep") return { min: 6, max: 8 };
-  return null;
-}
-
-function wordCount(value: string): number {
-  return value.split(/\s+/).filter(Boolean).length;
-}
-
-function visibleProof(step: Step): boolean {
-  const action = affirmativeSentences(step.action);
-  if (/\b(without (?:testing|showing)|unopened|sealed|guess|might|later|tomorrow|soon|never show)\b/i.test(action)) return false;
-  // A prop (sample, timer, receipt) or promise of a test is not a performed test.
-  const performedTest = /\b(compare|measure|test|demonstrate)\b/i.test(action)
-    && !/\b(?:promise|tease|announce|plan|prepare|pretend|describe|say|talk about)\b/i.test(action);
-  const visibleResult = /\b(?:show|reveal|capture|frame)\b/i.test(action)
-    && /\b(?:results?|finish(?:es)?|textures?|readout|receipt|cross.section|inside|difference|reversal|reaction|before.and.after|side by side|split screen)\b/i.test(action);
-  return PHYSICAL_ACTION.test(action) && (performedTest || visibleResult);
-}
-
-function visiblyCompletesPayoff(step: Step): boolean {
-  const action = affirmativeSentences(step.action);
-  if (/\b(without (?:showing|revealing|comparing)|(?:promise|tease|withhold|hide) (?:the |a )?(?:result|answer|finish|comparison)|(?:result|answer|comparison) (?:later|tomorrow|soon))\b/i.test(action)) return false;
-  return /\b(show|reveal|compare|finish|choose|resolve|correct|complete|taste|display)\b/i.test(action)
-    || (/\b(hold|point)\b/i.test(action) && /\b(finish(?:ed)?|result|completed|comparison|answer|artifact|checklist|decision|texture|side by side)\b/i.test(action));
 }
 
 function text(value: unknown): string {
@@ -362,9 +253,20 @@ function overlap(left: string, right: string): number {
   if (!a.size || !b.size) return 0;
   let hits = 0;
   for (const token of a) if (b.has(token)) hits += 1;
+  return hits / Math.min(a.size, b.size);
+}
+
+function visualContentOverlap(plan: string, action: string): number {
+  // Shared camera boilerplate, pronouns, and overlay copy are not evidence
+  // that the scheduled objects or scene actually appear in the first image.
+  const boilerplate = /\b(?:a|an|the|and|or|with|without|in|on|at|to|of|for|from|into|toward|beside|next|both|each|this|that|these|those|it|its|their|them|you|your|one|two|hold|show|place|frame|shot|camera|locked|static|wide|medium|close|up|macro|overhead|handheld|tripod|pov)\b/gi;
+  const planned = tokenSet(plan.replace(boilerplate, " "));
+  const performed = tokenSet(action.replace(boilerplate, " "));
+  let hits = 0;
+  for (const token of planned) if (performed.has(token)) hits += 1;
   // One shared noun such as “mirror” can be incidental. The first-frame plan
   // must establish at least two planned visual details in the actual action.
-  return hits < 2 ? 0 : hits / Math.min(a.size, b.size);
+  return hits < 2 ? 0 : hits / Math.min(planned.size, performed.size);
 }
 
 function uniqueRatio(values: string[]): number {
@@ -374,6 +276,110 @@ function uniqueRatio(values: string[]): number {
 
 function hasConcreteDetail(value: string): boolean {
   return /\b\d+(?:\.\d+)?\b/.test(value) || /\b(mirror|counter|kitchen|studio|street|hotel|trail|gym|pan|bowl|brush|shoe|plate|window|door|bench|table|phone|camera|product|ingredient|boat|yacht|deck|room|restaurant|oven|glass|towel|mat|dumbbell|bottle|bag|screen|sample|swatch)\b/i.test(value);
+}
+
+function durationProfile(duration: number): "quick" | "single" | "story" | "deep" | null {
+  if (duration >= 12 && duration <= 18) return "quick";
+  if (duration >= 19 && duration <= 27) return "single";
+  if (duration >= 28 && duration <= 39) return "story";
+  if (duration >= 40 && duration <= 60) return "deep";
+  return null;
+}
+
+function expectedStepRange(duration: number): { min: number; max: number } | null {
+  const profile = durationProfile(duration);
+  if (profile === "quick") return { min: 3, max: 4 };
+  if (profile === "single") return { min: 4, max: 5 };
+  if (profile === "story") return { min: 5, max: 6 };
+  if (profile === "deep") return { min: 6, max: 8 };
+  return null;
+}
+
+function wordCount(value: string): number {
+  return value.split(/\s+/).filter(Boolean).length;
+}
+
+function visibleProof(step: Step): boolean {
+  const action = affirmativeSentences(step.action);
+  if (/\b(without (?:testing|showing)|unopened|sealed|guess|might|later|tomorrow|soon|never show)\b/i.test(action)) return false;
+  // A prop (sample, timer, receipt) or promise of a test is not a performed test.
+  const performedTest = /\b(compare|measure|test|demonstrate)\b/i.test(action)
+    && !/\b(?:promise|tease|announce|plan|prepare|pretend|describe|say|talk about)\b/i.test(action);
+  const visibleResult = /\b(?:show|reveal|capture|frame)\b/i.test(action)
+    && /\b(?:results?|finish(?:es)?|textures?|readout|receipt|cross.section|inside|difference|reversal|reaction|before.and.after|side by side|split screen)\b/i.test(action);
+  return PHYSICAL_ACTION.test(action) && (performedTest || visibleResult);
+}
+
+function visiblyCompletesPayoff(step: Step): boolean {
+  const action = affirmativeSentences(step.action);
+  if (/\b(without (?:showing|revealing|comparing)|(?:promise|tease|withhold|hide) (?:the |a )?(?:result|answer|finish|comparison)|(?:result|answer|comparison) (?:later|tomorrow|soon))\b/i.test(action)) return false;
+  return /\b(show|reveal|compare|finish|choose|resolve|correct|complete|taste|display)\b/i.test(action)
+    || (/\b(hold|point)\b/i.test(action) && /\b(finish(?:ed)?|result|completed|comparison|answer|artifact|checklist|decision|texture|side by side)\b/i.test(action));
+}
+
+function hookDeliveryExecuted(step: Step | undefined, delivery: string): boolean {
+  if (!step) return false;
+  const opening = `${step.action}\n${step.shot}\n${step.spokenLine}\n${step.onScreenText}\n${step.editNote}\n${step.performanceNote}`;
+  if (delivery === "visual_action") return Boolean(step.action && PHYSICAL_ACTION.test(step.action));
+  if (["spoken", "dialogue"].includes(delivery)) return Boolean(step.spokenLine);
+  if (delivery === "on_screen_text") return Boolean(step.onScreenText);
+  if (delivery === "sound") return SOUND_EXECUTION.test(opening);
+  if (delivery === "prop") return PHYSICAL_ACTION.test(step.action) && hasConcreteDetail(step.action);
+  if (delivery === "environment") return ENVIRONMENT_EXECUTION.test(opening);
+  if (delivery === "edit_transition") return EDIT_TRANSITION_EXECUTION.test(step.editNote);
+  return false;
+}
+
+function proofDeviceExecuted(steps: Step[], proofDeviceId: string): boolean {
+  const execution = steps.map((step) => affirmativeSentences(`${step.action}\n${step.shot}\n${step.onScreenText}`)).join("\n");
+  const visible = steps.some(visibleProof);
+  const patterns: Record<string, RegExp> = {
+    controlled_side_by_side: /\b(compare|both|side by side|split screen|versus|vs\.)\b/i,
+    live_demonstration: /\b(apply|demonstrate|test|show|make|assemble|perform|use)\b/i,
+    measured_readout: /\b(measure|timer|readout|scale|number|receipt|count|temperature)\b/i,
+    process_result: /\b(process|finish(?:ed)?|result|after|reveal|show)\b/i,
+    visible_consequence: /\b(consequence|reaction|response|result|change|effect)\b/i,
+    reversal_callback: /\b(reverse|reversal|turn(?:ed)?|flip|callback|instead)\b/i,
+    source_receipt: /\b(source|receipt|document|citation|record|reference)\b/i,
+    route_map: /\b(route|map|itinerary|direction|stop|station)\b/i,
+    sensory_result: /\b(taste|texture|smell|sound|crisp|sizzle|feel)\b/i,
+    form_reference: /\b(form|posture|alignment|range|rep(?:s)?|mobility)\b/i,
+    decision_matrix: /\b(matrix|criteria|checklist|compare|tradeoff|decision)\b/i,
+    before_after_state: /\b(before|after|state|difference|change)\b/i,
+  };
+  return visible && Boolean(patterns[proofDeviceId]?.test(execution));
+}
+
+function payoffTypeExecuted(step: Step | undefined, payoffTypeId: string): boolean {
+  if (!step || !visiblyCompletesPayoff(step)) return false;
+  const execution = affirmativeSentences(`${step.action}\n${step.goal}\n${step.onScreenText}`);
+  const patterns: Record<string, RegExp> = {
+    visible_result: /\b(result|finish(?:ed)?|show|reveal|display|difference)\b/i,
+    side_by_side_decision: /\b(side by side|both|compare|choice|choose|smoother|better|decision)\b/i,
+    reversal_callback: /\b(reverse|reversal|turn(?:ed)?|flip|instead)\b/i,
+    before_after_state: /\b(before|after|state|difference|change)\b/i,
+    answer_reveal: /\b(answer|reveal|resolve|correct)\b/i,
+    usable_artifact: /\b(checklist|template|plan|matrix|list|artifact|decision)\b/i,
+    sensory_finish: /\b(taste|texture|smell|sound|finish|feel)\b/i,
+    mistake_correction: /\b(correct|fix|replace|mistake|instead)\b/i,
+    identity_resolution: /\b(choose|decision|fit|style|identity|preference)\b/i,
+    open_loop_close: /\b(answer|resolve|reveal|close|result)\b/i,
+  };
+  return Boolean(patterns[payoffTypeId]?.test(execution));
+}
+
+function highConfidenceSafetyCodes(value: string): string[] {
+  const codes: string[] = [];
+  const childCapture = /\b(record|film|capture|show|display|reveal|share|publish|post)\b/i.test(value)
+    && /\b(child|kid|toddler|minor|student)\b/i.test(value);
+  const privateChildDetail = /\b(full face|name|school|location|address|bedroom|medical|health record|private message)\b/i.test(value);
+  const childSafeguard = /\b(parent(?:al)?|guardian) (?:permission|consent)\b|\b(blur|redact|fictional)\b/i.test(value);
+  if (childCapture && privateChildDetail && !childSafeguard) codes.push("hard_child_privacy");
+  if (/\b(child|kid|toddler|minor)\b/i.test(value) && /\b(distress|crying|meltdown|tantrum|humiliate|shame|scare)\b/i.test(value)) codes.push("hard_child_distress");
+  if (/\b(blindfold(?:ed)?|without (?:a )?spotter|hold (?:your )?breath|choke|strangle|set .{0,30} on fire|drive (?:as )?fast|jump from|dangerous challenge|eat (?:a )?(?:nonfood|detergent)|ingest (?:detergent|cleaner))\b/i.test(value)) {
+    codes.push("dangerous_physical_direction");
+  }
+  return codes;
 }
 
 export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options = {}): QualityV22Result {
@@ -462,7 +468,7 @@ export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options =
     hookExecution -= 5;
     hardGateCodes.push("first_frame_plan_mismatch");
   }
-  if (recipe?.success && firstStep && !hookDeliveryExecuted(firstStep, recipe.data.hookDeliveryId)) {
+  if (recipe?.success && !hookDeliveryExecuted(firstStep, recipe.data.hookDeliveryId)) {
     hookExecution -= 5;
     hardGateCodes.push("hook_delivery_missing");
   }
@@ -514,7 +520,7 @@ export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options =
       emotionVibeCoherence -= 4;
       issueCodes.push("vibe_execution_underspecified");
     }
-    const audioDirection = affirmativeSentences([soundPlan, ...card.notes, ...card.steps.flatMap((step) => [step.action, step.shot, step.editNote, step.performanceNote])].join(" "));
+    const audioDirection = affirmativeSentences([soundPlan, ...card.notes, ...card.steps.flatMap((step) => [step.action, step.shot, step.editNote, step.performanceNote])].join("\n"));
     if (LICENSE_SENSITIVE_SOUND.test(audioDirection) && options.recipeEvidence?.audioLicense !== true) {
       hardGateCodes.push("audio_license_unverified");
     }
@@ -540,7 +546,7 @@ export function evaluateIdeaCardV22(input: unknown, options: QualityV22Options =
 
   let safetyAndEvidence = 8;
   const explicitSafetyFlags = [...(options.safetyFlags ?? []), ...privacySafetyFlags(input)];
-  const claims = affirmativeSentences([card.title, card.concept, card.takeaway, card.why, ...card.requiredItems, ...card.steps.flatMap((step) => [step.purpose, step.goal, step.action, step.shot, step.spokenLine, step.onScreenText, step.editNote, step.performanceNote]), ...card.notes].join(" "));
+  const claims = affirmativeSentences([card.title, card.concept, card.takeaway, card.why, ...card.requiredItems, ...card.steps.flatMap((step) => [step.purpose, step.goal, step.action, step.shot, step.spokenLine, step.onScreenText, step.editNote, step.performanceNote]), ...card.notes].join("\n"));
   if (GUARANTEE_LANGUAGE.test(claims) || /\b(heals?|reverses?|prevents?|clinically proven|burns? fat)\b/i.test(claims)) { safetyAndEvidence -= 8; hardGateCodes.push("unsafe_or_unbounded_claim"); }
   hardGateCodes.push(...explicitSafetyFlags.filter((flag) => flag.startsWith("hard_") || flag.includes("review") || flag === "missing_sponsor_disclosure" || flag === "missing_claim_boundary" || flag === "missing_claim_evidence"));
   if (needsSponsorDisclosure(input) && !hasEarlySponsorDisclosure(input)) {

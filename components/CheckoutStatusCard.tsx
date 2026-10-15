@@ -15,7 +15,7 @@ type StatusPayload = {
 const statusCopy: Record<CheckoutFulfillmentState, { label: string; title: string; body: string }> = {
   delivered: {
     label: "Secured",
-    title: "Your dossier is ready in the Creator Vault.",
+    title: "Your creative brief is ready in Creator Vault.",
     body: "Payment is confirmed and your private briefs have been assigned exactly once.",
   },
   pending: {
@@ -76,7 +76,7 @@ export function CheckoutStatusCard({
       <div className="relative min-h-64 bg-ink lg:min-h-[520px]">
         <Image
           src={premiumAssets.marketing.howReceive}
-          alt="An Anomaly Box creative dossier secured in a calm production workspace"
+          alt="An Anomaly Box creative brief secured in a calm production workspace"
           fill
           sizes="(max-width: 1023px) 100vw, 45vw"
           className="object-cover"

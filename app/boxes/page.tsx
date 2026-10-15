@@ -1,9 +1,14 @@
+import Image from "next/image";
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
-import { CreativeDossierShelf, type CreatorBox } from "@/components/ViralBoxShelf";
+import { CreativeDossierShelf, type CreatorBox } from "@/components/CreativeDossierShelf";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { displayCardPremise, displayCardTitle } from "@/lib/card-display";
+import { premiumAssets } from "@/lib/premium-assets";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function BoxesPage() {
   const { user } = await requireUser();
@@ -56,7 +61,7 @@ export default async function BoxesPage() {
       created_at: delivery.created_at,
       delivered_at: delivery.delivered_at,
       opened_at: typeof metadata.opened_at === "string" ? metadata.opened_at : null,
-      product_name: product?.name ?? "Premium ViralBox",
+      product_name: product?.name ?? "Shoot brief",
       product_slug: product?.slug ?? "viral_box",
       category_name: category?.name ?? category?.slug ?? "Creator category",
       persona_name: persona?.name ?? persona?.slug ?? "Creator persona",
@@ -66,21 +71,38 @@ export default async function BoxesPage() {
 
   return (
     <AppShell>
-      <section className="mb-6 overflow-hidden rounded-md border border-ink/10 bg-ink p-6 text-white shadow-soft">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-white/55">Creator Vault</p>
-          <h1 className="mt-3 text-4xl font-semibold leading-tight md:text-5xl">Your premium ViralBox collection</h1>
-          <p className="mt-4 text-lg leading-8 text-white/70">
-            Sealed boxes stay private until you choose to reveal them. Opened boxes keep your premium creator cards saved for planning, shooting and review.
-          </p>
-        </div>
-      </section>
+      <div className="mb-8">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/40">Creator Vault</p>
+        <h1 className="mt-2 text-4xl font-semibold">Your briefs</h1>
+        <p className="mt-2 max-w-2xl text-ink/70">
+          Each brief keeps the lane and creator mode you bought. Changing your profile later does not rewrite what is already here.
+        </p>
+      </div>
 
       {!boxes.length ? (
         <section className="rounded-md border border-ink/10 bg-white p-8 text-center shadow-soft">
-          <h2 className="text-2xl font-semibold">Your vault is ready for its first box.</h2>
-          <p className="mx-auto mt-3 max-w-xl text-ink/60">Choose your creator lane, buy a ViralBox, and it will appear here as a sealed premium box.</p>
-          <Link className="mt-6 inline-flex rounded-md bg-ink px-5 py-3 font-semibold text-white" href="/store">Browse ViralBox store</Link>
+          <div className="relative mx-auto mb-5 h-40 w-full max-w-md">
+            <Image
+              src={premiumAssets.marketing.emptyVault}
+              alt="An illustration of an empty vault — no briefs have been unlocked yet"
+              fill
+              sizes="400px"
+              className="rounded-sm object-cover"
+            />
+          </div>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">Empty vault</p>
+          <h2 className="mt-2 text-2xl font-semibold">No creative briefs yet</h2>
+          <p className="mx-auto mt-3 max-w-xl text-ink/60">
+            Your Creator Vault is empty. Configure a creative brief in Store with your lane and creator mode. Purchased and gifted briefs appear here secured until you choose to access them.
+          </p>
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link className="focus-ring inline-flex rounded-md bg-ink px-5 py-3 font-semibold text-white" href="/store">
+              Open Store
+            </Link>
+            <Link className="focus-ring inline-flex rounded-md border border-ink/15 px-5 py-3 font-semibold text-ink/75" href="/pricing">
+              Compare creative brief packages
+            </Link>
+          </div>
         </section>
       ) : (
         <CreativeDossierShelf boxes={boxes} />

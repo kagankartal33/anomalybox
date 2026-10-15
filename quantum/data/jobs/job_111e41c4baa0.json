@@ -1,0 +1,34 @@
+{
+  "job_id": "job_111e41c4baa0",
+  "page_id": "AB-099",
+  "slug": "instagram-content-strategy-service",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:instagram-content-strategy-service:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:28Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:28Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:28Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "near_duplicate:ugc-creative-strategy-service:0.843",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

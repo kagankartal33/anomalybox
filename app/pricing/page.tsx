@@ -1,50 +1,66 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Crown, Gem, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Clock3, Crown, Gem, LockKeyhole, ShieldCheck, SlidersHorizontal, Sparkles, VideoOff } from "lucide-react";
 import { PublicShell } from "@/components/PublicShell";
 import { PremiumIcon } from "@/components/PremiumIcon";
 import { CreativeDossierVisual } from "@/components/CreativeDossierVisual";
+import { SampleBriefModal } from "@/components/SampleBriefModal";
+import { premiumAssets } from "@/lib/premium-assets";
 
 export const metadata: Metadata = {
   title: "Anomaly Box Pricing | Classic Red, Signature Purple, and Atelier",
   description:
-    "Compare Anomaly Box pricing for Classic Red, Signature Purple, and the contact-only Atelier concierge creative service.",
+    "Compare Classic Red, Signature Purple, and Atelier. Briefs arrive in Creator Vault. Filming is not included.",
   alternates: {
     canonical: "/pricing",
   },
+  openGraph: {
+    images: [{ url: premiumAssets.og.pricing, width: 1200, height: 630, alt: "Anomaly Box pricing" }],
+  },
 };
 
+export const revalidate = 300;
 const plans = [
   {
     name: "Classic Red Box",
-    price: "$500",
-    description: "2 private creator cards calibrated to your lane, creator mode, and production style.",
+    price: "$9",
+    description: "Two private shoot briefs tailored for one lane and one creator mode. Ready to film this week.",
     variant: "red" as const,
     icon: Gem,
     href: "/store?box=viral_box_500",
     cta: "Configure Classic Red",
-    features: ["Two private strategy cards", "Scene flow and shot direction", "Caption and comment prompts", "Brand-safe execution notes"],
+    features: ["Two private shoot briefs", "Opening, scenes, and camera notes", "Caption and comment prompts", "What you should not claim on camera"],
   },
   {
-    name: "SIGNATURE PURPLE BOX",
-    price: "$1,000",
-    description: "5 private strategy cards with deeper execution direction, brand-lift framing, and launch-ready creative angles.",
+    name: "Signature Purple Box",
+    price: "$19",
+    description: "Five private shoot briefs with deeper scene flow, pacing, and visual proof structure for your selected lane.",
     variant: "purple" as const,
     icon: Crown,
     href: "/store?box=premium_viral_box_1000",
     cta: "Configure Signature Purple",
-    features: ["Five private strategy cards", "Deeper production guidance", "Brand-lift and atmosphere direction", "Stronger range for campaign moments"],
+    features: ["Five private shoot briefs", "Longer scene and proof notes", "Atmosphere and edit direction", "More angles inside the same lane"],
   },
   {
-    name: "ATELIER BLACK BOX",
+    name: "Atelier Black Box",
     price: "Private quote",
-    description: "A bespoke concierge creator-card system for launches, rebrands, sponsored campaigns, and premium positioning.",
+    description: "A custom brief set for a launch, rebrand, or sponsor job. Quote after a short intake.",
     variant: "black" as const,
     icon: Sparkles,
     href: "/atelier#atelier-request",
     cta: "Request Atelier consultation",
-    features: ["Creator and lane analysis", "Desired brand-effect selection", "Custom digital cards", "Optional manual execution review"],
+    features: ["Lane and voice review", "The brand effect you want", "Custom briefs written for that job", "Private intake, not a form package"],
   },
+];
+
+const briefIncludes = [
+  "Hook and opening options",
+  "Scene-by-scene flow",
+  "Shot, framing, and camera direction",
+  "Spoken lines and on-screen text system",
+  "Caption and comment-response prompts",
+  "Edit rhythm and atmosphere direction",
+  "Sponsor-safe wording and claim boundaries",
 ];
 
 export default function PricingPage() {
@@ -52,9 +68,9 @@ export default function PricingPage() {
     <PublicShell>
       <div className="mb-8">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/40">Pricing</p>
-        <h1 className="mt-2 max-w-4xl text-5xl font-semibold leading-[1.02]">Choose the level of private creator strategy you need.</h1>
+        <h1 className="mt-2 max-w-4xl text-5xl font-semibold leading-[1.02]">Pick how many shoot briefs you need.</h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-ink/66">
-          Standard dossiers are configured in Store by lane and creator mode. The Atelier service is contact-only for custom strategy work.
+          Classic and Signature use the lane and creator mode you choose at checkout. Atelier is quote-only when a standard box is not enough.
         </p>
       </div>
 
@@ -85,9 +101,60 @@ export default function PricingPage() {
         ))}
       </div>
 
-      <p className="mt-8 text-center text-sm leading-6 text-ink/55">
-        Anomaly Box provides execution guidance and creative strategy. It does not guarantee reach, engagement, or platform outcomes.
-      </p>
+      <section className="mt-12 border-t border-ink/10 pt-12" aria-labelledby="brief-includes-title">
+        <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr]">
+          <div>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-plum-deep">Inside every brief</p>
+                <h2 id="brief-includes-title" className="mt-2 max-w-2xl text-3xl font-semibold leading-tight">
+                  What each brief settles before you pick up the phone.
+                </h2>
+              </div>
+              <SampleBriefModal triggerVariant="badge" triggerLabel="Inspect Full Sample Brief" />
+            </div>
+            <p className="mt-4 max-w-2xl leading-7 text-ink/62">
+              Package size changes how many angles you get. The job of each brief stays the same: fewer decisions on set.
+            </p>
+            <ul className="mt-7 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+              {briefIncludes.map((item) => (
+                <li key={item} className="flex items-start gap-3 border-b border-ink/8 pb-3 text-sm leading-6 text-ink/72">
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-teal" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-ink/12 bg-paper p-6 sm:p-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink/42">Delivery and scope</p>
+            <h2 className="mt-3 text-2xl font-semibold">What you get, and what you do not.</h2>
+            <div className="mt-6 grid gap-5 text-sm leading-6 text-ink/68">
+              <div className="flex gap-3">
+                <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0 text-plum-deep" aria-hidden="true" />
+                <p><strong className="text-ink">Delivery:</strong> Your creative brief is delivered digitally to your secure Creator Vault.</p>
+              </div>
+              <div className="flex gap-3">
+                <Clock3 className="mt-0.5 h-5 w-5 shrink-0 text-plum-deep" aria-hidden="true" />
+                <p><strong className="text-ink">Estimated timing:</strong> Typically within a few minutes after payment confirmation. If fulfillment needs attention, the checkout status page keeps you informed.</p>
+              </div>
+              <div className="flex gap-3">
+                <SlidersHorizontal className="mt-0.5 h-5 w-5 shrink-0 text-plum-deep" aria-hidden="true" />
+                <p><strong className="text-ink">Edits after delivery:</strong> Classic and Signature are not rewritten after you pay. You choose lane and mode before checkout. Atelier edits are written into the quote.</p>
+              </div>
+              <div className="flex gap-3">
+                <VideoOff className="mt-0.5 h-5 w-5 shrink-0 text-plum-deep" aria-hidden="true" />
+                <p><strong className="text-ink">Production boundary:</strong> Finished video production, filming, and editing are not included.</p>
+              </div>
+              <div className="flex gap-3">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-plum-deep" aria-hidden="true" />
+                <p><strong className="text-ink">Outcome boundary:</strong> Anomaly Box provides creative strategy and execution guidance; reach, engagement, and viral performance are not guaranteed.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </PublicShell>
   );
 }

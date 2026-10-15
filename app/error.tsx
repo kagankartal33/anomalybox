@@ -2,9 +2,10 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { AlertCircle, RotateCcw, ArrowRight } from "lucide-react";
+import { PublicShell } from "@/components/PublicShell";
 
-export default function GlobalError({
+export default function RootError({
   error,
   reset,
 }: {
@@ -12,38 +13,53 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Application error:", error);
+    console.error("Anomaly Box Root Error Boundary caught:", error);
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#F7F4ED] px-4 py-16 text-center text-ink">
-      <div className="mx-auto max-w-md rounded-2xl border border-ink/10 bg-white p-8 shadow-soft">
-        <div className="mx-auto grid h-14 w-14 place-items-center rounded-xl bg-coral/10 text-coral">
+    <PublicShell>
+      <div className="mx-auto flex min-h-[50vh] max-w-2xl flex-col items-center justify-center py-16 text-center">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-plum/20 bg-plum-soft text-plum-deep shadow-sm">
           <AlertCircle className="h-7 w-7" />
         </div>
-        <h1 className="mt-5 text-2xl font-bold tracking-tight sm:text-3xl">
-          Bir Hata Oluştu
-        </h1>
-        <p className="mt-3 text-sm leading-6 text-ink/65">
-          İşlem gerçekleştirilirken beklenmedik bir durum meydana geldi. Lütfen tekrar deneyin.
+
+        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-plum-deep">
+          Temporary System Interruption
         </p>
-        <div className="mt-6 flex flex-col gap-2.5">
+
+        <h1 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          Something interrupted this brief view.
+        </h1>
+
+        <p className="mt-4 max-w-lg text-base leading-relaxed text-ink/70">
+          The requested page encountered an unexpected state. Your vault credentials and cart parameters are safe.
+        </p>
+
+        {error.digest && (
+          <p className="mt-2 font-mono text-xs text-ink/40">
+            Incident ID: {error.digest}
+          </p>
+        )}
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <button
-            onClick={() => reset()}
-            className="focus-ring inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-white transition hover:bg-black"
             type="button"
+            onClick={() => reset()}
+            className="inline-flex items-center gap-2 rounded-xl bg-ink px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-black focus-ring shadow-sm"
           >
-            <RefreshCw className="h-4 w-4" />
-            Yeniden Dene
+            <RotateCcw className="h-4 w-4" />
+            Try again
           </button>
+
           <Link
-            href="/"
-            className="focus-ring inline-flex w-full items-center justify-center rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm font-semibold text-ink transition hover:bg-white"
+            href="/store"
+            className="inline-flex items-center gap-2 rounded-xl border border-ink/15 bg-white px-6 py-3.5 text-sm font-semibold text-ink transition hover:bg-[#F7F4ED] focus-ring"
           >
-            Ana Sayfaya Dön
+            Go to Store
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>
-    </div>
+    </PublicShell>
   );
 }

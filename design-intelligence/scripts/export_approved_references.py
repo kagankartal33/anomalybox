@@ -45,7 +45,7 @@ def main() -> int:
         if not target.exists():
             download(src, target)
             time.sleep(0.4)
-        record["desktop_file"] = str(target.relative_to(ROOT)).replace("", "/")
+        record["desktop_file"] = str(target.relative_to(ROOT)).replace("\\", "/")
         downloaded += 1
 
     by_id = {record["reference_id"]: record for record in records}

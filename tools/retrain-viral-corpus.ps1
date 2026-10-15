@@ -39,7 +39,7 @@ if ($DatasetPath -and (Test-Path -LiteralPath $DatasetPath)) {
   if (-not $CompileVersion) {
     $CompileVersion = "2026-v2-dataset"
   }
-  powershell -ExecutionPolicy Bypass -File .\\tools\\train-from-dataset.ps1 `
+  powershell -ExecutionPolicy Bypass -File .\tools\train-from-dataset.ps1 `
     -DatasetPath $DatasetPath `
     -Apply `
     -CompileVersion $CompileVersion

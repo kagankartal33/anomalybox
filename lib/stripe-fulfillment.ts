@@ -202,7 +202,7 @@ export async function fulfillStripeCheckout(sessionId: string): Promise<Checkout
         userId: checkout.user_id,
         email: authUser.user?.email,
         type: "dossier_delivered",
-        title: "Your Anomaly Box dossier is ready",
+        title: "Your Anomaly Box creative brief is ready",
         body: `${product.name} is secured in your Creator Vault. Access it when you are ready to review the private briefs.`,
         href: `${siteUrl()}/boxes`,
         metadata: { delivery_id: delivery.id, purchase_id: purchase.id },

@@ -15,7 +15,6 @@ Use this checklist after Railway deploy, Supabase production setup, and Stripe/O
 - `supabase db lint --local` passes before push.
 - Finalist import applied to production.
 - Production DB size measured and stays below 400 MB safety target.
-- `creator-review-videos` bucket exists and is private.
 
 ## 3. Auth
 
@@ -36,6 +35,7 @@ Use this checklist after Railway deploy, Supabase production setup, and Stripe/O
 - Box reveal opens and saves `opened_at`.
 - Opened card links to card detail.
 - Card detail sections are structured and English.
+- Card report/check can be submitted from card detail.
 
 ## 5. Lane Lock Test
 
@@ -59,20 +59,9 @@ Use this checklist after Railway deploy, Supabase production setup, and Stripe/O
 - Admin can send gift box.
 - Admin can view inventory health.
 - Admin can view Atelier leads.
-- Admin can open review queue.
+- Admin can open and decide card reports.
 
-## 8. Manual Review
-
-- Creator uploads MP4/MOV/WebM.
-- Status becomes `under_review`.
-- Admin can open signed video URL.
-- Admin checklist saves.
-- Creator sees feedback.
-- Admin private note is not visible to creator.
-- Creator can submit a second attempt.
-- `ready_to_post` requires required checklist items to pass or be not applicable.
-
-## 9. ATELIER BLACK BOX
+## 8. ATELIER BLACK BOX
 
 - `/atelier` loads.
 - Form validation works.
@@ -80,7 +69,7 @@ Use this checklist after Railway deploy, Supabase production setup, and Stripe/O
 - Lead appears in `/admin/atelier-leads`.
 - ATELIER BLACK BOX is not available in checkout.
 
-## 10. Final Audit Commands
+## 9. Final Audit Commands
 
 ```powershell
 npm run audit:leaks
@@ -94,7 +83,6 @@ npm run typecheck
 npm run lint
 npm run build
 supabase db lint --local
-powershell -ExecutionPolicy Bypass -File .\\tools\\test-generator-flow.ps1
-powershell -ExecutionPolicy Bypass -File .\\tools\\test-quality-gate-v2.ps1
-powershell -ExecutionPolicy Bypass -File .\\tools\\test-creator-video-review.ps1
+powershell -ExecutionPolicy Bypass -File .\tools\test-generator-flow.ps1
+powershell -ExecutionPolicy Bypass -File .\tools\test-quality-gate-v2.ps1
 ```

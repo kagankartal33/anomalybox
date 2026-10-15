@@ -1,5 +1,4 @@
 """No GPU, network or third-party dependencies required."""
-
 import hashlib
 import copy
 import json

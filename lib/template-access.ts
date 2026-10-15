@@ -29,3 +29,4 @@ export const getTemplateAccessState = cache(async (): Promise<TemplateAccessStat
 export function hasTemplatePurchaseAccess(state: TemplateAccessState): boolean {
   return state === "customer";
 }
+

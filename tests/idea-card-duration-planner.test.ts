@@ -51,6 +51,11 @@ for (const lane of lanes) {
     assert.ok(plan.targetSeconds <= RUNTIME_PROFILE_RANGES[runtimeProfile].max);
     durations.push(plan.targetSeconds);
   }
+  const distribution = analyzeDurationDistribution(durations);
+  assert.ok(distribution.distinctProfiles >= 3, `${lane} must use at least three runtime profiles`);
+  assert.ok(distribution.maxExactSecondShare <= 0.2, `${lane} must not collapse onto one exact second`);
+  assert.deepEqual(distribution.issueCodes, []);
+}
 
 for (const lane of lanes) {
   const profilesAcrossRepeatedSingleRequests = Array.from({ length: 12 }, (_, globalSlotIndex) =>
@@ -60,11 +65,6 @@ for (const lane of lanes) {
     new Set(profilesAcrossRepeatedSingleRequests).size >= 3,
     `${lane} must keep the batch-wide runtime mix when twelve cards are generated one request at a time`,
   );
-}
-  const distribution = analyzeDurationDistribution(durations);
-  assert.ok(distribution.distinctProfiles >= 3, `${lane} must use at least three runtime profiles`);
-  assert.ok(distribution.maxExactSecondShare <= 0.2, `${lane} must not collapse onto one exact second`);
-  assert.deepEqual(distribution.issueCodes, []);
 }
 
 const baseCard = {

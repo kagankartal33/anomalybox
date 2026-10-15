@@ -9,9 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "content" / "seo-package"
 
 DECISION_SYSTEM = re.compile(
-    r"Treat \\\\*\\\\*(.+?)\\\\*\\\\* as a production decision system: name the audience tension, "
-    r"the visible proof, the first frame, and the constraint you will not violate\\\\. "
-    r"Then film the smallest version that still answers the reader[’']s job\\\\."
+    r"Treat \*\*(.+?)\*\* as a production decision system: name the audience tension, "
+    r"the visible proof, the first frame, and the constraint you will not violate\. "
+    r"Then film the smallest version that still answers the reader[’']s job\."
 )
 
 
@@ -29,14 +29,14 @@ def decision_replacement(topic: str, slug: str) -> str:
 def clean_text(text: str, slug: str) -> str:
     text = DECISION_SYSTEM.sub(lambda match: decision_replacement(match.group(1), slug), text)
     text = re.sub(
-        r"The final commercial scope, turnaround and pricing must be confirmed on the live store or service page\\\\. "
-        r"Do not invent fulfilment guarantees inside this article\\\\.",
+        r"The final commercial scope, turnaround and pricing must be confirmed on the live store or service page\. "
+        r"Do not invent fulfilment guarantees inside this article\.",
         "Confirm current scope, turnaround, and pricing on the live store or service page before purchase.",
         text,
     )
     text = re.sub(
-        r"People actively working on \\\\*\\\\*(.+?)\\\\*\\\\* who need a practical system, not generic motivation\\\\.",
-        r"Creators using **\\\\1** who want clearer decisions before filming, review, or approval.",
+        r"People actively working on \*\*(.+?)\*\* who need a practical system, not generic motivation\.",
+        r"Creators using **\1** who want clearer decisions before filming, review, or approval.",
         text,
     )
     replacements = {

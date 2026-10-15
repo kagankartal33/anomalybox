@@ -1,0 +1,19 @@
+{
+  "claim_id": "clm_bc25233e7a13",
+  "statement": "Anomaly Box provides private creative direction dossiers and does not guarantee virality, reach, or sales.",
+  "claim_type": "factual",
+  "risk_level": "low",
+  "required_support": 1,
+  "supporting_sources": [
+    {
+      "source_id": "src_7b4e9daa2557",
+      "evidence_span": "Anomaly Box sells private creative direction dossiers; it does not guarantee virality, reach, or sales.",
+      "support_strength": 0.9
+    }
+  ],
+  "contradicting_sources": [],
+  "confidence": 0.9,
+  "valid_until": null,
+  "verification_status": "verified",
+  "page_id": "AB-076"
+}

@@ -1,0 +1,2 @@
+{"at": "2026-08-05T21:10:56Z", "event": "experiment_created", "experiment_id": "exp_5c21ecb25820", "status": "registered", "failures": []}
+{"at": "2026-08-05T21:10:56Z", "event": "experiment_created", "experiment_id": "exp_c26fa92532fe", "status": "rejected", "failures": ["invalid_experiment_type:keyword_stuffing"]}

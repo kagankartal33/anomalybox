@@ -10,8 +10,8 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
   const [{ data: users }, { data: products }, { data: categories }, { data: personas }] = await Promise.all([
     supabase.from("profiles").select("id,display_name,role,created_at").order("created_at", { ascending: false }).limit(200),
     supabase.from("box_products").select("slug,name").eq("enabled", true).order("price_usd_cents"),
-    supabase.from("categories").select("slug,name").eq("enabled", true).order("sort_order").limit(500),
-    supabase.from("creator_personas").select("slug,name").eq("enabled", true).order("sort_order"),
+    supabase.from("categories").select("slug,name").eq("enabled", true).order("sort_order").limit(2000),
+    supabase.from("creator_personas").select("slug,name").eq("enabled", true).order("sort_order").limit(100),
   ]);
 
   return (
@@ -19,7 +19,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
       <section className="mb-6 rounded-md border border-ink/10 bg-white p-6 shadow-soft">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Admin users</p>
         <h1 className="mt-2 text-4xl font-semibold">Users & complimentary dossiers</h1>
-        <p className="mt-2 text-ink/60">Create creator accounts and send complimentary private dossiers from approved inventory.</p>
+        <p className="mt-2 text-ink/60">Create creator accounts and send complimentary creative briefs from approved inventory.</p>
       </section>
       {params.error ? <div className="mb-4 rounded-md bg-coral/10 p-3 text-sm text-coral">{params.error}</div> : null}
       {params.gift ? <div className="mb-4 rounded-md bg-teal/10 p-3 text-sm text-teal">Complimentary dossier sent.</div> : null}

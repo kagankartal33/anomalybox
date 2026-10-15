@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="144" viewBox="0 0 620 144" role="img" aria-labelledby="title">
+  <title id="title">Anomaly Box</title>
+  <g transform="translate(10 10)">
+    <rect x="18" y="18" width="88" height="88" rx="23" transform="rotate(45 62 62)" fill="#806C89"/>
+    <path d="M41 84 60.5 41.5c.6-1.4 2.6-1.4 3.2 0L83 84" fill="none" stroke="#FBF8F2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M49 70.5h26" fill="none" stroke="#FBF8F2" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <text x="154" y="76" fill="#FBF8F2" font-family="Georgia, 'Times New Roman', serif" font-size="49" letter-spacing="1.8">ANOMALY</text>
+  <text x="158" y="108" fill="#B5A8BB" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="600" letter-spacing="9">BOX</text>
+</svg>

@@ -1,0 +1,252 @@
+{
+  "generated_at": "2026-08-10T15:23:57Z",
+  "base": "Qwen/Qwen2.5-1.5B-Instruct",
+  "adapter": "C:\\Users\\Kagan\\OneDrive\\Desktop\\ViralBox-training-archive\\models\\lora-idea-card-6h-secure",
+  "use_4bit": true,
+  "prompts": [
+    "beauty_01",
+    "comedy_01",
+    "travel_01",
+    "fitness_01",
+    "food_01"
+  ],
+  "base_results": [
+    {
+      "score": 0,
+      "hard_fail": true,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": false,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "beauty",
+      "raw_preview": "```json\n{\n  \"idea\": {\n    \"title\": \"Keep or Remove Filter\",\n    \"description\": \"Create an Instagram Reel where you show the results of applying different filters to your face during a facial oil treatment.\",\n    \"steps\": [\n      {\n        \"action\": \"Apply a natural-looking filter\",\n        \"say\": \"Start with a clear and natural filter that enhances your skin tone without any artificial colors.\"\n      },\n      {\n        \"action\": \"Add a warm glow filter\",\n        \"say\": \"Next, add a warm glow fil",
+      "id": "beauty_01",
+      "raw_len": 3281
+    },
+    {
+      "score": 25,
+      "hard_fail": false,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": true,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "comedy",
+      "raw_preview": "```json\n{\n  \"idea\": {\n    \"title\": \"Clip and Copy\",\n    \"description\": \"A clip of an employee trying to copy information on a clipboard while sitting in a waiting room.\",\n    \"steps\": [\n      {\n        \"action\": \"The clip starts with an employee standing at a desk, looking around the room.\",\n        \"say\": \"I need my notes.\"\n      },\n      {\n        \"action\": \"The clip shows the employee reaching for a clipboard on a nearby table.\",\n        \"say\": \"Clipboard!\"\n      },\n      {\n        \"action\": ",
+      "id": "comedy_01",
+      "raw_len": 3492
+    },
+    {
+      "score": 0,
+      "hard_fail": true,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": false,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "travel",
+      "raw_preview": "```json\n{\n  \"idea\": {\n    \"title\": \"Pack or Leave Filter\",\n    \"description\": \"Introduce a unique 'pack or leave' filter on the hotel desk to encourage guests to consider their luggage before checking out.\",\n    \"steps\": [\n      {\n        \"action\": \"Showcase the 'pack or leave' filter on the hotel desk\",\n        \"sayThis\": \"Welcome! We've got a special feature just for you.\"\n      },\n      {\n        \"action\": \"Ask guests if they want to take their bags with them\",\n        \"sayThis\": \"Would you l",
+      "id": "travel_01",
+      "raw_len": 2968
+    },
+    {
+      "score": 25,
+      "hard_fail": false,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": true,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "fitness",
+      "raw_preview": "```json\n{\n  \"idea\": {\n    \"title\": \"Form Check Before Increasing Load\",\n    \"description\": \"Before you increase your workout intensity, make sure your form is perfect using a resistance band.\",\n    \"steps\": [\n      {\n        \"action\": \"Warm up and stretch\",\n        \"say\": \"Start by warming up and stretching to prepare your muscles for the workout.\"\n      },\n      {\n        \"action\": \"Check form with a resistance band\",\n        \"say\": \"Use a resistance band to check your form in different exercis",
+      "id": "fitness_01",
+      "raw_len": 3330
+    },
+    {
+      "score": 25,
+      "hard_fail": false,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": true,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "food",
+      "raw_preview": "```json\n{\n  \"idea\": {\n    \"title\": \"Weeknight Sauce Simplified\",\n    \"description\": \"In just 3 easy steps, transform your favorite sauce into a quick and delicious meal prep staple.\",\n    \"steps\": [\n      {\n        \"action\": \"Preheat oven to 375°F (190°C).\",\n        \"say\": \"Preheat the oven to 375°F.\"\n      },\n      {\n        \"action\": \"Mix all ingredients in a bowl.\",\n        \"say\": \"Combine all sauce ingredients in a mixing bowl.\"\n      },\n      {\n        \"action\": \"Bake for 20 minutes or unti",
+      "id": "food_01",
+      "raw_len": 3090
+    }
+  ],
+  "adapter_results": [
+    {
+      "score": 0,
+      "hard_fail": true,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": false,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "beauty",
+      "raw_preview": "{\"id\": \"sft_beauty_1867\", \"title\": \"The Keep Filter\", \"conceptSummary\": \"Show the single choice behind a polished beauty result using a filter on a facial oil routine on a bathroom counter, so the viewer can reuse the keep or remove filter.\", \"format\": \"Reels\", \"category\": \"beauty\", \"platform\": \"instagram_reels\", \"audience\": \"People who want clearer beauty decisions without hype\", \"durationSeconds\": 36, \"difficulty\": \"medium\", \"requiredItems\": [\"filter\", \"phone\", \"bathroom\", \"facial\"], \"viewerTa",
+      "id": "beauty_01",
+      "raw_len": 2705
+    },
+    {
+      "score": 0,
+      "hard_fail": true,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": false,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "comedy",
+      "raw_preview": "{\"id\": \"sft_bureaucratic_1637\", \"title\": \"The Form Filter\", \"category\": \"comedy\", \"platform\": \"instagram_reels\", \"duration_seconds\": 36, \"difficulty\": \"easy\", \"required_items\": [\"clipboard\", \"waiting_room\", \"phone\"], \"viewer_takeaway\": \"A reusable filter for keeping forms useful without abuse\", \"overall_production_notes\": [\"Keep lighting even on the waiting room\", \"Never promise medical, money, or guaranteed outcomes\", \"Say lines aloud once before rolling\"], \"steps\": [{\"id\": \"s1\", \"stage\": \"hook",
+      "id": "comedy_01",
+      "raw_len": 2615
+    },
+    {
+      "score": 0,
+      "hard_fail": true,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": false,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "travel",
+      "raw_preview": "{\"id\": \"sft_travel_1836\", \"title\": \"The Day Bag Filter\", \"category\": \"travel\", \"format\": \"Reels\", \"durationSeconds\": 36, \"difficulty\": \"medium\", \"requiredItems\": [\"day bag\", \"hotel\", \"phone\", \"tripod or stable surface\"], \"viewerTakeaway\": \"A reusable filtering habit for day bags.\", \"overallProductionNotes\": [\"Keep lighting even on the hotel desk\", \"Never promise medical, money, or guaranteed outcomes\", \"Say lines aloud once before rolling\"], \"steps\": [{\"id\": \"s1\", \"order\": 1, \"stage\": \"hook\", \"s",
+      "id": "travel_01",
+      "raw_len": 2588
+    },
+    {
+      "score": 0,
+      "hard_fail": true,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": false,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "fitness",
+      "raw_preview": "{\"id\": \"sft_fitness_1936\", \"title\": \"The Form Filter\", \"conceptSummary\": \"Show the single choice behind a polished fitness result using a resistance band on a home gym, so the viewer can reuse the keep-or-remove filter.\", \"format\": \"Reels\", \"category\": \"fitness\", \"platform\": \"instagram_reels\", \"audience\": \"People who want clearer fitness decisions without hype\", \"durationSeconds\": 36, \"difficulty\": \"medium\", \"requiredItems\": [\"resistance band\", \"phone\", \"tripod or stable surface\", \"home\"], \"step",
+      "id": "fitness_01",
+      "raw_len": 2756
+    },
+    {
+      "score": 0,
+      "hard_fail": true,
+      "banned_hits": [],
+      "meta_hits": [],
+      "field_clone": false,
+      "structural": {
+        "json_parsed": false,
+        "schema_version_2": false,
+        "steps_ge_3": false,
+        "hook_first": false,
+        "starts_at_0": false,
+        "has_spoken": false,
+        "has_action": false,
+        "timeline_ok": false
+      },
+      "category": "food",
+      "raw_preview": "{\"id\": \"sft_food_1936\", \"title\": \"The Keep or Simplify Filter on the Stove\", \"category\": \"food\", \"platform\": \"instagram_reels\", \"format\": \"reels\", \"durationSeconds\": 36, \"difficulty\": \"medium\", \"requiredItems\": [\"stove\", \"pan\", \"cutter\"], \"viewerTakeaway\": \"A reusable keep-or-remove constraint for food setups.\", \"overallProductionNotes\": [\"Keep lighting even if not required\", \"Never promise medical, money, or guaranteed outcomes\", \"Say lines aloud once before rolling\"], \"steps\": [{\"id\": \"s1\", \"o",
+      "id": "food_01",
+      "raw_len": 2645
+    }
+  ],
+  "base_summary": {
+    "n": 5,
+    "mean_score": 15.0,
+    "hard_fail_rate": 0.4,
+    "json_parse_rate": 0.6,
+    "banned_any_rate": 0.0,
+    "meta_any_rate": 0.0,
+    "timeline_ok_rate": 0.0,
+    "hook_first_rate": 0.0
+  },
+  "adapter_summary": {
+    "n": 5,
+    "mean_score": 0.0,
+    "hard_fail_rate": 1.0,
+    "json_parse_rate": 0.0,
+    "banned_any_rate": 0.0,
+    "meta_any_rate": 0.0,
+    "timeline_ok_rate": 0.0,
+    "hook_first_rate": 0.0
+  },
+  "verdict": {
+    "keep_adapter": false,
+    "better_than_base_or_close": false,
+    "reason": "Adapter failed secure gen thresholds — do not wire to production"
+  }
+}

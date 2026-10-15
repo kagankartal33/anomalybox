@@ -50,12 +50,12 @@ function Get-PremiumCategoryCue {
 function Get-PremiumScenarioTitle {
   param([string]$Text)
   switch -Regex ($Text) {
-    'Three[-\\s]?Part Save Filter' { return "Soft Proof Reveal" }
-    'Comment[-\\s]?First Comparison' { return "Mirror Vote" }
-    'Behind[-\\s]?The[-\\s]?Standard Edit' { return "Standard Turn" }
-    'Real[-\\s]?Life Friction Turn' { return "Human Detail" }
+    'Three[-\s]?Part Save Filter' { return "Soft Proof Reveal" }
+    'Comment[-\s]?First Comparison' { return "Mirror Vote" }
+    'Behind[-\s]?The[-\s]?Standard Edit' { return "Standard Turn" }
+    'Real[-\s]?Life Friction Turn' { return "Human Detail" }
     'Quiet Proof Ritual' { return "Quiet Proof Signal" }
-    'Micro[-\\s]?Authority Checklist' { return "Trust Marker" }
+    'Micro[-\s]?Authority Checklist' { return "Trust Marker" }
     'Founder Taste Audit' { return "Taste Decision" }
     'Hidden Decision Map' { return "Hidden Choice" }
     'Premium Mistake Reveal' { return "Polished Mistake" }
@@ -63,10 +63,10 @@ function Get-PremiumScenarioTitle {
     'Local Context Lens' { return "Local Signal" }
     'Soft Objection Turn' { return "Soft Objection" }
     'Saveable Sorting Ritual' { return "Save Signal" }
-    'One[-\\s]?Minute Trust Audit' { return "Trust Minute" }
+    'One[-\s]?Minute Trust Audit' { return "Trust Minute" }
     'Tiny Upgrade Sequence' { return "Tiny Upgrade" }
     'Expectation Reset' { return "Expectation Flip" }
-    'Proof[-\\s]?First Walkthrough' { return "Proof Reveal" }
+    'Proof[-\s]?First Walkthrough' { return "Proof Reveal" }
     'Taste Boundary Test' { return "Taste Boundary" }
     'Viewer Vote Framework' { return "Viewer Vote" }
     'Calm Expert Breakdown' { return "Calm Expert Turn" }
@@ -77,7 +77,7 @@ function Get-PremiumScenarioTitle {
 function Test-LowQualityTitle {
   param([string]$Value)
   if ([string]::IsNullOrWhiteSpace($Value)) { return $true }
-  return $Value -match '\\b(Brief|Ritual|Report|Memo|Audit|Dossier|File|Sheet|SOP|Framework|Blueprint|AI|Algorithm|Engine|Model|Prompt|Agent|Neural|Autopilot|System|Quality Gate|score|score_band|training|dataset|inventory)\\b|run_\\d{8}_\\d{6}|\\b\\d{3,}\\b'
+  return $Value -match '\b(Brief|Ritual|Report|Memo|Audit|Dossier|File|Sheet|SOP|Framework|Blueprint|AI|Algorithm|Engine|Model|Prompt|Agent|Neural|Autopilot|System|Quality Gate|score|score_band|training|dataset|inventory)\b|run_\d{8}_\d{6}|\b\d{3,}\b'
 }
 
 function New-PremiumTitleFromRecord {
@@ -156,7 +156,7 @@ function Get-PersonaForCategory {
   if (& $has @("tech", "technology", "science", "ai", "software", "tool", "tools", "data", "security", "privacy")) { return "science_tech_explainer" }
   if (& $has @("business", "startup", "founder", "operator", "career", "sales", "marketing", "entrepreneur", "leadership")) { return "founder_operator" }
   if (& $has @("preschool", "kindergarten", "university", "college", "academy", "education", "school", "coach", "consult", "course", "book", "author")) { return "science_tech_explainer" }
-  if ($slugText -match '\\b(content|creator|social|influencer)\\b') { return "creator_teacher" }
+  if ($slugText -match '\b(content|creator|social|influencer)\b') { return "creator_teacher" }
   if ((& $has @("supply", "store", "shop", "retail", "product", "commerce", "affiliate", "market")) -and -not (& $has @("hotel", "travel", "tourism"))) { return "product_reviewer" }
   if ((& $has @("supply", "store", "shop", "retail", "product", "commerce", "affiliate", "market")) -and (& $has @("restaurant", "food", "sporting", "outdoor"))) { return "product_reviewer" }
   if (& $has @("comedy", "entertainment", "meme", "theater", "music", "creator", "artist")) { return "comedy_observer" }
@@ -175,7 +175,7 @@ function Get-Categories {
   $limit = if ($LimitCategories -gt 0) { " limit $LimitCategories" } else { "" }
   $rows = Invoke-DbSql -Sql "select slug, name, family from public.categories where $where order by sort_order, slug$limit;"
   return @($rows | Where-Object { $_ } | ForEach-Object {
-    $parts = $_ -split "\\|", 3
+    $parts = $_ -split "\|", 3
     if ($parts.Count -lt 3) { $parts = $_ -split "`t", 3 }
     [pscustomobject]@{ slug = $parts[0]; name = $parts[1]; family = $parts[2] }
   })
@@ -359,9 +359,9 @@ foreach ($category in $categories) {
   $rows = @(Get-FinalistRows -CategorySlug $category.slug -PersonaSlug $persona)
   $low = 0; $mid = 0; $high = 0
   foreach ($row in $rows) {
-    if ($row -match '"score_band"\\s*:\\s*"low"') { $low += 1 }
-    if ($row -match '"score_band"\\s*:\\s*"mid"') { $mid += 1 }
-    if ($row -match '"score_band"\\s*:\\s*"high"') { $high += 1 }
+    if ($row -match '"score_band"\s*:\s*"low"') { $low += 1 }
+    if ($row -match '"score_band"\s*:\s*"mid"') { $mid += 1 }
+    if ($row -match '"score_band"\s*:\s*"high"') { $high += 1 }
   }
 
   $ok = $rows.Count -ge $MinimumCardsPerCategory -and $low -ge 2 -and $mid -ge 1 -and $high -ge 2

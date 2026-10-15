@@ -13,8 +13,11 @@ from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = ROOT / "Book-Train"
-DEFAULT_OUTPUT = ROOT / "dataset" / "book_train" / "prepared" / "extended"
+# Training sources archived outside the app tree after successful compile.
+ARCHIVE = Path(r"C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive")
+DEFAULT_INPUT = ARCHIVE / "Book-Train"
+DEFAULT_OUTPUT = ARCHIVE / "dataset" / "book_train" / "prepared" / "extended"
+csv.field_size_limit(1024 * 1024 * 128)
 
 
 SOURCES = [
@@ -144,7 +147,25 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
         for line in f:
             line = line.strip()
             if line:
-                yield json.loads(line)
+                try:
+                    item = json.loads(line)
+                except json.JSONDecodeError:
+                    decoder = json.JSONDecoder()
+                    cursor = 0
+                    while cursor < len(line):
+                        while cursor < len(line) and line[cursor].isspace():
+                            cursor += 1
+                        if cursor >= len(line):
+                            break
+                        try:
+                            item, cursor = decoder.raw_decode(line, cursor)
+                        except json.JSONDecodeError:
+                            break
+                        if isinstance(item, dict):
+                            yield item
+                    continue
+                if isinstance(item, dict):
+                    yield item
 
 
 def iter_json_items(path: Path) -> Iterable[dict[str, Any]]:
@@ -383,6 +404,7 @@ def main() -> None:
     parser.add_argument("--input-dir", default=str(DEFAULT_INPUT))
     parser.add_argument("--out-dir", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--output-name", default="book_train_extended_v1.jsonl")
+    parser.add_argument("--source-filter", default="")
     parser.add_argument("--max-rows-per-source", type=int, default=0)
     parser.add_argument("--max-scan-rows-per-source", type=int, default=0)
     parser.add_argument("--apply", action="store_true")
@@ -393,9 +415,12 @@ def main() -> None:
     output_path = out_dir / args.output_name
     manifest_path = out_dir / args.output_name.replace(".jsonl", ".manifest.json")
 
+    source_filter = args.source_filter.strip().lower()
     sources = []
     for source in SOURCES:
         adjusted = dict(source)
+        if source_filter and source_filter not in adjusted["family"].lower() and source_filter not in adjusted["path"].lower():
+            continue
         if args.max_rows_per_source > 0:
             adjusted["max_rows"] = min(int(adjusted.get("max_rows", args.max_rows_per_source)), args.max_rows_per_source)
         if args.max_scan_rows_per_source > 0:

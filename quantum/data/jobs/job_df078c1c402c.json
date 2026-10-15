@@ -1,0 +1,34 @@
+{
+  "job_id": "job_df078c1c402c",
+  "page_id": "AB-104",
+  "slug": "ugc-creative-strategy-service",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:ugc-creative-strategy-service:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:29Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:29Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:29Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "near_duplicate:instagram-content-strategy-service:0.843",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

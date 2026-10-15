@@ -8,7 +8,7 @@ function add(name, value) {
   const result = spawnSync(
     command,
     process.platform === "win32" ? ["/d", "/s", "/c", `npx.cmd ${args.join(" ")}`] : args,
-    { input: `${value}\n`, encoding: "utf8" }
+    { input: `${value}\n`, encoding: "utf8", windowsHide: true, stdio: ["pipe", "pipe", "pipe"] },
   );
   if (result.status !== 0) {
     throw new Error(`${name} could not be added: ${(result.stderr || result.stdout || "unknown error").trim().slice(0, 400)}`);

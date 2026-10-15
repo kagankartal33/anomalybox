@@ -1,7 +1,6 @@
 param(
   [int]$TargetCount = 1000,
-  [string]$OutputSql = ".\\supabase\\seeds\
-eal_viral_examples.sql"
+  [string]$OutputSql = ".\supabase\seeds\real_viral_examples.sql"
 )
 
 $ErrorActionPreference = "Stop"
@@ -90,7 +89,7 @@ function TriggersFor([string]$Name, [string]$Type) {
 }
 
 function Add-Example($Map, [string]$Name, [string]$Source, [string]$Url, [string]$ClassLabel, [Nullable[int]]$Year) {
-  $clean = (($Name -replace "\\s+", " ").Trim())
+  $clean = (($Name -replace "\s+", " ").Trim())
   if (-not $clean -or $clean.Length -lt 2) { return }
   if ($clean -match "^Category:|^Template:|^File:|^List of|^Timeline of") { return }
   $slugBase = Normalize-Slug $clean
@@ -199,7 +198,7 @@ OFFSET $offset
         $url = $row.item.value
         $class = if ($row.classLabel) { $row.classLabel.value } else { $root.label }
         $year = $null
-        if ($row.date -and $row.date.value -match "^(\\d{4})") { $year = [int]$Matches[1] }
+        if ($row.date -and $row.date.value -match "^(\d{4})") { $year = [int]$Matches[1] }
         Add-Example $examples $name "wikidata_sparql:$($root.label)" $url $class $year
       }
     } catch {

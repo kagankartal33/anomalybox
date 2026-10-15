@@ -45,7 +45,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
 
   const displayName = profile?.display_name ?? user.email ?? "Anomaly Box creator";
   const providers = providerNames(user.app_metadata?.providers);
-  const googleOnly = providers.includes("google") && !providers.includes("email");
+  const oauthOnly = (providers.includes("google") || providers.includes("apple")) && !providers.includes("email");
   const message = accountMessage(params);
 
   return (
@@ -137,9 +137,9 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
                 <p className="text-sm text-ink/60">Use at least 8 characters. Your session may refresh after the update.</p>
               </div>
             </div>
-            {googleOnly ? (
+            {oauthOnly ? (
               <div className="mt-5 rounded-md border border-ink/10 bg-paper/70 p-4 text-sm leading-6 text-ink/65">
-                If your account uses Google login, password changes may not apply unless email/password login is enabled.
+                If your account uses Google or Apple login, password changes may not apply unless email/password login is enabled.
               </div>
             ) : null}
             <form action={changeProfilePassword} className="mt-5 grid gap-4 md:grid-cols-2">
@@ -165,7 +165,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               <div>
                 <h2 className="text-2xl font-semibold">User Agreement & Legal</h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/65">
-                  By using Anomaly Box and purchasing digital dossiers, you agree to the Terms, Privacy Policy, and Digital Goods policy.
+                  By using Anomaly Box and purchasing digital creative briefs, you agree to the Terms, Privacy Policy, and Digital Goods policy.
                 </p>
                 <Link className="focus-ring mt-5 inline-flex items-center gap-2 rounded-md border border-ink/15 px-4 py-3 text-sm font-semibold hover:bg-paper" href="/legal">
                   <ShieldCheck className="h-4 w-4" />

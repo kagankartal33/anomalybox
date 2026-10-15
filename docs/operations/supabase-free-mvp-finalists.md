@@ -17,13 +17,13 @@ The production MVP uses Supabase Free as a slim app database. The local generato
 Dry run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\export-production-finalists.ps1 -DryRun
+powershell -ExecutionPolicy Bypass -File .\tools\export-production-finalists.ps1 -DryRun
 ```
 
 Write an export package:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\export-production-finalists.ps1
+powershell -ExecutionPolicy Bypass -File .\tools\export-production-finalists.ps1
 ```
 
 Output:
@@ -40,8 +40,8 @@ production_exports/
 If `missing_routes.jsonl` is not empty, generate more local stock only for those categories:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\top-up-missing-production-finalists.ps1 -MissingRoutesPath .\\production_exports\\...\\missing_routes.jsonl -DryRun
-powershell -ExecutionPolicy Bypass -File .\\tools\\top-up-missing-production-finalists.ps1 -MissingRoutesPath .\\production_exports\\...\\missing_routes.jsonl
+powershell -ExecutionPolicy Bypass -File .\tools\top-up-missing-production-finalists.ps1 -MissingRoutesPath .\production_exports\...\missing_routes.jsonl -DryRun
+powershell -ExecutionPolicy Bypass -File .\tools\top-up-missing-production-finalists.ps1 -MissingRoutesPath .\production_exports\...\missing_routes.jsonl
 ```
 
 After top-up finishes, run the export again. The goal is `missing_routes = 0` before importing to production.
@@ -51,25 +51,25 @@ After top-up finishes, run the export again. The goal is `missing_routes = 0` be
 Dry run validation:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\import-production-finalists.ps1 -InputPath .\\production_exports\\...\\finalist_cards.jsonl
+powershell -ExecutionPolicy Bypass -File .\tools\import-production-finalists.ps1 -InputPath .\production_exports\...\finalist_cards.jsonl
 ```
 
 Creator-facing leak scan:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\scan-production-leaks.ps1 -ExportPath .\\production_exports\\...\\finalist_cards.jsonl -ScanApp
+powershell -ExecutionPolicy Bypass -File .\tools\scan-production-leaks.ps1 -ExportPath .\production_exports\...\finalist_cards.jsonl -ScanApp
 ```
 
 Apply to the configured database container:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\import-production-finalists.ps1 -InputPath .\\production_exports\\...\\finalist_cards.jsonl -Apply
+powershell -ExecutionPolicy Bypass -File .\tools\import-production-finalists.ps1 -InputPath .\production_exports\...\finalist_cards.jsonl -Apply
 ```
 
 Apply to a Supabase production database URL:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\import-production-finalists.ps1 -InputPath .\\production_exports\\...\\finalist_cards.jsonl -DatabaseUrl "<SUPABASE_DB_CONNECTION_STRING>" -Apply
+powershell -ExecutionPolicy Bypass -File .\tools\import-production-finalists.ps1 -InputPath .\production_exports\...\finalist_cards.jsonl -DatabaseUrl "<SUPABASE_DB_CONNECTION_STRING>" -Apply
 ```
 
 The import writes only:

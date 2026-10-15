@@ -1,0 +1,34 @@
+{
+  "job_id": "job_257e40e79086",
+  "page_id": "AB-038",
+  "slug": "why-is-content-creation-so-hard",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:why-is-content-creation-so-hard:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:10Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:10Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:10Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "near_duplicate:content-creation-takes-too-much-time:0.741",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

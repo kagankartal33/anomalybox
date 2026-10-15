@@ -1,6 +1,5 @@
 param(
-  [string]$OutDir = ".\\dataset\\huggingface\
-aw",
+  [string]$OutDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\dataset\huggingface\raw",
   [ValidateSet("p0", "p0_p1_text")]
   [string]$Preset = "p0",
   [switch]$Force
@@ -27,6 +26,18 @@ $p1TextDatasets = @(
 $datasets = @($p0Datasets)
 if ($Preset -eq "p0_p1_text") {
   $datasets += $p1TextDatasets
+}
+
+function Get-SafePathPart {
+  param([Parameter(Mandatory = $true)][string]$Value)
+  return ($Value -replace '[^A-Za-z0-9._-]+', '_').Trim("_")
+}
+
+function Invoke-HfJson {
+  param([Parameter(Mandatory = $true)][string]$Dataset)
+
+  $uri = "https://datasets-server.huggingface.co/parquet?dataset=$([uri]::EscapeDataString($Dataset))"
+  Invoke-RestMethod -Uri $uri -TimeoutSec 60
 }
 
 function Get-HfRepoFileMetadata {
@@ -62,20 +73,12 @@ function Download-HfRepoFile {
   Invoke-WebRequest -Uri $url -OutFile $Target -UseBasicParsing -TimeoutSec 1800
 }
 
-function Get-SafePathPart {
-  param([Parameter(Mandatory = $true)][string]$Value)
-  return ($Value -replace '[^A-Za-z0-9._-]+', '_').Trim("_")
-}
-
-function Invoke-HfJson {
-  param([Parameter(Mandatory = $true)][string]$Dataset)
-
-  $uri = "https://datasets-server.huggingface.co/parquet?dataset=$([uri]::EscapeDataString($Dataset))"
-  Invoke-RestMethod -Uri $uri -TimeoutSec 60
-}
-
 $root = Resolve-Path -LiteralPath "."
-$outPath = Join-Path $root $OutDir
+if ([System.IO.Path]::IsPathRooted($OutDir)) {
+  $outPath = $OutDir
+} else {
+  $outPath = Join-Path $root $OutDir
+}
 New-Item -ItemType Directory -Force -Path $outPath | Out-Null
 
 $manifest = [ordered]@{

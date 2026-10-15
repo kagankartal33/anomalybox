@@ -39,3 +39,4 @@ These datasets are candidate sources for ViralBox training. Use them as pattern-
 - Unknown/license-other datasets should be `pattern_only` or `eval_only`.
 - NSFW, hate, toxic, political, minors, medical, finance, and public figure sensitive rows should not promote into production idea generation without review.
 - Video training remains disabled. TikTok/YouTube multimodal datasets should not create a raw video pipeline until explicitly re-enabled.
+

@@ -1,4 +1,4 @@
-export type StoreCategory = {
+﻿export type StoreCategory = {
   id: string;
   slug: string;
   name: string;
@@ -26,23 +26,22 @@ const cuisineTerms = [
 ];
 
 const turkishCharacterMap: Record<string, string> = {
-  ı: "i",
-  İ: "i",
-  ğ: "g",
-  Ğ: "g",
-  ü: "u",
-  Ü: "u",
-  ş: "s",
-  Ş: "s",
-  ö: "o",
-  Ö: "o",
-  ç: "c",
-  Ç: "c",
+  "\u0131": "i",
+  "\u0130": "i",
+  "\u011f": "g",
+  "\u011e": "g",
+  "\u00fc": "u",
+  "\u00dc": "u",
+  "\u015f": "s",
+  "\u015e": "s",
+  "\u00f6": "o",
+  "\u00d6": "o",
+  "\u00e7": "c",
+  "\u00c7": "c",
 };
-
 export function normalized(value: string) {
   return value
-    .replace(/[ıİğĞüÜşŞöÖçÇ]/g, (character) => turkishCharacterMap[character] ?? character)
+    .replace(/[\u0131\u0130\u011f\u011e\u00fc\u00dc\u015f\u015e\u00f6\u00d6\u00e7\u00c7]/g, (character) => turkishCharacterMap[character] ?? character)
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -198,3 +197,4 @@ export function filterStoreCategories(
     })
     .sort((left, right) => categorySearchScore(right, query, cuisineQuery, restaurantSlug) - categorySearchScore(left, query, cuisineQuery, restaurantSlug));
 }
+

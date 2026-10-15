@@ -14,15 +14,15 @@ function record(value: unknown): Record<string, unknown> {
     : {};
 }
 
+function optionalString(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
 function optionalUuid(value: unknown): string | null {
   const candidate = optionalString(value);
   return candidate && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)
     ? candidate
     : null;
-}
-
-function optionalString(value: unknown): string | null {
-  return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
 export function generationProvenance(decisionTrace: unknown): GenerationProvenance {

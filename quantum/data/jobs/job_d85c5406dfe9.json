@@ -1,0 +1,34 @@
+{
+  "job_id": "job_d85c5406dfe9",
+  "page_id": "AB-051",
+  "slug": "short-form-video-script-template",
+  "state": "BLOCKED",
+  "idempotency_key": "anomalybox:short-form-video-script-template:v1",
+  "history": [
+    {
+      "at": "2026-08-05T19:43:14Z",
+      "actor": "system",
+      "from_state": "",
+      "to_state": "DISCOVERED",
+      "reason": "created",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:14Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "DISCOVERED",
+      "to_state": "TRIAGED",
+      "reason": "batch_eval",
+      "policy_version": "4.0"
+    },
+    {
+      "at": "2026-08-05T19:43:14Z",
+      "actor": "evaluate_seo_package",
+      "from_state": "TRIAGED",
+      "to_state": "BLOCKED",
+      "reason": "near_duplicate:product-video-script-template:0.835",
+      "policy_version": "4.0"
+    }
+  ],
+  "payload": {}
+}

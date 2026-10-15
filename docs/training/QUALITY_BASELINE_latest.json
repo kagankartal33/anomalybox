@@ -1,0 +1,80 @@
+{
+  "generated_at": "2026-08-13T23:55:42.099Z",
+  "pipeline": "viral_idea_cards",
+  "source_export": "production_exports/mvp_finalists_20260705_222400/finalist_cards.jsonl",
+  "cards_scanned": 35,
+  "parse_errors": 0,
+  "parse_error_samples": [],
+  "rates": {
+    "legacy_adapted": 1,
+    "blocking_quality_errors": 0,
+    "red_gate_failures": 0,
+    "leak_signal": 0,
+    "banned_phrase_cards_v2": 0,
+    "red_gates_passed": 1,
+    "schema_v2_band_high": 1,
+    "schema_v2_band_mid": 0,
+    "schema_v2_band_low": 0
+  },
+  "schema_v2_score": {
+    "mean": 94,
+    "p50": 94,
+    "p90": 94,
+    "min": 94,
+    "max": 94
+  },
+  "editorial_quality_score": {
+    "mean": 88.17114285714288,
+    "p50": 87.68,
+    "p90": 91.15,
+    "min": 86.23,
+    "max": 91.15,
+    "present": 35
+  },
+  "by_category": {
+    "beauty": 7,
+    "fashion": 7,
+    "travel": 7,
+    "lifestyle": 7,
+    "food": 7
+  },
+  "by_inventory_band": {
+    "low": 15,
+    "high": 13,
+    "mid": 7
+  },
+  "by_schema_v2_band": {
+    "high": 35
+  },
+  "top_issue_codes": {
+    "UNSUPPORTED_SCHEMA_VERSION": 35,
+    "WEAK_ACTION": 35
+  },
+  "top_banned_phrases": {
+    "proof detail": 35,
+    "carry the energy": 35,
+    "hidden decision": 35,
+    "content moment": 35,
+    "let the proof carry": 35,
+    "here is the proof detail": 35,
+    "beauty moment": 7,
+    "for this beauty moment": 7,
+    "food moment": 7,
+    "for this food moment": 7
+  },
+  "north_star_targets": {
+    "approve_rate_safe_candidates": 0.55,
+    "editorial_mean_approved": 88,
+    "semantic_dupe_ge_0_78_share": 0.05,
+    "banned_phrase_hit_rate": 0.01,
+    "gold_gate_agreement": 0.85,
+    "scorer_human_spearman": 0.6
+  },
+  "notes": [
+    "schema_v2_score uses lib/idea-card/quality.scoreIdeaCard after adaptLegacyIdeaCard.",
+    "inventory rank / QG editorial come from export metadata when present.",
+    "scoreCandidate hash bonus is NOT re-simulated here; see admin-generation-batches scoreCandidate for production rank path.",
+    "This baseline is offline finalist-only unless --export points elsewhere."
+  ],
+  "sample_red_gate_failures": []
+}

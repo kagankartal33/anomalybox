@@ -15,17 +15,17 @@ type Run = { id: string; status: string; stage: string | null; provider: string;
 function object(value: unknown): Json {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Json : {};
 }
+function count(values: string[]) {
+  const result = new Map<string, number>();
+  for (const value of values.filter(Boolean)) result.set(value, (result.get(value) ?? 0) + 1);
+  return [...result.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
+}
 function weightedCount(rows: Json[]) {
   const result = new Map<string, number>();
   for (const row of rows) for (const [code, raw] of Object.entries(row)) {
     const value = Number(raw);
     if (Number.isFinite(value) && value > 0) result.set(code, (result.get(code) ?? 0) + value);
   }
-  return [...result.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
-}
-function count(values: string[]) {
-  const result = new Map<string, number>();
-  for (const value of values.filter(Boolean)) result.set(value, (result.get(value) ?? 0) + 1);
   return [...result.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]));
 }
 function percentile(values: number[], portion: number) {

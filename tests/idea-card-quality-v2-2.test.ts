@@ -24,6 +24,17 @@ const wrongOpeningVisual = evaluate({
 assert.equal(wrongOpeningVisual.decision, "reject", "Overlay copy must not hide an unrelated first-frame action");
 assert.ok(wrongOpeningVisual.hardGateCodes.includes("first_frame_plan_mismatch"));
 
+const oneTokenOpeningOverlap = evaluate({
+  ...baseCard,
+  steps: baseCard.steps.map((step, index) => index === 0 ? {
+    ...step,
+    action: "Hold a passport beside the mirror",
+    onScreenText: "Texture comparison",
+  } : step),
+});
+assert.equal(oneTokenOpeningOverlap.decision, "reject", "One incidental shared object cannot satisfy a first-frame plan");
+assert.ok(oneTokenOpeningOverlap.hardGateCodes.includes("first_frame_plan_mismatch"));
+
 for (const delivery of ["spoken", "dialogue", "on_screen_text"] as const) {
   const recipe = { ...automaticRecipe, hookDeliveryId: delivery };
   const missingOpeningDelivery = evaluate({
@@ -35,6 +46,33 @@ for (const delivery of ["spoken", "dialogue", "on_screen_text"] as const) {
   assert.equal(missingOpeningDelivery.decision, "reject", `A ${delivery} hook must execute its required opening field`);
   assert.ok(missingOpeningDelivery.hardGateCodes.includes("hook_delivery_missing"));
 }
+
+for (const delivery of ["sound", "prop", "environment", "edit_transition"] as const) {
+  const recipe = { ...automaticRecipe, hookDeliveryId: delivery, shootFormat: "object_led" as const };
+  const missingOpeningDelivery = evaluate({
+    ...baseCard,
+    shootFormat: "object_led",
+    steps: baseCard.steps.map((step, index) => index === 0 ? {
+      ...step,
+      action: "Move it into frame",
+      shot: "Locked close-up",
+      editNote: "Keep the opening steady.",
+      performanceNote: "Stay neutral.",
+    } : step),
+  }, { creativeRecipe: recipe, concept: { ...automaticConcept, recipe, shootFormat: recipe.shootFormat } });
+  assert.equal(missingOpeningDelivery.decision, "reject", `A ${delivery} hook must have an observable opening execution`);
+  assert.ok(missingOpeningDelivery.hardGateCodes.includes("hook_delivery_missing"));
+}
+
+const beforeAfterRecipe = { ...automaticRecipe, proofDeviceId: "before_after_state" as const };
+const wrongProofDevice = evaluate(baseCard, { creativeRecipe: beforeAfterRecipe, concept: { ...automaticConcept, recipe: beforeAfterRecipe } });
+assert.equal(wrongProofDevice.decision, "reject", "A recipe proof device must occur in the filmed steps");
+assert.ok(wrongProofDevice.hardGateCodes.includes("recipe_proof_not_executed"));
+
+const artifactPayoffRecipe = { ...automaticRecipe, payoffTypeId: "usable_artifact" as const };
+const wrongPayoffType = evaluate(baseCard, { creativeRecipe: artifactPayoffRecipe, concept: { ...automaticConcept, recipe: artifactPayoffRecipe } });
+assert.equal(wrongPayoffType.decision, "reject", "A recipe payoff type must occur in the final filmed step");
+assert.ok(wrongPayoffType.hardGateCodes.includes("recipe_payoff_not_executed"));
 
 const withheldPayoff = evaluate({
   ...baseCard,
@@ -154,50 +192,6 @@ for (const proofAction of [
 ]) {
   const result = evaluate({ ...baseCard, steps: baseCard.steps.map((step, i) => ({ ...step, action: i === 2 ? proofAction : "Hold the bottle beside the mirror" })) });
   assert.equal(result.hardGateCodes.includes("missing_proof_beat"), false, `Concrete proof action must be recognized: ${proofAction}`);
-}
-
-for (const delivery of ["sound", "prop", "environment", "edit_transition"] as const) {
-  const recipe = { ...automaticRecipe, hookDeliveryId: delivery, shootFormat: "object_led" as const };
-  const missingOpeningDelivery = evaluate({
-    ...baseCard,
-    shootFormat: "object_led",
-    steps: baseCard.steps.map((step, index) => index === 0 ? {
-      ...step,
-      action: "Move it into frame",
-      shot: "Locked close-up",
-      editNote: "Keep the opening steady.",
-      performanceNote: "Stay neutral.",
-    } : step),
-  }, { creativeRecipe: recipe, concept: { ...automaticConcept, recipe, shootFormat: recipe.shootFormat } });
-  assert.equal(missingOpeningDelivery.decision, "reject", `A ${delivery} hook must have an observable opening execution`);
-  assert.ok(missingOpeningDelivery.hardGateCodes.includes("hook_delivery_missing"));
-}
-
-const beforeAfterRecipe = { ...automaticRecipe, proofDeviceId: "before_after_state" as const };
-const wrongProofDevice = evaluate(baseCard, { creativeRecipe: beforeAfterRecipe, concept: { ...automaticConcept, recipe: beforeAfterRecipe } });
-assert.equal(wrongProofDevice.decision, "reject", "A recipe proof device must occur in the filmed steps");
-assert.ok(wrongProofDevice.hardGateCodes.includes("recipe_proof_not_executed"));
-
-const artifactPayoffRecipe = { ...automaticRecipe, payoffTypeId: "usable_artifact" as const };
-const wrongPayoffType = evaluate(baseCard, { creativeRecipe: artifactPayoffRecipe, concept: { ...automaticConcept, recipe: artifactPayoffRecipe } });
-assert.equal(wrongPayoffType.decision, "reject", "A recipe payoff type must occur in the final filmed step");
-assert.ok(wrongPayoffType.hardGateCodes.includes("recipe_payoff_not_executed"));
-
-for (const delivery of ["sound", "prop", "environment", "edit_transition"] as const) {
-  const recipe = { ...automaticRecipe, hookDeliveryId: delivery, shootFormat: "object_led" as const };
-  const missingOpeningDelivery = evaluate({
-    ...baseCard,
-    shootFormat: "object_led",
-    steps: baseCard.steps.map((step, index) => index === 0 ? {
-      ...step,
-      action: "Move it into frame",
-      shot: "Locked close-up",
-      editNote: "Keep the opening steady.",
-      performanceNote: "Stay neutral.",
-    } : step),
-  }, { creativeRecipe: recipe, concept: { ...automaticConcept, recipe, shootFormat: recipe.shootFormat } });
-  assert.equal(missingOpeningDelivery.decision, "reject", `A ${delivery} hook must have an observable opening execution`);
-  assert.ok(missingOpeningDelivery.hardGateCodes.includes("hook_delivery_missing"));
 }
 
 const generic = evaluate({ ...baseCard, category: "", personaSlug: "", steps: baseCard.steps.map((step) => ({ ...step, action: "Be energetic and make the scene engaging", shot: "Film this" })) });

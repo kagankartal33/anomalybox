@@ -17,8 +17,9 @@ function insideRoot(target) {
 }
 
 function writeJson(relativePath, value, pretty = false) {
+  const target = path.join(root, relativePath);
   if (!insideRoot(target)) throw new Error(`Refusing out-of-workspace write: ${target}`);
-  fs.writeFileSync(target, `${JSON.stringify(value, null, pretty ? 2 : 0)}\n`);
+  fs.writeFileSync(target, `${JSON.stringify(value, null, pretty ? 2 : 0)}\n`, "utf8");
 }
 
 const registryPath = path.join(root, "lib", "seo-package-registry.json");

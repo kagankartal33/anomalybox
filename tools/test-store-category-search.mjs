@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Fixture test: Store category search must map Turkish yacht/boat intent to
  * the premium English-facing category label used by the purchase UI.
  *
@@ -29,8 +29,8 @@ const categories = [
 
 const yachtQueries = ["yat", "tekne", "yatch", "yacht", "mavi tur", "gulet", "private yacht charter"];
 
-assert.equal(normalized("lüks yat turu"), "luks yat turu");
-assert.equal(normalized("Özel Tekne"), "ozel tekne");
+assert.equal(normalized("l\u00fcks yat turu"), "luks yat turu");
+assert.equal(normalized("\u00d6zel Tekne"), "ozel tekne");
 
 for (const query of yachtQueries) {
   const results = filterStoreCategories(categories, query, "all");
@@ -45,3 +45,5 @@ assert.ok(travelResults.some((category) => premiumCategoryLabel(category) === "Y
 console.log("OK  travel filter keeps yacht/boat categories");
 
 console.log("\nStore category search fixtures passed.");
+
+

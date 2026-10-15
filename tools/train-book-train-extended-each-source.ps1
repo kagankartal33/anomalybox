@@ -1,6 +1,6 @@
 param(
-  [string]$InputDir = ".\\Book-Train",
-  [string]$OutDir = ".\\dataset\\book_train\\prepared\\extended\\individual",
+  [string]$InputDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\Book-Train",
+  [string]$OutDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\dataset\book_train\prepared\extended\individual",
   [int]$MaxRowsPerSource = 30000,
   [int]$MaxScanRowsPerSource = 350000,
   [int]$MaxTrainingExamples = 25000,
@@ -35,7 +35,7 @@ foreach ($source in $sources) {
 
   $argsList = @(
     "-ExecutionPolicy", "Bypass",
-    "-File", ".\\tools\\prepare-and-train-book-train-extended.ps1",
+    "-File", ".\tools\prepare-and-train-book-train-extended.ps1",
     "-InputDir", $InputDir,
     "-OutDir", $sourceOutDir,
     "-OutputName", $outputName,

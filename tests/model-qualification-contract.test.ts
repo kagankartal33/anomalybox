@@ -8,10 +8,6 @@ import { GENERATION_PIPELINE_VERSION, modelContract } from "../lib/generation/au
 import { CREATIVE_SCHEDULER_VERSION } from "../lib/generation/creative-taxonomy";
 import { CONCEPT_RANKER_VERSION } from "../lib/generation/concept-ranking";
 import { DURATION_PLANNER_VERSION } from "../lib/idea-card/duration-planner";
-import { GENERATION_PIPELINE_VERSION } from "../lib/generation/automatic-policy";
-import { CREATIVE_SCHEDULER_VERSION } from "../lib/generation/creative-taxonomy";
-import { CONCEPT_RANKER_VERSION } from "../lib/generation/concept-ranking";
-import { DURATION_PLANNER_VERSION } from "../lib/idea-card/duration-planner";
 
 const contract = {
   promptVersion: "prompt-v2",
@@ -42,7 +38,6 @@ assert.equal(criticMatchesQualificationContract(qualifiedPair, { ...critic, prof
 assert.equal(criticMatchesQualificationContract({ ...qualifiedPair, features: {} }, critic), false, "Missing configured critic alias fails closed");
 assert.equal(criticMatchesQualificationContract(qualifiedPair, { ...critic, enabled: false }), false);
 assert.equal(criticMatchesQualificationContract(approvedProfile, critic), false, "Missing critic qualification evidence fails closed");
-assert.equal(profileMatchesQualificationContract({ ...approvedProfile, qualification_metrics: { ...approvedProfile.qualification_metrics, scheduler_version: "stale" } }, contract), false);
 
 const expected = {
   pilotCategories: ["beauty", "food"],

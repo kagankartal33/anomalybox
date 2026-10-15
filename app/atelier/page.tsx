@@ -8,9 +8,9 @@ import { RecaptchaSubmitButton } from "@/components/RecaptchaSubmitButton";
 import { premiumAssets } from "@/lib/premium-assets";
 
 export const metadata: Metadata = {
-  title: "ATELIER BLACK BOX | Custom Creator Strategy Cards",
+  title: "ATELIER BLACK BOX | Custom Campaign-Ready Briefs",
   description:
-    "A private concierge creator-card service for launches, rebrands, sponsored campaigns, and premium creator positioning.",
+    "A private concierge creative brief service for launches, rebrands, sponsored campaigns, and premium creator positioning.",
   alternates: {
     canonical: "/atelier",
   },
@@ -28,8 +28,8 @@ const effects = [
 const deliverables = [
   "Creator and lane analysis",
   "Desired brand-effect selection",
-  "Custom digital strategy cards",
-  "Brand-lift direction",
+  "Custom shoot briefs for that job",
+  "How the work should feel on camera",
   "Hook, caption, and scene system",
   "Sponsor-safe wording",
   "Launch or rebrand strategy",
@@ -42,9 +42,9 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
   return (
     <main className="min-h-screen bg-[#060606] text-white">
       <header className="border-b border-white/10">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+        <nav aria-label="Atelier Navigation" className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <Link href="/" className="focus-ring inline-flex items-center gap-3 rounded-sm" aria-label="Anomaly Box home">
-            <Image src={premiumAssets.brand.mark} alt="" width={40} height={40} className="h-10 w-10" priority />
+            <Image src={premiumAssets.brand.mark} alt="" aria-hidden="true" role="presentation" width={40} height={40} className="h-10 w-10" priority />
             <span className="text-lg font-semibold tracking-[0.01em] text-white">Anomaly Box</span>
           </Link>
           <a
@@ -53,7 +53,7 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
           >
             Request consultation
           </a>
-        </div>
+        </nav>
       </header>
 
       <section className="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-[1fr_0.9fr] md:items-center">
@@ -64,8 +64,8 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
           </div>
           <h1 className="mt-6 text-6xl font-semibold leading-[0.95]">ATELIER BLACK BOX</h1>
           <p className="mt-6 max-w-2xl text-xl leading-9 text-white/70">
-            A bespoke creator-card system for established creators who need sharper positioning, campaign-specific direction,
-            and premium digital cards shaped around their voice, audience, and production style.
+            Custom briefs when a launch, rebrand, or sponsor set needs more than a standard box.
+            Built around how you already talk and shoot.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -126,17 +126,15 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
         <div className="mx-auto grid max-w-6xl gap-8 px-6 md:grid-cols-2">
           <div className="rounded-md border border-white/10 bg-white/[0.035] p-7">
             <PremiumIcon icon={Shield} tone="blackDiamond" />
-            <h2 className="mt-4 text-2xl font-semibold">Built for brand-safe premium content.</h2>
+            <h2 className="mt-4 text-2xl font-semibold">What stays off-camera.</h2>
             <p className="mt-3 leading-7 text-white/64">
-              The Atelier service focuses on claim boundaries, sponsor-safe phrasing, visual positioning, and clear production guidance.
-              It helps you create with taste and control without promising a guaranteed viral outcome.
+              We write claim limits, sponsor wording, and shot notes. We do not promise a viral outcome.
             </p>
           </div>
           <div className="rounded-md border border-white/10 bg-white/[0.035] p-7">
             <h2 className="text-2xl font-semibold">Best for</h2>
             <p className="mt-3 leading-7 text-white/64">
-              Campaign launches, creator rebrands, premium sponsored posts, founder-led content, luxury positioning, high-value product reveals,
-              and creators who want a more bespoke creative system than a standard dossier.
+              A launch, a rebrand, a paid post, or a founder-facing series when Classic or Signature is too small.
             </p>
           </div>
         </div>
@@ -156,30 +154,30 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
             {params.error ? <div className="mb-4 rounded-md border border-red-300/25 bg-red-400/10 p-3 text-sm text-red-100">{params.error}</div> : null}
             <input aria-hidden="true" className="hidden" name="company" tabIndex={-1} />
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm font-semibold text-white/82">
-                Name
-                <input className="focus-ring rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal text-white placeholder:text-white/30" name="name" required />
-              </label>
-              <label className="grid gap-2 text-sm font-semibold text-white/82">
-                Email
-                <input className="focus-ring rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal text-white placeholder:text-white/30" name="email" required type="email" />
-              </label>
+              <div className="grid gap-2 text-sm font-semibold text-white/82">
+                <label htmlFor="atelier-name">Name</label>
+                <input id="atelier-name" className="focus-ring rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal text-white placeholder:text-white/30" name="name" required />
+              </div>
+              <div className="grid gap-2 text-sm font-semibold text-white/82">
+                <label htmlFor="atelier-email">Email</label>
+                <input id="atelier-email" className="focus-ring rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal text-white placeholder:text-white/30" name="email" required type="email" />
+              </div>
             </div>
-            <label className="mt-4 grid gap-2 text-sm font-semibold text-white/82">
-              Instagram handle
-              <input className="focus-ring rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal text-white placeholder:text-white/30" name="instagram_handle" placeholder="@creator" />
-            </label>
-            <label className="mt-4 grid gap-2 text-sm font-semibold text-white/82">
-              Desired brand effect
-              <select className="focus-ring rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal text-white" name="desired_effect" required defaultValue="">
+            <div className="mt-4 grid gap-2 text-sm font-semibold text-white/82">
+              <label htmlFor="atelier-handle">Instagram handle</label>
+              <input id="atelier-handle" className="focus-ring rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal text-white placeholder:text-white/30" name="instagram_handle" placeholder="@creator" />
+            </div>
+            <div className="mt-4 grid gap-2 text-sm font-semibold text-white/82">
+              <label htmlFor="atelier-effect">Desired brand effect</label>
+              <select id="atelier-effect" className="focus-ring rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal text-white" name="desired_effect" required defaultValue="">
                 <option disabled value="">Select one</option>
                 {effects.map((effect) => <option className="bg-[#0D0D0D]" key={effect} value={effect}>{effect}</option>)}
               </select>
-            </label>
-            <label className="mt-4 grid gap-2 text-sm font-semibold text-white/82">
-              What are you preparing for?
-              <textarea className="focus-ring min-h-36 rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal leading-7 text-white placeholder:text-white/30" name="project_context" placeholder="Launch, rebrand, sponsor campaign, product reveal, or the audience effect you want..." required />
-            </label>
+            </div>
+            <div className="mt-4 grid gap-2 text-sm font-semibold text-white/82">
+              <label htmlFor="atelier-context">What are you preparing for?</label>
+              <textarea id="atelier-context" className="focus-ring min-h-36 rounded-md border border-white/12 bg-black/35 px-3 py-3 font-normal leading-7 text-white placeholder:text-white/30" name="project_context" placeholder="Launch, rebrand, sponsor campaign, product reveal, or the audience effect you want..." required />
+            </div>
             <RecaptchaSubmitButton action="atelier_request" className="focus-ring mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-5 py-3 font-semibold text-[#10100f] hover:bg-[#E8EDF7] disabled:opacity-60">
               Request private Atelier review <ArrowRight className="h-4 w-4" />
             </RecaptchaSubmitButton>

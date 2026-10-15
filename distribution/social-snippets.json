@@ -1,0 +1,192 @@
+{
+  "brand": {
+    "name": "Anomaly Box",
+    "url": "https://anomalybox.com",
+    "tagline": "Private Creative Direction & Shoot Briefs for Instagram Creators",
+    "short_bio": "Private Instagram shoot briefs with scene flow, spoken lines, camera angles, and edit notes. Built for creators who refuse generic AI slop.",
+    "full_bio": "Anomaly Box provides private creative direction and campaign-ready shoot briefs for Instagram creators, brands, and agency operators. Instead of generic prompt generators and AI slop, Anomaly Box delivers structured creative dossiers (Classic Red & Signature Purple) directly to the creator's secure digital vault. Each brief covers hook options, scene-by-scene timing, camera angles, spoken dialogue, on-screen text systems, and anti-claim boundaries to eliminate decision fatigue on set.",
+    "tags": ["Content Creation", "Instagram Reels", "Video Production", "Creator Economy", "Creative Direction", "Social Media Strategy"]
+  },
+  "platforms": [
+    {
+      "id": 1,
+      "name": "Pinterest",
+      "signup_url": "https://www.pinterest.com",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com/pricing",
+      "bio": "Private Instagram shoot briefs with scene flow, spoken lines, and camera notes. Built for creators who refuse generic AI slop.",
+      "first_action": "Create board 'Instagram Shoot Briefs' and pin dossier graphics pointing to https://anomalybox.com/pricing"
+    },
+    {
+      "id": 2,
+      "name": "Tumblr",
+      "signup_url": "https://www.tumblr.com/register",
+      "profile_name": "anomalybox",
+      "website": "https://anomalybox.com/resources",
+      "bio": "Daily video shoot frameworks, hook retention breakdowns, and creative direction notes from Anomaly Box.",
+      "first_action": "Post quote or snippet from https://anomalybox.com/resources/first-3-seconds-hook-retention-framework"
+    },
+    {
+      "id": 3,
+      "name": "Medium",
+      "signup_url": "https://medium.com/m/signin",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com",
+      "bio": "Private creative direction platform delivering campaign-ready shoot briefs to Creator Vault.",
+      "first_action": "Import distribution/medium/01-hook-retention-framework.md with canonical URL set to https://anomalybox.com/resources/first-3-seconds-hook-retention-framework"
+    },
+    {
+      "id": 4,
+      "name": "Behance",
+      "signup_url": "https://www.behance.net",
+      "profile_name": "Anomaly Box Studio",
+      "website": "https://anomalybox.com",
+      "bio": "Creative direction system & physical/digital dossier design for high-ticket content creators.",
+      "first_action": "Create project 'Anomaly Box — Creative Direction Dossier UI' with screenshots of Classic Red and Signature Purple."
+    },
+    {
+      "id": 5,
+      "name": "Dribbble",
+      "signup_url": "https://dribbble.com/signup/new",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com",
+      "bio": "UI & Design System for private creator shoot briefs and interactive teleprompter mode.",
+      "first_action": "Publish shot of Creator Vault and Execution Board with link to https://anomalybox.com"
+    },
+    {
+      "id": 6,
+      "name": "Flickr",
+      "signup_url": "https://identity.flickr.com/sign-up",
+      "profile_name": "Anomaly Box Studio",
+      "website": "https://anomalybox.com",
+      "bio": "Editorial photography, studio lighting setups, and brief packaging aesthetics.",
+      "first_action": "Upload brand asset photos and add https://anomalybox.com in image descriptions."
+    },
+    {
+      "id": 7,
+      "name": "Issuu",
+      "signup_url": "https://issuu.com/signup",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com/pricing",
+      "bio": "Digital publication catalog of creator briefs and video production frameworks.",
+      "first_action": "Upload distribution/slideshare/presentation.html (exported to PDF) as Anomaly Box Brief Catalog."
+    },
+    {
+      "id": 8,
+      "name": "SlideShare",
+      "signup_url": "https://www.slideshare.net/signup",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com",
+      "bio": "Executive slide presentations on creator retention, video hook architecture, and production workflows.",
+      "first_action": "Upload distribution/slideshare/presentation.html (as PDF) with title 'Eliminating Decision Fatigue on Set'."
+    },
+    {
+      "id": 9,
+      "name": "About.me",
+      "signup_url": "https://about.me/signup",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com",
+      "bio": "We help creators and brands eliminate decision fatigue before filming. Private shoot briefs delivered to Creator Vault.",
+      "first_action": "Set primary CTA button to 'Explore Shoot Briefs' -> https://anomalybox.com/store"
+    },
+    {
+      "id": 10,
+      "name": "Gravatar",
+      "signup_url": "https://gravatar.com",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com",
+      "bio": "Private creative direction and campaign-ready shoot briefs for Instagram creators.",
+      "first_action": "Add website https://anomalybox.com to profile websites and avatar."
+    },
+    {
+      "id": 11,
+      "name": "Diigo",
+      "signup_url": "https://www.diigo.com/sign-up",
+      "profile_name": "anomalybox",
+      "website": "https://anomalybox.com",
+      "bio": "Curated bookmarks on creator economy tools and video retention research.",
+      "first_action": "Bookmark https://anomalybox.com and https://anomalybox.com/tools with tags: video-production, creator-tools, instagram"
+    },
+    {
+      "id": 12,
+      "name": "Pearltrees",
+      "signup_url": "https://www.pearltrees.com",
+      "profile_name": "anomalybox",
+      "website": "https://anomalybox.com",
+      "bio": "Curated collection of short-form video scripts, hook research, and studio setups.",
+      "first_action": "Create pearl collection 'Video Strategy 2026' and link https://anomalybox.com/resources"
+    },
+    {
+      "id": 13,
+      "name": "Scoop.it",
+      "signup_url": "https://www.scoop.it/signup",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com/resources",
+      "bio": "Curated insights on short-form video directing, retention psychology, and creator burnout solutions.",
+      "first_action": "Create topic 'Video Directing Systems' and scoop top 3 articles from https://anomalybox.com/resources"
+    },
+    {
+      "id": 14,
+      "name": "Flipboard",
+      "signup_url": "https://flipboard.com",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com/feed.xml",
+      "bio": "Curated magazine for independent creators, agencies, and operators filming high-retention video.",
+      "first_action": "Create magazine 'The Creator Direction' and connect RSS feed https://anomalybox.com/feed.xml"
+    },
+    {
+      "id": 15,
+      "name": "Reddit",
+      "signup_url": "https://www.reddit.com/register/",
+      "profile_name": "u/anomalybox",
+      "website": "https://anomalybox.com",
+      "bio": "Private creative direction platform for Instagram creators. Sharing practical, non-slop filming frameworks.",
+      "first_action": "Add website link in profile settings. Participate in r/Instagrammarketing and r/videography with value-first answers."
+    },
+    {
+      "id": 16,
+      "name": "Quora",
+      "signup_url": "https://www.quora.com",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com",
+      "bio": "Creative Direction Studio at Anomaly Box. Settle the hook, scenes, and camera angles before recording.",
+      "first_action": "Answer questions on 'How to write a viral reel script' linking to https://anomalybox.com/resources/first-3-seconds-hook-retention-framework"
+    },
+    {
+      "id": 17,
+      "name": "LinkedIn",
+      "signup_url": "https://www.linkedin.com/company/setup/new/",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com",
+      "bio": "Anomaly Box provides private creative direction and campaign-ready shoot briefs for Instagram creators, brands, and agency operators.",
+      "first_action": "Create Company Page 'Anomaly Box' with website https://anomalybox.com and industry 'Media Production'."
+    },
+    {
+      "id": 18,
+      "name": "GitHub",
+      "signup_url": "https://github.com/signup",
+      "profile_name": "anomalybox",
+      "website": "https://anomalybox.com/tools",
+      "bio": "Open creator decision tools, format utility routers, and shoot brief scorecards from Anomaly Box.",
+      "first_action": "Create repository anomalybox/anomalybox and push distribution/github-profile/README.md"
+    },
+    {
+      "id": 19,
+      "name": "Product Hunt",
+      "signup_url": "https://www.producthunt.com",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com/store",
+      "bio": "Campaign-ready Instagram shoot briefs delivered to Creator Vault. Zero generic AI slop.",
+      "first_action": "Submit Anomaly Box as a new product or upcoming launch with website https://anomalybox.com"
+    },
+    {
+      "id": 20,
+      "name": "Wellfound",
+      "signup_url": "https://wellfound.com",
+      "profile_name": "Anomaly Box",
+      "website": "https://anomalybox.com",
+      "bio": "Private creative direction platform delivering campaign-ready shoot briefs to Creator Vault.",
+      "first_action": "Create company profile for Anomaly Box with primary domain https://anomalybox.com"
+    }
+  ]
+}

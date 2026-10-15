@@ -12,7 +12,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUT = ROOT / "dataset" / "huggingface"
+ARCHIVE = Path(r"C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive")
+DEFAULT_OUT = ARCHIVE / "dataset" / "huggingface"
 BASE_URL = "https://datasets-server.huggingface.co"
 
 
@@ -305,3 +306,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

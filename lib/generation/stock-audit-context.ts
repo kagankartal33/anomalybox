@@ -1,7 +1,7 @@
-import { automaticGenerationBlockers, objectRecord } from "./automatic-policy";
-import { conceptPlanSchema } from "./contracts";
-import { creativeRecipeSchema } from "./creative-taxonomy";
-import type { QualityV22Options } from "../idea-card/quality-v2-2";
+import { automaticGenerationBlockers, objectRecord } from "./automatic-policy.ts";
+import { conceptPlanSchema } from "./contracts.ts";
+import { creativeRecipeSchema } from "./creative-taxonomy.ts";
+import type { QualityV22Options } from "../idea-card/quality-v2-2.ts";
 
 type GenerationQualityContext = Pick<QualityV22Options, "creativeRecipe" | "concept"> & {
   additionalHardGateCodes: string[];

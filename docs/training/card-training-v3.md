@@ -13,11 +13,6 @@ This is the automatic English Instagram Reels training contract. It is isolated 
 - Concept ranker: `concept-ranker-v2`
 - Duration planner: `duration-planner-v2`
 - Automatic policy: `automatic-card-policy-v3.1`
-- Generation pipeline: `generation-pipeline-v3.1`
-- Creative scheduler: `creative-scheduler-v2`
-- Concept ranker: `concept-ranker-v2`
-- Duration planner: `duration-planner-v2`
-- Automatic policy: `automatic-card-policy-v3.1`
 - Dataset: `card-sft-v3`
 - Creator output: schemaVersion 2
 

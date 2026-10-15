@@ -1,4 +1,9 @@
-param()
+param(
+  [ValidatePattern('^[A-Za-z0-9_]+$')]
+  [string]$Database = "postgres",
+  [ValidatePattern('^[A-Za-z0-9_]+$')]
+  [string]$DatabaseUser = "postgres"
+)
 
 $ErrorActionPreference = "Stop"
 
@@ -53,9 +58,23 @@ insert into public.idea_candidates (
 on conflict (id) do update set status = excluded.status;
 
 insert into public.idea_cards (idea_id, title, card)
-values ('$ideaId', 'The One Slot Signal', '{"idea_summary":{"premise":"Single-use fixture"}}'::jsonb)
+values (
+  '$ideaId',
+  'The One Slot Signal',
+  '{"idea_summary":{"premise":"Single-use fixture"},"steps":[{"action":"Show the sealed item"},{"action":"Open it once on camera"},{"action":"Reveal the result"}]}'::jsonb
+)
 on conflict (idea_id) do update set title = excluded.title, card = excluded.card;
 
+-- Seed pre-upgrade stock to test delivery compatibility, not new publication.
+-- Local postgres only. The named guard is restored before delivery assertions;
+-- any setup failure rolls this transaction back, including trigger state.
+begin;
+do `$`$
+begin
+  if exists (select 1 from pg_trigger where tgname = 'idea_inventory_automatic_publication' and tgrelid = 'public.idea_inventory'::regclass) then
+    alter table public.idea_inventory disable trigger idea_inventory_automatic_publication;
+  end if;
+end `$`$;
 insert into public.idea_inventory (
   id, idea_id, category_id, persona_id, platform, language, internal_rank_score,
   score_band, quality_floor_passed, status, reuse_count, max_reuse_count, metadata
@@ -66,6 +85,13 @@ insert into public.idea_inventory (
   'instagram_reels', 'en', 98, 'high', true, 'available', 0, 1, '{"test":"single_use"}'::jsonb
 )
 on conflict (id) do update set status = 'available', reuse_count = 0, max_reuse_count = 1;
+do `$`$
+begin
+  if exists (select 1 from pg_trigger where tgname = 'idea_inventory_automatic_publication' and tgrelid = 'public.idea_inventory'::regclass) then
+    alter table public.idea_inventory enable trigger idea_inventory_automatic_publication;
+  end if;
+end `$`$;
+commit;
 
 do `$`$
 declare
@@ -138,7 +164,7 @@ $cleanupFile = Join-Path $env:TEMP "viralbox-single-use-cleanup-$runId.sql"
 try {
   $setupAndAssertSql | Set-Content -LiteralPath $sqlFile -Encoding ascii
   Get-Content -LiteralPath $sqlFile -Raw |
-    docker exec -i supabase_db_ViralBox psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - | Out-Null
+    docker exec -i supabase_db_ViralBox psql -U $DatabaseUser -d $Database -v ON_ERROR_STOP=1 -f - | Out-Null
   if ($LASTEXITCODE -ne 0) {
     throw "Single-use setup/assert SQL failed with exit code $LASTEXITCODE"
   }
@@ -146,7 +172,7 @@ try {
 } finally {
   $cleanupSql | Set-Content -LiteralPath $cleanupFile -Encoding ascii
   Get-Content -LiteralPath $cleanupFile -Raw |
-    docker exec -i supabase_db_ViralBox psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - | Out-Null
+    docker exec -i supabase_db_ViralBox psql -U $DatabaseUser -d $Database -v ON_ERROR_STOP=1 -f - | Out-Null
   Remove-Item -LiteralPath $sqlFile -Force -ErrorAction SilentlyContinue
   Remove-Item -LiteralPath $cleanupFile -Force -ErrorAction SilentlyContinue
 }

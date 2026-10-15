@@ -67,7 +67,7 @@ Public schema is exposed through the Data API, so RLS must stay enabled. Sensiti
 Run the project-level verifier after training, generator, quality gate, or Docker/container changes:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\test-all.ps1
+powershell -ExecutionPolicy Bypass -File .\tools\test-all.ps1
 ```
 
 The script intentionally removes only the local functions Edge Runtime container if it is stale. It does not remove database, storage, auth, or Studio containers.
@@ -75,5 +75,5 @@ The script intentionally removes only the local functions Edge Runtime container
 For container cleanup only:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -Command ". .\\tools\\local-functions.ps1; Stop-LocalFunctionServers -RemoveEdgeRuntime"
+powershell -ExecutionPolicy Bypass -Command ". .\tools\local-functions.ps1; Stop-LocalFunctionServers -RemoveEdgeRuntime"
 ```

@@ -9,9 +9,6 @@ alter table public.idea_generation_runs add column if not exists lease_expires_a
 alter table public.idea_scores alter column viral_potential_score drop not null;
 alter table public.idea_scores alter column viral_potential_score drop default;
 
-alter table public.idea_scores alter column viral_potential_score drop not null;
-alter table public.idea_scores alter column viral_potential_score drop default;
-
 alter table public.trend_signals add column if not exists source_url text;
 alter table public.trend_signals add column if not exists observed_at timestamptz;
 alter table public.trend_signals add column if not exists country_code text;
@@ -246,10 +243,6 @@ begin
     and m->>'scheduler_version' = 'creative-scheduler-v2'
     and m->>'concept_ranker_version' = 'concept-ranker-v2'
     and m->>'duration_planner_version' = 'duration-planner-v2'
-    and m->>'pipeline_version' = 'generation-pipeline-v3.1'
-    and m->>'scheduler_version' = 'creative-scheduler-v2'
-    and m->>'concept_ranker_version' = 'concept-ranker-v2'
-    and m->>'duration_planner_version' = 'duration-planner-v2'
     and m->>'regression_version' = 'automatic-quality-regression-v3'
     and m->>'regression_passed' = 'true' and (m->>'regression_case_count')::integer = 72
     and m->'generator_snapshot' = public.idea_model_contract(p)
@@ -257,8 +250,6 @@ begin
     and case when jsonb_typeof(e.category_counts) = 'object'
       then (select count(*) from jsonb_object_keys(e.category_counts)) = 12
       else false end
-    and m->'category_counts' = e.category_counts
-    and jsonb_typeof(e.category_counts) = 'object' and jsonb_object_length(e.category_counts) = 12
     and m->'category_counts' = e.category_counts
     and (m->>'embedded_count')::integer = e.brief_count
     and (m->>'critic_record_count')::integer = e.brief_count
@@ -340,10 +331,6 @@ begin
       and p.qualified_prompt_version = 'idea-card-premium-v3.0.0-automatic'
       and p.qualified_schema_version = 2 and p.qualified_quality_gate_version = 'quality-gate-v3.0.0-automatic'
       and p.qualification_eval_id is not null and p.qualification_metrics->>'qualification_mode' = 'automatic-v3'
-      and p.qualification_metrics->>'pipeline_version' = 'generation-pipeline-v3.1'
-      and p.qualification_metrics->>'scheduler_version' = 'creative-scheduler-v2'
-      and p.qualification_metrics->>'concept_ranker_version' = 'concept-ranker-v2'
-      and p.qualification_metrics->>'duration_planner_version' = 'duration-planner-v2'
       and p.qualification_metrics->>'pipeline_version' = 'generation-pipeline-v3.1'
       and p.qualification_metrics->>'scheduler_version' = 'creative-scheduler-v2'
       and p.qualification_metrics->>'concept_ranker_version' = 'concept-ranker-v2'

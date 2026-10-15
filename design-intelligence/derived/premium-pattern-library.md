@@ -15,7 +15,7 @@ Principle: Store, Creator Vault, Profile, Notifications, Admin. Do not overload 
 ## Store
 
 Pattern: Decision-first product cards
-Use when: Selling $500 and $1000 boxes.
+Use when: Selling Classic Red and Signature Purple boxes.
 Principle: Show package outcome, category/persona fit, availability, and one checkout action.
 
 ## Creator Vault

@@ -7,4 +7,4 @@ for (const script of scripts) {
   const source = await (await fetch(script)).text();
   for (const match of source.matchAll(/https:\/\/([a-z0-9]+)\.supabase\.co/g)) refs.add(match[1]);
 }
-console.log([...refs].join("\n"));
+console.log([...refs].join("\n") || "NO_PUBLIC_SUPABASE_REF_FOUND");

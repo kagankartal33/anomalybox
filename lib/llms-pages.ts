@@ -1,3 +1,4 @@
+import registry from "./seo-package-registry.json";
 import { resources } from "@/lib/seo-content";
 import { isPurchaseProtectedTemplate } from "@/lib/template-policy";
 
@@ -7,13 +8,14 @@ export type LlmPublicPage = {
   description: string;
 };
 
-const legacyPages: LlmPublicPage[] = resources.map((resource) => ({
+const registryPages = (registry.pages ?? []) as Array<Pick<LlmPublicPage, "path" | "title" | "description">>;
+const legacyPages = resources.map((resource) => ({
   path: `/resources/${resource.slug}`,
   title: resource.title,
   description: resource.description,
 }));
 
-export const llmsPublicPages: LlmPublicPage[] = legacyPages.filter(
+export const llmsPublicPages: LlmPublicPage[] = [...registryPages, ...legacyPages].filter(
   (page) => !isPurchaseProtectedTemplate({ section: sectionFromPath(page.path), title: page.title }),
 );
 

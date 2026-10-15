@@ -1,7 +1,6 @@
-export type TemplatePolicyPage = {
-  section?: string;
-  title: string;
-};
+import type { SeoPackagePage } from "@/lib/seo-package";
+
+type TemplatePolicyPage = Pick<SeoPackagePage, "section" | "title">;
 
 /**
  * Protect actual reusable templates, while keeping editorial comparisons such
@@ -10,3 +9,4 @@ export type TemplatePolicyPage = {
 export function isPurchaseProtectedTemplate(page: TemplatePolicyPage): boolean {
   return page.section === "templates" || /\btemplate\b/i.test(page.title);
 }
+

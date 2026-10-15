@@ -1,8 +1,7 @@
-/** Automatic qualification. Dry-run by default; never consumes human gold ratings. */
 import { createClient } from "@supabase/supabase-js";
 import { PROMPT_VERSION } from "../lib/generation/contracts";
 import { QUALITY_GATE_VERSION } from "../lib/idea-card/quality-v2-2";
-import { AUTOMATIC_QUALIFICATION_MODE, cardContentHash, modelContract, objectRecord, semanticDocument, sha256, stableJson } from "../lib/generation/automatic-policy";
+import { AUTOMATIC_QUALIFICATION_MODE, GENERATION_PIPELINE_VERSION, SEMANTIC_DOCUMENT_VERSION, cardContentHash, independentCritic, modelContract, objectRecord, semanticDocument, sha256, stableJson } from "../lib/generation/automatic-policy";
 import { automaticQualificationPass, QUALIFICATION_CATEGORIES } from "../lib/generation/qualification";
 import { DURATION_PLANNER_VERSION, analyzeDurationDistribution, timingFingerprint } from "../lib/idea-card/duration-planner";
 import { CREATIVE_SCHEDULER_VERSION, CREATIVE_TAXONOMY_VERSION, analyzeCreativeDistribution, creativeRecipeSchema, recipeMatchesConcept, type CreativeRecipe } from "../lib/generation/creative-taxonomy";
@@ -10,111 +9,186 @@ import { CONCEPT_RANKER_VERSION } from "../lib/generation/concept-ranking";
 import { runAutomaticQualityRegression } from "./automatic-quality-regression";
 import type { IdeaCard } from "../lib/idea-card/types";
 
-const arg = (name: string) => { const index = process.argv.indexOf(name); return index < 0 ? "" : process.argv[index + 1] ?? ""; };
-const profileSlug = arg("--profile");
-const runIds = [...new Set(arg("--run-ids").split(",").map((v) => v.trim()).filter(Boolean))];
+const argument = (name: string) => process.argv[process.argv.indexOf(name) + 1];
+const profileSlug = process.argv.includes("--profile") ? argument("--profile") : "";
+const runIds = [...new Set((process.argv.includes("--run-ids") ? argument("--run-ids") : "").split(",").filter(Boolean))];
 const apply = process.argv.includes("--apply");
 const approve = process.argv.includes("--approve");
-const base = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-if (!base || !key) throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required");
-const url = new URL(base);
-if (url.username || url.password || (url.protocol !== "https:" && !(url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)))) throw new Error("Invalid Supabase service URL");
-if (!profileSlug || !runIds.length || runIds.some((id) => !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))) throw new Error("--profile and explicit UUID --run-ids are required");
-if (approve && !apply) throw new Error("--approve requires --apply");
-const supabase = createClient(base, key, { auth: { persistSession: false } });
-const chunks = <T,>(rows: T[], size = 100): T[][] => Array.from({ length: Math.ceil(rows.length / size) }, (_, i) => rows.slice(i * size, (i + 1) * size));
-const mean = (values: number[]) => values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+type Row = Record<string, unknown>;
+
+function chunks<T>(rows: T[], size = 100) {
+  return Array.from({ length: Math.ceil(rows.length / size) }, (_, i) => rows.slice(i * size, (i + 1) * size));
+}
 
 async function main() {
+  if (!profileSlug || !runIds.length || runIds.some(id => !/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id))) throw new Error("--profile and UUID --run-ids are required");
+  if (approve && !apply) throw new Error("--approve requires --apply");
+  const base = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!base || !key) throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required");
+  const url = new URL(base);
+  if (url.username || url.password || (url.protocol !== "https:" && !(url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)))) throw new Error("Unsafe SUPABASE_URL");
+  const db = createClient(base, key, { auth: { persistSession: false } });
   const regression = runAutomaticQualityRegression();
-  if (!regression.passed) throw new Error("Automatic regression suite failed; no model can be qualified");
-  const { data: profile, error: profileError } = await supabase.from("idea_model_profiles").select("*").eq("profile_slug", profileSlug).single();
-  if (profileError || !profile?.enabled) throw new Error("Enabled model profile not found");
-  const { data: critic, error: criticError } = await supabase.from("idea_model_profiles").select("*").eq("profile_slug", objectRecord(profile.features).critic_profile_slug).eq("enabled", true).single();
-  if (criticError || !critic || (critic.model === profile.model && critic.provider === profile.provider)) throw new Error("Independent enabled critic not found");
+  if (!regression.passed) throw new Error("Automatic regression failed");
+  const { data: profile, error: profileError } = await db.from("idea_model_profiles").select("*").eq("profile_slug", profileSlug).eq("enabled", true).single();
+  if (profileError || !profile) throw new Error("Enabled model profile not found");
+  const { data: critic } = await db.from("idea_model_profiles").select("*").eq("profile_slug", String(objectRecord(profile.features).critic_profile_slug ?? "")).eq("enabled", true).single();
+  if (!critic || !independentCritic(profile, critic)) throw new Error("Enabled independent critic required");
   const criticHash = await sha256(stableJson(modelContract(critic)));
-  const runs: Record<string, unknown>[] = [];
+  const runs: Row[] = [];
   for (const ids of chunks(runIds)) {
-    const { data, error } = await supabase.from("idea_generation_runs").select("*").in("id", ids);
-    if (error) throw error; runs.push(...data ?? []);
+    const { data, error } = await db.from("idea_generation_runs").select("*").in("id", ids);
+    if (error) throw new Error("Cannot read qualification runs");
+    runs.push(...(data ?? []));
   }
-  if (runs.length !== runIds.length || runs.some((run) => run.model_profile_id !== profile.id || !["completed", "partial"].includes(String(run.status)) || run.prompt_version !== PROMPT_VERSION || run.schema_version !== 2 || objectRecord(run.metadata).critic_profile_hash !== criticHash)) throw new Error("Runs must use this generator, current contract and current critic");
-  const batchIds = [...new Set(runs.map((r) => String(r.generation_batch_id)))];
-  const candidates: Record<string, unknown>[] = [];
+  if (runs.length !== runIds.length || runs.some(run => {
+    const metadata = objectRecord(run.metadata);
+    return run.model_profile_id !== profile.id || run.prompt_version !== PROMPT_VERSION || run.taxonomy_version !== CREATIVE_TAXONOMY_VERSION || run.schema_version !== 2
+      || !["completed", "partial", "failed"].includes(String(run.status))
+      || metadata.pipeline_version !== GENERATION_PIPELINE_VERSION || metadata.scheduler_version !== CREATIVE_SCHEDULER_VERSION
+      || metadata.concept_ranker_version !== CONCEPT_RANKER_VERSION || metadata.critic_profile_hash !== criticHash
+      || stableJson(metadata.generator_snapshot) !== stableJson(modelContract(profile));
+  })) throw new Error("Runs must be terminal and match the current generator, critic and pipeline contract");
+  const batchIds = [...new Set(runs.map(run => String(run.generation_batch_id)))];
   for (const ids of chunks(batchIds)) {
-    for (let offset = 0;; offset += 1000) {
-      const { data, error } = await supabase.from("idea_candidates").select("id,category_id,decision_trace").in("generation_batch_id", ids).order("id").range(offset, offset + 999);
-      if (error) throw error;
-      candidates.push(...(data ?? []).filter((row) => runIds.includes(String(objectRecord(objectRecord(row.decision_trace).generation).run_id))));
+    for (let from = 0;; from += 1000) {
+      const { data, error } = await db.from("idea_generation_runs").select("id").in("generation_batch_id", ids).eq("model_profile_id", profile.id).eq("prompt_version", PROMPT_VERSION).order("id").range(from, from + 999);
+      if (error || (data ?? []).some(run => !runIds.includes(run.id))) throw new Error("Include every current-contract attempt from the selected batches, including failures");
       if ((data ?? []).length < 1000) break;
     }
   }
-  const { data: categories, error: categoriesError } = await supabase.from("categories").select("id,slug").in("slug", [...PILOT_CATEGORIES]);
-  if (categoriesError) throw categoriesError;
-  const categoryById = new Map((categories ?? []).map((c) => [c.id, c.slug]));
-  const categoryCounts: Record<string, number> = Object.fromEntries(PILOT_CATEGORIES.map((slug) => [slug, 0]));
-  candidates.forEach((c) => { const slug = categoryById.get(String(c.category_id)); if (slug) categoryCounts[slug]++; });
-  const qualityRows: Record<string, unknown>[] = []; const cards = new Map<string, IdeaCard>(); const embeddings = new Map<string, Record<string, unknown>>();
-  for (const ids of chunks(candidates.map((c) => String(c.id)))) {
-    const [q, c, e] = await Promise.all([
-      supabase.from("idea_quality_checks").select("*").in("idea_id", ids),
-      supabase.from("idea_cards").select("idea_id,card").in("idea_id", ids),
-      supabase.from("idea_semantic_embeddings").select("idea_id,source_text_hash,metadata,embedding_model").in("idea_id", ids),
-    ]);
-    if (q.error || c.error || e.error) throw q.error ?? c.error ?? e.error;
-    qualityRows.push(...q.data ?? []);
-    c.data?.forEach((row) => cards.set(row.idea_id, row.card as IdeaCard));
-    e.data?.forEach((row) => embeddings.set(row.idea_id, row));
+  const { data: categories, error: categoryError } = await db.from("categories").select("id,slug").in("slug", [...QUALIFICATION_CATEGORIES]);
+  if (categoryError) throw new Error("Cannot read categories");
+  const categoryById = new Map((categories ?? []).map(row => [row.id, row.slug]));
+  const categoryByBatchId = new Map<string, string>();
+  for (const ids of chunks(batchIds)) {
+    const { data, error } = await db.from("idea_generation_batches").select("id,category_id").in("id", ids);
+    if (error) throw new Error("Cannot read qualification batch categories");
+    for (const batch of data ?? []) {
+      const category = categoryById.get(batch.category_id);
+      if (!category) throw new Error("Qualification batch is outside the 12 supported categories");
+      categoryByBatchId.set(batch.id, category);
+    }
   }
-  const { data: corpus, error: corpusError } = await supabase.from("idea_embedding_corpus_state").select("card_count,revision").single();
-  if (corpusError) throw corpusError;
-  const qById = new Map(qualityRows.map((q) => [String(q.idea_id), q]));
-  let embedded = 0; let criticRecords = 0; let fresh = 0; let approvedCritics = 0;
+  if (categoryByBatchId.size !== batchIds.length) throw new Error("Qualification batch category evidence is incomplete");
+  const candidates: Row[] = [];
+  for (const ids of chunks(batchIds)) {
+    for (let from = 0;; from += 1000) {
+      const { data, error } = await db.from("idea_candidates").select("id,category_id,decision_trace").in("generation_batch_id", ids).order("id").range(from, from + 999);
+      if (error) throw new Error("Cannot read candidates");
+      candidates.push(...(data ?? []).filter(row => runIds.includes(String(objectRecord(objectRecord(row.decision_trace).generation).run_id))));
+      if ((data ?? []).length < 1000) break;
+    }
+  }
+  const cards = new Map<string, Row>(), qualities = new Map<string, Row>(), embeddings = new Map<string, Row>();
+  for (const ids of chunks(candidates.map(row => String(row.id)))) {
+    for (const [table, destination] of [["idea_cards", cards], ["idea_quality_checks", qualities], ["idea_semantic_embeddings", embeddings]] as const) {
+      const { data, error } = await db.from(table).select("*").in("idea_id", ids);
+      if (error) throw new Error("Cannot read qualification evidence");
+      for (const row of data ?? []) destination.set(String(row.idea_id), row);
+    }
+  }
+  const { data: corpus, error: corpusError } = await db.from("idea_embedding_corpus_state").select("*").single();
+  if (corpusError || !corpus) throw new Error("Cannot verify embedding corpus");
+  const categoryCounts: Record<string, number> = Object.fromEntries(QUALIFICATION_CATEGORIES.map(slug => [slug, 0]));
+  const evidence: { id: string; category: string | undefined; fresh: boolean; embedded: boolean; criticRecord: boolean; approvedCritic: boolean; taxonomyValid: boolean; recipeAdherent: boolean; hookFirstFrame: boolean; proofPayoff: boolean }[] = [];
+  const recipes: CreativeRecipe[] = [];
+  const recipesByCategory = new Map<string, CreativeRecipe[]>(QUALIFICATION_CATEGORIES.map((category) => [category, []]));
   for (const candidate of candidates) {
-    const id = String(candidate.id); const card = cards.get(id); const q = qById.get(id); if (!card || !q) continue;
-    const contentHash = await cardContentHash(card);
-    const v = objectRecord(objectRecord(objectRecord(candidate.decision_trace).generation_gate).critic_verification);
-    const criticCurrent = v.card_hash === contentHash && v.independent === true && v.profile_id === critic.id && v.profile_hash === criticHash;
-    if (criticCurrent) criticRecords++;
-    if (criticCurrent && v.passed === true && q.decision === "approve") approvedCritics++;
-    if (objectRecord(q.metadata).card_hash === contentHash) fresh++;
-    const em = objectRecord(embeddings.get(id)?.metadata);
-    if (embeddings.get(id)?.source_text_hash === await sha256(semanticDocument(card)) && em.document_version === "card-semantic-v2" && em.comparison_scope === "global" && em.corpus_complete === true && em.corpus_revision === corpus.revision && Number(em.corpus_count) === Number(corpus.card_count) && q.embedding_duplicate_score === em.nearest_similarity && q.embedding_model === embeddings.get(id)?.embedding_model && q.embedding_model_version === em.model_version) embedded++;
+    const id = String(candidate.id), card = objectRecord(cards.get(id)?.card), quality = qualities.get(id) ?? {}, embedding = embeddings.get(id) ?? {};
+    const category = categoryById.get(candidate.category_id);
+    if (category && category in categoryCounts) categoryCounts[category]++;
+    const hash = await cardContentHash(card);
+    const verification = objectRecord(objectRecord(objectRecord(candidate.decision_trace).generation_gate).critic_verification);
+    const generation = objectRecord(objectRecord(candidate.decision_trace).generation);
+    const parsedRecipe = creativeRecipeSchema.safeParse(generation.creative_recipe);
+    let recipeAdherent = false;
+    if (generation.taxonomy_version === CREATIVE_TAXONOMY_VERSION && parsedRecipe.success) {
+      recipes.push(parsedRecipe.data);
+      if (category) recipesByCategory.get(category)?.push(parsedRecipe.data);
+      const concept = objectRecord(generation.concept_plan);
+      recipeAdherent = recipeMatchesConcept(parsedRecipe.data, concept) && card.hookId === parsedRecipe.data.hookTypeId && card.shootFormat === parsedRecipe.data.shootFormat && card.presenceMode === parsedRecipe.data.presenceMode;
+    }
+    const criticResult = objectRecord(objectRecord(objectRecord(candidate.decision_trace).generation_gate).critic_result);
+    const criticChecks = objectRecord(criticResult.checks);
+    const validCritic = verification.independent === true && verification.card_hash === hash && verification.profile_id === critic.id && verification.profile_hash === criticHash;
+    const approvedCritic = validCritic && verification.passed === true && quality.decision === "approve";
+    const meta = objectRecord(embedding.metadata);
+    const embedded = embedding.source_text_hash === await sha256(semanticDocument(card)) && meta.document_version === SEMANTIC_DOCUMENT_VERSION && meta.corpus_complete === true && meta.comparison_scope === "global" && meta.corpus_revision === corpus.revision && Number(meta.corpus_count) === Number(corpus.card_count) && embedding.embedding_model === quality.embedding_model && meta.model_version === quality.embedding_model_version && typeof meta.nearest_similarity === "number" && meta.nearest_similarity === quality.embedding_duplicate_score;
+    evidence.push({ id, category, fresh: objectRecord(quality.metadata).card_hash === hash, embedded, criticRecord: validCritic, approvedCritic, taxonomyValid: generation.taxonomy_version === CREATIVE_TAXONOMY_VERSION && parsedRecipe.success, recipeAdherent, hookFirstFrame: approvedCritic && criticChecks.first_frame_hook === "pass", proofPayoff: approvedCritic && criticChecks.proof_payoff === "pass" });
   }
-  const approved = qualityRows.filter((q) => q.decision === "approve");
-  const approvedCards = approved.map((q) => cards.get(String(q.idea_id))).filter((c): c is IdeaCard => Boolean(c));
-  const fingerprints = approvedCards.map(timingFingerprint);
-  const duration = analyzeDurationDistribution(approvedCards.map((c) => c.durationSeconds), fingerprints);
-  const durationCodes = /duration|runtime|spoken_delivery|physical_action_exceeds/;
-  const n = qualityRows.length;
-  const requested = runs.reduce((sum, run) => sum + Number(run.requested_count), 0);
-  const metrics = {
-    qualification_mode: AUTOMATIC_QUALIFICATION_MODE, regression_version: regression.version, regression_passed: regression.passed, regression_case_count: regression.case_count,
-    category_counts: categoryCounts, evaluated_count: n, embedded_count: embedded, critic_record_count: criticRecords, fresh_snapshot_count: fresh,
-    current_gate_count: qualityRows.filter((q) => q.evaluator_version === QUALITY_GATE_VERSION).length,
-    schema_pass_rate: requested ? runs.reduce((sum, r) => sum + Number(r.imported_count), 0) / requested : 0,
-    safe_approve_rate: n ? approved.length / n : 0,
-    approved_average: mean(approved.map((q) => Number(q.craft_score))),
-    approved_critic_pass_rate: approved.length ? approvedCritics / approved.length : 0,
-    duplicate_rate_078: n ? qualityRows.filter((q) => Number(q.embedding_duplicate_score) >= 0.78).length / n : 1,
-    banned_residue_rate: n ? qualityRows.filter((q) => Array.isArray(q.reasons) && q.reasons.includes("creator_facing_residue")).length / n : 1,
-    duration_fit_rate: n ? qualityRows.filter((q) => Array.isArray(q.reasons) && !q.reasons.some((reason) => durationCodes.test(String(reason)))).length / n : 0,
-    exact_duration_max_share: duration.maxExactSecondShare,
-    timing_template_duplicate_rate: fingerprints.length ? (fingerprints.length - new Set(fingerprints).size) / fingerprints.length : 1,
+  const creativeDistribution = analyzeCreativeDistribution(recipes);
+  const creativeDistributionByCategory = Object.fromEntries(
+    QUALIFICATION_CATEGORIES.map((category) => [category, analyzeCreativeDistribution(recipesByCategory.get(category) ?? [])]),
+  );
+  const qualityMetrics = (category?: string) => {
+    const subset = evidence.filter(row => !category || row.category === category);
+    const rows = subset.flatMap(row => qualities.has(row.id) ? [qualities.get(row.id)!] : []);
+    const approved = rows.filter(row => row.decision === "approve");
+    const approvedCards = approved.map(row => objectRecord(cards.get(String(row.idea_id))?.card) as unknown as IdeaCard);
+    const fingerprints = approvedCards.map(timingFingerprint);
+    const durations = analyzeDurationDistribution(approvedCards.map(card => card.durationSeconds), fingerprints);
+    // Include failed attempts with no imported candidate in the category denominator.
+    const attempts = runs.filter(run => !category || categoryByBatchId.get(String(run.generation_batch_id)) === category);
+    const count = (key: keyof typeof subset[number]) => subset.filter(row => row[key] === true).length;
+    return {
+      evaluated_count: rows.length,
+      schema_pass_rate: attempts.reduce((sum, run) => sum + Number(run.imported_count), 0) / Math.max(1, attempts.reduce((sum, run) => sum + Number(run.requested_count), 0)),
+      taxonomy_pass_rate: count("taxonomyValid") / Math.max(1, subset.length),
+      recipe_adherence_rate: count("recipeAdherent") / Math.max(1, subset.length),
+      safe_approve_rate: approved.length / Math.max(1, rows.length),
+      approved_average: approved.reduce((sum, row) => sum + Number(row.craft_score), 0) / Math.max(1, approved.length),
+      approved_critic_pass_rate: count("approvedCritic") / Math.max(1, approved.length),
+      approved_hook_first_frame_rate: count("hookFirstFrame") / Math.max(1, approved.length),
+      approved_proof_payoff_rate: count("proofPayoff") / Math.max(1, approved.length),
+      creative_distribution_passed: (category ? creativeDistributionByCategory[category] : creativeDistribution).issueCodes.length === 0,
+      duplicate_rate_078: rows.filter(row => Number(row.embedding_duplicate_score) >= .78).length / Math.max(1, rows.length),
+      banned_residue_rate: rows.filter(row => Array.isArray(row.reasons) && row.reasons.includes("creator_facing_residue")).length / Math.max(1, rows.length),
+      creator_residue_rate: rows.filter(row => Array.isArray(row.reasons) && row.reasons.includes("creator_facing_residue")).length / Math.max(1, rows.length),
+      duration_fit_rate: rows.filter(row => Array.isArray(row.reasons) && !row.reasons.some(reason => /duration|runtime|spoken_delivery|physical_action_exceeds/.test(String(reason)))).length / Math.max(1, rows.length),
+      exact_duration_max_share: durations.maxExactSecondShare,
+      timing_template_duplicate_rate: (fingerprints.length - new Set(fingerprints).size) / Math.max(1, fingerprints.length),
+      embedded_count: count("embedded"), critic_record_count: count("criticRecord"), fresh_snapshot_count: count("fresh"),
+      current_gate_count: rows.filter(row => row.evaluator_version === QUALITY_GATE_VERSION).length,
+    };
   };
-  const passed = candidates.length === n && automaticQualificationPass(metrics);
-  const evaluation = { model_profile_id: profile.id, prompt_version: PROMPT_VERSION, schema_version: 2, quality_gate_version: QUALITY_GATE_VERSION, brief_count: candidates.length, category_counts: categoryCounts, generation_run_ids: runIds, gold_rating_ids: [], metrics, status: passed ? "completed" : "invalid" };
-  console.log(JSON.stringify({ mode: apply ? "apply" : "dry_run", passed, evaluation, human_review_required: false }, null, 2));
-  if (!apply) { if (!passed) process.exitCode = 1; return; }
-  const { data: saved, error } = await supabase.from("idea_model_qualification_evals").insert(evaluation).select("id").single();
-  if (error) throw error;
+  const metrics = {
+    qualification_mode: AUTOMATIC_QUALIFICATION_MODE,
+    pipeline_version: GENERATION_PIPELINE_VERSION,
+    scheduler_version: CREATIVE_SCHEDULER_VERSION,
+    concept_ranker_version: CONCEPT_RANKER_VERSION,
+    duration_planner_version: DURATION_PLANNER_VERSION,
+    regression_version: regression.version, regression_passed: regression.passed, regression_case_count: regression.case_count,
+    ...qualityMetrics(),
+    category_counts: categoryCounts,
+    category_metrics: Object.fromEntries(QUALIFICATION_CATEGORIES.map(category => [category, qualityMetrics(category)])),
+    creative_distribution: creativeDistribution,
+    creative_distribution_by_category: creativeDistributionByCategory,
+    generator_snapshot: modelContract(profile), critic_snapshot: modelContract(critic),
+    critic_profile_id: critic.id, critic_profile_hash: criticHash,
+  };
+  const passed = candidates.length === qualities.size && automaticQualificationPass(metrics);
+  const evaluation = {
+    model_profile_id: profile.id, prompt_version: PROMPT_VERSION, schema_version: 2, quality_gate_version: QUALITY_GATE_VERSION,
+    brief_count: candidates.length, category_counts: categoryCounts, generation_run_ids: runIds, gold_rating_ids: [],
+    metrics, status: passed ? "completed" : "invalid",
+  };
+  console.log(JSON.stringify({ mode: apply ? "apply" : "dry_run", passed, human_review_required: false, evaluation }, null, 2));
+  if (!passed) process.exitCode = 1;
+  if (!apply) return;
+  const { data: inserted, error } = await db.from("idea_model_qualification_evals").insert(evaluation).select("id").single();
+  if (error || !inserted) throw new Error("Cannot save qualification evaluation");
   if (approve) {
-    if (!passed) throw new Error("Automatic qualification failed; profile remains unapproved");
-    const { data, error: approvalError } = await supabase.rpc("qualify_idea_model_profile", { p_profile_slug: profileSlug, p_eval_id: saved.id });
-    if (approvalError) throw approvalError;
-    console.log(JSON.stringify(data));
+    if (!passed) throw new Error("Invalid automatic qualification; profile remains shadow");
+    const { data, error: qualificationError } = await db.rpc("qualify_idea_model_profile", { p_profile_slug: profileSlug, p_eval_id: inserted.id });
+    if (qualificationError) throw new Error("Qualification approval failed");
+    console.log(JSON.stringify({ qualification_eval_id: inserted.id, result: data }));
     if (!objectRecord(data).qualified) process.exitCode = 1;
   }
 }
-main().catch((error) => { console.error(error instanceof Error ? error.message : "Automatic qualification failed"); process.exitCode = 1; });
+
+main().catch(() => {
+  console.error("Automatic qualification failed. Check arguments, current evidence and database migrations; no profile was force-approved.");
+  process.exitCode = 1;
+});

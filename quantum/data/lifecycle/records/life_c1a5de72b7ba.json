@@ -1,0 +1,26 @@
+{
+  "record_id": "life_c1a5de72b7ba",
+  "site_id": "anomalybox",
+  "slug": "demo-stale",
+  "path": "/resources/demo-stale",
+  "action": "refresh_evidence",
+  "status": "applied",
+  "reason": "facts_stale_or_freshness_trigger",
+  "triggers": [],
+  "signals": {
+    "still_useful": true,
+    "core_intent_unchanged": true,
+    "facts_stale": true,
+    "performance_weak_due_to_overlap": false,
+    "triggers": [],
+    "notes": ""
+  },
+  "target_slug": null,
+  "redirect_path": null,
+  "actor": "cli",
+  "created_at": "2026-08-05T21:10:56Z",
+  "applied_at": "2026-08-05T21:10:56Z",
+  "error": "",
+  "requires_human": false,
+  "related_publication_id": null
+}

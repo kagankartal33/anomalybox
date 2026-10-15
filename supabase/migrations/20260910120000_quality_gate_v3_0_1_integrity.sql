@@ -68,7 +68,7 @@ returns text language sql immutable set search_path = public as $$
       (7::bigint, coalesce(step.value->'editNote', step.value->'edit_note'))
     ) as field(ordinality, value)
   )
-  select coalesce(string_agg(value, E'
+  select coalesce(string_agg(value, E'\n' order by position), '') from fields where value is not null
 $$;
 
 create or replace function public.automatic_card_semantic_hash(p_card jsonb)

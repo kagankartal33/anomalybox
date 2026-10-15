@@ -69,7 +69,7 @@ export async function getCheckoutStatusForUser(
         checkoutId: checkout.id,
         purchaseId: purchase.id,
         deliveryId: delivery?.id,
-        message: "Payment is confirmed, but your dossier needs a fulfillment review. No second payment is required.",
+        message: "Payment is confirmed, but your creative brief needs a fulfillment review. No second payment is required.",
       };
     }
 

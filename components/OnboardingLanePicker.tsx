@@ -460,7 +460,7 @@ export function OnboardingLanePicker({
               </div>
               <h2 className="mt-3 text-2xl font-semibold">Choose the lanes your audience already recognizes you for.</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">
-                Your primary lane powers new purchases. Supporting lanes help shape your creator profile, while secured dossiers already in your vault keep their original match.
+                Your primary lane powers new purchases. Supporting lanes help shape your creator profile, while briefs already secured in your vault keep their original match.
               </p>
             </div>
             <div className="rounded-md border border-ink/10 bg-paper px-4 py-3 text-sm">
@@ -545,7 +545,7 @@ export function OnboardingLanePicker({
                 <div>
                   <p className="text-sm font-semibold text-ink">Use Restaurant as the main lane.</p>
                   <p className="mt-1 text-sm leading-6 text-ink/60">
-                    Keep {titleCase(cuisineQuery)} as a cuisine or concept detail, so your dossier still uses the broad food inventory while the briefs understand the specific context.
+                    Keep {titleCase(cuisineQuery)} as a cuisine or concept detail, so your creative brief still uses the broad food inventory while its guidance reflects the specific context.
                   </p>
                 </div>
                 <button className="focus-ring rounded-md bg-ink px-4 py-2 text-sm font-semibold text-white" type="button" onClick={useCuisineAsRestaurant}>
@@ -630,7 +630,7 @@ export function OnboardingLanePicker({
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Creator mode</p>
             <h2 className="mt-2 text-2xl font-semibold">Choose the mode your audience already recognizes you for.</h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">
-              This shapes the rhythm, visual grammar, audience promise, and strategic angle of every card.
+              This is how you talk and hold the camera. The briefs follow that.
             </p>
           </div>
           <div className="inline-flex items-center gap-2 rounded-full bg-[#f7f5ef] px-3 py-1 text-xs font-semibold text-ink/55">
@@ -697,7 +697,7 @@ export function OnboardingLanePicker({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm">
             <span className="font-semibold">{selectedCategoryIds.length}/3 lanes selected</span>
-            <span className="ml-2 text-ink/55">Your dossier will be matched to your lane, format, and audience promise.</span>
+            <span className="ml-2 text-ink/55">Your creative brief will be matched to your lane, format, and audience promise.</span>
           </div>
           <button className="focus-ring rounded-md bg-ink px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40" type="submit" disabled={!selectedCategoryIds.length}>
             Save profile and continue to Store

@@ -1,13 +1,16 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export async function requireUser() {
+export async function requireUser(nextPath?: string) {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) {
+    const next = nextPath && nextPath.startsWith("/") && !nextPath.startsWith("//") ? nextPath : "";
+    redirect(next ? `/login?next=${encodeURIComponent(next)}` : "/login");
+  }
   return { supabase, user };
 }
 

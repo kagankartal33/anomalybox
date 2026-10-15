@@ -9,8 +9,29 @@ export async function saveOnboarding(formData: FormData) {
   const handle = String(formData.get("handle") ?? "");
   const niche = String(formData.get("niche") ?? "");
   const cuisineDetail = String(formData.get("cuisine_detail") ?? "").trim().slice(0, 140);
-  const categoryId = String(formData.get("category_id") ?? "");
+  const categoryIds = [
+    String(formData.get("category_id_1") ?? ""),
+    String(formData.get("category_id_2") ?? ""),
+    String(formData.get("category_id_3") ?? ""),
+  ].filter(Boolean);
   const personaId = String(formData.get("persona_id") ?? "");
+  const uniqueCategoryIds = [...new Set(categoryIds)].slice(0, 3);
+
+  if (!uniqueCategoryIds.length) {
+    redirect(`/onboarding?error=${encodeURIComponent("Choose at least one creator lane before continuing.")}`);
+  }
+
+  const { data: validCategories } = await supabase
+    .from("categories")
+    .select("id")
+    .in("id", uniqueCategoryIds)
+    .eq("enabled", true);
+  const validCategoryIds = new Set((validCategories ?? []).map((category) => category.id));
+  const safeCategoryIds = uniqueCategoryIds.filter((catId) => validCategoryIds.has(catId));
+
+  if (!safeCategoryIds.length) {
+    redirect(`/onboarding?error=${encodeURIComponent("Those creator lanes are no longer available. Choose a current lane.")}`);
+  }
 
   await supabase.from("profiles").upsert({
     id: user.id,
@@ -22,18 +43,25 @@ export async function saveOnboarding(formData: FormData) {
     handle,
     niche,
     default_platforms: ["instagram_reels"],
-    production_capacity: { review_flow: "manual_admin", mvp: true, cuisine_detail: cuisineDetail || null },
+    production_capacity: { mvp: true, cuisine_detail: cuisineDetail || null },
   }, { onConflict: "user_id" });
 
-  if (categoryId) {
-    await supabase.from("creator_category_preferences").upsert({
-      user_id: user.id,
-      category_id: categoryId,
-      persona_id: personaId || null,
-      priority: 1,
-      selected_content_layers: [],
-    }, { onConflict: "user_id,category_id,persona_id" });
-  }
+  // Clear previous lanes and save fresh up to 3. Existing delivered boxes keep
+  // their original category/persona through idea_box_deliveries.
+  await supabase.from("creator_category_preferences").delete().eq("user_id", user.id);
+
+  const preferencePromises = safeCategoryIds
+    .filter(Boolean)
+    .map((catId, index) =>
+      supabase.from("creator_category_preferences").insert({
+        user_id: user.id,
+        category_id: catId,
+        persona_id: personaId || null,
+        priority: index + 1,
+        selected_content_layers: [],
+      })
+    );
+  await Promise.all(preferencePromises);
 
   redirect("/store");
 }

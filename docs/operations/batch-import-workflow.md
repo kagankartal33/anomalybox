@@ -31,8 +31,8 @@ Admin panelde `manifest.json` secilir. Panel ayni klasordeki `ideas_*.jsonl` dos
 
 ```powershell
 $env:ADMIN_API_TOKEN = "local-admin-token"
-.\\tools\\import-generated-batch.ps1 `
-  -BatchFolder .\\generated_batches\\batch_2026_06_28_beauty_luxury_editor `
+.\tools\import-generated-batch.ps1 `
+  -BatchFolder .\generated_batches\batch_2026_06_28_beauty_luxury_editor `
   -Publish
 ```
 

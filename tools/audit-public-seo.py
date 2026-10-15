@@ -66,17 +66,17 @@ def main() -> int:
             errors.append(f"missing package markdown: {page['slug']}")
             continue
         text = markdown.read_text(encoding="utf-8", errors="replace")
-        if "\\\\x01" in text:
+        if "\x01" in text:
             errors.append(f"control character: {page['slug']}")
-        if not re.search(r"^#\\\\s+", text, re.M):
+        if not re.search(r"^#\s+", text, re.M):
             errors.append(f"missing H1: {page['slug']}")
         else:
-            h1 = re.search(r"^#\\\\s+(.+?)\\\\s*$", text, re.M).group(1).replace("**", "").strip()
+            h1 = re.search(r"^#\s+(.+?)\s*$", text, re.M).group(1).replace("**", "").strip()
             if h1 != page.get("title"):
                 errors.append(f"registry title differs from H1: {page['slug']}")
-        if not re.search(r"^##\\\\s+Frequently asked questions", text, re.M | re.I):
+        if not re.search(r"^##\s+Frequently asked questions", text, re.M | re.I):
             errors.append(f"missing visible FAQ: {page['slug']}")
-        if not re.search(r"^##\\\\s+Next step", text, re.M | re.I):
+        if not re.search(r"^##\s+Next step", text, re.M | re.I):
             errors.append(f"missing next step: {page['slug']}")
 
     for description, owners in descriptions.items():

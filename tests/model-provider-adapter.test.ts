@@ -29,11 +29,20 @@ const valid = await generateStructured(baseProfile, request, {
     const body = JSON.parse(String(init?.body));
     assert.equal(body.text.format.type, "json_schema");
     assert.equal(body.store, false);
-    return new Response(JSON.stringify({ output_text: '{"ok":true}', usage: { input_tokens: 5, output_tokens: 3, total_tokens: 8 } }), { status: 200, headers: { "x-request-id": "req_1" } });
+    return new Response(JSON.stringify({ output_text: "{\"ok\":true}", usage: { input_tokens: 5, output_tokens: 3, total_tokens: 8 } }), { status: 200, headers: { "x-request-id": "req_1" } });
   },
 });
 assert.deepEqual(valid.value, { ok: true });
 assert.equal(valid.usage.totalTokens, 8);
+
+await generateStructured({ ...baseProfile, protocol: "gemini", baseUrl: null }, request, {
+  env,
+  fetchImpl: async (input, init) => {
+    assert.equal(String(input).includes("?key="), false);
+    assert.equal(new Headers(init?.headers).get("x-goog-api-key"), "secret-that-must-not-leak");
+    return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: "{\"ok\":true}" }] } }] }), { status: 200 });
+  },
+});
 
 await generateStructured({ ...baseProfile, protocol: "anthropic", baseUrl: null }, request, {
   env,
@@ -45,21 +54,12 @@ await generateStructured({ ...baseProfile, protocol: "anthropic", baseUrl: null 
   },
 });
 
-await generateStructured({ ...baseProfile, protocol: "gemini", baseUrl: null }, request, {
-  env,
-  fetchImpl: async (input, init) => {
-    assert.equal(String(input).includes("?key="), false);
-    assert.equal(new Headers(init?.headers).get("x-goog-api-key"), "secret-that-must-not-leak");
-    return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: '{"ok":true}' }] } }] }), { status: 200 });
-  },
-});
-
 let calls = 0;
 const repaired = await generateStructured({ ...baseProfile, protocol: "json_text", baseUrl: "https://provider.invalid/generate" }, request, {
   env,
   fetchImpl: async () => {
     calls += 1;
-    return new Response(JSON.stringify({ text: calls === 1 ? "{partial" : '{"ok":true}' }), { status: 200 });
+    return new Response(JSON.stringify({ text: calls === 1 ? "{partial" : "{\"ok\":true}" }), { status: 200 });
   },
 });
 assert.equal(repaired.repaired, true);
@@ -165,12 +165,35 @@ async function expectCode(code: ModelProviderError["code"], fetchImpl: typeof fe
 }
 
 await expectCode("rate_limit", async () => new Response("{}", { status: 429 }));
-await expectCode("configuration", async () => new Response("{}"), { ...baseProfile, baseUrl: "https://user:secret@provider.invalid/v1" });
-await expectCode("configuration", async () => new Response("{}"), { ...baseProfile, baseUrl: "https://provider.invalid/v1?api_key=secret" });
+await expectCode("provider_error", async () => new Response(JSON.stringify({ error: { code: "unsupported_schema" } }), { status: 400 }));
 await expectCode("refusal", async () => new Response(JSON.stringify({ output: [{ content: [{ type: "refusal", refusal: "no" }] }] }), { status: 200 }));
-await expectCode("invalid_output", async () => new Response(JSON.stringify({ output_text: '{"ok":false}' }), { status: 200 }));
+await expectCode("refusal", async () => new Response(JSON.stringify({ choices: [{ message: { role: "assistant", content: null, refusal: "no" } }] }), { status: 200 }), { ...baseProfile, features: { api: "chat_completions" } });
+await expectCode("refusal", async () => new Response(JSON.stringify({ candidates: [{ finishReason: "SAFETY" }] }), { status: 200 }), { ...baseProfile, protocol: "gemini", baseUrl: null });
+await expectCode("invalid_output", async () => new Response(JSON.stringify({ output_text: "{\"ok\":false}" }), { status: 200 }));
 await expectCode("timeout", async (_input, init) => new Promise((_resolve, reject) => {
   init?.signal?.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError")));
 }), { ...baseProfile, timeoutMs: 30 });
+await expectCode("configuration", async () => new Response("{}"), { ...baseProfile, baseUrl: "https://user:secret@provider.invalid/v1" });
+await expectCode("configuration", async () => new Response("{}"), { ...baseProfile, baseUrl: "https://provider.invalid/v1?api_key=secret" });
+
+let protectedEnvRead = false;
+try {
+  await generateStructured({ ...baseProfile, apiKeyEnvVar: "SUPABASE_SERVICE_ROLE_KEY" }, request, {
+    env: () => {
+      protectedEnvRead = true;
+      return "must-not-be-read";
+    },
+    fetchImpl: async () => new Response("{}"),
+  });
+  assert.fail("Expected provider environment allowlist rejection");
+} catch (error) {
+  assert.ok(error instanceof ModelProviderError);
+  assert.equal(error.code, "configuration");
+}
+assert.equal(protectedEnvRead, false, "a provider profile must not read unrelated application secrets");
+
+const stepSchema = (((ideaCardJsonSchema.properties as Record<string, unknown>).steps as Record<string, unknown>).items as Record<string, unknown>);
+const optionalStepProperty = ((stepSchema.properties as Record<string, Record<string, unknown>>).spokenLine);
+assert.deepEqual(optionalStepProperty.type, ["string", "null"]);
 
 console.log("model provider adapter contract fixtures passed");

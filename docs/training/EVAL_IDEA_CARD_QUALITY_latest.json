@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-09-01T00:36:36.920Z",
+  "evaluator_version": "quality-gate-v3.0.0-automatic",
+  "fixtures": [
+    {
+      "id": "fixture-high-pass",
+      "passed": true,
+      "score": 100,
+      "band": "high",
+      "decision": "approve",
+      "red_gates_passed": true,
+      "issue_count": 0
+    },
+    {
+      "id": "fixture-meta-dialogue-fail",
+      "passed": true,
+      "score": 52,
+      "band": "low",
+      "decision": "reject",
+      "red_gates_passed": false,
+      "issue_count": 13
+    },
+    {
+      "id": "fixture-llm-style-fail",
+      "passed": true,
+      "score": 64,
+      "band": "low",
+      "decision": "reject",
+      "red_gates_passed": false,
+      "issue_count": 18
+    },
+    {
+      "id": "fixture-workslop-fail",
+      "passed": true,
+      "score": 76,
+      "band": "low",
+      "decision": "reject",
+      "red_gates_passed": false,
+      "issue_count": 18
+    }
+  ],
+  "gold": null,
+  "failures": [],
+  "ok": true
+}

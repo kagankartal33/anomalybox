@@ -20,6 +20,22 @@ if (!supabaseUrl || !serviceKey) throw new Error("SUPABASE_URL and SUPABASE_SERV
 function safeServiceUrl(value: string) {
   let parsed: URL;
   try { parsed = new URL(value); } catch { throw new Error("SUPABASE_URL is invalid"); }
+  const local = ["localhost", "127.0.0.1", "[::1]"].includes(parsed.hostname);
+  if ((parsed.protocol !== "https:" && !(local && parsed.protocol === "http:")) || parsed.username || parsed.password) {
+    throw new Error("SUPABASE_URL must use HTTPS and must not contain credentials");
+  }
+  return parsed.toString().replace(/\/$/, "");
+}
+
+const supabase = createClient(safeServiceUrl(supabaseUrl), serviceKey, { auth: { persistSession: false } });
+
+type InventoryRow = { id: string; idea_id: string; status: string; metadata: Record<string, unknown> | null };
+
+function chunks<T>(rows: T[], size = 100): T[][] {
+  const output: T[][] = [];
+  for (let index = 0; index < rows.length; index += size) output.push(rows.slice(index, index + size));
+  return output;
+}
 
 async function inventoryByStatus(status: "available" | "paused") {
   const rows: InventoryRow[] = [];
@@ -69,22 +85,6 @@ async function protectedInventoryIds() {
     if ((data ?? []).length < pageSize) break;
   }
   return { ideaIds, inventoryIds };
-}
-  const local = ["localhost", "127.0.0.1", "[::1]"].includes(parsed.hostname);
-  if ((parsed.protocol !== "https:" && !(local && parsed.protocol === "http:")) || parsed.username || parsed.password) {
-    throw new Error("SUPABASE_URL must use HTTPS and must not contain credentials");
-  }
-  return parsed.toString().replace(/\\\\/$/, "");
-}
-
-const supabase = createClient(safeServiceUrl(supabaseUrl), serviceKey, { auth: { persistSession: false } });
-
-type InventoryRow = { id: string; idea_id: string; status: string; metadata: Record<string, unknown> | null };
-
-function chunks<T>(rows: T[], size = 100): T[][] {
-  const output: T[][] = [];
-  for (let index = 0; index < rows.length; index += size) output.push(rows.slice(index, index + size));
-  return output;
 }
 
 function fingerprintScore(check: Record<string, unknown> | undefined): number | null {
@@ -214,7 +214,6 @@ async function main() {
     .sort((left, right) => right[1] - left[1])
     .slice(0, 20)
     .map(([fingerprint, count]) => ({ fingerprint, count }));
-
 
   console.log(JSON.stringify({
     mode: apply ? "apply" : "dry_run",

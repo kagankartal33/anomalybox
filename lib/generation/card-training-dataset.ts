@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { ideaCardSchema } from "../idea-card/schema";
-import { evaluateIdeaCardV22, QUALITY_GATE_VERSION } from "../idea-card/quality-v2-2";
-import { runtimeProfileForSeconds } from "../idea-card/duration-planner";
-import { conceptPlanSchema, criticResultSchema, ideaCardJsonSchema, PROMPT_VERSION } from "./contracts";
-import { cardContentHash, criticPassed, objectRecord, semanticDocument, SEMANTIC_DOCUMENT_VERSION, sha256, stableJson } from "./automatic-policy";
-import { CARD_TRAINING_VERSION, CARD_WRITER_SYSTEM, buildCardTrainingContext, cardDraftPrompt } from "./card-training";
-import { creativeRecipeId, recipeMatchesConcept } from "./creative-taxonomy";
-import { QUALIFICATION_CATEGORIES } from "./qualification";
+import { ideaCardSchema } from "../idea-card/schema.ts";
+import { evaluateIdeaCardV22, QUALITY_GATE_VERSION } from "../idea-card/quality-v2-2.ts";
+import { runtimeProfileForSeconds } from "../idea-card/duration-planner.ts";
+import { conceptPlanSchema, criticResultSchema, ideaCardJsonSchema, PROMPT_VERSION } from "./contracts.ts";
+import { cardContentHash, criticPassed, objectRecord, semanticDocument, SEMANTIC_DOCUMENT_VERSION, sha256, stableJson } from "./automatic-policy.ts";
+import { CARD_TRAINING_VERSION, CARD_WRITER_SYSTEM, buildCardTrainingContext, cardDraftPrompt } from "./card-training.ts";
+import { creativeRecipeId, recipeMatchesConcept } from "./creative-taxonomy.ts";
+import { QUALIFICATION_CATEGORIES } from "./qualification.ts";
 
 export const CARD_DATASET_VERSION = "card-sft-v3.1";
 const identifier = z.string().regex(/^[a-zA-Z0-9_.:/-]{1,160}$/);
@@ -77,7 +77,7 @@ export function cardTrainingTarget(input: unknown): Record<string, unknown> {
   if (parsed.durationSeconds < 12 || parsed.durationSeconds > 60 || !parsed.requiredItems.length || parsed.requiredItems.length > 12 || !parsed.overallProductionNotes?.length) throw new Error("invalid_production_contract");
   const stepKeys = Object.keys(objectRecord(objectRecord(objectRecord(properties.steps).items).properties));
   target.steps = parsed.steps.map((step, index) => {
-    if ((step.stage as string) === "custom" || Object.keys(objectRecord((raw.steps as unknown[])[index])).some(key => !stepKeys.includes(key))) throw new Error("unsupported_step_contract");
+    if (step.stage === "custom" || Object.keys(objectRecord((raw.steps as unknown[])[index])).some(key => !stepKeys.includes(key))) throw new Error("unsupported_step_contract");
     return Object.fromEntries(stepKeys.map(key => [key, objectRecord(step)[key] ?? null]));
   });
   return target;

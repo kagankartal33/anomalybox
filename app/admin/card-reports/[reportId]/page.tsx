@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { ArrowLeft, Flag, RefreshCcw } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { CardSections } from "@/components/CardSections";
+import { IdeaCardView } from "@/components/idea-card/IdeaCardView";
 import { StatusPill } from "@/components/StatusPill";
 import { saveCardReportDecision } from "@/app/admin/actions";
 import { requireAdmin } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { displayCardTitle } from "@/lib/card-display";
-import { normalizeAdminCardSections, normalizeCardExecution } from "@/lib/card-sections";
+import { adaptLegacyIdeaCard, presentIdeaCard } from "@/lib/idea-card";
 import { dateTime } from "@/lib/format";
 
 export default async function AdminCardReportPage({
@@ -66,8 +66,14 @@ export default async function AdminCardReportPage({
     .filter(Boolean) as Array<{ inventory: { id: string; idea_id: string }; card: { idea_id: string; title: string | null; card: unknown }; title: string }>;
 
   const rawCard = reportedCard?.card as Record<string, unknown> | undefined;
-  const sections = normalizeAdminCardSections(rawCard ?? {});
-  const execution = normalizeCardExecution(rawCard ?? {});
+  const adapted = adaptLegacyIdeaCard(rawCard ?? {}, {
+    ideaId: reportedCard?.idea_id,
+    dbTitle: reportedCard?.title,
+  });
+  const presented = presentIdeaCard(adapted.card, {
+    rawLegacy: rawCard ?? null,
+    dbTitle: reportedCard?.title,
+  });
   const title = reportedCard ? displayCardTitle(reportedCard.card, reportedCard.title) : "Reported card";
   const error = typeof query.error === "string" ? query.error : "";
   const saved = query.saved === "1";
@@ -119,16 +125,7 @@ export default async function AdminCardReportPage({
             </div>
           </div>
 
-          <div className="rounded-md border border-ink/10 bg-white p-6 shadow-soft">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-teal">{execution.example_story.title}</p>
-            <div className="mt-3 space-y-3 text-sm leading-7 text-ink/68">
-              {execution.example_story.paragraphs.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-            </div>
-          </div>
-
-          <CardSections sections={sections} cardId={report.idea_id} />
+          <IdeaCardView card={presented} />
         </section>
 
         <aside className="space-y-4">

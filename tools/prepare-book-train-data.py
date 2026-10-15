@@ -16,8 +16,10 @@ from ebooklib import ITEM_DOCUMENT, epub
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = ROOT / "Book-Train"
-DEFAULT_OUTPUT = ROOT / "dataset" / "book_train" / "prepared"
+# Training sources archived outside the app tree after successful compile.
+ARCHIVE = Path(r"C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive")
+DEFAULT_INPUT = ARCHIVE / "Book-Train"
+DEFAULT_OUTPUT = ARCHIVE / "dataset" / "book_train" / "prepared"
 
 
 LAYER_KEYWORDS = {
@@ -263,13 +265,13 @@ def abstract_text(params: dict[str, Any]) -> str:
     layer = params["layer"]
     features = ", ".join(params["features"])
     return (
-        f"Book-Train cinema craft observation. Layer={layer}. "
+        f"Cinema craft observation. Layer={layer}. "
         f"Feature flags: {features}. "
         f"Language={params['language']}. "
         f"Raw surface hidden; raw_text_hash={params['raw_hash'][:16]}. "
         "Use only as abstract premium video craft guidance for scene_script, shot_list, b_roll, "
         "editing_timeline, atmosphere_direction and production_plan. Do not copy source wording, "
-        "book title, author, ISBN, file name, character, example scene, or quote."
+        "title, author, publication identifier, file name, character, example scene, or quote."
     )
 
 
@@ -331,11 +333,25 @@ def source_files(input_dir: Path) -> list[Path]:
     )
 
 
+def selected_sources(input_dir: Path, source_filter: str | None) -> list[tuple[int, Path]]:
+    all_sources = list(enumerate(source_files(input_dir), 1))
+    if not source_filter:
+        return all_sources
+
+    needle = source_filter.lower()
+    selected: list[tuple[int, Path]] = []
+    for source_index, path in all_sources:
+        if needle == safe_ref(source_index).lower() or needle in path.name.lower():
+            selected.append((source_index, path))
+    return selected
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", default=str(DEFAULT_INPUT))
     parser.add_argument("--out-dir", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--output-name", default="book_train_cinema_v1.jsonl")
+    parser.add_argument("--source-filter", default="")
     parser.add_argument("--max-chunks-per-book", type=int, default=12000)
     parser.add_argument("--min-chunk-chars", type=int, default=300)
     parser.add_argument("--max-chunk-chars", type=int, default=1800)
@@ -347,7 +363,7 @@ def main() -> None:
     output_path = out_dir / args.output_name
     manifest_path = out_dir / args.output_name.replace(".jsonl", ".manifest.json")
 
-    files = source_files(input_dir)
+    files = selected_sources(input_dir, args.source_filter.strip() or None)
     sources = [
         {
             "source_ref": safe_ref(i),
@@ -355,12 +371,12 @@ def main() -> None:
             "size": path.stat().st_size,
             "extraction_method": extraction_method(path),
         }
-        for i, path in enumerate(files, 1)
+        for i, path in files
     ]
     plan = {
         "mode": "book_train_cinema_prepare",
-        "input_dir": str(input_dir),
-        "output_path": str(output_path),
+        "input_ref": "book_train_sources",
+        "output_file": output_path.name,
         "source_count": len(files),
         "max_chunks_per_book": args.max_chunks_per_book,
         "sources": sources,
@@ -375,7 +391,7 @@ def main() -> None:
     stats = []
     seen_hashes = set()
     with output_path.open("w", encoding="utf-8") as out:
-        for source_index, path in enumerate(files, 1):
+        for source_index, path in files:
             source_ref = safe_ref(source_index)
             extraction = extraction_method(path)
             source_kind = path.suffix.lower().lstrip(".")

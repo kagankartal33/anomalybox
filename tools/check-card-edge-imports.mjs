@@ -7,7 +7,7 @@ const root = process.cwd();
 const directory = path.join(root, "supabase/functions/admin-generation-batches");
 const queue = [path.join(directory, "index.ts")], visited = new Set();
 const imports = { zod: "npm:zod@3.25.76" };
-const relative = value => path.relative(directory, value).replaceAll("", "/");
+const relative = value => path.relative(directory, value).replaceAll("\\", "/");
 while (queue.length) {
   const file = queue.shift();
   if (visited.has(file)) continue;

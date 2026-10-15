@@ -1,0 +1,62 @@
+{
+  "Classic AI Clichés & Buzzwords": [
+    {
+      "file": "content/resources/ai-slop-vs-human-authenticity-for-creators.md",
+      "line": 3,
+      "matched": "In today's fast-paced",
+      "snippet": "The social media ecosystem in 2026 is experiencing an huge consumer revolt against synthetic. Generic, and mass-produced content—commonly te"
+    },
+    {
+      "file": "content/resources/ai-slop-vs-human-authenticity-for-creators.md",
+      "line": 13,
+      "matched": "game-changer",
+      "snippet": "2. **Enforce an Anti-Voice Banned List:** Systematically strip buzzwords like *\"game-changer,\" \"elevate,\" \"unleash,\"*. And *\"in today's worl"
+    },
+    {
+      "file": "content/resources/ai-slop-vs-human-authenticity-for-creators.md",
+      "line": 38,
+      "matched": "Synergy",
+      "snippet": "| **Voice & Vocabulary** | Generic corporate buzzwords: *\"Synergy, elevate, leverage\"* | Natural conversational phrasing: *\"Cut the fluff, s"
+    }
+  ],
+  "Generic Engagement Bait / Slop CTA": [
+    {
+      "file": "content/resources/how-many-followers-from-1m-views-conversion-funnel.md",
+      "line": 58,
+      "matched": "Follow for more",
+      "snippet": "Avoid generic *\"Follow for more!\"* pleas. Use an orientation-based call to action: *\"If you are an independent creator trying to fix your sh"
+    },
+    {
+      "file": "content/resources/why-similar-videos-perform-differently-distribution-audit.md",
+      "line": 45,
+      "matched": "Follow for more",
+      "snippet": "| **Call to Action** | Vague: *\"Follow for more tips\"* | Goal-focused: *\"Save this checklist for your next shoot\"* |"
+    },
+    {
+      "file": "content/seo-package/beauty-content-ideas.md",
+      "line": 51,
+      "matched": "follow for more",
+      "snippet": "**Natural next step:** Invite a follow for more finished-product notes."
+    }
+  ],
+  "Banned Vibe & Vague Filler": [
+    {
+      "file": "app/dossiers/[slug]/page.tsx",
+      "line": 12,
+      "matched": "proof detail",
+      "snippet": "\"signature-purple\": { name: \"Signature Purple Creative Brief\", price: 100, count: 5, variant: \"purple\" as const, query: \"premium_viral_box_1"
+    },
+    {
+      "file": "app/pricing/page.tsx",
+      "line": 34,
+      "matched": "proof detail",
+      "snippet": "description: \"Five shoot briefs with more scene and proof detail for the same lane and mode.\","
+    },
+    {
+      "file": "components/StoreConfigurator.tsx",
+      "line": 182,
+      "matched": "proof detail",
+      "snippet": "if (product.slug.includes(\"1000\")) return \"Five shoot briefs with more scene and proof detail for this lane and mode.\";"
+    }
+  ]
+}

@@ -51,7 +51,7 @@ admin sees low inventory for category + persona
 Kaynak katalog degisirse:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\\tools\\build-instagram-category-seed.ps1
+powershell -ExecutionPolicy Bypass -File .\tools\build-instagram-category-seed.ps1
 supabase db reset
 supabase db lint --local
 ```

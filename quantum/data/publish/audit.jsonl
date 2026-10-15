@@ -1,0 +1,15 @@
+{"at": "2026-08-05T20:28:31Z", "event": "version_created", "version_id": "ver_328e731a6fe1", "slug": "instagram-content-ideas", "content_version": 1, "actor": "batch"}
+{"at": "2026-08-05T20:28:31Z", "event": "publish_ok", "publication_id": "pub_a49c0d0f813b", "version_id": "ver_328e731a6fe1", "actor": "batch"}
+{"at": "2026-08-05T20:28:31Z", "event": "read_back_ok", "publication_id": "pub_a49c0d0f813b"}
+{"at": "2026-08-05T20:28:31Z", "event": "version_created", "version_id": "ver_8d9132926f9b", "slug": "instagram-reels-ideas", "content_version": 1, "actor": "batch"}
+{"at": "2026-08-05T20:28:31Z", "event": "publish_ok", "publication_id": "pub_6feccab42dd3", "version_id": "ver_8d9132926f9b", "actor": "batch"}
+{"at": "2026-08-05T20:28:31Z", "event": "read_back_ok", "publication_id": "pub_6feccab42dd3"}
+{"at": "2026-08-05T20:28:31Z", "event": "version_created", "version_id": "ver_ee502e3dd14c", "slug": "faceless-content-ideas", "content_version": 1, "actor": "batch"}
+{"at": "2026-08-05T20:28:31Z", "event": "publish_ok", "publication_id": "pub_20009f6a84c4", "version_id": "ver_ee502e3dd14c", "actor": "batch"}
+{"at": "2026-08-05T20:28:31Z", "event": "read_back_ok", "publication_id": "pub_20009f6a84c4"}
+{"at": "2026-08-05T20:28:40Z", "event": "version_created", "version_id": "ver_d29152f02ffb", "slug": "instagram-content-ideas", "content_version": 2, "actor": "system"}
+{"at": "2026-08-05T20:28:40Z", "event": "publish_ok", "publication_id": "pub_70dd3a1e7675", "version_id": "ver_d29152f02ffb", "actor": "demo"}
+{"at": "2026-08-05T20:28:40Z", "event": "read_back_ok", "publication_id": "pub_70dd3a1e7675"}
+{"at": "2026-08-05T20:28:40Z", "event": "mark_rolled_back", "publication_id": "pub_70dd3a1e7675", "actor": "demo"}
+{"at": "2026-08-05T20:28:40Z", "event": "read_back_ok", "publication_id": "pub_6e3f64e40ac1"}
+{"at": "2026-08-05T20:28:40Z", "event": "rollback", "slug": "instagram-content-ideas", "target_version_id": "ver_328e731a6fe1", "publication_id": "pub_6e3f64e40ac1", "actor": "demo"}

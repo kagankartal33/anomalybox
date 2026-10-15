@@ -1,4 +1,4 @@
-import { ideaCardSchema } from "../idea-card/schema";
+import { ideaCardSchema } from "../idea-card/schema.ts";
 
 export const AUTOMATIC_POLICY_VERSION = "automatic-card-policy-v3.1";
 // Bump whenever an automatic acceptance or publication invariant changes.
@@ -83,7 +83,6 @@ export function automaticGenerationBlockers(trace: unknown, contentHash: string)
   const blockers: string[] = [];
   if (!generation.run_id || row.import_source !== "verified_generation") blockers.push("unverified_generation_source");
   if (generation.pipeline_version !== GENERATION_PIPELINE_VERSION) blockers.push("stale_generation_pipeline");
-  if (generation.pipeline_version !== GENERATION_PIPELINE_VERSION) blockers.push("stale_generation_pipeline");
   if (gate.policy_version !== AUTOMATIC_POLICY_VERSION) blockers.push("stale_generation_policy");
   if (gate.final_decision !== "approve") blockers.push(gate.final_decision === "reject" ? "generation_rejected" : "generation_unresolved");
   if (!Array.isArray(gate.hardGateCodes) || gate.hardGateCodes.length) blockers.push("generation_hard_gate_unresolved");
@@ -100,7 +99,6 @@ export function publicationBlockers(params: {
   const blockers = automaticGenerationBlockers(params.trace, params.contentHash);
   if (!ideaCardSchema.safeParse(params.card).success) blockers.push("schema_invalid");
   if (q.decision !== "approve" || q.second_opinion_required === true) blockers.push("quality_not_approved");
-
   if (q.evaluator_version !== params.gateVersion || meta.card_hash !== params.contentHash) blockers.push("quality_stale");
   if (!Number.isFinite(q.craft_score) || Number(q.craft_score) < 90 || !Number.isFinite(q.editorial_quality_score) || Number(q.editorial_quality_score) < 90) blockers.push("quality_below_floor");
   if (!Number.isFinite(q.embedding_duplicate_score) || Number(q.embedding_duplicate_score) >= 0.78 || Number(q.embedding_duplicate_score) < 0) blockers.push("semantic_not_clear");

@@ -1,12 +1,12 @@
 # Premium Web Design Playbook
 
-Generated from a compact reference workflow. Approved WebUI references: 0. WebSight structure notes: 0.
+Generated from a compact reference workflow. Approved WebUI references: 3. WebSight structure notes: 40.
 
-Dominant archetypes: {}
+Dominant archetypes: {'product': 1, 'other': 1, 'agency': 1}
 
-Dominant styles: {}
+Dominant styles: {'unclear': 1, 'premium_minimal': 2}
 
-Structure patterns: {}
+Structure patterns: {'hero_composition': 13, 'pricing_comparison': 3, 'navigation_footer_structure': 23, 'section_structure': 1}
 
 ## ViralBox Direction
 

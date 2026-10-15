@@ -1,0 +1,97 @@
+{
+  "experiments": [
+    {
+      "experiment_id": "exp_5c21ecb25820",
+      "site_id": "anomalybox",
+      "slug": "demo-stale",
+      "experiment_type": "cta_placement",
+      "hypothesis": "CTA above fold improves qualified trial starts",
+      "primary_metric": "qualified_trial_start_rate",
+      "guardrail_metrics": [
+        "bounce_rate",
+        "support_contact_rate",
+        "page_speed"
+      ],
+      "allocation": "50/50",
+      "minimum_runtime_days": 21,
+      "minimum_detectable_effect": "pre-registered",
+      "sample_size_method": "power analysis",
+      "alpha": 0.05,
+      "statistical_power": 0.8,
+      "multiple_testing_control": "Benjamini-Hochberg when applicable",
+      "novelty_effect_window": "excluded or modeled",
+      "stopping_rule": "predefined; no unplanned peeking",
+      "segment_analysis": "pre-registered",
+      "owner": "growth-editorial",
+      "status": "registered",
+      "governance_failures": [],
+      "created_at": "2026-08-05T21:10:56Z",
+      "registered_at": "2026-08-05T21:10:56Z",
+      "started_at": null,
+      "stopped_at": null,
+      "outcome_notes": "",
+      "primary_metric_result": null
+    },
+    {
+      "experiment_id": "exp_c26fa92532fe",
+      "site_id": "anomalybox",
+      "slug": "demo-stale",
+      "experiment_type": "keyword_stuffing",
+      "hypothesis": "Stuff more keywords to win rankings over peers",
+      "primary_metric": "qualified_trial_start_rate",
+      "guardrail_metrics": [
+        "bounce_rate",
+        "support_contact_rate",
+        "page_speed"
+      ],
+      "allocation": "50/50",
+      "minimum_runtime_days": 21,
+      "minimum_detectable_effect": "pre-registered",
+      "sample_size_method": "power analysis",
+      "alpha": 0.05,
+      "statistical_power": 0.8,
+      "multiple_testing_control": "Benjamini-Hochberg when applicable",
+      "novelty_effect_window": "excluded or modeled",
+      "stopping_rule": "predefined; no unplanned peeking",
+      "segment_analysis": "pre-registered",
+      "owner": "growth-editorial",
+      "status": "rejected",
+      "governance_failures": [
+        "invalid_experiment_type:keyword_stuffing"
+      ],
+      "created_at": "2026-08-05T21:10:56Z",
+      "registered_at": null,
+      "started_at": null,
+      "stopped_at": null,
+      "outcome_notes": "",
+      "primary_metric_result": null
+    }
+  ],
+  "counts": {
+    "total": 2,
+    "by_status": {
+      "registered": 1,
+      "rejected": 1
+    }
+  },
+  "valid_types": [
+    "comparison_matrix_vs_narrative",
+    "cta_placement",
+    "diagram_vs_text_only",
+    "interactive_calculator_vs_static",
+    "internal_link_module_variant",
+    "original_data_section",
+    "short_answer_vs_extended_opening"
+  ],
+  "invalid_types": [
+    "deceptive_freshness_dates",
+    "detector_evasion_styling",
+    "fake_authorship",
+    "hidden_content",
+    "keyword_stuffing",
+    "mass_near_duplicate_pages",
+    "misleading_schema",
+    "random_anchor_injection"
+  ],
+  "exported_at": "2026-08-05T21:10:57Z"
+}

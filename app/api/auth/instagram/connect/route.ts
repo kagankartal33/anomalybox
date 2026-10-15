@@ -5,7 +5,7 @@ import { env, siteUrl } from "@/lib/env";
 
 export async function GET() {
   const appId = env.metaAppId();
-  if (!appId) return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Meta app env eksik")}`);
+  if (!appId) return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram connection is not configured")}`);
 
   const state = randomBytes(16).toString("hex");
   const cookieStore = await cookies();

@@ -31,10 +31,11 @@ def eligible(block: str) -> bool:
 
 def anchors(text: str) -> list[str]:
     candidates = re.findall(r"^###\s+(.+?)\s*$", text, re.M)
-    candidates += re.findall(r"\*\*([^*:\n]+)\*\*", text)
+    candidates += re.findall(r"\*\*([^*:\n]{4,70})\*\*(?=:)", text)
     title_match = re.search(r"^#\s+(.+?)\s*$", text, re.M)
+    page_title = title_match.group(1) if title_match else "the page example"
     if title_match:
-        candidates.append(title_match.group(1))
+        candidates.append(page_title)
 
     useful: list[str] = []
     for candidate in candidates:
@@ -43,7 +44,7 @@ def anchors(text: str) -> list[str]:
             continue
         if clean and clean.lower() not in {item.lower() for item in useful}:
             useful.append(clean)
-    return useful or ["the page example"]
+    return useful or [page_title]
 
 
 def contextualize(block: str, anchor: str, variant: int) -> str:
@@ -80,6 +81,8 @@ def main() -> int:
 
     for path, original in texts.items():
         page_anchors = anchors(original)
+        title_match = re.search(r"^#\s+(.+?)\s*$", original, re.M)
+        page_title = title_match.group(1) if title_match else path.stem.replace("-", " ")
         occurrence = 0
 
         def replace(match: re.Match[str]) -> str:
@@ -91,18 +94,20 @@ def main() -> int:
                 return match.group(0)
             digest = hashlib.sha256(f"{path.stem}:{key}".encode("utf-8")).hexdigest()
             anchor = page_anchors[int(digest[:8], 16) % len(page_anchors)]
+            if anchor == "the page example" or anchor.lower().startswith("will a break destroy"):
+                anchor = page_title
             variant = int(digest[8:16], 16) % 4
             occurrence += 1
             changed_paragraphs += 1
             return prefix + contextualize(block, anchor, variant)
 
         polished = re.sub(
-            r"(?ms)(?P<prefix>\A|\n\n)(?P<block>[^\n#|`>].+?)(?=\n\n|\Z)",
+            r"(?ms)(?P<prefix>\A|\n\s*\n)(?P<block>\S.*?)(?=\n\s*\n|\Z)",
             replace,
             original,
         )
         if polished != original:
-            path.write_text(polished.rstrip() + "\n", encoding="utf-8")
+            path.write_text(polished.rstrip() + "\n", encoding="utf-8", newline="\n")
             changed_files += 1
 
     print(f"personalized SEO package files: {changed_files}")

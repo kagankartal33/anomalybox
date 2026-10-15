@@ -1,6 +1,6 @@
 param(
-  [string]$InputDir = ".\\Book-Train",
-  [string]$OutDir = ".\\dataset\\book_train\\prepared\\individual",
+  [string]$InputDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\Book-Train",
+  [string]$OutDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\dataset\book_train\prepared\individual",
   [int]$MaxChunksPerBook = 12000,
   [int]$MinChunkChars = 300,
   [int]$MaxChunkChars = 1800,
@@ -37,7 +37,7 @@ for ($i = 0; $i -lt $books.Count; $i++) {
 
   $argsList = @(
     "-ExecutionPolicy", "Bypass",
-    "-File", ".\\tools\\prepare-and-train-book-train.ps1",
+    "-File", ".\tools\prepare-and-train-book-train.ps1",
     "-InputDir", $InputDir,
     "-OutDir", $bookOutDir,
     "-MaxChunksPerBook", "$MaxChunksPerBook",

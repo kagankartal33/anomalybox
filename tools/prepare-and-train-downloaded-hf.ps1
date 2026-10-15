@@ -1,7 +1,6 @@
 param(
-  [string]$RawDir = ".\\dataset\\huggingface\
-aw",
-  [string]$OutDir = ".\\dataset\\huggingface\\prepared_downloaded",
+  [string]$RawDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\dataset\huggingface\raw",
+  [string]$OutDir = "C:\Users\Kagan\OneDrive\Desktop\ViralBox-training-archive\dataset\huggingface\prepared_downloaded",
   [int]$MaxRowsPerSource = 50000,
   [int]$MaxScanRowsPerSource = 250000,
   [string]$CompileVersion = "2026-v6-hf-downloaded",
@@ -18,7 +17,7 @@ aw",
 $ErrorActionPreference = "Stop"
 
 $prepareArgs = @(
-  ".\\tools\\prepare-downloaded-hf-training-data.py",
+  ".\tools\prepare-downloaded-hf-training-data.py",
   "--raw-dir", $RawDir,
   "--out-dir", $OutDir,
   "--max-rows-per-source", "$MaxRowsPerSource",
@@ -60,7 +59,7 @@ if (-not $KeepExistingSourceObservations) {
   docker exec -i $dbContainer psql -U postgres -d postgres -v ON_ERROR_STOP=1 -P pager=off -c "delete from public.dataset_training_observations where metadata ->> 'source_slug' = '$safeSourceSlug';"
 }
 
-& .\\tools\\train-from-dataset.ps1 `
+& .\tools\train-from-dataset.ps1 `
   -DatasetPath $OutDir `
   -Mode hf `
   -SourceSlug $SourceSlug `
