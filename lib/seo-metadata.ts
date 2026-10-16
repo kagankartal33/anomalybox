@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BRAND_SAME_AS } from "@/lib/brand-profiles";
 
 export type PublicSeoInput = {
   title: string;
@@ -94,16 +95,7 @@ export function publicMetadata(base: string, input: PublicSeoInput): Metadata {
 }
 
 export function organizationJsonLd(base: string) {
-  const verifiedProfiles = [
-    process.env.NEXT_PUBLIC_INSTAGRAM_URL,
-    process.env.NEXT_PUBLIC_YOUTUBE_URL,
-    process.env.NEXT_PUBLIC_TWITTER_URL,
-    process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/kagankartal33",
-    process.env.NEXT_PUBLIC_LINKEDIN_URL,
-    process.env.NEXT_PUBLIC_PINTEREST_URL,
-    process.env.NEXT_PUBLIC_MEDIUM_URL || "https://medium.com/@anomalybox",
-    process.env.NEXT_PUBLIC_GRAVATAR_URL || "https://gravatar.com/delectably2582260304",
-  ].filter(Boolean) as string[];
+  const verifiedProfiles = BRAND_SAME_AS;
 
   return {
     "@context": "https://schema.org",

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRAND_PROFILES } from "@/lib/brand-profiles";
 import { INTERACTIVE_TOOLS } from "@/lib/interactive-tools";
 import Image from "next/image";
 import { premiumAssets } from "@/lib/premium-assets";
@@ -35,7 +36,7 @@ export function SiteFooter() {
             {/* Social channels */}
             <div className="mt-5 flex items-center gap-2.5 text-ink/60">
               <a
-                href={process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/anomalybox"}
+                href={BRAND_PROFILES.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -46,25 +47,14 @@ export function SiteFooter() {
                 </svg>
               </a>
               <a
-                href={process.env.NEXT_PUBLIC_TWITTER_URL || "https://x.com/anomalybox"}
+                href={BRAND_PROFILES.medium}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="X (Twitter)"
+                aria-label="Medium"
                 className="focus-ring flex h-8 w-8 items-center justify-center rounded-full border border-ink/10 bg-white hover:text-ink hover:border-ink/30 transition"
               >
-                <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              <a
-                href={process.env.NEXT_PUBLIC_TIKTOK_URL || "https://tiktok.com/@anomalybox"}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="TikTok"
-                className="focus-ring flex h-8 w-8 items-center justify-center rounded-full border border-ink/10 bg-white hover:text-ink hover:border-ink/30 transition"
-              >
-                <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24">
-                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" />
                 </svg>
               </a>
             </div>
