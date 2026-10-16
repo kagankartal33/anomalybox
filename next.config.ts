@@ -1,4 +1,14 @@
 import type { NextConfig } from "next";
+import consolidation from "./lib/seo-consolidation.json";
+
+// Content consolidation (docs/seo/content-consolidation-plan.md): merged articles and hub pages that no
+// longer exist answer with a 308 to the page that now owns their search intent.
+const consolidationRedirects = [
+  ...consolidation.clusters.flatMap((cluster) =>
+    cluster.redirects.map((source) => ({ source, destination: cluster.winner, permanent: true })),
+  ),
+  ...consolidation.retiredHubPages.map(({ source, destination }) => ({ source, destination, permanent: true })),
+];
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -99,6 +109,7 @@ const nextConfig: NextConfig = {
           permanent: true,
         }),
       ),
+      ...consolidationRedirects,
       {
         source: "/dashboard",
         destination: "/boxes",

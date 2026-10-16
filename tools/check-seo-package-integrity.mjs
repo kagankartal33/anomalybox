@@ -19,6 +19,17 @@ const articleSourcePath = path.join(root, "components", "SeoPackageArticle.tsx")
 const packageContentPath = path.join(root, "content", "seo-package");
 const legacyContentPath = path.join(root, "content", "resources");
 const markdownMapPath = path.join(root, "lib", "seo-package-markdown.json");
+const consolidationPath = path.join(root, "lib", "seo-consolidation.json");
+const seoContentPath = path.join(root, "lib", "seo-content.ts");
+const hubPageSize = 9;
+// Static public routes that may win a consolidation cluster (money pages).
+const staticWinnerRoutes = new Map([
+  ["/pricing", "app/pricing/page.tsx"],
+  ["/store", "app/store/page.tsx"],
+  ["/atelier", "app/atelier/page.tsx"],
+  ["/dossiers/classic-red", "app/dossiers/[slug]/page.tsx"],
+  ["/dossiers/signature-purple", "app/dossiers/[slug]/page.tsx"],
+]);
 const expectedPageCount = 110;
 
 const registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
@@ -132,6 +143,75 @@ if (Object.keys(markdownMap).length !== expectedMarkdown.size) {
   errors.push(`markdown map count: expected ${expectedMarkdown.size}, found ${Object.keys(markdownMap).length}`);
 }
 
+// Content consolidation: every merged URL must exist today, redirect in one hop to a live, indexable
+// page, and never be a winner itself. Retired hub pages must be beyond the new last page.
+const consolidation = JSON.parse(fs.readFileSync(consolidationPath, "utf8"));
+const isProtected = (page) => page.section === "templates" || /\btemplate\b/i.test(page.title || "");
+const seoContentSource = fs.readFileSync(seoContentPath, "utf8");
+const segmentPaths = new Set(
+  [...(seoContentSource.split("export const resources")[0] || "").matchAll(/slug: "([^"]+)"/g)].map(
+    (match) => `/content-ideas/${match[1]}`,
+  ),
+);
+const legacyPaths = new Set(
+  fs
+    .readdirSync(legacyContentPath)
+    .filter((name) => name.endsWith(".md"))
+    .map((name) => `/resources/${name.slice(0, -3)}`),
+);
+const publicArticlePaths = new Set([
+  ...pages.filter((page) => !isProtected(page)).map((page) => page.path),
+  ...legacyPaths,
+  ...segmentPaths,
+]);
+const consolidationSources = new Set();
+const consolidationWinners = new Set();
+for (const cluster of consolidation.clusters || []) {
+  if (!cluster.id || !cluster.winner || !cluster.primaryKeyword || !Array.isArray(cluster.redirects)) {
+    errors.push(`consolidation cluster is incomplete: ${cluster.id || "unknown"}`);
+    continue;
+  }
+  if (consolidationWinners.has(cluster.winner)) errors.push(`consolidation winner used twice: ${cluster.winner}`);
+  consolidationWinners.add(cluster.winner);
+  const staticRoute = staticWinnerRoutes.get(cluster.winner);
+  if (staticRoute ? !fs.existsSync(path.join(root, staticRoute)) : !publicArticlePaths.has(cluster.winner)) {
+    errors.push(`consolidation winner is not a live public page: ${cluster.winner}`);
+  }
+  for (const link of cluster.moneyLinks || []) {
+    if (!staticWinnerRoutes.has(link.href) || !link.label) {
+      errors.push(`consolidation money link must target a money page: ${cluster.id} -> ${link.href}`);
+    }
+  }
+  for (const source of cluster.redirects) {
+    if (consolidationSources.has(source)) errors.push(`consolidation source listed twice: ${source}`);
+    consolidationSources.add(source);
+    if (source === cluster.winner) errors.push(`consolidation source redirects to itself: ${source}`);
+    if (!publicArticlePaths.has(source)) errors.push(`consolidation source is not a public article: ${source}`);
+  }
+}
+for (const winner of consolidationWinners) {
+  if (consolidationSources.has(winner)) errors.push(`consolidation chain: winner ${winner} is also merged`);
+}
+const remainingPublic = pages.filter((page) => !isProtected(page) && !consolidationSources.has(page.path));
+const hubCounts = new Map([["resources", remainingPublic.length]]);
+for (const page of remainingPublic) {
+  if (page.section !== "resources") hubCounts.set(page.section, (hubCounts.get(page.section) || 0) + 1);
+}
+for (const retired of consolidation.retiredHubPages || []) {
+  const match = /^\/([a-z-]+)\/p\/(\d+)$/.exec(retired.source || "");
+  if (!match) {
+    errors.push(`retired hub page has an invalid path: ${retired.source}`);
+    continue;
+  }
+  const lastPage = Math.max(1, Math.ceil((hubCounts.get(match[1]) || 0) / hubPageSize));
+  if (Number(match[2]) <= lastPage) {
+    errors.push(`retired hub page still exists: ${retired.source} (last page is ${lastPage})`);
+  }
+  if (retired.destination !== `/${match[1]}`) {
+    errors.push(`retired hub page must redirect to its hub root: ${retired.source}`);
+  }
+}
+
 if (errors.length > 0) {
   console.error("SEO package integrity failed:");
   for (const error of errors) console.error(`- ${error}`);
@@ -139,5 +219,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `SEO package integrity passed: ${pages.length} registry pages, ${pages.length * 2} WebP assets, version ${computedAssetVersion}, legacy hubs isolated.`,
+  `SEO package integrity passed: ${pages.length} registry pages, ${pages.length * 2} WebP assets, version ${computedAssetVersion}, legacy hubs isolated, ${consolidationSources.size} URLs consolidated into ${consolidationWinners.size} winners.`,
 );

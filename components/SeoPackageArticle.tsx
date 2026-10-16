@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -12,6 +13,7 @@ import {
   versionedSeoPackageHeroImage,
 } from "@/lib/seo-package";
 import { siteUrl } from "@/lib/env";
+import { consolidationClusterForWinner } from "@/lib/seo-consolidation";
 import { articleJsonLd, breadcrumbJsonLd, cleanAlt } from "@/lib/seo-metadata";
 import { isPurchaseProtectedTemplate } from "@/lib/template-policy";
 
@@ -77,6 +79,8 @@ export function SeoPackageArticle({ page, markdown, showPurchaseProtectedLinks =
   const sectionHref = `/${page.section}`;
   const sectionName = sectionLabel(page.section);
   const smartStore = getSmartStoreLink(page);
+  // Cluster winners absorb merged guides, so they carry the contextual links to the money pages.
+  const moneyLinks = consolidationClusterForWinner(page.path)?.moneyLinks ?? [];
   const related = relatedLinksForSlug(page.slug, 8)
     .filter((item) => showPurchaseProtectedLinks || !isPurchaseProtectedTemplate(item))
     .slice(0, 5);
@@ -143,6 +147,24 @@ export function SeoPackageArticle({ page, markdown, showPurchaseProtectedLinks =
         <div className="mt-4">
           <MarkdownRenderer content={body} />
         </div>
+
+        {moneyLinks.length > 0 && (
+          <p className="mt-10 border-l-2 border-plum-deep/40 pl-4 leading-relaxed text-ink/75">
+            Ready to film instead of plan? You can{" "}
+            {moneyLinks.map((link, index) => (
+              <Fragment key={link.href}>
+                {index > 0 ? (index === moneyLinks.length - 1 ? ", or " : ", ") : null}
+                <Link
+                  href={link.href}
+                  className="font-semibold text-plum-deep underline decoration-plum-deep/30 underline-offset-4 transition hover:decoration-plum-deep"
+                >
+                  {link.label}
+                </Link>
+              </Fragment>
+            ))}
+            .
+          </p>
+        )}
 
         {related.length > 0 && (
           <section className="mt-14 border-t border-ink/10 pt-10" aria-labelledby="related-guides-heading">

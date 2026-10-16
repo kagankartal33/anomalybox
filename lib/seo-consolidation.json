@@ -1,0 +1,382 @@
+{
+  "version": "2026-10-16",
+  "plan": "docs/seo/content-consolidation-plan.md",
+  "policy": "Each redirect source is a public article whose search intent is already served by the cluster winner. Sources are removed from hubs, sitemap, feed, llms.txt and related links, and answer with a 308 to the winner. Remove a source from this file to restore its page; the markdown and registry entries are kept on purpose.",
+  "clusters": [
+    {
+      "id": "classic-red",
+      "priority": "P0",
+      "label": "Classic Red product page",
+      "primaryKeyword": "classic red creative brief",
+      "winner": "/dossiers/classic-red",
+      "redirects": ["/resources/anomalybox-classic-red-dossier-review"]
+    },
+    {
+      "id": "signature-purple",
+      "priority": "P0",
+      "label": "Signature Purple product page",
+      "primaryKeyword": "signature purple creative brief",
+      "winner": "/dossiers/signature-purple",
+      "redirects": ["/resources/anomalybox-signature-purple-aesthetic-dossier"]
+    },
+    {
+      "id": "atelier",
+      "priority": "P0",
+      "label": "Atelier custom brief page",
+      "primaryKeyword": "custom campaign creative brief",
+      "winner": "/atelier",
+      "redirects": ["/resources/anomalybox-atelier-black-box-for-agencies"]
+    },
+    {
+      "id": "pricing",
+      "priority": "P0",
+      "label": "Brief comparison and pricing",
+      "primaryKeyword": "creator shoot brief pricing",
+      "winner": "/pricing",
+      "redirects": [
+        "/resources/creative-direction-box-dossier-system",
+        "/resources/anomalybox-unboxing-and-creator-dossier-walkthrough"
+      ]
+    },
+    {
+      "id": "store",
+      "priority": "P0",
+      "label": "Brief configuration and ordering",
+      "primaryKeyword": "order a custom creative brief",
+      "winner": "/store",
+      "redirects": ["/resources/custom-creative-direction-box-ordering-guide"]
+    },
+    {
+      "id": "briefs-vs-templates",
+      "priority": "P0",
+      "label": "Creative briefs vs templates and AI prompts",
+      "primaryKeyword": "creative brief vs template",
+      "winner": "/resources/physical-creative-direction-box-vs-digital-templates",
+      "moneyLinks": [
+        { "href": "/pricing", "label": "compare Classic Red and Signature Purple" },
+        { "href": "/dossiers/signature-purple", "label": "see the five-brief Signature Purple set" }
+      ],
+      "redirects": ["/resources/why-physical-dossiers-beat-ai-prompt-generators"]
+    },
+    {
+      "id": "creative-direction-service",
+      "priority": "P0",
+      "label": "Creative direction service",
+      "primaryKeyword": "creative direction for content creators",
+      "winner": "/services/creative-direction-for-content-creators",
+      "moneyLinks": [
+        { "href": "/dossiers/signature-purple", "label": "see the Signature Purple brief set" },
+        { "href": "/pricing", "label": "compare every brief option" }
+      ],
+      "redirects": [
+        "/services/reels-creative-direction",
+        "/services/personal-brand-creative-direction"
+      ]
+    },
+    {
+      "id": "instagram-plan-service",
+      "priority": "P0",
+      "label": "Custom Instagram content plan service",
+      "primaryKeyword": "custom instagram content plan",
+      "winner": "/services/custom-instagram-content-plan",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "start with the two-brief Classic Red set" },
+        { "href": "/pricing", "label": "compare every brief option" }
+      ],
+      "redirects": [
+        "/services/content-strategist-for-instagram",
+        "/services/content-planning-service-for-creators",
+        "/services/instagram-content-strategy-service",
+        "/resources/custom-instagram-content-plan-framework"
+      ]
+    },
+    {
+      "id": "creator-burnout",
+      "priority": "P1",
+      "label": "Creator burnout and fatigue",
+      "primaryKeyword": "content creator burnout",
+      "winner": "/resources/content-creator-burnout",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two pre-decided Classic Red shoot briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": [
+        "/resources/creator-fatigue",
+        "/resources/content-fatigue",
+        "/resources/instagram-burnout",
+        "/resources/social-media-burnout-creator",
+        "/reels/reels-burnout",
+        "/resources/is-everyone-feeling-creator-burnout-q1-fix"
+      ]
+    },
+    {
+      "id": "decision-fatigue",
+      "priority": "P1",
+      "label": "Creator decision fatigue",
+      "primaryKeyword": "content creation decision fatigue",
+      "winner": "/resources/creator-decision-fatigue-and-burnout-solution",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two pre-decided Classic Red shoot briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/resources/content-creation-decision-fatigue"]
+    },
+    {
+      "id": "content-idea-generation",
+      "priority": "P1",
+      "label": "Finding content ideas",
+      "primaryKeyword": "how to come up with content ideas",
+      "winner": "/resources/how-to-come-up-with-content-ideas",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two ready-to-film Classic Red briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": [
+        "/resources/how-to-find-content-ideas",
+        "/resources/how-to-never-run-out-of-content-ideas",
+        "/resources/running-out-of-content-ideas",
+        "/resources/content-ideas-when-stuck"
+      ]
+    },
+    {
+      "id": "creative-block",
+      "priority": "P1",
+      "label": "Creative block",
+      "primaryKeyword": "creative block content creator",
+      "winner": "/resources/creative-block-content-creator",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two ready-to-film Classic Red briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/resources/instagram-content-block"]
+    },
+    {
+      "id": "what-to-post",
+      "priority": "P1",
+      "label": "What to post on Instagram",
+      "primaryKeyword": "what to post on instagram",
+      "winner": "/resources/what-to-post-on-instagram",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two ready-to-film Classic Red briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/resources/i-dont-know-what-to-post-on-instagram"]
+    },
+    {
+      "id": "content-bank",
+      "priority": "P1",
+      "label": "Content bank",
+      "primaryKeyword": "how to build a content bank",
+      "winner": "/resources/how-to-build-a-content-bank",
+      "moneyLinks": [
+        { "href": "/dossiers/signature-purple", "label": "bank five Signature Purple briefs at once" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/resources/content-bank-ideas"]
+    },
+    {
+      "id": "content-batching",
+      "priority": "P1",
+      "label": "Content batching",
+      "primaryKeyword": "how to batch content",
+      "winner": "/resources/batch-content-without-burnout",
+      "moneyLinks": [
+        { "href": "/dossiers/signature-purple", "label": "batch five Signature Purple briefs in one session" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/resources/how-to-batch-content"]
+    },
+    {
+      "id": "content-consistency",
+      "priority": "P1",
+      "label": "Posting consistently",
+      "primaryKeyword": "how to create content consistently",
+      "winner": "/resources/how-to-create-content-consistently",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two ready-to-film Classic Red briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/resources/how-to-stay-consistent-on-instagram"]
+    },
+    {
+      "id": "content-workflow",
+      "priority": "P1",
+      "label": "Content creation workflow",
+      "primaryKeyword": "content creation workflow",
+      "winner": "/resources/content-creation-workflow",
+      "moneyLinks": [
+        { "href": "/pricing", "label": "compare brief options" },
+        { "href": "/store", "label": "configure a brief for your lane" }
+      ],
+      "redirects": ["/resources/content-planning-workflow"]
+    },
+    {
+      "id": "repeatable-system",
+      "priority": "P1",
+      "label": "Repeatable content system",
+      "primaryKeyword": "repeatable content system",
+      "winner": "/resources/how-to-build-a-repeatable-content-system",
+      "moneyLinks": [
+        { "href": "/pricing", "label": "compare brief options" },
+        { "href": "/store", "label": "configure a brief for your lane" }
+      ],
+      "redirects": ["/resources/repeatable-content-system"]
+    },
+    {
+      "id": "content-creation-hard",
+      "priority": "P1",
+      "label": "Why content creation feels hard",
+      "primaryKeyword": "why is content creation so hard",
+      "winner": "/resources/why-is-content-creation-so-hard",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two ready-to-film Classic Red briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/resources/content-creation-overwhelm"]
+    },
+    {
+      "id": "creator-content-strategy",
+      "priority": "P1",
+      "label": "Content strategy for creators",
+      "primaryKeyword": "content strategy for creators",
+      "winner": "/resources/content-strategy-for-creators",
+      "moneyLinks": [
+        { "href": "/pricing", "label": "compare brief options" },
+        { "href": "/store", "label": "configure a brief for your lane" }
+      ],
+      "redirects": [
+        "/creator-personas/content-strategy-for-small-creators",
+        "/content-ideas/creator-content-strategy"
+      ]
+    },
+    {
+      "id": "minimum-viable-strategy",
+      "priority": "P1",
+      "label": "Low-capacity content strategy",
+      "primaryKeyword": "minimum viable content strategy",
+      "winner": "/resources/minimum-viable-content-strategy",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two ready-to-film Classic Red briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": [
+        "/resources/sustainable-content-strategy",
+        "/creator-personas/content-strategy-for-busy-creators"
+      ]
+    },
+    {
+      "id": "beauty-reels",
+      "priority": "P2",
+      "label": "Beauty and skincare Reels ideas",
+      "primaryKeyword": "beauty reels ideas",
+      "winner": "/creator-lanes/beauty-reels-ideas",
+      "moneyLinks": [
+        { "href": "/pricing", "label": "compare beauty brief options" },
+        { "href": "/dossiers/classic-red", "label": "start with the two-brief Classic Red set" }
+      ],
+      "redirects": ["/creator-lanes/skincare-reels-ideas"]
+    },
+    {
+      "id": "beauty-strategy",
+      "priority": "P2",
+      "label": "Beauty and skincare content strategy",
+      "primaryKeyword": "beauty content strategy",
+      "winner": "/creator-lanes/beauty-content-strategy",
+      "moneyLinks": [
+        { "href": "/pricing", "label": "compare beauty brief options" },
+        { "href": "/dossiers/signature-purple", "label": "see the five-brief Signature Purple set" }
+      ],
+      "redirects": ["/creator-lanes/skincare-content-strategy"]
+    },
+    {
+      "id": "beauty-product-video",
+      "priority": "P2",
+      "label": "Beauty and skincare product video ideas",
+      "primaryKeyword": "beauty product video ideas",
+      "winner": "/creator-lanes/beauty-product-video-ideas",
+      "moneyLinks": [
+        { "href": "/pricing", "label": "compare beauty brief options" },
+        { "href": "/dossiers/classic-red", "label": "start with the two-brief Classic Red set" }
+      ],
+      "redirects": ["/creator-lanes/skincare-product-video-ideas"]
+    },
+    {
+      "id": "fashion-strategy",
+      "priority": "P2",
+      "label": "Fashion and luxury content strategy",
+      "primaryKeyword": "fashion content strategy",
+      "winner": "/creator-lanes/fashion-content-strategy",
+      "moneyLinks": [
+        { "href": "/pricing", "label": "compare fashion brief options" },
+        { "href": "/dossiers/signature-purple", "label": "see the five-brief Signature Purple set" }
+      ],
+      "redirects": ["/creator-lanes/luxury-content-strategy"]
+    },
+    {
+      "id": "founder-strategy",
+      "priority": "P2",
+      "label": "Founder and thought leadership content strategy",
+      "primaryKeyword": "content strategy for founders",
+      "winner": "/creator-lanes/content-strategy-for-founders",
+      "moneyLinks": [
+        { "href": "/atelier", "label": "request a custom Atelier brief set" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/creator-lanes/thought-leadership-content-strategy"]
+    },
+    {
+      "id": "ai-search",
+      "priority": "P2",
+      "label": "AI Overviews and answer engines",
+      "primaryKeyword": "answer engine optimization for creators",
+      "winner": "/resources/answer-engine-optimization-for-creators",
+      "moneyLinks": [{ "href": "/pricing", "label": "compare brief options" }],
+      "redirects": ["/resources/how-to-optimize-creator-content-for-ai-overviews"]
+    },
+    {
+      "id": "reels-ideas",
+      "priority": "P2",
+      "label": "Instagram Reels ideas",
+      "primaryKeyword": "instagram reels ideas",
+      "winner": "/reels/instagram-reels-ideas",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two ready-to-film Classic Red briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/content-ideas/reels-content-ideas"]
+    },
+    {
+      "id": "fashion-ideas",
+      "priority": "P2",
+      "label": "Fashion content ideas",
+      "primaryKeyword": "fashion content ideas",
+      "winner": "/content-ideas/fashion-luxury-content-ideas",
+      "redirects": ["/content-ideas/fashion-content-ideas"]
+    },
+    {
+      "id": "founder-ideas",
+      "priority": "P2",
+      "label": "Founder content ideas",
+      "primaryKeyword": "founder content ideas",
+      "winner": "/creator-lanes/founder-content-ideas",
+      "redirects": ["/content-ideas/founder-content-ideas"]
+    },
+    {
+      "id": "instagram-ideas",
+      "priority": "P2",
+      "label": "Instagram and lifestyle content ideas",
+      "primaryKeyword": "instagram content ideas",
+      "winner": "/content-ideas/instagram-content-ideas",
+      "moneyLinks": [
+        { "href": "/dossiers/classic-red", "label": "get two ready-to-film Classic Red briefs" },
+        { "href": "/pricing", "label": "compare brief options" }
+      ],
+      "redirects": ["/content-ideas/lifestyle-content-ideas"]
+    }
+  ],
+  "retiredHubPages": [
+    { "source": "/resources/p/9", "destination": "/resources" },
+    { "source": "/resources/p/10", "destination": "/resources" },
+    { "source": "/resources/p/11", "destination": "/resources" }
+  ]
+}

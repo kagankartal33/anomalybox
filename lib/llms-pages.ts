@@ -1,6 +1,7 @@
 import registry from "./seo-package-registry.json";
 import { resources } from "@/lib/seo-content";
 import { isPurchaseProtectedTemplate } from "@/lib/template-policy";
+import { isConsolidatedPath } from "@/lib/seo-consolidation";
 
 export type LlmPublicPage = {
   path: string;
@@ -16,7 +17,9 @@ const legacyPages = resources.map((resource) => ({
 }));
 
 export const llmsPublicPages: LlmPublicPage[] = [...registryPages, ...legacyPages].filter(
-  (page) => !isPurchaseProtectedTemplate({ section: sectionFromPath(page.path), title: page.title }),
+  (page) =>
+    !isConsolidatedPath(page.path) &&
+    !isPurchaseProtectedTemplate({ section: sectionFromPath(page.path), title: page.title }),
 );
 
 function sectionFromPath(path: string): string {
