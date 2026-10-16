@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { unstable_cache } from "next/cache";
 import { PublicShell } from "@/components/PublicShell";
 import { StoreConfigurator } from "@/components/StoreConfigurator";
@@ -70,18 +69,16 @@ export default async function StorePage() {
         </p>
       </div>
 
-      <Suspense fallback={<div className="rounded-md border border-ink/10 bg-white p-8 text-sm text-ink/60">Loading store options.</div>}>
-        <StoreConfigurator
-          products={productRows}
-          categories={categoryRows}
-          personas={personaRows}
-          initialProductSlug={productRows[0]?.slug ?? ""}
-          initialCategorySlug={categoryRows[0]?.slug ?? ""}
-          initialPersonaSlug={personaRows[0]?.slug ?? ""}
-          initialContextDetail=""
-          initialGrid={initialGrid}
-        />
-      </Suspense>
+      <StoreConfigurator
+        products={productRows}
+        categories={categoryRows}
+        personas={personaRows}
+        initialProductSlug={productRows[0]?.slug ?? ""}
+        initialCategorySlug={categoryRows[0]?.slug ?? ""}
+        initialPersonaSlug={personaRows[0]?.slug ?? ""}
+        initialContextDetail=""
+        initialGrid={initialGrid}
+      />
     </PublicShell>
   );
 }

@@ -324,7 +324,7 @@ export function ShootingModeModal({
             aria-label="Exit Shoot mode"
           >
             <span className="hidden sm:inline text-xs font-semibold">Exit</span>
-            <kbd className="rounded bg-white/10 px-1 py-0.5 font-mono text-[10px] text-white/40 hidden sm:inline">
+            <kbd className="rounded bg-white/10 px-1 py-0.5 font-mono text-[10px] text-white/55 hidden sm:inline">
               ESC
             </kbd>
             <X className="h-4 w-4" />
@@ -379,7 +379,7 @@ export function ShootingModeModal({
               {currentStep.spokenLine ? (
                 <span>&ldquo;{currentStep.spokenLine}&rdquo;</span>
               ) : (
-                <span className="text-white/40 italic font-normal text-2xl sm:text-3xl">
+                <span className="text-white/55 italic font-normal text-2xl sm:text-3xl">
                   (Silent scene &mdash; no spoken line. Focus on action and camera.)
                 </span>
               )}

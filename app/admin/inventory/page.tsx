@@ -219,9 +219,9 @@ export default async function AdminInventoryPage({
             {topNeeds.map((row) => (
               <li key={`need-${row.category_slug}-${row.persona_slug}`} className="rounded-md border border-ink/10 bg-paper px-3 py-2 text-sm">
                 <span className="font-semibold">{row.category_slug}</span>
-                <span className="text-ink/40"> / </span>
+                <span className="text-ink/60"> / </span>
                 <span>{row.persona_slug}</span>
-                <span className="ml-2 text-ink/50">({totalStock(row)} cards)</span>
+                <span className="ml-2 text-ink/60">({totalStock(row)} cards)</span>
               </li>
             ))}
           </ul>

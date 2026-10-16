@@ -81,7 +81,7 @@ export default async function AdminPage() {
       <section className="mb-6 overflow-hidden rounded-md border border-ink/10 bg-ink text-white shadow-soft">
         <div className="grid gap-6 p-6 lg:grid-cols-[1fr_360px] lg:items-end">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/45">Admin workspace</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/55">Admin workspace</p>
             <h1 className="mt-2 text-4xl font-semibold">Operations command center</h1>
             <p className="mt-2 max-w-2xl leading-7 text-white/70">
               Watch inventory readiness, manage complimentary dossiers, handle brief reports, and collect private Atelier requests from one surface.
@@ -95,11 +95,11 @@ export default async function AdminPage() {
             <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div>
                 <div className="text-2xl font-semibold">{pct(readyRoutes, inventory.length)}</div>
-                <div className="text-white/45">routes ready</div>
+                <div className="text-white/55">routes ready</div>
               </div>
               <div>
                 <div className="text-2xl font-semibold">{cardReportCount ?? 0}</div>
-                <div className="text-white/45">reports waiting</div>
+                <div className="text-white/55">reports waiting</div>
               </div>
             </div>
           </div>
@@ -208,7 +208,7 @@ export default async function AdminPage() {
           ))}
         </section>
         <section className="rounded-md border border-ink/10 bg-ink p-5 text-white">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/40">Operator notes</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/55">Operator notes</p>
           <h2 className="mt-2 text-2xl font-semibold">What to watch today</h2>
           <div className="mt-5 space-y-3 text-sm leading-6 text-white/70">
             <p>Keep routes available before sending traffic to checkout.</p>

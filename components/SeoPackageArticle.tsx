@@ -120,7 +120,7 @@ export function SeoPackageArticle({ page, markdown, showPurchaseProtectedLinks =
               {sectionName}
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-ink/40">Guide</span>
+            <span className="text-ink/60">Guide</span>
           </nav>
           <span className="rounded-full border border-plum-deep/20 bg-plum-soft/40 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-plum-deep">
             {sectionName}
@@ -138,7 +138,8 @@ export function SeoPackageArticle({ page, markdown, showPurchaseProtectedLinks =
             alt={page.imageAlt}
             width={1600}
             height={900}
-            priority={page.pageType === "pillar"}
+            // The hero is the LCP element on every article, so it must never be lazy-loaded.
+            preload
             sizes="(max-width: 896px) 100vw, 896px"
             className="w-full rounded-xl object-cover"
           />

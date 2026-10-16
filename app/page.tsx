@@ -273,7 +273,7 @@ export default function AnomalyBoxLanding() {
       <section className="content-visibility-auto bg-[#080808] py-16 text-white">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/42">Private custom service</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">Private custom service</p>
             <h2 className="mt-3 text-5xl font-semibold">ATELIER BLACK BOX</h2>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-white/66">
               Custom briefs for a launch, rebrand, or sponsor set when a standard package is not enough.

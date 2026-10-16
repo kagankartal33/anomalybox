@@ -80,7 +80,7 @@ export function CheckoutStatusCard({
           fill
           sizes="(max-width: 1023px) 100vw, 45vw"
           className="object-cover"
-          priority
+          preload
         />
       </div>
       <div className="flex items-center p-7 sm:p-10 lg:p-12">

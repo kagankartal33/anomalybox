@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import {
   Activity,
   BadgeCheck,
@@ -208,30 +207,30 @@ export function StoreConfigurator({
   initialContextDetail: string;
   initialGrid?: Record<string, number>;
 }) {
-  const searchParams = useSearchParams();
-  const boxParam = searchParams.get("box") ?? "";
-  const categoryParam = searchParams.get("category") ?? "";
-  const personaParam = searchParams.get("persona") ?? "";
-  const detailParam = (searchParams.get("detail") ?? "").slice(0, 160);
-  const checkoutParam = searchParams.get("checkout") === "1";
+  // Selections start from the server-provided defaults so the whole configurator is server-rendered.
+  // Deep links (/store?box=…&category=…&persona=…) are applied after hydration: reading them with
+  // useSearchParams made Next.js skip server rendering on this static page, so crawlers saw only a
+  // loading placeholder and the late client render shifted the layout (CLS 0.39).
+  const [selectedProductSlug, setSelectedProductSlug] = useState(initialProductSlug);
+  const [selectedCategorySlug, setSelectedCategorySlug] = useState(initialCategorySlug);
+  const [selectedPersonaSlug, setSelectedPersonaSlug] = useState(initialPersonaSlug);
+  const [contextDetail, setContextDetail] = useState(initialContextDetail);
+  const [checkoutResume, setCheckoutResume] = useState(false);
 
-  const [selectedProductSlug, setSelectedProductSlug] = useState(() => {
-    if (boxParam && products.some((product) => product.slug === boxParam)) return boxParam;
-    return initialProductSlug;
-  });
-  const [selectedCategorySlug, setSelectedCategorySlug] = useState(() => {
-    if (categoryParam && categories.some((item) => item.slug === categoryParam)) return categoryParam;
-    return initialCategorySlug;
-  });
-  const [selectedPersonaSlug, setSelectedPersonaSlug] = useState(() => {
-    if (personaParam && personas.some((item) => item.slug === personaParam)) return personaParam;
-    return initialPersonaSlug;
-  });
-  const [contextDetail, setContextDetail] = useState(() => {
-    if (detailParam) return detailParam;
-    return initialContextDetail;
-  });
-  const [checkoutResume] = useState(checkoutParam);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const box = params.get("box") ?? "";
+    const category = params.get("category") ?? "";
+    const persona = params.get("persona") ?? "";
+    const detail = (params.get("detail") ?? "").slice(0, 160);
+    /* eslint-disable react-hooks/set-state-in-effect -- one-time sync from the URL after hydration */
+    if (box && products.some((product) => product.slug === box)) setSelectedProductSlug(box);
+    if (category && categories.some((item) => item.slug === category)) setSelectedCategorySlug(category);
+    if (persona && personas.some((item) => item.slug === persona)) setSelectedPersonaSlug(persona);
+    if (detail) setContextDetail(detail);
+    if (params.get("checkout") === "1") setCheckoutResume(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [products, categories, personas]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [availability, setAvailability] = useState<AvailabilityState | null>(null);
@@ -361,7 +360,7 @@ export function StoreConfigurator({
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center justify-between gap-3">
-                        <div className={`inline-flex max-w-full items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${selected ? "bg-white/10 text-white/70" : "bg-white text-ink/55"}`}>
+                        <div className={`inline-flex max-w-full items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${selected ? "bg-white/10 text-white/70" : "bg-white text-ink/60"}`}>
                           <PremiumIcon icon={variant === "purple" ? Crown : Gem} size="sm" tone={tone} />
                           {productEyebrow(product)}
                         </div>
@@ -406,7 +405,7 @@ export function StoreConfigurator({
               {query ? (
                 <button
                   aria-label="Clear search"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink/60 hover:text-ink"
                   onClick={() => setQuery("")}
                   type="button"
                 >
@@ -491,7 +490,7 @@ export function StoreConfigurator({
                           </div>
                           <div className="min-w-0">
                             <h3 className="truncate font-semibold">{premiumCategoryLabel(category)}</h3>
-                            <p className={`mt-0.5 text-[11px] uppercase tracking-[0.12em] ${selected ? "text-white/45" : "text-ink/35"}`}>{visual.label}</p>
+                            <p className={`mt-0.5 text-[11px] uppercase tracking-[0.12em] ${selected ? "text-white/55" : "text-ink/60"}`}>{visual.label}</p>
                           </div>
                         </div>
                         <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border ${selected ? "border-white/30 bg-white text-ink" : "border-ink/15 text-transparent"}`}>
@@ -501,7 +500,7 @@ export function StoreConfigurator({
                       <p className={`mt-2 text-xs leading-relaxed line-clamp-2 ${selected ? "text-white/65" : "text-ink/60"}`}>
                         {laneHint(category, contextDetail)}
                       </p>
-                      <p className={`mt-2 text-xs font-semibold uppercase tracking-[0.12em] ${selected ? "text-white/45" : !gridLoaded ? "text-ink/40" : inStock ? "text-teal" : "text-coral"}`}>
+                      <p className={`mt-2 text-xs font-semibold uppercase tracking-[0.12em] ${selected ? "text-white/55" : !gridLoaded ? "text-ink/60" : inStock ? "text-teal" : "text-coral"}`}>
                         {!gridLoaded
                           ? "Checking stock"
                           : known
@@ -546,7 +545,7 @@ export function StoreConfigurator({
                       </div>
                       <div className="min-w-0">
                         <h3 className="font-semibold">{persona.name}</h3>
-                        <p className={`mt-1 text-[11px] uppercase tracking-[0.12em] ${selected ? "text-white/45" : "text-ink/35"}`}>{visual.label}</p>
+                        <p className={`mt-1 text-[11px] uppercase tracking-[0.12em] ${selected ? "text-white/55" : "text-ink/60"}`}>{visual.label}</p>
                       </div>
                     </div>
                     <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border ${selected ? "border-white/30 bg-white text-ink" : "border-ink/15 text-transparent"}`}>
@@ -554,7 +553,7 @@ export function StoreConfigurator({
                     </span>
                   </div>
                   <p className={`mt-3 text-sm leading-6 ${selected ? "text-white/66" : "text-ink/60"}`}>{personaHint(persona)}</p>
-                  <p className={`mt-2 text-xs font-semibold uppercase tracking-[0.12em] ${selected ? "text-white/45" : !gridLoaded ? "text-ink/40" : inStock ? "text-teal" : "text-coral"}`}>
+                  <p className={`mt-2 text-xs font-semibold uppercase tracking-[0.12em] ${selected ? "text-white/55" : !gridLoaded ? "text-ink/60" : inStock ? "text-teal" : "text-coral"}`}>
                     {!gridLoaded
                       ? "Checking stock"
                       : known

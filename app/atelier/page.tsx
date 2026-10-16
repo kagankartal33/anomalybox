@@ -46,7 +46,7 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
       <header className="border-b border-white/10">
         <nav aria-label="Atelier Navigation" className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <Link href="/" className="focus-ring inline-flex items-center gap-3 rounded-sm" aria-label="Anomaly Box home">
-            <Image src={premiumAssets.brand.mark} alt="" aria-hidden="true" role="presentation" width={40} height={40} className="h-10 w-10" priority />
+            <Image src={premiumAssets.brand.mark} alt="" aria-hidden="true" role="presentation" width={40} height={40} className="h-10 w-10" />
             <span className="text-lg font-semibold tracking-[0.01em] text-white">Anomaly Box</span>
           </Link>
           <a
@@ -88,6 +88,7 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
               src={premiumAssets.marketing.atelier}
               alt="A face-free creative director reviewing a tailored campaign in a dark cinematic studio"
               fill
+              preload
               sizes="(max-width: 768px) 100vw, 45vw"
               className="object-cover"
             />
@@ -110,7 +111,7 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
       <section className="border-t border-white/10 py-14">
         <div className="mx-auto max-w-6xl px-6">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">What is included</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">What is included</p>
             <h2 className="mt-3 text-4xl font-semibold">Custom cards, custom positioning, controlled execution.</h2>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-4">
@@ -145,7 +146,7 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
       <section id="atelier-request" className="border-t border-white/10 py-14">
         <div className="mx-auto grid max-w-6xl gap-8 px-6 lg:grid-cols-[0.85fr_1fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">Private request</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">Private request</p>
             <h2 className="mt-3 text-4xl font-semibold">Tell us the effect you want the campaign to create.</h2>
             <p className="mt-4 leading-8 text-white/64">
               Share the launch, brand shift, sponsor campaign, or creator lane you want to sharpen. The Atelier response is reviewed manually.

@@ -156,7 +156,7 @@ export async function SeoPackageHub({ featured, section, title, description, pag
                   src={versionedSeoPackageImage(item.image)}
                   alt={item.imageAlt}
                   fill
-                  priority={index < 3}
+                  preload={index < 3}
                   className="object-cover transition duration-500 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />

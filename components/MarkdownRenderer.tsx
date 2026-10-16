@@ -102,7 +102,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                 {step}
               </div>
               {idx < steps.length - 1 && (
-                <div className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-white/40">
+                <div className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-white/55">
                   <ArrowRight className="h-4 w-4" />
                 </div>
               )}

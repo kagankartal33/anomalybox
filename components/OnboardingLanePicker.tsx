@@ -465,7 +465,7 @@ export function OnboardingLanePicker({
             </div>
             <div className="rounded-md border border-ink/10 bg-paper px-4 py-3 text-sm">
               <span className="font-semibold">{selectedCategoryIds.length}/3</span>
-              <span className="ml-1 text-ink/55">lanes selected</span>
+              <span className="ml-1 text-ink/60">lanes selected</span>
             </div>
           </div>
 
@@ -697,7 +697,7 @@ export function OnboardingLanePicker({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm">
             <span className="font-semibold">{selectedCategoryIds.length}/3 lanes selected</span>
-            <span className="ml-2 text-ink/55">Your creative brief will be matched to your lane, format, and audience promise.</span>
+            <span className="ml-2 text-ink/60">Your creative brief will be matched to your lane, format, and audience promise.</span>
           </div>
           <button className="focus-ring rounded-md bg-ink px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40" type="submit" disabled={!selectedCategoryIds.length}>
             Save profile and continue to Store

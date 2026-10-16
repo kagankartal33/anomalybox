@@ -83,7 +83,7 @@ export function SiteHeader({
               height={44}
               sizes="160px"
               className="h-10 sm:h-12 md:h-16 w-auto object-contain"
-              priority
+              preload
             />
           </Link>
 

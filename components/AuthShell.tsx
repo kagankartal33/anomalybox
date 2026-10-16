@@ -24,7 +24,7 @@ export function AuthShell({
             fill
             sizes="(max-width: 1023px) 100vw, 55vw"
             className="object-cover"
-            priority
+            preload
           />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">

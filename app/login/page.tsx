@@ -158,7 +158,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                 <div className="w-full border-t border-ink/10" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-3 text-ink/50">or continue securely</span>
+                <span className="bg-white px-3 text-ink/60">or continue securely</span>
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">

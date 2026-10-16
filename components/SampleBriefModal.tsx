@@ -211,19 +211,19 @@ export function SampleBriefModal({
               {/* Metadata Banner */}
               <div className="grid gap-3 rounded-xl border border-white/10 bg-[#1c1c22] p-4 sm:grid-cols-4">
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">Lane</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/55">Lane</p>
                   <p className="mt-1 font-semibold text-white">Specialty Coffee &amp; Cafes</p>
                 </div>
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">Creator Mode</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/55">Creator Mode</p>
                   <p className="mt-1 font-semibold text-white">Calm Authority</p>
                 </div>
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">Production Setup</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/55">Production Setup</p>
                   <p className="mt-1 font-semibold text-white">Solo • Phone 4K60 • 35m</p>
                 </div>
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">Pacing Style</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/55">Pacing Style</p>
                   <p className="mt-1 font-semibold text-white">ASMR Proof First • 45s</p>
                 </div>
               </div>
@@ -284,7 +284,7 @@ export function SampleBriefModal({
                   <h3 className="text-xs font-bold uppercase tracking-wider text-white/50">
                     Scene-by-Scene Shoot Flow (4 Scenes)
                   </h3>
-                  <span className="text-xs text-white/40">Click scene tab to inspect</span>
+                  <span className="text-xs text-white/55">Click scene tab to inspect</span>
                 </div>
 
                 <div className="flex gap-2 overflow-x-auto pb-2">
@@ -315,7 +315,7 @@ export function SampleBriefModal({
                         {sampleScenes[activeTab].stage}
                       </span>
                     </div>
-                    <span className="font-mono text-xs text-white/40">
+                    <span className="font-mono text-xs text-white/55">
                       Target Duration: {sampleScenes[activeTab].time}
                     </span>
                   </div>
