@@ -12,12 +12,14 @@ import { siteUrl } from "@/lib/env";
 import { premiumAssets } from "@/lib/premium-assets";
 import { packageGenerateMetadata } from "@/lib/seo-package-page";
 import { brandedTitle } from "@/lib/seo-metadata";
+import { isConsolidatedPath } from "@/lib/seo-consolidation";
 
 const packageMeta = packageGenerateMetadata("content-ideas");
 
 export function generateStaticParams() {
   const packageSlugs = seoPackageBySection("content-ideas").map((p) => p.slug);
-  const segmentSlugs = segments.map((s) => s.slug);
+  // Merged segment pages redirect in next.config.ts, so they are not prerendered.
+  const segmentSlugs = segments.map((s) => s.slug).filter((slug) => !isConsolidatedPath(`/content-ideas/${slug}`));
   return [...new Set([...packageSlugs, ...segmentSlugs])].map((slug) => ({ slug }));
 }
 

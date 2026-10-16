@@ -177,14 +177,14 @@ export const LANE_CLUSTER_LINKS: Record<string, ClusterLink[]> = {
   ],
   product: [
     {
-      slug: "creative-direction-box-dossier-system",
-      title: "Creative Direction Dossier System",
-      anchorText: "Creative Direction Dossier System",
+      slug: "physical-creative-direction-box-vs-digital-templates",
+      title: "Campaign-Ready Creative Briefs vs Generic Templates",
+      anchorText: "Creative Briefs vs Generic Templates",
     },
     {
-      slug: "custom-instagram-content-plan-framework",
-      title: "Custom Instagram Content Plan Framework",
-      anchorText: "Custom Shoot-Ready Content Plan",
+      slug: "shoot-ready-card-system-for-creator-teams",
+      title: "Shoot-Ready Card System for Creator Teams & SMMs",
+      anchorText: "Shoot-Ready Card System for Teams",
     },
   ],
   visual: [

@@ -31,6 +31,7 @@
     "audit:readability": "python tools/audit_content_readability.py",
     "audit:live-content": "node tools/audit-live-public-content.mjs",
     "test:seo-package": "node tools/check-seo-package-integrity.mjs",
+    "audit:consolidation": "node tools/check-consolidation-crawl.mjs",
     "audit:readiness": "powershell -ExecutionPolicy Bypass -File .\\tools\\test-production-readiness.ps1 -SkipSlow -SkipExportDryRun",
     "audit:env": "node tools/check-production-env.mjs",
     "audit:env:production": "node tools/check-production-env.mjs --production",

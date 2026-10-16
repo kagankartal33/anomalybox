@@ -5,6 +5,7 @@
  */
 
 import { resources } from "@/lib/seo-content";
+import { consolidationDestination, isConsolidatedPath } from "@/lib/seo-consolidation";
 import registry from "./seo-package-registry.json";
 import linkData from "./seo-package-links.json";
 
@@ -165,9 +166,11 @@ function legacyResourceDescription(description: string, sections: string[]): str
 
 // Keep the public hubs limited to the curated public package. Legacy
 // resources remain routable for backwards compatibility, but must never be
-// merged back into the new editorial indexes.
-const registryPages = loadRegistry();
-const legacyResourcePages = loadLegacyResourcePages();
+// merged back into the new editorial indexes. Pages merged into a cluster
+// winner (lib/seo-consolidation.json) are not routable: next.config.ts
+// answers them with a 308 before any route renders.
+const registryPages = loadRegistry().filter((page) => !isConsolidatedPath(page.path));
+const legacyResourcePages = loadLegacyResourcePages().filter((page) => !isConsolidatedPath(page.path));
 const routablePages = [...registryPages, ...legacyResourcePages];
 
 export const seoPackagePages: SeoPackagePage[] = registryPages;
@@ -228,13 +231,32 @@ function loadLinkGraph(): Record<string, SeoPackageRelatedLink[]> {
 
 const linkGraph = loadLinkGraph();
 
+const routablePagesByPath = new Map(routablePages.map((page) => [page.path, page]));
+
+/** Point a related link at the cluster winner when its target was merged; drop it if the winner is not an article. */
+function resolveRelatedLink(item: SeoPackageRelatedLink): SeoPackageRelatedLink | undefined {
+  const destination = item.path ? consolidationDestination(item.path) : undefined;
+  if (!destination) return item;
+  const winner = routablePagesByPath.get(destination);
+  if (!winner) return undefined;
+  return {
+    slug: winner.slug,
+    path: winner.path,
+    title: winner.title,
+    section: winner.section,
+    score: item.score,
+    anchorText: winner.seoTitle || winner.title,
+  };
+}
+
 export function relatedLinksForSlug(slug: string, limit = 5): SeoPackageRelatedLink[] {
   const items = linkGraph[slug] ?? [];
-  const validPaths = new Set(routablePages.map((page) => page.path));
+  const self = routablePages.find((page) => page.slug === slug)?.path;
   const seen = new Set<string>();
   return items
-    .filter((item) => {
-      if (!item.path || item.slug === slug || !validPaths.has(item.path) || seen.has(item.path)) {
+    .map(resolveRelatedLink)
+    .filter((item): item is SeoPackageRelatedLink => {
+      if (!item?.path || item.slug === slug || item.path === self || !routablePagesByPath.has(item.path) || seen.has(item.path)) {
         return false;
       }
       seen.add(item.path);

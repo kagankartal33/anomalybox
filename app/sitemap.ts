@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/env";
 import { segments } from "@/lib/seo-content";
 import { llmsPublicPages } from "@/lib/llms-pages";
+import { isConsolidatedPath } from "@/lib/seo-consolidation";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();
@@ -51,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       .map((p) => p.path.split("/").at(-1)),
   );
   const extraSegments: MetadataRoute.Sitemap = segments
-    .filter((s) => !packageContentIdeaSlugs.has(s.slug))
+    .filter((s) => !packageContentIdeaSlugs.has(s.slug) && !isConsolidatedPath(`/content-ideas/${s.slug}`))
     .map((item) => ({
       url: `${base}/content-ideas/${item.slug}`,
       lastModified: contentUpdated,
