@@ -45,7 +45,7 @@ export default function LegalPage() {
           </section>
         </div>
 
-        <p className="mt-12 text-xs text-ink/50">
+        <p className="mt-12 text-xs text-ink/60">
           For questions: <a href="mailto:support@anomalybox.com" className="underline">support@anomalybox.com</a>
         </p>
 

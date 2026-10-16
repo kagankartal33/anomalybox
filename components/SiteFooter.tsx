@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { INTERACTIVE_TOOLS } from "@/lib/interactive-tools";
 import Image from "next/image";
 import { premiumAssets } from "@/lib/premium-assets";
 
@@ -71,7 +72,7 @@ export function SiteFooter() {
 
           {/* Direction & Store */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-ink/40">Direction &amp; Store</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-ink/60">Direction &amp; Store</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link href="/store" className="text-ink/75 transition hover:text-ink">
@@ -108,7 +109,7 @@ export function SiteFooter() {
 
           {/* Content & Intelligence */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-ink/40">Content &amp; Strategy</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-ink/60">Content &amp; Strategy</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link href="/content-ideas" className="text-ink/75 transition hover:text-ink">
@@ -140,13 +141,20 @@ export function SiteFooter() {
 
           {/* Interactive Tools */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-ink/40">Interactive Tools</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-ink/60">Interactive Tools</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link href="/tools" className="text-ink/75 transition hover:text-ink">
                   Creator Tools Hub
                 </Link>
               </li>
+              {INTERACTIVE_TOOLS.map((tool) => (
+                <li key={tool.href}>
+                  <Link href={tool.href} className="text-ink/75 transition hover:text-ink">
+                    {tool.title}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <Link href="/tools/content-pillar-builder" className="text-ink/75 transition hover:text-ink">
                   Pillar Builder
@@ -172,7 +180,7 @@ export function SiteFooter() {
 
           {/* Company & Legal */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-ink/40">Platform &amp; Trust</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-ink/60">Platform &amp; Trust</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link href="/about" className="text-ink/75 transition hover:text-ink">

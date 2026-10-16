@@ -35,7 +35,7 @@ function MetricTile({
     <div className="rounded-md border border-ink/10 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">{label}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">{label}</p>
           <div className="mt-3 text-3xl font-semibold">{value}</div>
           <p className="mt-2 text-sm leading-6 text-ink/60">{detail}</p>
         </div>
@@ -117,27 +117,27 @@ export default async function AdminPage() {
         <Link href="/admin/card-quality" className="group rounded-md border border-ink/10 bg-white p-5 font-semibold shadow-soft transition hover:-translate-y-0.5 focus-ring">
           <Sparkles className="mb-4 h-5 w-5 text-teal" />
           Card generation health
-          <div className="mt-2 text-sm font-normal text-ink/55">Monitor V3 quality, diversity and qualification.</div>
+          <div className="mt-2 text-sm font-normal text-ink/60">Monitor V3 quality, diversity and qualification.</div>
         </Link>
         <Link href="/admin/inventory" className="group rounded-md border border-ink/10 bg-white p-5 font-semibold shadow-soft transition hover:-translate-y-0.5 focus-ring">
           <ClipboardCheck className="mb-4 h-5 w-5 text-teal" />
           Inventory health
-          <div className="mt-2 text-sm font-normal text-ink/55">Check lane availability before traffic.</div>
+          <div className="mt-2 text-sm font-normal text-ink/60">Check lane availability before traffic.</div>
         </Link>
         <Link href="/admin/users" className="group rounded-md border border-ink/10 bg-white p-5 font-semibold shadow-soft transition hover:-translate-y-0.5 focus-ring">
           <Gift className="mb-4 h-5 w-5 text-[#B42335]" />
           Users & complimentary dossiers
-          <div className="mt-2 text-sm font-normal text-ink/55">Create creators or assign a complimentary brief.</div>
+          <div className="mt-2 text-sm font-normal text-ink/60">Create creators or assign a complimentary brief.</div>
         </Link>
         <Link href="/admin/atelier-leads" className="group rounded-md border border-ink/10 bg-white p-5 font-semibold shadow-soft transition hover:-translate-y-0.5 focus-ring">
           <Inbox className="mb-4 h-5 w-5 text-[#5B2A86]" />
           Atelier requests
-          <div className="mt-2 text-sm font-normal text-ink/55">{newAtelierCount ?? 0} new private requests.</div>
+          <div className="mt-2 text-sm font-normal text-ink/60">{newAtelierCount ?? 0} new private requests.</div>
         </Link>
         <Link href="/admin#card-reports" className="group rounded-md border border-ink/10 bg-white p-5 font-semibold shadow-soft transition hover:-translate-y-0.5 focus-ring">
           <Flag className="mb-4 h-5 w-5 text-[#5B2A86]" />
           Card reports
-          <div className="mt-2 text-sm font-normal text-ink/55">{cardReportCount ?? 0} cards under review.</div>
+          <div className="mt-2 text-sm font-normal text-ink/60">{cardReportCount ?? 0} cards under review.</div>
         </Link>
       </div>
 
@@ -145,7 +145,7 @@ export default async function AdminPage() {
         <section id="card-reports" className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Card quality</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/60">Card quality</p>
               <h2 className="mt-1 text-2xl font-semibold">Card reports</h2>
             </div>
             <StatusPill value={cardReportCount ? "under_review" : "available"} />
@@ -155,7 +155,7 @@ export default async function AdminPage() {
               <Link key={report.id} href={`/admin/card-reports/${report.id}`} className="group grid gap-3 rounded-md border border-ink/10 bg-paper p-4 transition hover:bg-mist focus-ring sm:grid-cols-[1fr_auto] sm:items-center">
                 <div>
                   <div className="font-semibold">Report {report.id.slice(0, 8)}</div>
-                  <p className="mt-1 text-sm text-ink/50">{String(report.reason).replaceAll("_", " ")} / {dateTime(report.created_at)}</p>
+                  <p className="mt-1 text-sm text-ink/60">{String(report.reason).replaceAll("_", " ")} / {dateTime(report.created_at)}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <StatusPill value={report.status} />
@@ -168,10 +168,10 @@ export default async function AdminPage() {
         </section>
 
         <section className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Commercial snapshot</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/60">Commercial snapshot</p>
           <h2 className="mt-1 text-2xl font-semibold">Recent checkout activity</h2>
           <div className="mt-5 rounded-md border border-ink/10 bg-paper p-4">
-            <div className="text-sm text-ink/50">Visible recent revenue</div>
+            <div className="text-sm text-ink/60">Visible recent revenue</div>
             <div className="mt-1 text-3xl font-semibold">{money(revenueCents)}</div>
           </div>
           <div className="mt-4 space-y-2">
@@ -181,7 +181,7 @@ export default async function AdminPage() {
                 <div key={purchase.id} className="flex items-center justify-between gap-3 border-t border-ink/10 py-3 first:border-t-0">
                   <div>
                     <div className="font-medium">{product?.name ?? purchase.fulfillment_source}</div>
-                    <p className="text-sm text-ink/50">{dateTime(purchase.created_at)}</p>
+                    <p className="text-sm text-ink/60">{dateTime(purchase.created_at)}</p>
                   </div>
                   <StatusPill value={purchase.status} />
                 </div>
@@ -201,7 +201,7 @@ export default async function AdminPage() {
             <div key={user.id} className="flex items-center justify-between border-t border-ink/10 py-3 first:border-t-0">
               <div>
                 <span className="font-medium">{user.display_name ?? user.id}</span>
-                <p className="text-sm text-ink/45">{dateTime(user.created_at)}</p>
+                <p className="text-sm text-ink/60">{dateTime(user.created_at)}</p>
               </div>
               <StatusPill value={user.role} />
             </div>

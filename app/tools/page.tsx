@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SeoPackageHub } from "@/components/SeoPackageHub";
+import { INTERACTIVE_TOOLS } from "@/lib/interactive-tools";
 
 export const metadata: Metadata = {
   title: "Creator Tools & Checklists | Anomaly Box",
@@ -12,6 +13,7 @@ export const revalidate = 300;
 export default function ToolsHubPage() {
   return (
     <SeoPackageHub
+      featured={INTERACTIVE_TOOLS}
       page={1}
       section="tools"
       title="Creator Tools & Checklists"

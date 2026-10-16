@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { siteUrl } from "@/lib/env";
 import { safeNextPath } from "@/lib/navigation";
+import { FLASH } from "@/lib/flash-messages";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -12,12 +13,12 @@ export async function GET(request: Request) {
   const providerError = url.searchParams.get("error_description") ?? url.searchParams.get("error");
 
   if (providerError) {
-    loginUrl.searchParams.set("error", "Sign-in was cancelled or could not be completed. Please try again.");
+    loginUrl.searchParams.set("error", FLASH.oauthCancelled);
     return NextResponse.redirect(loginUrl);
   }
 
   if (!code) {
-    loginUrl.searchParams.set("error", "The sign-in response was incomplete. Please try again.");
+    loginUrl.searchParams.set("error", FLASH.oauthIncomplete);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -29,10 +30,11 @@ export async function GET(request: Request) {
       code: error?.code,
       status: error?.status,
     });
-    loginUrl.searchParams.set("error", "Your secure session could not be verified. Please try again.");
+    loginUrl.searchParams.set("error", FLASH.sessionUnverified);
     return NextResponse.redirect(loginUrl);
   }
 
+  // First sign-in creates the profile; later sign-ins must not overwrite a display name the creator changed.
   await supabase.from("profiles").upsert({
     id: data.user.id,
     display_name:
@@ -40,7 +42,7 @@ export async function GET(request: Request) {
       data.user.user_metadata?.full_name ??
       data.user.user_metadata?.name ??
       data.user.email,
-  }, { onConflict: "id" });
+  }, { onConflict: "id", ignoreDuplicates: true });
 
   return NextResponse.redirect(`${siteUrl()}${next}`);
 }

@@ -79,7 +79,7 @@ export default function First3SecondsAuditorPage() {
                   onChange={(e) => setOpeningLine(e.target.value)}
                   required
                 />
-                <p className="mt-1.5 text-xs text-ink/50">Keep it between 4 and 14 words for optimal retention velocity.</p>
+                <p className="mt-1.5 text-xs text-ink/60">Keep it between 4 and 14 words for optimal retention velocity.</p>
               </div>
 
               <div>
@@ -94,7 +94,7 @@ export default function First3SecondsAuditorPage() {
                   value={visualAction}
                   onChange={(e) => setVisualAction(e.target.value)}
                 />
-                <p className="mt-1.5 text-xs text-ink/50">Physical movement prevents scroll momentum before audio registers.</p>
+                <p className="mt-1.5 text-xs text-ink/60">Physical movement prevents scroll momentum before audio registers.</p>
               </div>
 
               <div>
@@ -158,7 +158,7 @@ export default function First3SecondsAuditorPage() {
               
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="text-5xl font-bold tracking-tight text-ink">{audited ? retentionScore : "--"}</span>
-                <span className="text-sm font-semibold text-ink/40">/ 100 Potential</span>
+                <span className="text-sm font-semibold text-ink/60">/ 100 Potential</span>
               </div>
 
               <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-paper">
@@ -173,7 +173,7 @@ export default function First3SecondsAuditorPage() {
               {audited ? (
                 <div className="mt-6 space-y-4 border-t border-ink/10 pt-5 text-sm">
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-ink/40">Detected Taxonomy Hook:</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-ink/60">Detected Taxonomy Hook:</span>
                     <p className="mt-1 font-semibold text-plum-deep">
                       {hook ? `${hook.nameTr} (${hook.id})` : "General / Custom Hook Pattern"}
                     </p>
@@ -183,7 +183,7 @@ export default function First3SecondsAuditorPage() {
                   </div>
 
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-ink/40">Neurocognitive Trigger:</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-ink/60">Neurocognitive Trigger:</span>
                     <p className="mt-1 font-medium text-ink/80">
                       {hook?.primaryCognitiveTriggerLabelTr ?? "Reward Prediction Error / Curiosity Gap"}
                     </p>
@@ -223,7 +223,7 @@ export default function First3SecondsAuditorPage() {
                   </div>
                 </div>
               ) : (
-                <div className="mt-6 text-center text-xs leading-relaxed text-ink/50 py-8">
+                <div className="mt-6 text-center text-xs leading-relaxed text-ink/60 py-8">
                   Enter your spoken opening line and frame 1 physical action above to trigger the 62-hook algorithmic audit.
                 </div>
               )}

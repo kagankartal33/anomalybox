@@ -98,7 +98,7 @@ export default async function ContentIdeasSlugPage({ params }: { params: Promise
         ]}
       />
       <article className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <nav className="text-sm font-medium text-ink/50">
+        <nav className="text-sm font-medium text-ink/60">
           <Link href="/content-ideas" className="hover:text-plum-deep">
             Content Ideas
           </Link>

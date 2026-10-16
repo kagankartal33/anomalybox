@@ -5,6 +5,7 @@ import { IdeaCardView } from "@/components/idea-card/IdeaCardView";
 import { StatusPill } from "@/components/StatusPill";
 import { adaptLegacyIdeaCard, presentIdeaCard } from "@/lib/idea-card";
 import { requireUser } from "@/lib/auth";
+import { publicFlashMessage } from "@/lib/flash-messages";
 import { reportCard } from "@/app/cards/actions";
 
 const reportReasons = [
@@ -56,7 +57,7 @@ export default async function CardDetailPage({
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
-  const reportError = typeof query.report_error === "string" ? query.report_error : "";
+  const reportError = publicFlashMessage(typeof query.report_error === "string" ? query.report_error : null);
   const reported = query.reported === "1";
   const canSubmitReport = !cardReport || !["under_review", "replaced"].includes(String(cardReport.status));
 
@@ -73,7 +74,7 @@ export default async function CardDetailPage({
         {/* Mobile only — jump to flag form without scrolling past all sections */}
         <a
           href="#report-section"
-          className="xl:hidden text-xs font-semibold text-ink/45 hover:text-ink/70 transition print:hidden"
+          className="xl:hidden text-xs font-semibold text-ink/60 hover:text-ink/70 transition print:hidden"
         >
           Flag this brief
         </a>
@@ -147,7 +148,7 @@ export default async function CardDetailPage({
                 <input type="hidden" name="delivery_id" value={deliveryItem.delivery_id} />
                 <input type="hidden" name="delivery_item_id" value={deliveryItem.id} />
                 <label className="block">
-                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Reason</span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Reason</span>
                   <select name="reason" className="mt-2 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm focus-ring" required>
                     {reportReasons.map(([value, label]) => (
                       <option key={value} value={value}>
@@ -157,7 +158,7 @@ export default async function CardDetailPage({
                   </select>
                 </label>
                 <label className="block">
-                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">What should we review?</span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">What should we review?</span>
                   <textarea
                     name="creator_note"
                     className="mt-2 min-h-24 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm leading-6 focus-ring"

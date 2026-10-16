@@ -7,6 +7,7 @@ import { checkInventoryForBox } from "@/lib/inventory";
 import { siteUrl } from "@/lib/env";
 import { storeSelectionPath } from "@/lib/navigation";
 import { stripe } from "@/lib/stripe";
+import { boxPriceCents } from "@/lib/pricing";
 import { verifyRecaptcha } from "@/lib/bot-protection";
 
 const CheckoutInput = z.object({
@@ -74,7 +75,7 @@ export async function POST(request: Request) {
       : null;
   const stripePriceId = stripeCatalog?.[stripeMode]?.price_id;
   const stripePriceAmount = stripeCatalog?.[stripeMode]?.unit_amount;
-  const expectedCents = product.slug === "premium_viral_box_1000" ? 1900 : product.slug === "viral_box_500" ? 900 : product.price_usd_cents;
+  const expectedCents = boxPriceCents(product.slug) ?? product.price_usd_cents;
   if (product.price_usd_cents !== expectedCents) {
     return NextResponse.json({ error: "product_price_misconfigured" }, { status: 500 });
   }

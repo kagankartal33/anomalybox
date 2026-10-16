@@ -48,7 +48,7 @@ export function TemplatePurchaseGate({ accessState, returnPath }: Props) {
               </Link>
             </div>
 
-            <div className="mt-9 flex items-start gap-3 border-t border-ink/10 pt-6 text-sm leading-6 text-ink/55">
+            <div className="mt-9 flex items-start gap-3 border-t border-ink/10 pt-6 text-sm leading-6 text-ink/60">
               <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-teal" aria-hidden="true" />
               <p>Access is checked securely against the paid purchase history on your signed-in account.</p>
             </div>

@@ -17,7 +17,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
   return (
     <AppShell>
       <section className="mb-6 rounded-md border border-ink/10 bg-white p-6 shadow-soft">
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Admin users</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/60">Admin users</p>
         <h1 className="mt-2 text-4xl font-semibold">Users & complimentary dossiers</h1>
         <p className="mt-2 text-ink/60">Create creator accounts and send complimentary creative briefs from approved inventory.</p>
       </section>

@@ -157,7 +157,7 @@ export default function FormatUtilityRouterPage() {
           {/* Results Output */}
           <div className="space-y-6 lg:col-span-5">
             <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-ink/40">Optimal Media Format</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-ink/60">Optimal Media Format</h2>
               
               <div className="mt-4 flex items-center gap-3">
                 <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-plum-soft text-plum-deep">

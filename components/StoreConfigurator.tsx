@@ -336,7 +336,7 @@ export function StoreConfigurator({
         <section className="min-w-0 overflow-hidden rounded-md border border-ink/10 bg-white p-5 shadow-soft">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">Step 1</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/60">Step 1</p>
               <h2 className="mt-2 text-2xl font-semibold">Choose your package.</h2>
             </div>
             <SampleBriefModal triggerVariant="badge" triggerLabel="Inspect Sample Brief" />
@@ -383,11 +383,11 @@ export function StoreConfigurator({
         <section className="min-w-0 overflow-hidden rounded-md border border-ink/10 bg-white p-5 shadow-soft">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">Step 2</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/60">Step 2</p>
               <h2 className="mt-2 text-2xl font-semibold">Choose your purchase lane.</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">Search by handle, niche, or topic. The brief pool matches this choice.</p>
             </div>
-            <div className="text-xs font-semibold text-ink/40">
+            <div className="text-xs font-semibold text-ink/60">
               {filteredCategories.length} {filteredCategories.length === 1 ? "lane" : "lanes"}
             </div>
           </div>
@@ -457,14 +457,14 @@ export function StoreConfigurator({
                 onChange={(event) => setContextDetail(event.target.value)}
                 placeholder="Turkish, Japanese, vegan tasting menu, hotel breakfast..."
               />
-              <span className="text-xs font-normal leading-5 text-ink/50">This stays as a note on the order. It does not become its own lane.</span>
+              <span className="text-xs font-normal leading-5 text-ink/60">This stays as a note on the order. It does not become its own lane.</span>
             </label>
           ) : null}
 
           <div className="mt-5">
             <div className="grid max-h-[380px] gap-2.5 overflow-y-auto pr-1 sm:grid-cols-2">
               {filteredCategories.length === 0 ? (
-                <div className="col-span-full py-8 text-center text-sm text-ink/50">
+                <div className="col-span-full py-8 text-center text-sm text-ink/60">
                   No lanes match &ldquo;{query}&rdquo;. Try another search term or browse the tabs above.
                 </div>
               ) : (
@@ -519,7 +519,7 @@ export function StoreConfigurator({
         </section>
 
         <section className="min-w-0 overflow-hidden rounded-md border border-ink/10 bg-white p-5 shadow-soft">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">Step 3</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/60">Step 3</p>
           <h2 className="mt-2 text-2xl font-semibold">Choose your creator mode.</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">Creator mode is how you talk and hold the camera. The briefs follow that, not a generic host voice.</p>
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -573,7 +573,7 @@ export function StoreConfigurator({
       <aside id="store-checkout-panel" className="scroll-mt-24 min-w-0 lg:sticky lg:top-24 lg:self-start">
         <div className="overflow-hidden rounded-md border border-ink/10 bg-white shadow-soft">
           <div className={`p-6 ${selectedVariant === "purple" ? "bg-[radial-gradient(circle_at_50%_0%,#F3E8FF_0%,#FFFFFF_48%,#F7F5EF_100%)]" : "bg-[radial-gradient(circle_at_50%_0%,#FFE6DD_0%,#FFFFFF_48%,#F7F5EF_100%)]"}`}>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink/55 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink/60 shadow-sm">
               <PremiumIcon icon={selectedVariant === "purple" ? Crown : Gem} size="sm" tone={selectedVariant === "purple" ? "purple" : "red"} />
               {productEyebrow(selectedProduct)}
             </div>

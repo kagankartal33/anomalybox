@@ -113,7 +113,7 @@ function ShootStepCard({
                 <span className="text-xs font-medium text-ink/60">
                   {step.stageLabel}
                 </span>
-                <span className="font-mono text-[10px] text-ink/35 tabular-nums">
+                <span className="font-mono text-[10px] text-ink/60 tabular-nums">
                   {step.order} / {totalSteps}
                 </span>
               </span>
@@ -129,7 +129,7 @@ function ShootStepCard({
 
               {/* Spoken line preview when collapsed */}
               {!open && hasSayThis && (
-                <span className="mt-1 block truncate text-sm italic text-ink/50">
+                <span className="mt-1 block truncate text-sm italic text-ink/60">
                   &ldquo;{step.spokenLine}&rdquo;
                 </span>
               )}
@@ -164,7 +164,7 @@ function ShootStepCard({
           {/* 2. Physical Action & Movement */}
           {step.action && (
             <div className="rounded-xl border border-ink/10 bg-[#FAF8F5] p-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-ink/50 flex items-center gap-1.5 mb-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-ink/60 flex items-center gap-1.5 mb-1.5">
                 <Play className="h-3 w-3 text-plum fill-current" aria-hidden="true" />
                 Action &amp; Physical Movement
               </span>
@@ -178,7 +178,7 @@ function ShootStepCard({
           <div className="grid gap-3 sm:grid-cols-3 pt-1">
             {/* Camera Frame */}
             <div className="rounded-lg border border-ink/10 bg-white p-3 shadow-2xs">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-ink/50 flex items-center gap-1.5 mb-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-ink/60 flex items-center gap-1.5 mb-1">
                 <Video className="h-3.5 w-3.5 text-plum" aria-hidden="true" />
                 Camera &amp; Frame
               </span>
@@ -190,7 +190,7 @@ function ShootStepCard({
             {/* On-Screen Text with One-Click Copy */}
             <div className="rounded-lg border border-ink/10 bg-white p-3 shadow-2xs">
               <div className="flex items-center justify-between gap-1 mb-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-ink/50 flex items-center gap-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-ink/60 flex items-center gap-1.5">
                   <Type className="h-3.5 w-3.5 text-plum" aria-hidden="true" />
                   On-Screen Text
                 </span>
@@ -221,14 +221,14 @@ function ShootStepCard({
                     &ldquo;{step.onScreenText}&rdquo;
                   </span>
                 ) : (
-                  <span className="text-ink/40 italic">No on-screen graphic</span>
+                  <span className="text-ink/60 italic">No on-screen graphic</span>
                 )}
               </p>
             </div>
 
             {/* Edit / Rhythm Cut */}
             <div className="rounded-lg border border-ink/10 bg-white p-3 shadow-2xs">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-ink/50 flex items-center gap-1.5 mb-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-ink/60 flex items-center gap-1.5 mb-1">
                 <Scissors className="h-3.5 w-3.5 text-plum" aria-hidden="true" />
                 Edit &amp; Cut Rhythm
               </span>
@@ -388,7 +388,7 @@ export function ShootPlan({
             <button
               type="button"
               onClick={resetFilmed}
-              className="text-[11px] text-ink/45 hover:text-coral transition flex items-center gap-1"
+              className="text-[11px] text-ink/60 hover:text-coral transition flex items-center gap-1"
               title="Reset filmed checklist"
             >
               <RotateCcw className="h-2.5 w-2.5" />

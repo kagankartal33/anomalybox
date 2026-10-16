@@ -33,13 +33,13 @@ export function HubPagination({ basePath, page, totalPages, totalItems, pageSize
             Previous
           </Link>
         ) : (
-          <span className="rounded-lg border border-ink/8 px-3 py-2 text-sm font-semibold text-ink/30">Previous</span>
+          <span className="rounded-lg border border-ink/8 px-3 py-2 text-sm font-semibold text-ink/60">Previous</span>
         )}
 
         <ol className="flex flex-wrap items-center justify-center gap-1">
           {pages.map((item, index) =>
             item === "gap" ? (
-              <li key={`gap-${index}`} className="px-1 text-sm text-ink/40" aria-hidden>
+              <li key={`gap-${index}`} className="px-1 text-sm text-ink/60" aria-hidden>
                 …
               </li>
             ) : (
@@ -72,7 +72,7 @@ export function HubPagination({ basePath, page, totalPages, totalItems, pageSize
             Next
           </Link>
         ) : (
-          <span className="rounded-lg border border-ink/8 px-3 py-2 text-sm font-semibold text-ink/30">Next</span>
+          <span className="rounded-lg border border-ink/8 px-3 py-2 text-sm font-semibold text-ink/60">Next</span>
         )}
       </div>
     </nav>

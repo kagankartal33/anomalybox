@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { preload } from "react-dom";
 import {
   ArrowRight,
   BadgeCheck,
@@ -77,6 +78,10 @@ const howSteps = [
 ] as const;
 
 export default function AnomalyBoxLanding() {
+  // The hero <picture> is the LCP element. Announce the matching source in <head> so the browser does
+  // not wait for body parsing to discover it.
+  preload(premiumAssets.marketing.heroMobile, { as: "image", fetchPriority: "high", media: "(max-width: 767px)" });
+  preload(premiumAssets.marketing.heroDesktop, { as: "image", fetchPriority: "high", media: "(min-width: 768px)" });
   return (
     <main className="min-h-screen bg-[#F7F4ED] text-ink">
       <JsonLd data={[

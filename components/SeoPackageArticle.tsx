@@ -111,7 +111,7 @@ export function SeoPackageArticle({ page, markdown, showPurchaseProtectedLinks =
       <JsonLd data={[...articleLd, breadcrumbLd]} />
       <article className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <nav className="text-sm font-medium text-ink/50" aria-label="Breadcrumb">
+          <nav className="text-sm font-medium text-ink/60" aria-label="Breadcrumb">
             <Link href={sectionHref} className="transition hover:text-plum-deep">
               {sectionName}
             </Link>
@@ -149,7 +149,7 @@ export function SeoPackageArticle({ page, markdown, showPurchaseProtectedLinks =
             <h2 id="related-guides-heading" className="text-2xl font-bold text-ink">
               Related guides
             </h2>
-            <p className="mt-2 text-sm text-ink/55">
+            <p className="mt-2 text-sm text-ink/60">
               Continue with the most useful next step for your format, workflow, or production constraint.
             </p>
             <ul className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -160,7 +160,7 @@ export function SeoPackageArticle({ page, markdown, showPurchaseProtectedLinks =
                     className="focus-ring block rounded-xl border border-ink/10 bg-white px-4 py-3 text-sm font-semibold text-ink transition hover:border-plum-deep/30 hover:bg-plum-soft/30"
                   >
                     {item.anchorText}
-                    <span className="mt-1 block text-xs font-medium text-ink/45">
+                    <span className="mt-1 block text-xs font-medium text-ink/60">
                       {sectionLabel(item.section)}
                     </span>
                   </Link>

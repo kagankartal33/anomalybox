@@ -172,7 +172,7 @@ export function ResourcesHubClient({ resources }: { resources: ResourceItem[] })
             <BookOpen className="h-5 w-5 text-plum-deep" />
             Creator Guide Library
           </h3>
-          <span className="text-xs font-semibold tracking-wider text-ink/50 uppercase">
+          <span className="text-xs font-semibold tracking-wider text-ink/60 uppercase">
             Showing {filteredResources.length} of {resources.length} Guides
           </span>
         </div>
@@ -229,7 +229,7 @@ export function ResourcesHubClient({ resources }: { resources: ResourceItem[] })
         ) : (
           <div className="rounded-2xl border border-dashed border-ink/20 bg-plum-soft/20 p-12 text-center">
             <p className="text-base font-semibold text-ink/70">{`No directions found matching "${searchQuery}".`}</p>
-            <p className="mt-1 text-sm text-ink/50">
+            <p className="mt-1 text-sm text-ink/60">
               {'Try searching for keywords like "UGC", "lighting", "repurposing", or "script".'}
             </p>
             <button

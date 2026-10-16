@@ -63,7 +63,7 @@ export default async function StorePage() {
   return (
     <PublicShell>
       <div className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/40">Anomaly Box Store</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/60">Anomaly Box Store</p>
         <h1 className="mt-2 max-w-4xl text-4xl font-semibold leading-[1.04] sm:text-5xl">Pick a package, a lane, and a creator mode.</h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-ink/66">
           You can browse without an account. Sign-in is required to pay. Your lane and mode stay attached if you log in mid-checkout.

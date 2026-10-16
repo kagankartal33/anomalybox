@@ -42,7 +42,7 @@ export function VisualGuide() {
           <h2 className="mt-0.5 text-xl font-semibold tracking-tight text-ink">
             Shoot and production reference
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-ink/55">
+          <p className="mt-1 text-xs sm:text-sm text-ink/60">
             Open this for camera angle, text-safe area, and edit notes.
           </p>
         </div>

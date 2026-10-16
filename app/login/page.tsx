@@ -3,6 +3,8 @@ import { ArrowRight, LockKeyhole } from "lucide-react";
 import { AuthShell } from "@/components/AuthShell";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { safeNextPath } from "@/lib/navigation";
+import { BOX_PRICING, boxPriceLabel } from "@/lib/pricing";
+import { publicFlashMessage } from "@/lib/flash-messages";
 import { isOAuthProviderEnabled } from "@/lib/supabase/auth-settings";
 import { signInWithPassword, signUpWithPassword } from "./actions";
 
@@ -24,9 +26,9 @@ function parseStoreReservation(nextPath: string) {
 
     const boxLabel =
       box === "premium_viral_box_1000"
-        ? "Signature Purple Box ($19 • 5 Briefs)"
+        ? `Signature Purple Box (${boxPriceLabel("premium_viral_box_1000")} • ${BOX_PRICING.premium_viral_box_1000.briefCount} Briefs)`
         : box === "viral_box_500"
-          ? "Classic Red Box ($9 • 2 Briefs)"
+          ? `Classic Red Box (${boxPriceLabel("viral_box_500")} • ${BOX_PRICING.viral_box_500.briefCount} Briefs)`
           : "Creative Brief Package";
 
     const categoryLabel = category
@@ -51,6 +53,7 @@ function parseStoreReservation(nextPath: string) {
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<LoginParams> }) {
   const params = await searchParams;
+  const errorMessage = publicFlashMessage(params.error);
   const next = safeNextPath(params.next, "/profile");
   const encodedNext = encodeURIComponent(next);
   const reservation = parseStoreReservation(next);
@@ -97,8 +100,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </div>
       ) : null}
 
-      {params.error ? (
-        <div className="mb-5 rounded-md border border-coral/20 bg-coral/10 p-3 text-sm text-coral">{params.error}</div>
+      {errorMessage ? (
+        <div className="mb-5 rounded-md border border-coral/20 bg-coral/10 p-3 text-sm text-coral">{errorMessage}</div>
       ) : null}
       {params.password === "reset" ? (
         <div className="mb-5 rounded-md border border-teal/20 bg-teal/10 p-3 text-sm text-teal">
@@ -203,7 +206,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         ) : (
           <div className="rounded-md border border-plum/15 bg-plum-soft/45 px-4 py-3 text-center">
             <div className="text-sm font-semibold text-ink/70">Social sign-in is being configured.</div>
-            <p className="mt-1 text-xs leading-5 text-ink/50">Email sign-in remains fully available.</p>
+            <p className="mt-1 text-xs leading-5 text-ink/60">Email sign-in remains fully available.</p>
           </div>
         )}
 
@@ -248,7 +251,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </div>
       </div>
 
-      <p className="mt-6 text-xs leading-5 text-ink/50">
+      <p className="mt-6 text-xs leading-5 text-ink/60">
         Your Store configuration remains ready after authentication. By continuing, you agree to the{" "}
         <Link href="/legal" className="underline underline-offset-2">Anomaly Box terms</Link>.
       </p>

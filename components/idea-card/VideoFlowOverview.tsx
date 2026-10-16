@@ -27,13 +27,13 @@ export function VideoFlowOverview({ card }: { card: PresentedCard }) {
           >
             Video flow
           </h2>
-          <p className="mt-1 text-sm leading-6 text-ink/55">
+          <p className="mt-1 text-sm leading-6 text-ink/60">
             See the job of each scene and the line you say.
           </p>
         </div>
 
         {/* Total beat count badge */}
-        <div className="shrink-0 rounded-full border border-ink/10 bg-paper px-3 py-1 text-xs font-semibold text-ink/55">
+        <div className="shrink-0 rounded-full border border-ink/10 bg-paper px-3 py-1 text-xs font-semibold text-ink/60">
           {total} scenes
         </div>
       </div>
@@ -74,7 +74,7 @@ export function VideoFlowOverview({ card }: { card: PresentedCard }) {
 
                 {/* Spoken line preview — only if available */}
                 {hasSpokenPreview && (
-                  <p className="mt-1 truncate text-sm italic leading-snug text-ink/50">
+                  <p className="mt-1 truncate text-sm italic leading-snug text-ink/60">
                     <span className="not-italic text-plum mr-1">&ldquo;</span>
                     {step.spokenLine}
                     <span className="not-italic text-plum ml-1">&rdquo;</span>

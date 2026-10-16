@@ -16,9 +16,9 @@ export function NotificationList({ notifications }: { notifications: Notificatio
   if (!notifications.length) {
     return (
       <div className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Inbox empty</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Inbox empty</p>
         <p className="mt-2 text-sm font-semibold text-ink/80">No notifications yet</p>
-        <p className="mt-1 text-sm leading-6 text-ink/55">
+        <p className="mt-1 text-sm leading-6 text-ink/60">
           Delivery notices and card-report updates will show up here after you buy or open a box.
         </p>
       </div>
@@ -50,7 +50,7 @@ export function NotificationList({ notifications }: { notifications: Notificatio
                   </div>
                 </div>
                 <p className="mt-1 text-sm text-ink/65 leading-relaxed">{item.body}</p>
-                <p className="mt-2 text-xs text-ink/40 tabular-nums">{dateTime(item.created_at)}</p>
+                <p className="mt-2 text-xs text-ink/60 tabular-nums">{dateTime(item.created_at)}</p>
               </div>
               <StatusPill value={item.read_at ? "read" : item.type} />
             </div>

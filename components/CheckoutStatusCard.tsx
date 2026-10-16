@@ -112,7 +112,7 @@ export function CheckoutStatusCard({
           </div>
 
           {status.state === "attention" ? (
-            <p className="mt-6 text-sm text-ink/55">
+            <p className="mt-6 text-sm text-ink/60">
               Need help? <a className="font-semibold underline" href="mailto:support@anomalybox.com">support@anomalybox.com</a>
             </p>
           ) : null}

@@ -482,9 +482,9 @@ export function OnboardingLanePicker({
                       <Icon className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">{index === 0 ? "Primary match" : `Support lane ${index + 1}`}</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">{index === 0 ? "Primary match" : `Support lane ${index + 1}`}</p>
                       <h3 className="mt-1 truncate font-semibold">{category?.name ?? "Choose a lane"}</h3>
-                      <p className="mt-1 line-clamp-2 text-xs leading-5 text-ink/55">
+                      <p className="mt-1 line-clamp-2 text-xs leading-5 text-ink/60">
                         {copy?.matchReason ?? "Use this only if it truly reflects what your audience expects from you."}
                       </p>
                     </div>
@@ -502,7 +502,7 @@ export function OnboardingLanePicker({
                           Make primary
                         </button>
                       ) : null}
-                      <button className="focus-ring inline-flex items-center gap-1 rounded-md border border-ink/10 bg-white px-2.5 py-1.5 text-xs font-semibold text-ink/55 hover:bg-mist" type="button" onClick={() => toggleCategory(category.id)}>
+                      <button className="focus-ring inline-flex items-center gap-1 rounded-md border border-ink/10 bg-white px-2.5 py-1.5 text-xs font-semibold text-ink/60 hover:bg-mist" type="button" onClick={() => toggleCategory(category.id)}>
                         <X className="h-3.5 w-3.5" />
                         Remove
                       </button>
@@ -564,7 +564,7 @@ export function OnboardingLanePicker({
                 onChange={(event) => setCuisineDetail(event.target.value)}
                 placeholder="Turkish, Japanese, Mexican, vegan tasting menu, hotel breakfast..."
               />
-              <span className="text-xs font-normal leading-5 text-ink/50">
+              <span className="text-xs font-normal leading-5 text-ink/60">
                 This is saved as creator context. It does not create a separate stock category or change already delivered boxes.
               </span>
             </label>
@@ -597,7 +597,7 @@ export function OnboardingLanePicker({
                       </div>
                       <div className="min-w-0">
                         <h3 className="font-semibold leading-5">{category.name}</h3>
-                        <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-ink/35">
+                        <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-ink/60">
                           {copy.signalLabel}
                         </p>
                       </div>
@@ -617,7 +617,7 @@ export function OnboardingLanePicker({
             })}
           </div>
           {!filteredCategories.length ? (
-            <div className="rounded-md border border-ink/10 bg-white p-8 text-center text-sm text-ink/55">
+            <div className="rounded-md border border-ink/10 bg-white p-8 text-center text-sm text-ink/60">
               No lane matched that search. Try a broader creator category.
             </div>
           ) : null}
@@ -627,13 +627,13 @@ export function OnboardingLanePicker({
       <section className="rounded-md border border-ink/10 bg-white p-5 shadow-soft">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Creator mode</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/60">Creator mode</p>
             <h2 className="mt-2 text-2xl font-semibold">Choose the mode your audience already recognizes you for.</h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">
               This is how you talk and hold the camera. The briefs follow that.
             </p>
           </div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#f7f5ef] px-3 py-1 text-xs font-semibold text-ink/55">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#f7f5ef] px-3 py-1 text-xs font-semibold text-ink/60">
             <Crown className="h-3.5 w-3.5" />
             {selectedPersona?.name ?? "Creator mode"}
           </div>

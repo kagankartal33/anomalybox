@@ -107,10 +107,10 @@ export function IdeaCardHeader({
       {spineItems.length > 0 ? (
         <div className="mt-5 rounded-xl border border-ink/10 bg-[#FAF8F5] p-4 sm:p-5">
           <div className="flex items-center justify-between gap-2 mb-3">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/50">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/60">
               Story Spine &middot; Video Flow
             </p>
-            <span className="text-[11px] text-ink/45 hidden sm:inline">
+            <span className="text-[11px] text-ink/60 hidden sm:inline">
               Click any beat to jump to scene
             </span>
           </div>
@@ -159,7 +159,7 @@ export function IdeaCardHeader({
 
         {card.kit.length ? (
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs font-semibold text-ink/40 mr-1">Kit:</span>
+            <span className="text-xs font-semibold text-ink/60 mr-1">Kit:</span>
             {card.kit.map((item) => (
               <span
                 key={item}

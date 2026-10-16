@@ -265,7 +265,7 @@ export function CreativeDossierShelf({ boxes }: { boxes: CreatorBox[] }) {
                   <StatusPill value={opened ? "opened" : "unopened"} />
                 </div>
 
-                <div className="-mt-1 mb-3 text-[11px] font-medium tracking-wide text-ink/55">
+                <div className="-mt-1 mb-3 text-[11px] font-medium tracking-wide text-ink/60">
                   {box.category_name} / {box.persona_name}
                 </div>
 
@@ -285,7 +285,7 @@ export function CreativeDossierShelf({ boxes }: { boxes: CreatorBox[] }) {
                     <p className={`text-xs font-semibold uppercase tracking-[0.16em] ${theme.cardNumberClass}`}>Brief Dossier</p>
                     <h2 className="mt-1 text-2xl font-semibold">{theme.label}</h2>
                   </div>
-                  <div className="rounded-full border border-ink/10 bg-paper px-3 py-1 text-xs font-semibold text-ink/55">
+                  <div className="rounded-full border border-ink/10 bg-paper px-3 py-1 text-xs font-semibold text-ink/60">
                     {box.items.length} shoot brief{box.items.length === 1 ? "" : "s"}
                   </div>
                 </div>
@@ -312,7 +312,7 @@ export function CreativeDossierShelf({ boxes }: { boxes: CreatorBox[] }) {
                           <div className="min-w-0">
                             <div className={`text-[10px] font-bold uppercase tracking-[0.14em] mb-0.5 ${theme.cardNumberClass}`}>Brief {idx + 1}</div>
                             <h3 className="text-base font-semibold leading-snug text-ink">{item.title}</h3>
-                            {item.premise ? <p className="mt-1.5 line-clamp-2 text-sm leading-6 text-ink/55">{item.premise}</p> : null}
+                            {item.premise ? <p className="mt-1.5 line-clamp-2 text-sm leading-6 text-ink/60">{item.premise}</p> : null}
                           </div>
                         </div>
                         <ChevronRight className={`h-4 w-4 shrink-0 mt-1.5 transition-transform group-hover/card:translate-x-0.5 ${theme.cardNumberClass} opacity-40 group-hover/card:opacity-70`} />

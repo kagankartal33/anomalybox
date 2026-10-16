@@ -72,7 +72,7 @@ export default async function BoxesPage() {
   return (
     <AppShell>
       <div className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/40">Creator Vault</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/60">Creator Vault</p>
         <h1 className="mt-2 text-4xl font-semibold">Your briefs</h1>
         <p className="mt-2 max-w-2xl text-ink/70">
           Each brief keeps the lane and creator mode you bought. Changing your profile later does not rewrite what is already here.
@@ -90,7 +90,7 @@ export default async function BoxesPage() {
               className="rounded-sm object-cover"
             />
           </div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/40">Empty vault</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/60">Empty vault</p>
           <h2 className="mt-2 text-2xl font-semibold">No creative briefs yet</h2>
           <p className="mx-auto mt-3 max-w-xl text-ink/60">
             Your Creator Vault is empty. Configure a creative brief in Store with your lane and creator mode. Purchased and gifted briefs appear here secured until you choose to access them.

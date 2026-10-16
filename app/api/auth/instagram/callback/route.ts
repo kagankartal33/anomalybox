@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { env, siteUrl } from "@/lib/env";
+import { FLASH } from "@/lib/flash-messages";
 import { encryptLinkedAccountToken } from "@/lib/token-crypto";
 
 export const runtime = "nodejs";
@@ -15,13 +16,13 @@ export async function GET(request: Request) {
   const expectedState = cookieStore.get("vb_meta_state")?.value;
 
   if (!code || !state || state !== expectedState) {
-    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram connection failed")}`);
+    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent(FLASH.instagramFailed)}`);
   }
 
   const appId = env.metaAppId();
   const appSecret = env.metaAppSecret();
   if (!appId || !appSecret) {
-    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram is not configured")}`);
+    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent(FLASH.instagramNotConfigured)}`);
   }
 
   const { user } = await requireUser();
@@ -34,14 +35,14 @@ export async function GET(request: Request) {
   const tokenResponse = await fetch(tokenUrl);
   const tokenPayload = await tokenResponse.json();
   if (!tokenResponse.ok || !tokenPayload.access_token) {
-    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Failed to connect Instagram")}`);
+    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent(FLASH.instagramFailed)}`);
   }
 
   let encryptedToken: string;
   try {
     encryptedToken = encryptLinkedAccountToken(String(tokenPayload.access_token));
   } catch {
-    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram token encryption is not configured")}`);
+    return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent(FLASH.instagramNotConfigured)}`);
   }
 
   const supabase = createSupabaseAdminClient();

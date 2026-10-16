@@ -2,6 +2,7 @@ import Link from "next/link";
 import { KeyRound } from "lucide-react";
 import { AuthShell } from "@/components/AuthShell";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { publicFlashMessage } from "@/lib/flash-messages";
 import { resetPassword } from "./actions";
 
 type ResetParams = {
@@ -11,6 +12,7 @@ type ResetParams = {
 
 export default async function ResetPasswordPage({ searchParams }: { searchParams: Promise<ResetParams> }) {
   const params = await searchParams;
+  const errorMessage = publicFlashMessage(params.error);
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -38,7 +40,7 @@ export default async function ResetPasswordPage({ searchParams }: { searchParams
         </div>
       ) : (
         <form action={resetPassword} className="space-y-4">
-          {params.error ? <div className="rounded-md border border-coral/20 bg-coral/10 p-3 text-sm text-coral">{params.error}</div> : null}
+          {errorMessage ? <div className="rounded-md border border-coral/20 bg-coral/10 p-3 text-sm text-coral">{errorMessage}</div> : null}
           <label className="grid gap-2 text-sm font-semibold">
             New password
             <input className="focus-ring rounded-md border border-ink/15 px-4 py-3 font-normal" minLength={8} name="password" type="password" autoComplete="new-password" required />

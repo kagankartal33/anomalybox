@@ -15,10 +15,13 @@ import {
 } from "@/lib/seo-package";
 import { HUB_PAGE_SIZE, clampHubPage, hubPageCount, hubPageHref, sliceHubPage } from "@/lib/hub-pagination";
 import { siteUrl } from "@/lib/env";
+import type { FeaturedHubLink } from "@/lib/interactive-tools";
 import { getTemplateAccessState, hasTemplatePurchaseAccess } from "@/lib/template-access";
 import { isPurchaseProtectedTemplate } from "@/lib/template-policy";
 
 type Props = {
+  /** Highlighted links shown above the section navigation on the first page (e.g. interactive tools). */
+  featured?: FeaturedHubLink[];
   /** If set, show one resource section. Otherwise show the complete library. */
   section?: SeoPackageSection;
   title: string;
@@ -29,7 +32,7 @@ type Props = {
   paginate?: boolean;
 };
 
-export async function SeoPackageHub({ section, title, description, page = 1, paginate = true }: Props) {
+export async function SeoPackageHub({ featured, section, title, description, page = 1, paginate = true }: Props) {
   const base = siteUrl();
   const candidatePages = section ? seoPackageBySection(section) : seoPackagePages;
   const path = section ? `/${section}` : "/resources";
@@ -83,12 +86,32 @@ export async function SeoPackageHub({ section, title, description, page = 1, pag
           </span>
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-ink sm:text-6xl">{title}</h1>
           <p className="mx-auto max-w-2xl text-lg leading-relaxed text-ink/65">{description}</p>
-          <p className="text-sm font-medium text-ink/45">
+          <p className="text-sm font-medium text-ink/60">
             {paginate
               ? `${visiblePages.length} guides on this page.`
               : "Choose the guide that matches your next planning or production decision."}
           </p>
         </div>
+
+        {featured?.length && currentPage === 1 ? (
+          <div className="mb-12">
+            <h2 className="mb-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-ink/60">Interactive tools</h2>
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featured.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="focus-ring block h-full rounded-2xl border border-plum-deep/20 bg-white p-6 shadow-sm transition hover:border-plum-deep/40 hover:shadow-md"
+                  >
+                    <span className="text-lg font-bold text-ink">{item.title}</span>
+                    <span className="mt-2 block text-sm leading-relaxed text-ink/70">{item.description}</span>
+                    <span className="mt-4 inline-block text-sm font-semibold text-plum-deep">Open tool →</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         <div className="mb-10 flex flex-wrap justify-center gap-2" role="navigation" aria-label="Resource categories">
           <Link

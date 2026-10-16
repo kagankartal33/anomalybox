@@ -117,8 +117,8 @@ export default async function AdminInventoryPage({
       <section className="mb-6 rounded-md border border-ink/10 bg-white p-6 shadow-soft">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <Link className="text-sm text-ink/55 underline underline-offset-2" href="/admin">Back to admin</Link>
-            <p className="mt-4 text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Inventory</p>
+            <Link className="text-sm text-ink/60 underline underline-offset-2" href="/admin">Back to admin</Link>
+            <p className="mt-4 text-sm font-semibold uppercase tracking-[0.16em] text-ink/60">Inventory</p>
             <h1 className="mt-2 text-4xl font-semibold">Inventory health</h1>
             <p className="mt-2 max-w-2xl text-ink/60">
               Filter lanes by category, persona, product readiness, and stock status. When a lane is unavailable, checkout stays closed until new cards are imported or generated.
@@ -127,7 +127,7 @@ export default async function AdminInventoryPage({
         </div>
 
         <form className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-5" method="get">
-          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/45">
+          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/60">
             Category
             <select className="focus-ring rounded-md border border-ink/15 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-ink" defaultValue={categoryFilter} name="category">
               <option value="">All categories</option>
@@ -136,7 +136,7 @@ export default async function AdminInventoryPage({
               ))}
             </select>
           </label>
-          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/45">
+          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/60">
             Persona
             <select className="focus-ring rounded-md border border-ink/15 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-ink" defaultValue={personaFilter} name="persona">
               <option value="">All personas</option>
@@ -145,7 +145,7 @@ export default async function AdminInventoryPage({
               ))}
             </select>
           </label>
-          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/45">
+          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/60">
             Status
             <select className="focus-ring rounded-md border border-ink/15 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-ink" defaultValue={statusFilter} name="status">
               <option value="all">All statuses</option>
@@ -154,7 +154,7 @@ export default async function AdminInventoryPage({
               <option value="empty">Empty stock</option>
             </select>
           </label>
-          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/45">
+          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/60">
             Product readiness
             <select className="focus-ring rounded-md border border-ink/15 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-ink" defaultValue={productFilter} name="product">
               <option value="">Any product</option>
@@ -163,7 +163,7 @@ export default async function AdminInventoryPage({
               ))}
             </select>
           </label>
-          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/45">
+          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/60">
             Search
             <input
               className="focus-ring rounded-md border border-ink/15 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-ink"
@@ -193,7 +193,7 @@ export default async function AdminInventoryPage({
           { label: "Available cards", value: summary.totalCards },
         ].map((item) => (
           <div key={item.label} className="rounded-md border border-ink/10 bg-white p-4 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink/40">{item.label}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink/60">{item.label}</p>
             <p className="mt-2 text-2xl font-semibold tabular-nums">{item.value}</p>
           </div>
         ))}
@@ -214,7 +214,7 @@ export default async function AdminInventoryPage({
       {topNeeds.length ? (
         <section className="mb-6 rounded-md border border-ink/10 bg-white p-5 shadow-soft">
           <h2 className="text-lg font-semibold">Priority restock</h2>
-          <p className="mt-1 text-sm text-ink/55">Lowest-stock filtered routes that still need attention.</p>
+          <p className="mt-1 text-sm text-ink/60">Lowest-stock filtered routes that still need attention.</p>
           <ul className="mt-4 grid gap-2 md:grid-cols-2">
             {topNeeds.map((row) => (
               <li key={`need-${row.category_slug}-${row.persona_slug}`} className="rounded-md border border-ink/10 bg-paper px-3 py-2 text-sm">
@@ -273,7 +273,7 @@ export default async function AdminInventoryPage({
         </table>
       </div>
       {filtered.length > 400 ? (
-        <p className="mt-3 text-sm text-ink/50">Showing first 400 of {filtered.length} matching routes. Narrow filters for the rest.</p>
+        <p className="mt-3 text-sm text-ink/60">Showing first 400 of {filtered.length} matching routes. Narrow filters for the rest.</p>
       ) : null}
     </AppShell>
   );

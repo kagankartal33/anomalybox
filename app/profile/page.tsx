@@ -5,6 +5,7 @@ import { NotificationList } from "@/components/NotificationList";
 import { PremiumIcon } from "@/components/PremiumIcon";
 import { StatusPill } from "@/components/StatusPill";
 import { requireUser } from "@/lib/auth";
+import { publicFlashMessage } from "@/lib/flash-messages";
 import { changeProfilePassword, updateProfileIdentity, uploadProfileAvatar } from "./actions";
 
 type ProfileParams = {
@@ -28,7 +29,8 @@ function providerNames(providers: unknown) {
 }
 
 function accountMessage(params: ProfileParams) {
-  if (params.error) return { tone: "error", text: params.error };
+  const errorMessage = publicFlashMessage(params.error);
+  if (errorMessage) return { tone: "error", text: errorMessage };
   if (params.account === "updated") return { tone: "success", text: "Account details updated." };
   if (params.avatar === "updated") return { tone: "success", text: "Avatar updated." };
   if (params.password === "updated") return { tone: "success", text: "Password updated." };
@@ -53,7 +55,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
       <section className="mb-6 rounded-md border border-ink/10 bg-white p-6 shadow-soft">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Account settings</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-ink/60">Account settings</p>
             <h1 className="mt-2 text-4xl font-semibold">{displayName}</h1>
             <p className="mt-2 max-w-2xl text-ink/60">
               Manage your identity, avatar, password, legal access, and account notifications.
@@ -94,7 +96,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
                       style={{ backgroundImage: `url(${profile.avatar_url})` }}
                     />
                   ) : (
-                    <span className="text-3xl font-semibold text-ink/45">{initials(displayName)}</span>
+                    <span className="text-3xl font-semibold text-ink/60">{initials(displayName)}</span>
                   )}
                 </div>
                 <form action={uploadProfileAvatar} className="mt-4 grid gap-3" encType="multipart/form-data">
@@ -106,7 +108,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
                     <Camera className="h-4 w-4" />
                     Upload avatar
                   </button>
-                  <p className="text-xs leading-5 text-ink/50">PNG, JPG, or WebP. Maximum 2 MB.</p>
+                  <p className="text-xs leading-5 text-ink/60">PNG, JPG, or WebP. Maximum 2 MB.</p>
                 </form>
               </div>
 

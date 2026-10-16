@@ -2,10 +2,12 @@ import { Compass, Gem, Instagram, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { OnboardingLanePicker } from "@/components/OnboardingLanePicker";
 import { requireUser } from "@/lib/auth";
+import { publicFlashMessage } from "@/lib/flash-messages";
 import { saveOnboarding } from "./actions";
 
 export default async function OnboardingPage({ searchParams }: { searchParams: Promise<{ error?: string; instagram?: string }> }) {
   const params = await searchParams;
+  const errorMessage = publicFlashMessage(params.error);
   const { supabase, user } = await requireUser();
   const [{ data: categories }, { data: personas }, { data: profile }, { data: creatorProfile }, { data: instagram }, { data: preferences }] = await Promise.all([
     supabase.from("categories").select("id,slug,name,family").eq("enabled", true).order("sort_order").limit(2000),
@@ -25,7 +27,7 @@ export default async function OnboardingPage({ searchParams }: { searchParams: P
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <section className="rounded-md border border-ink/10 bg-white shadow-soft">
           <div className="border-b border-ink/10 bg-[radial-gradient(circle_at_80%_0%,#F3E8FF_0%,#FFFFFF_38%,#FBFAF6_100%)] p-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-ink/45 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60 shadow-sm">
               <Gem className="h-3.5 w-3.5 text-[#5B2A86]" />
               Creator fit profile
             </div>
@@ -35,7 +37,7 @@ export default async function OnboardingPage({ searchParams }: { searchParams: P
             </p>
           </div>
           <div className="p-6">
-          {params.error ? <div className="mt-4 rounded-md bg-coral/10 p-3 text-sm text-coral">{params.error}</div> : null}
+          {errorMessage ? <div className="mt-4 rounded-md bg-coral/10 p-3 text-sm text-coral">{errorMessage}</div> : null}
           {params.instagram === "connected" ? <div className="mt-4 rounded-md bg-teal/10 p-3 text-sm text-teal">Instagram connection saved.</div> : null}
           <form action={saveOnboarding} className="mt-6">
             <OnboardingLanePicker

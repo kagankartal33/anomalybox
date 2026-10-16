@@ -6,6 +6,7 @@ import { submitAtelierLead } from "@/app/atelier/actions";
 import { PremiumIcon } from "@/components/PremiumIcon";
 import { RecaptchaSubmitButton } from "@/components/RecaptchaSubmitButton";
 import { premiumAssets } from "@/lib/premium-assets";
+import { publicFlashMessage } from "@/lib/flash-messages";
 
 export const metadata: Metadata = {
   title: "ATELIER BLACK BOX | Custom Campaign-Ready Briefs",
@@ -38,6 +39,7 @@ const deliverables = [
 
 export default async function AtelierPage({ searchParams }: { searchParams: Promise<{ sent?: string; error?: string }> }) {
   const params = await searchParams;
+  const errorMessage = publicFlashMessage(params.error);
 
   return (
     <main className="min-h-screen bg-[#060606] text-white">
@@ -151,7 +153,7 @@ export default async function AtelierPage({ searchParams }: { searchParams: Prom
           </div>
           <form action={submitAtelierLead} className="rounded-md border border-white/10 bg-white/[0.045] p-6 shadow-[0_50px_120px_-80px_rgba(255,255,255,0.5)]">
             {params.sent ? <div className="mb-4 rounded-md border border-[#D9E2F2]/25 bg-[#D9E2F2]/10 p-3 text-sm text-[#D9E2F2]">Your private request was sent to the Anomaly Box Atelier team.</div> : null}
-            {params.error ? <div className="mb-4 rounded-md border border-red-300/25 bg-red-400/10 p-3 text-sm text-red-100">{params.error}</div> : null}
+            {errorMessage ? <div className="mb-4 rounded-md border border-red-300/25 bg-red-400/10 p-3 text-sm text-red-100">{errorMessage}</div> : null}
             <input aria-hidden="true" className="hidden" name="company" tabIndex={-1} />
             <div className="grid gap-4 md:grid-cols-2">
               <div className="grid gap-2 text-sm font-semibold text-white/82">

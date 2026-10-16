@@ -111,13 +111,13 @@ export default async function AdminCardReportPage({
             </div>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               <div className="rounded-md border border-ink/10 bg-paper p-4">
-                <div className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Reason</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Reason</div>
                 <p className="mt-2 font-semibold">{String(report.reason).replaceAll("_", " ")}</p>
               </div>
               <div className="rounded-md border border-ink/10 bg-paper p-4">
-                <div className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Reporter</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Reporter</div>
                 <p className="mt-2 font-semibold">{profile?.display_name ?? report.user_id}</p>
-                <p className="mt-1 text-sm text-ink/50">{dateTime(report.created_at)}</p>
+                <p className="mt-1 text-sm text-ink/60">{dateTime(report.created_at)}</p>
               </div>
             </div>
             <div className="mt-3 rounded-md border border-ink/10 bg-white p-4 text-sm leading-6 text-ink/68">
@@ -141,7 +141,7 @@ export default async function AdminCardReportPage({
             <input type="hidden" name="user_id" value={report.user_id} />
 
             <label className="mt-4 block">
-              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Decision</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Decision</span>
               <select name="decision" className="mt-2 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm focus-ring" defaultValue="reject">
                 <option value="reject">Reject report - keep card</option>
                 <option value="accept_no_replace">Accept - no replacement</option>
@@ -150,25 +150,25 @@ export default async function AdminCardReportPage({
             </label>
 
             <label className="mt-4 block">
-              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Replacement card</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Replacement card</span>
               <select name="replacement_inventory_id" className="mt-2 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm focus-ring" defaultValue="">
                 <option value="">No replacement selected</option>
                 {replacementCandidates.map((candidate) => (
                   <option key={candidate.inventory.id} value={candidate.inventory.id}>{candidate.title}</option>
                 ))}
               </select>
-              <p className="mt-2 text-xs leading-5 text-ink/50">
+              <p className="mt-2 text-xs leading-5 text-ink/60">
                 Replacement is only used for &quot;Accept - replace this slot.&quot; Candidates are filtered to this box lane and creator mode.
               </p>
             </label>
 
             <label className="mt-4 block">
-              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Creator-facing feedback</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Creator-facing feedback</span>
               <textarea name="admin_feedback" className="mt-2 min-h-32 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm leading-6 focus-ring" required />
             </label>
 
             <label className="mt-4 block">
-              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">Private admin note</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">Private admin note</span>
               <textarea name="admin_private_note" className="mt-2 min-h-24 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm leading-6 focus-ring" />
             </label>
 

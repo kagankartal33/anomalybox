@@ -36,7 +36,7 @@ export default function RootError({
         </p>
 
         {error.digest && (
-          <p className="mt-2 font-mono text-xs text-ink/40">
+          <p className="mt-2 font-mono text-xs text-ink/60">
             Incident ID: {error.digest}
           </p>
         )}

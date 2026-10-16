@@ -6,6 +6,7 @@ import { PremiumIcon } from "@/components/PremiumIcon";
 import { CreativeDossierVisual } from "@/components/CreativeDossierVisual";
 import { SampleBriefModal } from "@/components/SampleBriefModal";
 import { premiumAssets } from "@/lib/premium-assets";
+import { boxPriceLabel } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Anomaly Box Pricing: Classic Red, Signature Purple, Atelier",
@@ -23,7 +24,7 @@ export const revalidate = 300;
 const plans = [
   {
     name: "Classic Red Box",
-    price: "$9",
+    price: boxPriceLabel("viral_box_500"),
     description: "Two private shoot briefs tailored for one lane and one creator mode. Ready to film this week.",
     variant: "red" as const,
     icon: Gem,
@@ -33,7 +34,7 @@ const plans = [
   },
   {
     name: "Signature Purple Box",
-    price: "$19",
+    price: boxPriceLabel("premium_viral_box_1000"),
     description: "Five private shoot briefs with deeper scene flow, pacing, and visual proof structure for your selected lane.",
     variant: "purple" as const,
     icon: Crown,
@@ -67,7 +68,7 @@ export default function PricingPage() {
   return (
     <PublicShell>
       <div className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/40">Pricing</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink/60">Pricing</p>
         <h1 className="mt-2 max-w-4xl text-5xl font-semibold leading-[1.02]">Pick how many shoot briefs you need.</h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-ink/66">
           Classic and Signature use the lane and creator mode you choose at checkout. Atelier is quote-only when a standard box is not enough.

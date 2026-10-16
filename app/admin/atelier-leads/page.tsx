@@ -53,8 +53,8 @@ export default async function AdminAtelierLeadsPage({
   return (
     <AppShell>
       <div className="mb-6">
-        <Link className="text-sm text-ink/55 underline underline-offset-2" href="/admin">Back to admin</Link>
-        <p className="mt-5 text-sm font-semibold uppercase tracking-[0.16em] text-ink/40">Concierge leads</p>
+        <Link className="text-sm text-ink/60 underline underline-offset-2" href="/admin">Back to admin</Link>
+        <p className="mt-5 text-sm font-semibold uppercase tracking-[0.16em] text-ink/60">Concierge leads</p>
         <h1 className="mt-2 text-4xl font-semibold">ATELIER BLACK BOX requests</h1>
         <p className="mt-2 max-w-2xl text-ink/65">Review private consultation requests and move each lead through contact, qualification, and close.</p>
       </div>
@@ -105,10 +105,10 @@ export default async function AdminAtelierLeadsPage({
                     <h2 className="text-xl font-semibold">{lead.name}</h2>
                     <StatusPill value={lead.status} />
                   </div>
-                  <p className="mt-1 text-sm text-ink/55">{lead.email}{lead.instagram_handle ? ` / ${lead.instagram_handle}` : ""}</p>
-                  <p className="mt-4 text-sm font-semibold uppercase tracking-[0.14em] text-ink/40">Desired effect</p>
+                  <p className="mt-1 text-sm text-ink/60">{lead.email}{lead.instagram_handle ? ` / ${lead.instagram_handle}` : ""}</p>
+                  <p className="mt-4 text-sm font-semibold uppercase tracking-[0.14em] text-ink/60">Desired effect</p>
                   <p className="mt-1 text-ink/75">{lead.desired_effect}</p>
-                  <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em] text-ink/40">Context</p>
+                  <p className="mt-3 text-sm font-semibold uppercase tracking-[0.14em] text-ink/60">Context</p>
                   <p className="mt-1 leading-7 text-ink/70">{lead.project_context}</p>
                   {lastChange?.note ? (
                     <p className="mt-3 rounded-md border border-ink/10 bg-paper px-3 py-2 text-sm text-ink/65">
@@ -117,13 +117,13 @@ export default async function AdminAtelierLeadsPage({
                   ) : null}
                 </div>
                 <div className="space-y-3">
-                  <div className="text-sm text-ink/55 lg:text-right">
+                  <div className="text-sm text-ink/60 lg:text-right">
                     <div>Created {dateTime(lead.created_at)}</div>
                     {lead.updated_at ? <div className="mt-1">Updated {dateTime(lead.updated_at)}</div> : null}
                   </div>
                   <form action={updateAtelierLeadStatus} className="rounded-md border border-ink/10 bg-paper p-3 space-y-3">
                     <input name="lead_id" type="hidden" value={lead.id} />
-                    <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/45">
+                    <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/60">
                       Status
                       <select
                         className="focus-ring rounded-md border border-ink/15 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-ink"
@@ -135,7 +135,7 @@ export default async function AdminAtelierLeadsPage({
                         ))}
                       </select>
                     </label>
-                    <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/45">
+                    <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink/60">
                       Internal note
                       <textarea
                         className="focus-ring min-h-20 rounded-md border border-ink/15 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-ink"

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
+import { FLASH } from "@/lib/flash-messages";
 
 const avatarTypes: Record<string, string> = {
   "image/jpeg": "jpg",
@@ -26,7 +27,10 @@ export async function updateProfileIdentity(formData: FormData) {
     .update({ display_name: displayName || user.email })
     .eq("id", user.id);
 
-  if (error) redirect(profilePath({ error: error.message }));
+  if (error) {
+    console.warn("Profile identity update failed.", { code: error.code });
+    redirect(profilePath({ error: FLASH.profileUpdateFailed }));
+  }
 
   revalidatePath("/profile");
   redirect(profilePath({ account: "updated" }));
@@ -37,16 +41,16 @@ export async function uploadProfileAvatar(formData: FormData) {
   const avatar = formData.get("avatar");
 
   if (!(avatar instanceof File) || avatar.size === 0) {
-    redirect(profilePath({ error: "Choose a PNG, JPG, or WebP avatar before uploading." }));
+    redirect(profilePath({ error: FLASH.avatarMissing }));
   }
 
   if (avatar.size > maxAvatarBytes) {
-    redirect(profilePath({ error: "Avatar must be 2 MB or smaller." }));
+    redirect(profilePath({ error: FLASH.avatarTooLarge }));
   }
 
   const extension = avatarTypes[avatar.type];
   if (!extension) {
-    redirect(profilePath({ error: "Avatar must be a PNG, JPG, or WebP image." }));
+    redirect(profilePath({ error: FLASH.avatarWrongType }));
   }
 
   const storagePath = `${user.id}/avatar.${extension}`;
@@ -58,7 +62,10 @@ export async function uploadProfileAvatar(formData: FormData) {
       upsert: true,
     });
 
-  if (uploadError) redirect(profilePath({ error: uploadError.message }));
+  if (uploadError) {
+    console.warn("Avatar upload failed.", { message: uploadError.message });
+    redirect(profilePath({ error: FLASH.avatarUploadFailed }));
+  }
 
   const { data } = supabase.storage.from("profile-avatars").getPublicUrl(storagePath);
   const avatarUrl = `${data.publicUrl}?v=${Date.now()}`;
@@ -68,7 +75,10 @@ export async function uploadProfileAvatar(formData: FormData) {
     .update({ avatar_url: avatarUrl })
     .eq("id", user.id);
 
-  if (updateError) redirect(profilePath({ error: updateError.message }));
+  if (updateError) {
+    console.warn("Avatar URL update failed.", { code: updateError.code });
+    redirect(profilePath({ error: FLASH.avatarUploadFailed }));
+  }
 
   revalidatePath("/profile");
   redirect(profilePath({ avatar: "updated" }));
@@ -80,15 +90,18 @@ export async function changeProfilePassword(formData: FormData) {
   const confirmPassword = String(formData.get("confirm_password") ?? "");
 
   if (password.length < 8) {
-    redirect(profilePath({ error: "Password must be at least 8 characters." }));
+    redirect(profilePath({ error: FLASH.passwordTooShort }));
   }
 
   if (password !== confirmPassword) {
-    redirect(profilePath({ error: "Password confirmation does not match." }));
+    redirect(profilePath({ error: FLASH.passwordsDoNotMatch }));
   }
 
   const { error } = await supabase.auth.updateUser({ password });
-  if (error) redirect(profilePath({ error: error.message }));
+  if (error) {
+    console.warn("Password change rejected.", { code: error.code, status: error.status });
+    redirect(profilePath({ error: error.code === "weak_password" ? FLASH.passwordTooShort : FLASH.passwordChangeFailed }));
+  }
 
   revalidatePath("/profile");
   redirect(profilePath({ password: "updated" }));

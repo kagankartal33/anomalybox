@@ -2,10 +2,11 @@ import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { env, siteUrl } from "@/lib/env";
+import { FLASH } from "@/lib/flash-messages";
 
 export async function GET() {
   const appId = env.metaAppId();
-  if (!appId) return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent("Instagram connection is not configured")}`);
+  if (!appId) return NextResponse.redirect(`${siteUrl()}/onboarding?error=${encodeURIComponent(FLASH.instagramNotConfigured)}`);
 
   const state = randomBytes(16).toString("hex");
   const cookieStore = await cookies();

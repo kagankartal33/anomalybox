@@ -59,7 +59,7 @@ export default function CreatorCapacityCalculatorPage() {
                 onChange={(e) => setWeeklyHours(Number(e.target.value))}
                 className="mt-3 w-full accent-plum-deep"
               />
-              <div className="mt-1 flex justify-between text-xs text-ink/40">
+              <div className="mt-1 flex justify-between text-xs text-ink/60">
                 <span>2h (Side-hustle)</span>
                 <span>20h (Dedicated)</span>
                 <span>40h (Full-time)</span>
@@ -150,7 +150,7 @@ export default function CreatorCapacityCalculatorPage() {
           {/* Results Output */}
           <div className="space-y-6 lg:col-span-5">
             <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-soft">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-ink/40">Sustainable Output Recommendation</h2>
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-ink/60">Sustainable Output Recommendation</h2>
               
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="text-5xl font-bold tracking-tight text-plum-deep">{maxSustainableWeeklyPosts}</span>

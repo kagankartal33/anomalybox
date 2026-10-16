@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { FLASH } from "@/lib/flash-messages";
 
 const ReportReason = z.enum([
   "unclear_execution",
@@ -21,15 +22,15 @@ const ReportCardInput = z.object({
   deliveryId: z.string().uuid(),
   deliveryItemId: z.string().uuid(),
   reason: ReportReason,
-  creatorNote: z.string().trim().min(10, "Please add a short note so the team knows what to review.").max(2000),
+  creatorNote: z.string().trim().min(10, FLASH.cardReportNoteRequired).max(2000),
 });
 
 function firstIssue(error: z.ZodError) {
-  return error.issues[0]?.message ?? "Invalid report.";
+  return error.issues[0]?.message ?? FLASH.cardReportFailed;
 }
 
 function reportError(ideaId: string, message: string): never {
-  redirect(`/cards/${ideaId}?report_error=${encodeURIComponent(message)}`);
+  redirect(`/cards/${encodeURIComponent(ideaId)}?report_error=${encodeURIComponent(message)}`);
 }
 
 export async function reportCard(formData: FormData) {
@@ -55,7 +56,7 @@ export async function reportCard(formData: FormData) {
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (!item) reportError(ideaId, "This card is not available in your vault.");
+  if (!item) reportError(ideaId, FLASH.cardNotInVault);
 
   const { data: openReport } = await supabase
     .from("card_reports")
@@ -64,7 +65,7 @@ export async function reportCard(formData: FormData) {
     .eq("status", "under_review")
     .maybeSingle();
 
-  if (openReport) reportError(ideaId, "This card already has a report under review.");
+  if (openReport) reportError(ideaId, FLASH.cardReportAlreadyOpen);
 
   const admin = createSupabaseAdminClient();
   const { data: report, error } = await admin
@@ -81,7 +82,10 @@ export async function reportCard(formData: FormData) {
     .select("id")
     .single();
 
-  if (error || !report) reportError(ideaId, error?.message ?? "Report could not be created.");
+  if (error || !report) {
+    console.error("Card report insert failed.", { code: error?.code });
+    reportError(ideaId, FLASH.cardReportFailed);
+  }
 
   await admin.from("card_report_events").insert({
     report_id: report.id,

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { siteUrl } from "@/lib/env";
 import { safeNextPath } from "@/lib/navigation";
+import { FLASH } from "@/lib/flash-messages";
 import { isOAuthProviderEnabled } from "@/lib/supabase/auth-settings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -10,7 +11,7 @@ export async function GET(request: Request) {
 
   if (!(await isOAuthProviderEnabled("apple"))) {
     const loginUrl = new URL("/login", siteUrl());
-    loginUrl.searchParams.set("error", "Apple sign-in is not available yet. Please use email sign-in.");
+    loginUrl.searchParams.set("error", FLASH.appleDisabled);
     loginUrl.searchParams.set("next", next);
     return NextResponse.redirect(loginUrl);
   }
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
 
   if (error || !data.url) {
     const loginUrl = new URL("/login", siteUrl());
-    loginUrl.searchParams.set("error", "Apple sign-in could not be started. Please try again.");
+    loginUrl.searchParams.set("error", FLASH.appleStartFailed);
     loginUrl.searchParams.set("next", next);
     return NextResponse.redirect(loginUrl);
   }

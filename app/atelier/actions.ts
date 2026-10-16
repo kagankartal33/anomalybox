@@ -6,14 +6,16 @@ import { z } from "zod";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { env } from "@/lib/env";
 import { verifyRecaptcha } from "@/lib/bot-protection";
+import { FLASH } from "@/lib/flash-messages";
 
 const AtelierLeadInput = z.object({
-  name: z.string().trim().min(2).max(120),
-  email: z.string().trim().email().max(180),
-  instagramHandle: z.string().trim().max(80),
-  desiredEffect: z.string().trim().min(2).max(120),
-  projectContext: z.string().trim().min(20).max(2000),
-  company: z.string().trim().max(0),
+  name: z.string().trim().min(2, FLASH.atelierName).max(120, FLASH.atelierName),
+  email: z.string().trim().email(FLASH.atelierEmail).max(180, FLASH.atelierEmail),
+  instagramHandle: z.string().trim().max(80, FLASH.atelierInstagram),
+  desiredEffect: z.string().trim().min(2, FLASH.atelierEffect).max(120, FLASH.atelierEffect),
+  projectContext: z.string().trim().min(20, FLASH.atelierContext).max(2000, FLASH.atelierContext),
+  // Honeypot: real visitors never see or fill this field.
+  company: z.string().trim().max(0, FLASH.atelierIncomplete),
   recaptchaToken: z.string().max(4096).optional(),
 });
 
@@ -29,11 +31,11 @@ export async function submitAtelierLead(formData: FormData) {
   });
 
   if (!parsed.success) {
-    const message = parsed.error.issues[0]?.message ?? "Please complete the request form.";
+    const message = parsed.error.issues[0]?.message ?? FLASH.atelierIncomplete;
     redirect(`/atelier?error=${encodeURIComponent(message)}#atelier-request`);
   }
   if (!(await verifyRecaptcha(parsed.data.recaptchaToken, "atelier_request"))) {
-    redirect(`/atelier?error=${encodeURIComponent("Security verification failed. Please try again.")}#atelier-request`);
+    redirect(`/atelier?error=${encodeURIComponent(FLASH.captchaFailed)}#atelier-request`);
   }
 
   const supabase = createSupabaseAdminClient();
@@ -48,7 +50,7 @@ export async function submitAtelierLead(formData: FormData) {
   }).select("id").single();
 
   if (error) {
-    redirect(`/atelier?error=${encodeURIComponent("Your request could not be saved. Please try again.")}#atelier-request`);
+    redirect(`/atelier?error=${encodeURIComponent(FLASH.atelierSaveFailed)}#atelier-request`);
   }
 
   const apiKey = env.resendApiKey();
@@ -56,7 +58,7 @@ export async function submitAtelierLead(formData: FormData) {
     await supabase.from("atelier_leads").update({
       metadata: { source: "atelier_page", creator_visible: false, email_delivery: "not_configured" },
     }).eq("id", lead.id);
-    redirect(`/atelier?error=${encodeURIComponent("Your request was saved, but email delivery is temporarily unavailable. Please contact support@anomalybox.com.")}#atelier-request`);
+    redirect(`/atelier?error=${encodeURIComponent(FLASH.atelierEmailUnavailable)}#atelier-request`);
   }
 
   const resend = new Resend(apiKey);
@@ -64,7 +66,8 @@ export async function submitAtelierLead(formData: FormData) {
     from: env.emailFrom(),
     to: env.atelierInbox(),
     replyTo: email,
-    subject: `New Atelier request — ${name}`,
+    // Strip line breaks so a crafted name cannot add lines to the subject header.
+    subject: `New Atelier request — ${name.replace(/[\r\n]+/g, " ")}`,
     text: [
       "New Anomaly Box Atelier request",
       "",
@@ -88,7 +91,7 @@ export async function submitAtelierLead(formData: FormData) {
   }).eq("id", lead.id);
 
   if (emailError) {
-    redirect(`/atelier?error=${encodeURIComponent("Your request was saved, but the notification email could not be delivered. Please contact support@anomalybox.com.")}#atelier-request`);
+    redirect(`/atelier?error=${encodeURIComponent(FLASH.atelierEmailFailed)}#atelier-request`);
   }
 
   redirect("/atelier?sent=1#atelier-request");

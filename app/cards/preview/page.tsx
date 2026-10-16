@@ -117,7 +117,7 @@ export default function CardPreviewVisualTestPage() {
         </Link>
         <a
           href="#report-section"
-          className="xl:hidden text-xs font-semibold text-ink/45 hover:text-ink/70 transition print:hidden"
+          className="xl:hidden text-xs font-semibold text-ink/60 hover:text-ink/70 transition print:hidden"
         >
           Flag this brief
         </a>

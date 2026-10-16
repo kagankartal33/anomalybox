@@ -6,10 +6,11 @@ import { JsonLd } from "@/components/JsonLd";
 import { PublicShell } from "@/components/PublicShell";
 import { siteUrl } from "@/lib/env";
 import { breadcrumbJsonLd, publicMetadata } from "@/lib/seo-metadata";
+import { BOX_PRICING, boxPriceAmount, boxPriceLabel } from "@/lib/pricing";
 
 const dossiers = {
-  "classic-red": { name: "Classic Red Creative Brief", price: 50, count: 2, variant: "red" as const, query: "viral_box_500", description: "Two private Instagram shoot briefs with scene flow, spoken lines, and camera notes for one lane. Ready to film this week." },
-  "signature-purple": { name: "Signature Purple Creative Brief", price: 100, count: 5, variant: "purple" as const, query: "premium_viral_box_1000", description: "Five private Instagram shoot briefs with deep proof structure, scene pacing, and spoken script systems for creators." },
+  "classic-red": { name: "Classic Red Creative Brief", count: BOX_PRICING.viral_box_500.briefCount, variant: "red" as const, query: "viral_box_500" as const, description: "Two private Instagram shoot briefs with scene flow, spoken lines, and camera notes for one lane. Ready to film this week." },
+  "signature-purple": { name: "Signature Purple Creative Brief", count: BOX_PRICING.premium_viral_box_1000.briefCount, variant: "purple" as const, query: "premium_viral_box_1000" as const, description: "Five private Instagram shoot briefs with deep proof structure, scene pacing, and spoken script systems for creators." },
 };
 
 function dossierImage(variant: "red" | "purple") {
@@ -54,7 +55,7 @@ export default async function DossierPage({ params }: { params: Promise<{ slug: 
         offers: {
           "@type": "Offer",
           priceCurrency: "USD",
-          price: dossier.price,
+          price: boxPriceAmount(dossier.query),
           availability: "https://schema.org/InStock",
           url: `${siteUrl()}/store?box=${dossier.query}`,
           seller: { "@type": "Organization", name: "Anomaly Box", url: siteUrl() },
@@ -71,7 +72,7 @@ export default async function DossierPage({ params }: { params: Promise<{ slug: 
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-plum-deep">Campaign-ready creative brief</p>
           <h1 className="mt-4 text-5xl font-semibold">{dossier.name}</h1>
           <p className="mt-5 text-xl leading-9 text-ink/65">{dossier.description}</p>
-          <p className="mt-6 text-3xl font-semibold">${dossier.price.toLocaleString("en-US")}</p>
+          <p className="mt-6 text-3xl font-semibold">{boxPriceLabel(dossier.query)}</p>
           <p className="mt-4 leading-7 text-ink/55">Configure the purchase for a specific creator lane and creator mode. Availability is verified before secure checkout.</p>
           <Link href={`/store?box=${dossier.query}`} className="focus-ring mt-7 inline-flex rounded-md bg-ink px-6 py-3 font-semibold text-white">Configure this creative brief</Link>
         </article>

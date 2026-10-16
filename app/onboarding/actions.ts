@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
+import { FLASH } from "@/lib/flash-messages";
 
 export async function saveOnboarding(formData: FormData) {
   const { supabase, user } = await requireUser();
@@ -18,7 +19,7 @@ export async function saveOnboarding(formData: FormData) {
   const uniqueCategoryIds = [...new Set(categoryIds)].slice(0, 3);
 
   if (!uniqueCategoryIds.length) {
-    redirect(`/onboarding?error=${encodeURIComponent("Choose at least one creator lane before continuing.")}`);
+    redirect(`/onboarding?error=${encodeURIComponent(FLASH.laneRequired)}`);
   }
 
   const { data: validCategories } = await supabase
@@ -30,7 +31,7 @@ export async function saveOnboarding(formData: FormData) {
   const safeCategoryIds = uniqueCategoryIds.filter((catId) => validCategoryIds.has(catId));
 
   if (!safeCategoryIds.length) {
-    redirect(`/onboarding?error=${encodeURIComponent("Those creator lanes are no longer available. Choose a current lane.")}`);
+    redirect(`/onboarding?error=${encodeURIComponent(FLASH.lanesUnavailable)}`);
   }
 
   await supabase.from("profiles").upsert({

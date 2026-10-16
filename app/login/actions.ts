@@ -4,13 +4,16 @@ import { redirect } from "next/navigation";
 import { siteUrl } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { safeNextPath } from "@/lib/navigation";
+import { FLASH } from "@/lib/flash-messages";
 
+// Creates the profile row on first sign-in only. An upsert that updates on conflict would replace the
+// display name the creator chose in their profile with their email on every sign-in.
 async function ensureProfile(userId: string, displayName?: string | null) {
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from("profiles").upsert({
     id: userId,
     display_name: displayName ?? null,
-  }, { onConflict: "id" });
+  }, { onConflict: "id", ignoreDuplicates: true });
   if (error) {
     console.warn("Creator profile initialization failed.", { code: error.code });
   }
@@ -29,7 +32,7 @@ export async function signInWithPassword(formData: FormData) {
   });
   if (error) {
     console.warn("Sign-in rejected.", { code: error.code, status: error.status });
-    const message = error.code === "captcha_failed" ? "Security verification failed. Please try again." : "Email or password is incorrect.";
+    const message = error.code === "captcha_failed" ? FLASH.captchaFailed : FLASH.invalidCredentials;
     redirect(`/login?error=${encodeURIComponent(message)}&next=${encodeURIComponent(next)}`);
   }
   if (data.user) await ensureProfile(data.user.id, data.user.email);
@@ -43,7 +46,7 @@ export async function signUpWithPassword(formData: FormData) {
   const captchaToken = String(formData.get("cf-turnstile-response") ?? "");
   const next = safeNextPath(String(formData.get("next") ?? ""), "/onboarding");
   if (password.length < 8) {
-    redirect(`/login?error=${encodeURIComponent("Password must be at least 8 characters.")}&next=${encodeURIComponent(next)}`);
+    redirect(`/login?error=${encodeURIComponent(FLASH.passwordTooShort)}&next=${encodeURIComponent(next)}`);
   }
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.signUp({
@@ -58,14 +61,14 @@ export async function signUpWithPassword(formData: FormData) {
   if (error) {
     console.warn("Account creation rejected.", { code: error.code, status: error.status });
     const message = error.code === "captcha_failed"
-      ? "Security verification failed. Please try again."
+      ? FLASH.captchaFailed
       : error.code === "user_already_exists"
-        ? "An account may already exist for this email. Try signing in or reset your password."
-        : "Your account could not be created. Please check the details and try again.";
+        ? FLASH.accountMayExist
+        : FLASH.accountCreateFailed;
     redirect(`/login?error=${encodeURIComponent(message)}&next=${encodeURIComponent(next)}`);
   }
   if (!data.user) {
-    redirect(`/login?error=${encodeURIComponent("Your account could not be created. Please try again.")}&next=${encodeURIComponent(next)}`);
+    redirect(`/login?error=${encodeURIComponent(FLASH.accountCreateRetry)}&next=${encodeURIComponent(next)}`);
   }
   if (!data.session) {
     redirect(`/login?signup=confirm&next=${encodeURIComponent(next)}`);
