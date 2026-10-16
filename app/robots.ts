@@ -16,12 +16,16 @@ export default function robots(): MetadataRoute.Robots {
     "/onboarding",
     "/checkout",
   ];
+  // Next.js prefetches React Server Component payloads as `<page>?_rsc=<random>`. Search Console
+  // showed 77% of Googlebot requests going to these variants and only 10% to HTML pages, starving
+  // real pages of crawl budget. Pages are fully server-rendered, so crawlers never need them.
+  const rscPayloads = ["/*?_rsc=", "/*&_rsc="];
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: privatePaths,
+        disallow: [...privatePaths, ...rscPayloads],
       },
     ],
     sitemap: `${url}/sitemap.xml`,
