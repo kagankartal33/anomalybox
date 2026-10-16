@@ -6,7 +6,8 @@ import { isConsolidatedPath } from "@/lib/seo-consolidation";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();
-  const contentUpdated = new Date("2026-09-23T00:00:00.000Z");
+  // Bump when public content changes site-wide so search engines see accurate <lastmod> values.
+  const contentUpdated = new Date("2026-10-16T00:00:00.000Z");
 
   const core: MetadataRoute.Sitemap = [
     { url: base, lastModified: contentUpdated, changeFrequency: "weekly", priority: 1.0 },
