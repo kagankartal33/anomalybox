@@ -47,3 +47,35 @@ export const BOX_FEATURES: Record<PricedBoxSlug, readonly string[]> = {
   viral_box_500: ["Two private shoot briefs", "Opening, scenes, and camera notes", "Caption and comment prompts", "What you should not claim on camera"],
   premium_viral_box_1000: ["Five private shoot briefs", "Longer scene and proof notes", "Atmosphere and edit direction", "More angles inside the same lane"],
 };
+
+/**
+ * Countries named in merchant structured data (return policy and shipping destination). Briefs are
+ * digital and sold worldwide through Stripe; these are the primary English-language, USD-priced
+ * markets the site targets. Google requires an explicit country list for both fields.
+ */
+export const MERCHANT_COUNTRIES = ["US", "GB", "CA", "AU"] as const;
+
+/**
+ * schema.org fields Google expects on a merchant listing Offer. Briefs are delivered digitally to
+ * Creator Vault right after payment (no shipping cost, no transit time) and, per /legal, are not
+ * refundable once delivered.
+ */
+export function digitalOfferPolicies() {
+  return {
+    hasMerchantReturnPolicy: {
+      "@type": "MerchantReturnPolicy",
+      applicableCountry: [...MERCHANT_COUNTRIES],
+      returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+    },
+    shippingDetails: MERCHANT_COUNTRIES.map((country) => ({
+      "@type": "OfferShippingDetails",
+      shippingRate: { "@type": "MonetaryAmount", value: 0, currency: "USD" },
+      shippingDestination: { "@type": "DefinedRegion", addressCountry: country },
+      deliveryTime: {
+        "@type": "ShippingDeliveryTime",
+        handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+        transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+      },
+    })),
+  };
+}

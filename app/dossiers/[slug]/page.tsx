@@ -12,6 +12,7 @@ import {
   BRIEF_INCLUDES,
   boxPriceAmount,
   boxPriceLabel,
+  digitalOfferPolicies,
   type PricedBoxSlug,
 } from "@/lib/pricing";
 
@@ -148,6 +149,7 @@ export default async function DossierPage({ params }: { params: Promise<{ slug: 
             availability: "https://schema.org/InStock",
             url: `${base}${storeHref}`,
             seller: { "@type": "Organization", name: "Anomaly Box", url: base },
+            ...digitalOfferPolicies(),
           },
         }}
       />
