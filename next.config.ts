@@ -89,6 +89,11 @@ const nextConfig: NextConfig = {
       },
       // Legacy static-site URLs (e.g. http://www.anomalybox.com/index.html) still known to Google.
       {
+        source: "/index",
+        destination: "/",
+        permanent: true,
+      },
+      {
         source: "/index.html",
         destination: "/",
         permanent: true,
