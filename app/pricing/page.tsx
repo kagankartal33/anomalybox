@@ -6,7 +6,7 @@ import { PremiumIcon } from "@/components/PremiumIcon";
 import { CreativeDossierVisual } from "@/components/CreativeDossierVisual";
 import { SampleBriefModal } from "@/components/SampleBriefModal";
 import { premiumAssets } from "@/lib/premium-assets";
-import { boxPriceLabel } from "@/lib/pricing";
+import { BOX_FEATURES, BRIEF_INCLUDES, boxPriceLabel } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Anomaly Box Pricing: Classic Red, Signature Purple, Atelier",
@@ -30,7 +30,7 @@ const plans = [
     icon: Gem,
     href: "/store?box=viral_box_500",
     cta: "Configure Classic Red",
-    features: ["Two private shoot briefs", "Opening, scenes, and camera notes", "Caption and comment prompts", "What you should not claim on camera"],
+    features: BOX_FEATURES.viral_box_500,
   },
   {
     name: "Signature Purple Box",
@@ -40,7 +40,7 @@ const plans = [
     icon: Crown,
     href: "/store?box=premium_viral_box_1000",
     cta: "Configure Signature Purple",
-    features: ["Five private shoot briefs", "Longer scene and proof notes", "Atmosphere and edit direction", "More angles inside the same lane"],
+    features: BOX_FEATURES.premium_viral_box_1000,
   },
   {
     name: "Atelier Black Box",
@@ -54,15 +54,7 @@ const plans = [
   },
 ];
 
-const briefIncludes = [
-  "Hook and opening options",
-  "Scene-by-scene flow",
-  "Shot, framing, and camera direction",
-  "Spoken lines and on-screen text system",
-  "Caption and comment-response prompts",
-  "Edit rhythm and atmosphere direction",
-  "Sponsor-safe wording and claim boundaries",
-];
+const briefIncludes = BRIEF_INCLUDES;
 
 export default function PricingPage() {
   return (

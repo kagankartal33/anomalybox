@@ -30,3 +30,20 @@ export function boxPriceLabel(slug: PricedBoxSlug): string {
 export function boxPriceAmount(slug: PricedBoxSlug): number {
   return BOX_PRICING[slug].priceCents / 100;
 }
+
+/** What every shoot brief contains, regardless of tier. Shown on /pricing and the dossier pages. */
+export const BRIEF_INCLUDES = [
+  "Hook and opening options",
+  "Scene-by-scene flow",
+  "Shot, framing, and camera direction",
+  "Spoken lines and on-screen text system",
+  "Caption and comment-response prompts",
+  "Edit rhythm and atmosphere direction",
+  "Sponsor-safe wording and claim boundaries",
+] as const;
+
+/** Tier-specific highlights. */
+export const BOX_FEATURES: Record<PricedBoxSlug, readonly string[]> = {
+  viral_box_500: ["Two private shoot briefs", "Opening, scenes, and camera notes", "Caption and comment prompts", "What you should not claim on camera"],
+  premium_viral_box_1000: ["Five private shoot briefs", "Longer scene and proof notes", "Atmosphere and edit direction", "More angles inside the same lane"],
+};
