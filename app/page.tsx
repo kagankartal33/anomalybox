@@ -13,6 +13,7 @@ import { PremiumIcon } from "@/components/PremiumIcon";
 import { CreativeDossierVisual } from "@/components/CreativeDossierVisual";
 import { SampleBriefModal } from "@/components/SampleBriefModal";
 import { premiumAssets } from "@/lib/premium-assets";
+import { popularGuides } from "@/lib/popular-guides";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -78,6 +79,7 @@ const howSteps = [
 ] as const;
 
 export default function AnomalyBoxLanding() {
+  const guides = popularGuides();
   // The hero <picture> is the LCP element. Announce the matching source in <head> so the browser does
   // not wait for body parsing to discover it.
   preload(premiumAssets.marketing.heroMobile, { as: "image", fetchPriority: "high", media: "(max-width: 767px)" });
@@ -241,6 +243,31 @@ export default function AnomalyBoxLanding() {
             ))}
           </div>
         </div>
+      </section>
+
+      <section aria-labelledby="popular-guides-heading" className="content-visibility-auto mx-auto max-w-7xl px-6 pb-16">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink/60">Free creator guides</p>
+            <h2 id="popular-guides-heading" className="mt-3 text-4xl font-semibold">Plan your next shoot with these guides</h2>
+          </div>
+          <Link href="/resources" className="inline-flex items-center gap-2 font-semibold text-plum-deep focus-ring">
+            Browse all guides <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {guides.map((guide) => (
+            <li key={guide.href}>
+              <Link
+                href={guide.href}
+                className="focus-ring block h-full rounded-xl border border-ink/10 bg-white p-5 transition hover:border-plum-deep/40 hover:shadow-md"
+              >
+                <span className="font-semibold leading-snug text-ink">{guide.title}</span>
+                <span className="mt-2 block text-sm leading-6 text-ink/70">{guide.description}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="content-visibility-auto bg-[#080808] py-16 text-white">

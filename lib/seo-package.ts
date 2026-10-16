@@ -183,6 +183,11 @@ export function seoPackageByPath(section: string, slug: string): SeoPackagePage 
   return routablePages.find((p) => p.section === section && p.slug === slug);
 }
 
+/** Routable article at a public path. Paths merged into a cluster winner resolve to that winner. */
+export function seoPageByPublicPath(path: string): SeoPackagePage | undefined {
+  return routablePagesByPath.get(consolidationDestination(path) ?? path);
+}
+
 export function seoPackageBySection(section: string): SeoPackagePage[] {
   return registryPages.filter((p) => p.section === section);
 }
