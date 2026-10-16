@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { SeoPackageHub } from "@/components/SeoPackageHub";
 import { clampHubPage, hubPageCount, hubPageHref } from "@/lib/hub-pagination";
 import { brandedTitle } from "@/lib/seo-metadata";
@@ -46,7 +46,7 @@ export async function renderHubPagedPage({
   const requested = Number.parseInt((await params).page, 10);
   const total = publicHubCount(section);
   if (!Number.isFinite(requested) || requested < 1) notFound();
-  if (requested === 1) redirect(`/${section}`);
+  if (requested === 1) permanentRedirect(`/${section}`);
   const page = clampHubPage(requested, total);
   if (page !== requested) notFound();
 

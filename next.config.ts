@@ -77,21 +77,27 @@ const nextConfig: NextConfig = {
         destination: "/login",
         permanent: false,
       },
-      ...["/resources", "/content-ideas", "/reels", "/creator-lanes", "/creator-personas", "/services", "/tools"].flatMap(
-        (root) => [
-          {
-            source: root,
-            has: [{ type: "query" as const, key: "page", value: "1" }],
-            destination: root,
-            permanent: false,
-          },
-          {
-            source: root,
-            has: [{ type: "query" as const, key: "page", value: "(?<page>\\d+)" }],
-            destination: `${root}/p/:page`,
-            permanent: false,
-          },
-        ],
+      // Legacy static-site URLs (e.g. http://www.anomalybox.com/index.html) still known to Google.
+      {
+        source: "/index.html",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/:path+/index.html",
+        destination: "/:path+",
+        permanent: true,
+      },
+      // ?page=N -> /p/N. Page 1 lands on /p/1, which permanently redirects to the hub root without the
+      // query string. Redirecting ?page=1 straight to the root looped, because Next.js carries the
+      // query over to the destination.
+      ...["/resources", "/content-ideas", "/reels", "/creator-lanes", "/creator-personas", "/services", "/tools"].map(
+        (root) => ({
+          source: root,
+          has: [{ type: "query" as const, key: "page", value: "(?<page>\\d+)" }],
+          destination: `${root}/p/:page`,
+          permanent: true,
+        }),
       ),
       {
         source: "/dashboard",
