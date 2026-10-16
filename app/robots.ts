@@ -28,7 +28,8 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [...privatePaths, ...rscPayloads],
       },
     ],
+    // No `Host:` line: Googlebot ignores it (Search Console flags it as a warning) and Yandex
+    // replaced it with redirects in 2018. www and vercel.app hosts 308 to the apex instead.
     sitemap: `${url}/sitemap.xml`,
-    host: url,
   };
 }
