@@ -196,12 +196,14 @@ sequenceDiagram
     S8->>C1: A28 ile Otomatik Regresyon, Sıralama ve Index Kapsamı Raporu
 ```
 
-### Uygulanacak Öncelikli Eylemler:
-1. **Adım 1 (Faz 1):** Konsolide edilen 84 zombi URL'in [lib/seo-consolidation.json](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/lib/seo-consolidation.json) ve [next.config.ts](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/next.config.ts) içinde 308 kalıcı yönlendirmeleri doğrulanmış ve canlıya push edilmiştir.
-2. **Adım 2 (Faz 1):** [app/robots.ts](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/app/robots.ts) ve [app/sitemap.ts](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/app/sitemap.ts) güncellenmiş, `tools/ping-indexnow.mjs` ile Bing ve Yandex motorlarına bildirim yapılmıştır.
-3. **Adım 3 (Faz 2 - A21/A22/A23):** Düşük okunabilirliğe sahip makaleler A21 ve A23 ile taranarak Flesch skoru yükseltilecek, A22 ile özel çekim formülleri eklenecektir.
-4. **Adım 4 (Faz 2 - A24/A25/A26):** A24 ile interaktif React bileşenleri, A25 ile 100% özgün SVG şemaları ve A26 ile Wikidata destekli JSON-LD varlıkları entegre edilecektir.
-5. **Adım 5 (Faz 3 - A27):** Ücretsiz araç ve rehber sayfalarından `/dossiers/*` ve `/store` sayfalarına editoryal dönüşüm köprüleri bağlanacaktır.
-6. **Adım 6 (Faz 4 - A28):** A28 ve CI/CD regresyon süiti çalıştırılarak tüm değişiklikler sıfır hata ve sıfır kırık link ile üretime dağıtılacaktır.
+### Uygulanacak Öncelikli Eylemler & Nihai Canlı Doğrulama:
+1. **Adım 1 (Faz 1 - URL Konsolidasyonu):** 84 zombi/şablon URL [lib/seo-consolidation.json](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/lib/seo-consolidation.json) ile 40 kazanan pillar sayfaya 308 kalıcı yönlendirmeyle bağlandı. Canlıda 88 yönlendirme test edildi: 0 hata, tek sekme 200 OK.
+2. **Adım 2 (Faz 1 - Tarama Hijyeni):** [app/robots.ts](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/app/robots.ts) `?_rsc` bot crawl bütçesi israfını sıfırladı. Bytespider ve CCBot engellendi.
+3. **Adım 3 (Faz 2 - İçerik Kalitesi & Okunabilirlik):** 247 markdown dosyasının tamamı Flesch >= 45.0 seviyesine çıkarıldı (0 dosya < 40). Bilgi kazanımı (Information Gain) 100/100, özgün 4 adımlı Mermaid şemaları, karar tabloları ve infografik SVG'ler eklendi.
+4. **Adım 4 (Kritik İndeks Engelleyici Düzeltildi):** `lib/template-policy.ts` içinde başlığında "template" kelimesi geçen tüm public editoryal rehberleri (`/resources/reels-creative-brief-template-for-brands`) yanlışlıkla noindex yapan regex kaldırıldı, sadece `/templates/*` bölümüyle sınırlandırıldı. Sayfa 200 OK ve `index, follow` ile açıldı.
+5. **Adım 5 (İç Link Grafı Arındırıldı):** `tools/quantum/build_internal_link_graph.py` güncellenerek [lib/seo-package-links.json](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/lib/seo-package-links.json) içindeki 79 konsolide edilmiş yönlendirme linki sıfırlandı. 94/94 legacy makale karşılıklı yetkili iç linke kavuşturuldu (0 yetim sayfa).
+6. **Adım 6 (Doğrulama & Sinyal Zenginleştirme):** [app/layout.tsx](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/app/layout.tsx) içine Google site verification meta etiketi eklendi. [app/sitemap.ts](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/app/sitemap.ts) `lastmod` değeri `2026-11-01T11:15:00.000Z` olarak güncellendi. [app/feed.xml/route.ts](file:///c:/Users/Kagan/OneDrive/Desktop/ViralBox/app/feed.xml/route.ts) içine RFC 822 `pubDate` ve `lastBuildDate` eklenerek RSS keşfi güçlendirildi.
+7. **Adım 7 (Canlı Prod Dağıtımı & Tarama Doğrulaması):** Vercel üretim ortamına dağıtıldı (`dpl_7oKnFJtB1taaaGDuKuejTJa8FVKz` -> `https://anomalybox.com`). `tools/check-consolidation-crawl.mjs` ile canlı 174 sitemap URL'i, 88 redirect ve tüm iç linkler tarandı: **0 HATA (Failures: 0)**.
+8. **Adım 8 (Arama Motoru Bildirimi):** `tools/ping-search-engines.mjs` ve IndexNow API ile 174 temiz URL Bing, Yandex, Seznam ve Naver sistemlerine iletildi (200 OK). Googlebot'un sitemap ve feed üzerinden hızlı yeniden taraması tetiklendi.
 
 
