@@ -20,12 +20,18 @@ export default function robots(): MetadataRoute.Robots {
   // showed 77% of Googlebot requests going to these variants and only 10% to HTML pages, starving
   // real pages of crawl budget. Pages are fully server-rendered, so crawlers never need them.
   const rscPayloads = ["/*?_rsc=", "/*&_rsc="];
+  const aggressiveScrapers = ["Bytespider", "CCBot"];
+
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
         disallow: [...privatePaths, ...rscPayloads],
+      },
+      {
+        userAgent: aggressiveScrapers,
+        disallow: ["/"],
       },
     ],
     // No `Host:` line: Googlebot ignores it (Search Console flags it as a warning) and Yandex

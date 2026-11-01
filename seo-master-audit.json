@@ -1,0 +1,1579 @@
+{
+  "version": "2026-11-01",
+  "domain": "https://anomalybox.com",
+  "generatedAt": "2026-10-31T22:51:24.126Z",
+  "architecture": "8 Command Divisions & 27 Specialized Agent Units",
+  "summary": {
+    "totalInventoryEntries": 181,
+    "indexableUrls": 80,
+    "consolidated308Redirects": 84,
+    "retiredHubPages": 4,
+    "activeWinnersCount": 40,
+    "purchaseProtectedTemplates": 13,
+    "crawlBudgetStatus": "RSC payloads (?_rsc=) and aggressive scrapers (Bytespider, CCBot) disallowed",
+    "structuredDataStatus": "Product, Offer, FAQPage, SoftwareApplication, Organization, BreadcrumbList verified"
+  },
+  "divisionStatus": {
+    "DIV 01 SEO COMMANDER": "ACTIVE - Strategy, URL inventory and commercial intent moat synchronized",
+    "DIV 02 GOOGLE INDEX DOCTOR": "ACTIVE - 84 duplicate URLs consolidated to 40 winners; robots.txt hardened",
+    "DIV 03 CANONICAL ARCHITECT": "ACTIVE - Single-hop 308 redirects, canonical uniformity and Hub-and-Spoke structure",
+    "DIV 04 TECHNICAL SEO ENGINEER": "ACTIVE - SSR/ISR clean delivery, Web Vitals audited, INP/LCP guards verified",
+    "DIV 05 CONTENT INTELLIGENCE": "ACTIVE - 0% template duplication gate, high-intent BOFU keyword clusters mapped",
+    "DIV 06 SERP DOMINATOR": "ACTIVE - Schema.org Product/Offer/SoftwareApplication injected; GEO llms.txt verified",
+    "DIV 07 AUTHORITY GUARDIAN": "ACTIVE - Creator Vault auth-walled; CSP/HSTS verified; brand registration kit active",
+    "DIV 08 SEO SENTINEL": "ACTIVE - Automated regression check passing (110 registry / 220 WebP / 84 consolidated)"
+  },
+  "resolvedIssuesP0_P3": [
+    {
+      "id": "P0-1",
+      "severity": "CRITICAL",
+      "issue": "146 URLs unindexed due to template repetition and crawl budget exhaustion",
+      "resolution": "Phase 1 & Phase 2 consolidated 84 URLs into 40 winning authority pillars with 308 redirects",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "P0-2",
+      "severity": "CRITICAL",
+      "issue": "Next.js RSC payloads consuming 77% of Googlebot crawl budget",
+      "resolution": "Disallowed /*?_rsc= and /*&_rsc= in app/robots.ts",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "P1-1",
+      "severity": "HIGH",
+      "issue": "Informational resource review pages cannibalizing /dossiers money pages",
+      "resolution": "Direct 308 redirects implemented from reviews to money pages",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "P1-2",
+      "severity": "HIGH",
+      "issue": "Lack of SoftwareApplication schema on free programmatic tools",
+      "resolution": "Injected WebApplication, Offer, and BreadcrumbList JSON-LD into all tool layouts",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "P2-1",
+      "severity": "MEDIUM",
+      "issue": "Aggressive scraper bots (Bytespider, CCBot) putting unneeded load on SSR endpoints",
+      "resolution": "Dedicated Disallow rules added for Bytespider and CCBot in app/robots.ts",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "P2-2",
+      "severity": "MEDIUM",
+      "issue": "Stale sitemap lastmod date (2026-10-16)",
+      "resolution": "Updated sitemap.ts contentUpdated to 2026-11-01T00:00:00.000Z",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "P3-1",
+      "severity": "LOW",
+      "issue": "Retired hub pages out of sync with reduced pagination count",
+      "resolution": "Retired /resources/p/8 added to retiredHubPages to match current 7-page hub capacity",
+      "status": "RESOLVED"
+    }
+  ],
+  "inventory": [
+    {
+      "url": "/",
+      "type": "core-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/content-ideas",
+      "type": "core-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/resources",
+      "type": "core-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/store",
+      "type": "money-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/pricing",
+      "type": "money-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/atelier",
+      "type": "money-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/about",
+      "type": "core-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/methodology",
+      "type": "core-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/dossiers/classic-red",
+      "type": "money-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/dossiers/signature-purple",
+      "type": "money-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/tools/first-3-seconds-auditor",
+      "type": "programmatic-tool",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/tools/format-utility-router",
+      "type": "programmatic-tool",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/tools/creator-capacity-calculator",
+      "type": "programmatic-tool",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/legal",
+      "type": "core-page",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 01 / DIV 06"
+    },
+    {
+      "url": "/reels",
+      "type": "section-hub",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/creator-lanes",
+      "type": "section-hub",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/creator-personas",
+      "type": "section-hub",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/services",
+      "type": "section-hub",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/tools",
+      "type": "section-hub",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/content-ideas/instagram-content-ideas",
+      "type": "cluster-winner-article",
+      "title": "Instagram Content Ideas That Actually Get Shot",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/reels/instagram-reels-ideas",
+      "type": "cluster-winner-article",
+      "title": "Instagram Reels Ideas with Hooks, Scenes and Shot Plans",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/faceless-content-ideas",
+      "type": "cluster-winner-article",
+      "title": "Faceless Content Ideas with Privacy-First Shot Plans",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/ugc-content-ideas",
+      "type": "editorial-article",
+      "title": "UGC Content Ideas Brands Can Approve and Creators Can Shoot",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/content-strategy-for-creators",
+      "type": "cluster-winner-article",
+      "title": "Content Strategy for Creators: A Shoot-Ready System",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/beauty-content-ideas",
+      "type": "editorial-article",
+      "title": "Beauty Content Ideas with Lighting, Proof and Product Detail",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/fashion-luxury-content-ideas",
+      "type": "cluster-winner-article",
+      "title": "Fashion and Luxury Content Ideas with Editorial Direction",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/travel-content-ideas",
+      "type": "editorial-article",
+      "title": "Travel Content Ideas with Location, Movement and Story",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/food-content-ideas",
+      "type": "editorial-article",
+      "title": "Food and Dining Content Ideas That Show Texture and Experience",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/fitness-content-ideas",
+      "type": "editorial-article",
+      "title": "Fitness Content Ideas with Safe Demonstration and Proof",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/parenting-content-ideas",
+      "type": "editorial-article",
+      "title": "Parenting Content Ideas with Privacy and Real-Life Utility",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/education-content-ideas",
+      "type": "editorial-article",
+      "title": "Educational Content Ideas That Make Expertise Easy to Follow",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/comedy-content-ideas",
+      "type": "editorial-article",
+      "title": "Comedy Content Ideas Built Around Repeatable Formats",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/thought-leadership-content-ideas",
+      "type": "editorial-article",
+      "title": "Thought Leadership Content Ideas with Evidence and Point of View",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/content-ideas/ecommerce-content-ideas",
+      "type": "editorial-article",
+      "title": "E-commerce Content Ideas That Move from Product to Proof",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/idea-to-shoot-ready-brief",
+      "type": "editorial-article",
+      "title": "How to Turn One Idea into a Shoot-Ready Content Brief",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/content-brief-vs-creative-brief-vs-production-brief",
+      "type": "editorial-article",
+      "title": "Content Brief vs Creative Brief vs Production Brief",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/batch-content-without-burnout",
+      "type": "cluster-winner-article",
+      "title": "How to Batch Content Without Burning Out",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/private-creative-direction-instagram-creators",
+      "type": "editorial-article",
+      "title": "Private Creative Direction for Instagram Creators",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/what-to-post-on-instagram",
+      "type": "cluster-winner-article",
+      "title": "What to Post on Instagram When Generic Lists Stop Helping",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/how-to-come-up-with-content-ideas",
+      "type": "cluster-winner-article",
+      "title": "How to Come Up with Content Ideas from Real Audience Friction",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/creative-block-content-creator",
+      "type": "cluster-winner-article",
+      "title": "Creative Block for Content Creators: Reduce the Decisions",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/content-creator-burnout",
+      "type": "cluster-winner-article",
+      "title": "Creator Burnout Is Often a System Problem",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/why-is-content-creation-so-hard",
+      "type": "cluster-winner-article",
+      "title": "Why Is Content Creation So Hard? Count the Invisible Decisions",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/how-to-create-content-consistently",
+      "type": "cluster-winner-article",
+      "title": "How to Create Content Consistently Without Daily Inspiration",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/content-creation-workflow",
+      "type": "cluster-winner-article",
+      "title": "A Calm Content Creation Workflow from Idea to Published Asset",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/how-to-build-a-content-bank",
+      "type": "cluster-winner-article",
+      "title": "How to Build a Content Bank You Can Actually Use",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/minimum-viable-content-strategy",
+      "type": "cluster-winner-article",
+      "title": "Minimum Viable Content Strategy for Busy Creators",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/ugc-shot-list",
+      "type": "editorial-article",
+      "title": "UGC Shot List: Product Proof without Robotic Delivery",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/b-roll-shot-list",
+      "type": "editorial-article",
+      "title": "B-Roll Shot List for Creators: Proof, Texture and Transitions",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/beauty-content-strategy",
+      "type": "cluster-winner-article",
+      "title": "Beauty Content Strategy: Build Recognizable Visual Proof",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/beauty-reels-ideas",
+      "type": "cluster-winner-article",
+      "title": "Beauty Reels Ideas with Lighting, Texture and Transformation",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/makeup-content-ideas",
+      "type": "editorial-article",
+      "title": "Makeup Content Ideas for Tutorials, Looks and Product Stories",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/beauty-product-video-ideas",
+      "type": "cluster-winner-article",
+      "title": "Beauty Product Video Ideas with Claim-Safe Demonstration",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/skincare-content-ideas",
+      "type": "editorial-article",
+      "title": "Skincare Content Ideas Beyond Before-and-After",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/fashion-content-strategy",
+      "type": "cluster-winner-article",
+      "title": "Fashion Content Strategy: Editorial Consistency without Sameness",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/fashion-reels-ideas",
+      "type": "editorial-article",
+      "title": "Fashion Reels Ideas with Movement, Detail and Styling Logic",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/outfit-reels-ideas",
+      "type": "editorial-article",
+      "title": "Outfit Reels Ideas That Explain the Styling Decision",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/travel-content-strategy",
+      "type": "editorial-article",
+      "title": "Travel Content Strategy Built Around Access, Light and Story",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/travel-reels-ideas",
+      "type": "editorial-article",
+      "title": "Travel Reels Ideas with Movement and Place-Specific Detail",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/hotel-collaboration-content-ideas",
+      "type": "editorial-article",
+      "title": "Hotel Collaboration Content Ideas That Serve Guest and Brand",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/travel-video-shot-list",
+      "type": "editorial-article",
+      "title": "Travel Video Shot List for Arrivals, Atmosphere and Proof",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/content-strategy-for-founders",
+      "type": "cluster-winner-article",
+      "title": "Content Strategy for Founders: Turn Operating Insight into Content",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/founder-content-ideas",
+      "type": "cluster-winner-article",
+      "title": "Founder Content Ideas beyond Announcements and Advice",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/founder-reels-ideas",
+      "type": "editorial-article",
+      "title": "Founder Reels Ideas for Expertise, Decisions and Proof",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/ecommerce-content-strategy",
+      "type": "editorial-article",
+      "title": "E-commerce Content Strategy: Demonstration, Objection and Use",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/product-reels-ideas",
+      "type": "editorial-article",
+      "title": "Product Reels Ideas That Show Why the Product Matters",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/product-video-shot-list",
+      "type": "editorial-article",
+      "title": "Product Video Shot List for Features, Use and Proof",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-lanes/product-launch-content-plan",
+      "type": "editorial-article",
+      "title": "Product Launch Content Plan from Tease to Demonstration",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-personas/ugc-content-strategy",
+      "type": "editorial-article",
+      "title": "UGC Content Strategy for Paid Creators",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-personas/brand-ready-creator",
+      "type": "editorial-article",
+      "title": "How to Become a Brand-Ready Creator before the First Deal",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/creator-personas/creator-brief-workflow-for-brand-teams",
+      "type": "editorial-article",
+      "title": "Creator Brief Workflow for Brand and Agency Teams",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/services/creative-direction-for-content-creators",
+      "type": "cluster-winner-article",
+      "title": "Creative Direction for Content Creators",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/services/custom-instagram-content-plan",
+      "type": "cluster-winner-article",
+      "title": "Custom Instagram Content Plan with Shoot-Ready Direction",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/services/ugc-creative-strategy-service",
+      "type": "editorial-article",
+      "title": "UGC Creative Strategy Service for Creators and Brand Teams",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/tools/creator-brief-scorecard",
+      "type": "editorial-article",
+      "title": "Creator Brief Scorecard",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/tools/creator-mode-selector",
+      "type": "editorial-article",
+      "title": "Creator Mode Selector",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/tools/brand-ready-creator-checklist",
+      "type": "editorial-article",
+      "title": "Brand-Ready Creator Checklist",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/tools/content-concept-stress-test",
+      "type": "editorial-article",
+      "title": "Content Concept Stress Test",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/tools/content-pillar-builder",
+      "type": "editorial-article",
+      "title": "Creator-Lane Content Pillar Builder",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/tools/creator-decision-fatigue-report",
+      "type": "editorial-article",
+      "title": "Creator Decision Fatigue Report",
+      "indexable": true,
+      "status": 200,
+      "divisionOwner": "DIV 05 Content Intelligence"
+    },
+    {
+      "url": "/resources/anomalybox-classic-red-dossier-review",
+      "type": "308-redirect",
+      "destination": "/dossiers/classic-red",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "classic red creative brief",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/anomalybox-signature-purple-aesthetic-dossier",
+      "type": "308-redirect",
+      "destination": "/dossiers/signature-purple",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "signature purple creative brief",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/anomalybox-atelier-black-box-for-agencies",
+      "type": "308-redirect",
+      "destination": "/atelier",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "custom campaign creative brief",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/creative-direction-box-dossier-system",
+      "type": "308-redirect",
+      "destination": "/pricing",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "creator shoot brief pricing",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/anomalybox-unboxing-and-creator-dossier-walkthrough",
+      "type": "308-redirect",
+      "destination": "/pricing",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "creator shoot brief pricing",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/custom-creative-direction-box-ordering-guide",
+      "type": "308-redirect",
+      "destination": "/store",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "order a custom creative brief",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/why-physical-dossiers-beat-ai-prompt-generators",
+      "type": "308-redirect",
+      "destination": "/resources/physical-creative-direction-box-vs-digital-templates",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "creative brief vs template",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/services/reels-creative-direction",
+      "type": "308-redirect",
+      "destination": "/services/creative-direction-for-content-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "creative direction for content creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/services/personal-brand-creative-direction",
+      "type": "308-redirect",
+      "destination": "/services/creative-direction-for-content-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "creative direction for content creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/services/content-strategist-for-instagram",
+      "type": "308-redirect",
+      "destination": "/services/custom-instagram-content-plan",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "custom instagram content plan",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/services/content-planning-service-for-creators",
+      "type": "308-redirect",
+      "destination": "/services/custom-instagram-content-plan",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "custom instagram content plan",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/services/instagram-content-strategy-service",
+      "type": "308-redirect",
+      "destination": "/services/custom-instagram-content-plan",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "custom instagram content plan",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/custom-instagram-content-plan-framework",
+      "type": "308-redirect",
+      "destination": "/services/custom-instagram-content-plan",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "custom instagram content plan",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/content-strategist-for-instagram-creators",
+      "type": "308-redirect",
+      "destination": "/services/custom-instagram-content-plan",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "custom instagram content plan",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/done-for-you-content-planning-structure",
+      "type": "308-redirect",
+      "destination": "/services/custom-instagram-content-plan",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "custom instagram content plan",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/creator-fatigue",
+      "type": "308-redirect",
+      "destination": "/resources/content-creator-burnout",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content creator burnout",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/content-fatigue",
+      "type": "308-redirect",
+      "destination": "/resources/content-creator-burnout",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content creator burnout",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/instagram-burnout",
+      "type": "308-redirect",
+      "destination": "/resources/content-creator-burnout",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content creator burnout",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/social-media-burnout-creator",
+      "type": "308-redirect",
+      "destination": "/resources/content-creator-burnout",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content creator burnout",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/reels/reels-burnout",
+      "type": "308-redirect",
+      "destination": "/resources/content-creator-burnout",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content creator burnout",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/is-everyone-feeling-creator-burnout-q1-fix",
+      "type": "308-redirect",
+      "destination": "/resources/content-creator-burnout",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content creator burnout",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/content-creation-decision-fatigue",
+      "type": "308-redirect",
+      "destination": "/resources/creator-decision-fatigue-and-burnout-solution",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content creation decision fatigue",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/how-to-find-content-ideas",
+      "type": "308-redirect",
+      "destination": "/resources/how-to-come-up-with-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "how to come up with content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/how-to-never-run-out-of-content-ideas",
+      "type": "308-redirect",
+      "destination": "/resources/how-to-come-up-with-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "how to come up with content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/running-out-of-content-ideas",
+      "type": "308-redirect",
+      "destination": "/resources/how-to-come-up-with-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "how to come up with content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/content-ideas-when-stuck",
+      "type": "308-redirect",
+      "destination": "/resources/how-to-come-up-with-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "how to come up with content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/instagram-content-block",
+      "type": "308-redirect",
+      "destination": "/resources/creative-block-content-creator",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "creative block content creator",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/i-dont-know-what-to-post-on-instagram",
+      "type": "308-redirect",
+      "destination": "/resources/what-to-post-on-instagram",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "what to post on instagram",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/content-bank-ideas",
+      "type": "308-redirect",
+      "destination": "/resources/how-to-build-a-content-bank",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "how to build a content bank",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/how-to-batch-content",
+      "type": "308-redirect",
+      "destination": "/resources/batch-content-without-burnout",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "how to batch content",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/one-hour-a-week-content-batching-system",
+      "type": "308-redirect",
+      "destination": "/resources/batch-content-without-burnout",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "how to batch content",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/how-to-stay-consistent-on-instagram",
+      "type": "308-redirect",
+      "destination": "/resources/how-to-create-content-consistently",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "how to create content consistently",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/content-planning-workflow",
+      "type": "308-redirect",
+      "destination": "/resources/content-creation-workflow",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content creation workflow",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/repeatable-content-system",
+      "type": "308-redirect",
+      "destination": "/resources/how-to-build-a-repeatable-content-system",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "repeatable content system",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/content-creation-overwhelm",
+      "type": "308-redirect",
+      "destination": "/resources/why-is-content-creation-so-hard",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "why is content creation so hard",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/content-creation-takes-too-much-time",
+      "type": "308-redirect",
+      "destination": "/resources/why-is-content-creation-so-hard",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "why is content creation so hard",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-personas/content-strategy-for-small-creators",
+      "type": "308-redirect",
+      "destination": "/resources/content-strategy-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content strategy for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/content-ideas/creator-content-strategy",
+      "type": "308-redirect",
+      "destination": "/resources/content-strategy-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content strategy for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/sustainable-content-strategy",
+      "type": "308-redirect",
+      "destination": "/resources/minimum-viable-content-strategy",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "minimum viable content strategy",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-personas/content-strategy-for-busy-creators",
+      "type": "308-redirect",
+      "destination": "/resources/minimum-viable-content-strategy",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "minimum viable content strategy",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-lanes/skincare-reels-ideas",
+      "type": "308-redirect",
+      "destination": "/creator-lanes/beauty-reels-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "beauty reels ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-lanes/skincare-content-strategy",
+      "type": "308-redirect",
+      "destination": "/creator-lanes/beauty-content-strategy",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "beauty content strategy",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-lanes/skincare-product-video-ideas",
+      "type": "308-redirect",
+      "destination": "/creator-lanes/beauty-product-video-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "beauty product video ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-lanes/luxury-content-strategy",
+      "type": "308-redirect",
+      "destination": "/creator-lanes/fashion-content-strategy",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "fashion content strategy",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-lanes/thought-leadership-content-strategy",
+      "type": "308-redirect",
+      "destination": "/creator-lanes/content-strategy-for-founders",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "content strategy for founders",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/how-to-optimize-creator-content-for-ai-overviews",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/eeat-experience-markers-for-ai-search",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/search-engine-generative-citation-guide",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/zero-click-summary-architecture-guide",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/voice-search-h2-question-architecture",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/multimodal-image-alt-text-for-ai-engines",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/entity-clustering-for-instagram-creators",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/knowledge-graph-entity-building-for-brands",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/structured-data-schema-for-creative-briefs",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/conversational-nlp-targeting-for-video-creators",
+      "type": "308-redirect",
+      "destination": "/resources/answer-engine-optimization-for-creators",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "answer engine optimization for creators",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/content-ideas/reels-content-ideas",
+      "type": "308-redirect",
+      "destination": "/reels/instagram-reels-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "instagram reels ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/content-ideas/fashion-content-ideas",
+      "type": "308-redirect",
+      "destination": "/content-ideas/fashion-luxury-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "fashion content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/content-ideas/founder-content-ideas",
+      "type": "308-redirect",
+      "destination": "/creator-lanes/founder-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "founder content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/content-ideas/lifestyle-content-ideas",
+      "type": "308-redirect",
+      "destination": "/content-ideas/instagram-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "instagram content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-personas/faceless-content-strategy",
+      "type": "308-redirect",
+      "destination": "/content-ideas/faceless-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "faceless content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-personas/content-ideas-for-camera-shy-creators",
+      "type": "308-redirect",
+      "destination": "/content-ideas/faceless-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "faceless content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/faceless-reels-ideas-for-busy-creators",
+      "type": "308-redirect",
+      "destination": "/content-ideas/faceless-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "faceless content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/reels-ideas-for-introverted-creators",
+      "type": "308-redirect",
+      "destination": "/content-ideas/faceless-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "faceless content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/faceless-content-authenticity-and-monetization-guide",
+      "type": "308-redirect",
+      "destination": "/content-ideas/faceless-content-ideas",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "faceless content ideas",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/reels/instagram-reels-shot-list",
+      "type": "308-redirect",
+      "destination": "/resources/short-form-video-shot-list",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "short form video shot list",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/cinematic-b-roll-shot-list-for-lifestyle-creators",
+      "type": "308-redirect",
+      "destination": "/resources/short-form-video-shot-list",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "short form video shot list",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/b2b-saas-linkedin-video-systems",
+      "type": "308-redirect",
+      "destination": "/resources/saas-founder-linkedin-video-strategy",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "saas founder linkedin video strategy",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/founder-tradeoff-storytelling-framework",
+      "type": "308-redirect",
+      "destination": "/resources/saas-founder-linkedin-video-strategy",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "saas founder linkedin video strategy",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/b2b-expert-linkedin-to-instagram-video-playbook",
+      "type": "308-redirect",
+      "destination": "/resources/saas-founder-linkedin-video-strategy",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "saas founder linkedin video strategy",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/creator-personas/content-strategy-for-experts",
+      "type": "308-redirect",
+      "destination": "/resources/saas-founder-linkedin-video-strategy",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "saas founder linkedin video strategy",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/how-to-create-a-uniquely-recognizable-visual-signature",
+      "type": "308-redirect",
+      "destination": "/resources/visual-signature-guide",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "visual signature guide",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/building-a-recognizable-reels-brand-aesthetic",
+      "type": "308-redirect",
+      "destination": "/resources/visual-signature-guide",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "visual signature guide",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/visual-brand-identity-checklist-for-creators",
+      "type": "308-redirect",
+      "destination": "/resources/visual-signature-guide",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "visual signature guide",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/perpetual-usage-rights-vs-organic-post-fees",
+      "type": "308-redirect",
+      "destination": "/resources/usage-rights-whitelisting-revisions-brand-deal-guide",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "ugc brand deal usage rights",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/normal-revision-limits-for-brand-deals",
+      "type": "308-redirect",
+      "destination": "/resources/usage-rights-whitelisting-revisions-brand-deal-guide",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "ugc brand deal usage rights",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/handling-major-ugc-revision-requests",
+      "type": "308-redirect",
+      "destination": "/resources/usage-rights-whitelisting-revisions-brand-deal-guide",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "ugc brand deal usage rights",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/how-to-make-a-solid-ugc-brief",
+      "type": "308-redirect",
+      "destination": "/resources/brand-safe-ugc-brief",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "brand safe ugc brief",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/skincare-brand-ugc-brief-framework",
+      "type": "308-redirect",
+      "destination": "/resources/brand-safe-ugc-brief",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "brand safe ugc brief",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/solo-creator-tripod-and-mount-hacks",
+      "type": "308-redirect",
+      "destination": "/resources/filming-reels-without-a-cameraman",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "filming reels without a cameraman",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/minimalist-aesthetic-home-studio-setup",
+      "type": "308-redirect",
+      "destination": "/resources/filming-reels-without-a-cameraman",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "filming reels without a cameraman",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/zero-budget-lighting-hacks-for-creators",
+      "type": "308-redirect",
+      "destination": "/resources/filming-reels-without-a-cameraman",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "filming reels without a cameraman",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/iphone-cinematic-mode-for-reels",
+      "type": "308-redirect",
+      "destination": "/resources/filming-reels-without-a-cameraman",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "filming reels without a cameraman",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/handmade-craft-product-process-filming",
+      "type": "308-redirect",
+      "destination": "/resources/hands-only-craft-and-product-filming",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "hands only craft product filming",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/wellness-fitness-high-ticket-lead-gen",
+      "type": "308-redirect",
+      "destination": "/resources/fitness-coach-high-ticket-content-plan",
+      "indexable": false,
+      "status": 308,
+      "primaryKeyword": "fitness coach content plan",
+      "divisionOwner": "DIV 02 / DIV 03"
+    },
+    {
+      "url": "/resources/p/8",
+      "type": "retired-hub-308",
+      "destination": "/resources",
+      "indexable": false,
+      "status": 308,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/resources/p/9",
+      "type": "retired-hub-308",
+      "destination": "/resources",
+      "indexable": false,
+      "status": 308,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/resources/p/10",
+      "type": "retired-hub-308",
+      "destination": "/resources",
+      "indexable": false,
+      "status": 308,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/resources/p/11",
+      "type": "retired-hub-308",
+      "destination": "/resources",
+      "indexable": false,
+      "status": 308,
+      "divisionOwner": "DIV 03 Canonical Architect"
+    },
+    {
+      "url": "/templates/reels-script-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/short-form-video-script-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/instagram-creative-brief-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/social-media-creative-brief-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/reels-creative-brief-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/content-creator-brief-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/ugc-video-script-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/ugc-creative-brief-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/influencer-brief-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/content-production-brief-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/video-production-brief-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/shoot-plan-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    },
+    {
+      "url": "/templates/product-video-script-template",
+      "type": "purchase-protected-template",
+      "indexable": false,
+      "status": "protected-from-public-indexing",
+      "divisionOwner": "DIV 01 / DIV 07"
+    }
+  ]
+}
