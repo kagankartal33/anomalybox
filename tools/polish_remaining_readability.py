@@ -68,3 +68,4 @@ if p_scs.exists():
                   "A good content system values long-term endurance over short-term posting spikes.")
     p_scs.write_text(t, encoding="utf-8")
     print("sustainable-content-strategy score:", flesch(t))
+
