@@ -12,12 +12,12 @@ A page may target the right phrase yet remain hard to cite when the answer is bu
 
 ## Decision map for Knowledge Graph Entity Building for Personal Creator Brands
 
-| Decision | Evidence to prepare | Boundary |
+| Decision | Evidence to prepare. | Boundary |
 | :--- | :--- | :--- |
-| **Connect the author profile** | Prepare a clearly attributed source | Write for the reader before optimising extraction. |
-| **Verify official social profiles** | Prepare a first-hand process example | Avoid claims that the cited source does not support. |
-| **Cross-reference real publications** | Prepare a question-shaped section with a complete response | Do not add FAQ schema for questions that are not visible. |
-| **Validate niche recognition** | Prepare a concise direct answer | Refresh dates only when the content actually changes. |
+| **Connect the author profile**. | Prepare a clearly attributed source. | Write for the reader before optimising extraction. |
+| **Verify official social profiles**. | Prepare a first-hand process example. | Avoid claims that the cited source does not support. |
+| **Cross-reference real publications**. | Prepare a question-shaped section with a complete response. | Do not add FAQ schema for questions that are not visible. |
+| **Validate niche recognition**. | Prepare a concise direct answer. | Refresh dates only when the content actually changes. |
 
 ## How to put the method into practice
 

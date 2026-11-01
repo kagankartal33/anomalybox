@@ -40,13 +40,13 @@ Capture wide, calm shots of your studio space, morning coffee preparation, or de
 
 ## Directing Comparison: Cheap Faceless vs. Premium Faceless
 
-| Directing Element | Cheap Faceless Style | Premium Faceless Direction (Anomaly Box) |
+| Directing Element. | Cheap Faceless Style. | Premium Faceless Direction (Anomaly Box). |
 | :--- | :--- | :--- |
-| **Visual Footage** | Generic royalty-free stock clips from Canva | Original, phone-filmed 4K POV footage of your real workspace |
-| **Audio & Voice** | Robotic, emotionless text-to-speech voice | Crisp human voiceover with clean acoustic sound balance |
-| **Lighting Setup** | Flat, inconsistent stock footage lighting | Controlled directional key light with high-contrast shadows |
-| **Proof & Artifacts** | Abstract concepts with zero proof | Real physical documents, sketchpads, and screen workflows |
-| **Monetization Power** | Low-paying spam affiliate links | High-ticket briefs, digital assets, and consulting retainers |
+| **Visual Footage**. | Generic royalty-free stock clips from Canva. | Original, phone-filmed 4K POV footage of your real workspace. |
+| **Audio & Voice**. | Robotic, emotionless text-to-speech voice. | Crisp human voiceover with clean acoustic sound balance. |
+| **Lighting Setup**. | Flat, inconsistent stock footage lighting. | Controlled directional key light with high-contrast shadows. |
+| **Proof & Artifacts**. | Abstract concepts with zero proof. | Real physical documents, sketchpads, and screen workflows. |
+| **Monetization Power**. | Low-paying spam affiliate links. | High-ticket briefs, digital assets, and consulting retainers. |
 
 ---
 

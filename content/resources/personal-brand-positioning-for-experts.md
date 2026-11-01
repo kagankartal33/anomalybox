@@ -14,16 +14,16 @@ Start with the smallest version of **proprietary method** that delivers safer pr
 
 ## Decision map for Personal Brand Positioning for Experts & Coaches
 
-| Decision | Evidence to prepare | Boundary |
+| Decision | Evidence to prepare. | Boundary |
 | :--- | :--- | :--- |
-| **Proprietary methodology** | Prepare a slowed technique comparison | Show the common error before the correction. |
-| **Differentiating trade-off** | Prepare a second camera angle | Keep music below the coaching cue. |
-| **Client outcome proof** | Prepare a slowed technique comparison | State when a movement needs individual assessment. |
-| **Authority content pillars** | Prepare a repeatable progression step | Show the common error before the correction. |
+| **Proprietary method**. | Prepare a slowed technique comparison. | Show the common error before the correction. |
+| **Differentiating trade-off**. | Prepare a second camera angle. | Keep music below the coaching cue. |
+| **Client outcome proof**. | Prepare a slowed technique comparison. | State when a movement needs individual assessment. |
+| **Authority content pillars**. | Prepare a repeatable progression step. | Show the common error before the correction. |
 
 ## How to put the method into practice
 
-### 1. Proprietary methodology
+### 1. Proprietary method
 
 Treat proprietary method as a direct operational step. Make it support **differentiating trade-off** and follow this rule: teach one cue at a time, show the relevant angle and keep outcome language responsible.
 
@@ -53,7 +53,7 @@ Use this shoot card for **Personal Brand Positioning for Experts & Coaches**:
 
 - **Audience job:** `[The exact moment this post helps the viewer]`
 - **Promise:** `[One clear outcome delivered in 30 seconds]`
-- **Workflow:** `Proprietary methodology → Differentiating trade-off → Client outcome proof`
+- **Workflow:** `Proprietary method → Differentiating trade-off → Client outcome proof`
 - **Proof:** `a slowed technique comparison`
 - **Capacity rule:** `[Cap weekly filming to a single 45-minute block]`
 - **Call to action:** `[One clear save or reply prompt]`
@@ -66,7 +66,7 @@ Suppose coaches and fitness creators must complete one finished content cycle in
 
 ## Review Authority content pillars before the next pass
 
-- **Direction:** Does proprietary methodology name one clear choice?
+- **Direction:** Does proprietary method name one clear choice?
 - **Visibility:** Can the viewer see differentiating trade-off without reading the caption?
 - **Proof:** Does a slowed technique comparison back up the main claim under 5600K light?
 - **Boundary:** Has the creator respected this guardrail: Show the common error before the correction.
@@ -74,7 +74,7 @@ Suppose coaches and fitness creators must complete one finished content cycle in
 
 ## Frequently asked questions
 
-### What must Proprietary methodology decide first?
+### What must Proprietary method decide first?
 
 Set one clear default for **proprietary method** next to **differentiating trade-off**. State the exact condition that justifies a change. A slowed technique comparison is far more useful than a long reference deck because you can test it directly on set.
 

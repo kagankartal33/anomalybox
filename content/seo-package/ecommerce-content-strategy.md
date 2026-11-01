@@ -1,4 +1,4 @@
-# E-commerce Content Strategy: Demonstration, Objection and Use
+# E-commerce Content Strategy: proof, Objection and Use
 
 A strategy for this page should produce **buyer decision support**, not a busier calendar. Begin with the audience’s recurring decisions and the evidence the creator can responsibly show.
 
@@ -12,12 +12,12 @@ For **E-commerce Content Strategy: proof, Objection and Use**, use this form: �
 
 ## Build the series architecture
 
-| Series | Audience job | Evidence | Low-production version |
+| Series | Audience job. | Evidence | Low-production version. |
 |---|---|---|---|
-| Problem demonstrations | Define the question it answers | use, scale, fit, comparison, objections, packaging, service and verified customer evidence | One hook, one proof, one next step |
-| Scale and fit | Define the question it answers | use, scale, fit, comparison, objections, packaging, service and verified customer evidence | One hook, one proof, one next step |
-| Objection answers | Define the question it answers | use, scale, fit, comparison, objections, packaging, service and verified customer evidence | One hook, one proof, one next step |
-| After-purchase care | Define the question it answers | use, scale, fit, comparison, objections, packaging, service and verified customer evidence | One hook, one proof, one next step |
+| Problem proofs. | Define the question it answers. | use, scale, fit, comparison, objections, packaging, service and verified customer evidence. | One hook, one proof, one next step. |
+| Scale and fit. | Define the question it answers. | use, scale, fit, comparison, objections, packaging, service and verified customer evidence. | One hook, one proof, one next step. |
+| Objection answers. | Define the question it answers. | use, scale, fit, comparison, objections, packaging, service and verified customer evidence. | One hook, one proof, one next step. |
+| After-purchase care. | Define the question it answers. | use, scale, fit, comparison, objections, packaging, service and verified customer evidence. | One hook, one proof, one next step. |
 
 ## Map the journey
 
@@ -50,11 +50,11 @@ Answer four questions: What did the audience need? What evidence worked? Where d
 
 | Day | Work | Output |
 | :--- | :--- | :--- |
-| Mon | Select 2 bank ideas + write cards | 2 briefs |
-| Tue | Film both in one setup | Raw clips |
-| Wed | Edit + caption | 1–2 posts ready |
-| Thu | Publish + reply window | Engagement |
-| Fri | Light review notes | Bank updates |
+| Mon | Select 2 bank ideas + write cards. | 2 briefs. |
+| Tue | Film both in one setup. | Raw clips. |
+| Wed | Edit + caption. | 1–2 posts ready. |
+| Thu | Publish + reply window. | Engagement |
+| Fri | Light review notes. | Bank updates. |
 
 If the week fails, shrink the minimum week — do not invent a new strategy.
 
@@ -65,10 +65,10 @@ Measure assisted add-to-cart language, not vanity likes.
 
 ## Ecommerce funnel content map
 
-1. **Discovery** — problem-aware short video or carousel  
-2. **Consideration** — objection handling and comparison honesty  
-3. **Conversion** — PDP-aligned demo with limit shot  
-4. **Post-purchase** — use tips that reduce returns  
+1. **Discovery** — problem-aware short video or carousel.
+2. **Consideration** — objection handling and comparison honesty.
+3. **Conversion** — PDP-aligned demo with limit shot.
+4. **Post-purchase** — use tips that reduce returns.
 
 Score content by assisted product views and save-to-SKU tags, not follower vanity. Repeatable ops systems are useful system; this page decides **which ecommerce story jobs** those systems run.
 

@@ -36,11 +36,11 @@ In **Will the final work sound like the creator?**, the live site should show a 
 
 Typically includes:
 
-- Profile audit (promise vs grid)  
-- Series architecture for Feed/Reels/Stories  
-- Claim-safe content rules  
-- Monthly planning ritual  
-- Optional creative direction handoff  
+- Profile audit (promise vs grid).
+- Series architecture for Feed/Reels/Stories.
+- Claim-safe content rules.
+- Monthly planning ritual.
+- Optional creative direction handoff.
 
 Excludes community management unless contracted.
 
@@ -50,12 +50,12 @@ Deliverables: audit, series map, 30-day plan, review cadence. Differs from pure 
 
 ## Deliverable matrix (Instagram strategy retainer)
 
-| Week | Artefact | Acceptance test |
+| Week | Artefact | Acceptance test. |
 | :--- | :--- | :--- |
-| 0 | Surface audit (Feed / Stories / Reels / bio) | One primary surface chosen |
-| 1 | Promise + two series map | Stranger can state the niche in one line |
-| 2 | 30-day plan with bank links | Every slot has proof asset named |
-| 3 | Review scoreboard | Planned vs shipped + saves trend |
+| 0 | Surface audit (Feed / Stories / Reels / bio). | One primary surface chosen. |
+| 1 | Promise + two series map. | Stranger can state the niche in one line. |
+| 2 | 30-day plan with bank links. | Every slot has proof asset named. |
+| 3 | Review scoreboard. | Planned vs shipped + saves trend. |
 
 UGC creative retainers optimise creator briefs and paid cutdowns. This service optimises **organic Instagram system design** and does not replace ad creative ops.
 

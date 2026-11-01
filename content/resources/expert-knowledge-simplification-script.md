@@ -14,12 +14,12 @@ Start with the smallest version of **relatable analogy hook** that delivers stro
 
 ## Decision map for Expert Knowledge Simplification Script for Complex Topics
 
-| Decision | Evidence to prepare | Boundary |
+| Decision | Evidence to prepare. | Boundary |
 | :--- | :--- | :--- |
-| **Relatable analogy hook** | Prepare a decision memo excerpt | Do not publish confidential customer information. |
-| **Core mechanism simplified** | Prepare an anonymised workflow screen | Give metrics a timeframe and baseline. |
-| **Real-world example** | Prepare an anonymised workflow screen | Do not publish confidential customer information. |
-| **Actionable summary** | Prepare a decision memo excerpt | Avoid turning one result into a universal promise. |
+| **Relatable analogy hook**. | Prepare a decision memo excerpt. | Do not publish confidential customer information. |
+| **Core mechanism simplified**. | Prepare an anonymised workflow screen. | Give metrics a timeframe and baseline. |
+| **Real-world example**. | Prepare an anonymised workflow screen. | Do not publish confidential customer information. |
+| **Actionable summary**. | Prepare a decision memo excerpt. | Avoid turning one result into a universal promise. |
 
 ## How to put the method into practice
 
@@ -52,10 +52,10 @@ Verify this step with a decision memo excerpt. Avoid turning one result into a u
 Use this 30-second script structure for **Expert Knowledge Simplification Script for Complex Topics**:
 
 - **Opening shot (0-3s):** `[Visual friction visible under 5600K light]`
-- **Spoken hook (0-3s):** "If you struggle with `[exact problem]`, watch this step."
+- **Spoken hook (0-3s):** "If you struggle with `[exact problem]`, watch this step.".
 - **Method beats (3-15s):** `Relatable analogy hook followed by Core mechanism simplified`
 - **Proof beat (15-25s):** `an anonymised workflow screen`
-- **Call to action (25-30s):** "Save this card before your next shoot."
+- **Call to action (25-30s):** "Save this card before your next shoot.".
 
 Read the lines for **Relatable analogy hook** in **Expert Knowledge Simplification Script for Complex Topics** aloud. Trim any sentence that takes more than 4 seconds to say on camera.
 

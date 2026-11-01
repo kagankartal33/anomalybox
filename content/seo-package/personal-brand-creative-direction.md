@@ -34,10 +34,10 @@ In **Personal Brand Creative Direction for Founders and Experts**, the live site
 
 ## Personal brand direction layers
 
-1. **Positioning promise** (who + outcome)  
-2. **Visual signature** (height, grade, props)  
-3. **Proof language** (case, process, POV)  
-4. **Offer bridge** (who it’s not for)  
+1. **Positioning promise** (who + outcome).
+2. **Visual signature** (height, grade, props).
+3. **Proof language** (case, process, POV).
+4. **Offer bridge** (who it’s not for).
 
 Direction that only changes LUTs is decoration. Direction that changes proof and promise is strategy.
 
@@ -47,10 +47,10 @@ Voice, visual motifs, story lanes. Not a 30-day content calendar alone.
 
 ## Personal brand direction canvas
 
-- Voice adjectives (3 max) with “never say” list  
-- Visual motif kit (colour, crop, type treatment)  
-- Story lanes: origin, craft, client result, opinion  
-- Boundary: what the person will not perform on camera  
+- Voice adjectives (3 max) with “never say” list.
+- Visual motif kit (colour, crop, type treatment).
+- Story lanes: origin, craft, client result, opinion.
+- Boundary: what the person will not perform on camera.
 
 A planning service builds calendars; creative direction locks **identity constraints** so calendars stay on-brand when volume rises.
 

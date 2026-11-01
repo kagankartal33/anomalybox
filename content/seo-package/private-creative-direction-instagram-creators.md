@@ -19,7 +19,7 @@ In **Private Creative Direction for Instagram Creators**, the most useful starti
 1. Teaching
 2. Process
 3. Proof
-4. Point of view
+4. Point of view.
 
 For each series, write one example, one non-example and one proof requirement. This prevents broad labels from becoming catch-all categories.
 

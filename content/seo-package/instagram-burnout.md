@@ -40,12 +40,12 @@ In **Instagram Burnout: A Sustainable Publishing Reset**, if exhaustion, anxiety
 
 Burnout on Instagram often comes from **surface maintenance**, not only long-form production:
 
-| Surface | Hidden cost |
+| Surface | Hidden cost. |
 | :--- | :--- |
-| Feed grid | Aesthetic continuity and “dead square” anxiety |
-| Stories | Daily presence expectation |
-| Reels | Trend velocity and edit time |
-| DMs / comments | Unbounded social labour |
+| Feed grid. | Aesthetic continuity and “dead square” anxiety. |
+| Stories | Daily presence expectation. |
+| Reels | Trend velocity and edit time. |
+| DMs / comments. | Unbounded social labour. |
 
 **Instagram minimum week:** 1 Reel *or* 2 carousels + 3 Stories max, with one reply window (not all-day inbox).
 

@@ -29,13 +29,13 @@ Viewers share content to strengthen relationships, display taste. Or initiate pr
 
 ## Directing Comparison: Save-Engineered vs. Share-Engineered Briefs
 
-| Directing Element | Save-Optimized Brief | Share-Optimized Brief |
+| Directing Element. | Save-Optimized Brief. | Share-Optimized Brief. |
 | :--- | :--- | :--- |
-| **Primary Cognitive Trigger** | Information Utility & Endowment Effect | Social Identity & Parasocial Mirroring |
-| **Pacing** | Measured, clear, high-density bullet points | Fast-paced, punchy, emotionally expressive |
-| **On-Screen Text** | Detailed lists, parameter numbers, checklist cues | Bold, expressive punchlines or short quote overlays |
-| **Proof Asset** | Tangible templates, spreadsheets, shot diagrams | Lived reaction, comedic timing, or shocking data |
-| **Spoken CTA** | *"Save this checklist before your next shoot"* | *"Send this to a creator who needs to hear this"* |
+| **Primary Cognitive Trigger**. | Information Utility & Endowment Effect. | Social Identity & Parasocial Mirroring. |
+| **Pacing** | Measured, clear, high-density bullet points. | Fast-paced, punchy, emotionally expressive. |
+| **On-Screen Text**. | Detailed lists, metric numbers, checklist cues. | Bold, expressive punchlines or short quote overlays. |
+| **Proof Asset**. | Tangible templates, spreadsheets, shot diagrams. | Lived reaction, comedic timing, or shocking data. |
+| **Spoken CTA**. | *"Save this checklist before your next shoot"*. | *"Send this to a creator who needs to hear this"*. |
 
 ---
 

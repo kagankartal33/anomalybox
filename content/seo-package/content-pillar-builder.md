@@ -15,7 +15,7 @@ List ten questions, objections, desires or decisions your audience repeatedly fa
 Useful jobs include:
 
 - Teach a decision or skill.
-- Demonstrate a process or product.
+- show a process or product.
 - Provide proof or a worked example.
 - Express a point of view.
 - Build relationship and context.
@@ -50,12 +50,12 @@ A pillar becomes operational only when it has a repeatable structure. For exampl
 
 ## Example pillar set
 
-| Pillar | Promise | Proof | Recurring format |
+| Pillar | Promise | Proof | Recurring format. |
 |---|---|---|---|
-| Decision clarity | Help creators choose the next useful move | Worked decisions | Decision note |
-| Shoot-ready execution | Turn ideas into scenes | Brief and shot example | Concept breakdown |
-| Creator sustainability | Reduce unnecessary production pressure | Workflow example | Minimum-version guide |
-| Brand readiness | Improve commercial clarity | Brief, disclosure and deliverable examples | Collaboration audit |
+| Decision clarity. | Help creators choose the next useful move. | Worked decisions. | Decision note. |
+| Shoot-ready execution. | Turn ideas into scenes. | Brief and shot example. | Concept breakdown. |
+| Creator sustainability. | Reduce unnecessary production pressure. | Workflow example. | Minimum-version guide. |
+| Brand readiness. | Improve commercial clarity. | Brief, disclosure and deliverable examples. | Collaboration audit. |
 
 ## Review questions
 

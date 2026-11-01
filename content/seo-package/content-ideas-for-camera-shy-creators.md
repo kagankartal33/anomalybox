@@ -19,7 +19,7 @@ In **Content Ideas for Camera-Shy Creators: Six Comfortable Production Modes**, 
 1. Teaching
 2. Process
 3. Proof
-4. Point of view
+4. Point of view.
 
 For each series, write one example, one non-example and one proof requirement. This prevents broad labels from becoming catch-all categories.
 
@@ -41,11 +41,11 @@ For **Content Ideas for Camera-Shy Creators: Six Comfortable Production Modes**,
 
 ## Camera-shy format menu
 
-- Hands-only demos  
-- Over-shoulder desk  
-- Voiceover + B-roll  
-- Text-led carousels  
-- Screen recordings  
+- Hands-only demos.
+- Over-shoulder desk.
+- Voiceover + B-roll.
+- Text-led carousels.
+- Screen recordings.
 
 **Anxiety rule:** separate “being watched” from “sharing expertise.” Start with zero-face formats for two weeks, then optional chin-down talking head if desired.
 

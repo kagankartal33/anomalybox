@@ -16,10 +16,10 @@ A working approach to **beauty content strategy** locks five defaults: audience 
 
 ## Recommended recurring series
 
-1. Texture and application library
-2. Routine decisions
-3. Honest comparisons
-4. Finished-product reviews
+1. Texture and application library.
+2. Routine decisions.
+3. Honest comparisons.
+4. Finished-product reviews.
 
 For each series, write one example, one non-example and one proof requirement. This prevents broad labels from becoming catch-all categories.
 
@@ -51,11 +51,11 @@ Use saves, brand inquiries, repeat series completion, production time. Add notes
 
 | Day | Work | Output |
 | :--- | :--- | :--- |
-| Mon | Select 2 bank ideas + write cards | 2 briefs |
-| Tue | Film both in one setup | Raw clips |
-| Wed | Edit + caption | 1–2 posts ready |
-| Thu | Publish + reply window | Engagement |
-| Fri | Light review notes | Bank updates |
+| Mon | Select 2 bank ideas + write cards. | 2 briefs. |
+| Tue | Film both in one setup. | Raw clips. |
+| Wed | Edit + caption. | 1–2 posts ready. |
+| Thu | Publish + reply window. | Engagement |
+| Fri | Light review notes. | Bank updates. |
 
 If the week fails, shrink the minimum week — do not invent a new strategy.
 
@@ -67,20 +67,20 @@ If the week fails, shrink the minimum week — do not invent a new strategy.
 
 | Day | Work | Output |
 | :--- | :--- | :--- |
-| Mon | Select 2 bank ideas + write cards | 2 briefs |
-| Tue | Film both in one setup | Raw clips |
-| Wed | Edit + caption | 1–2 posts ready |
-| Thu | Publish + reply window | Engagement |
-| Fri | Light review notes | Bank updates |
+| Mon | Select 2 bank ideas + write cards. | 2 briefs. |
+| Tue | Film both in one setup. | Raw clips. |
+| Wed | Edit + caption. | 1–2 posts ready. |
+| Thu | Publish + reply window. | Engagement |
+| Fri | Light review notes. | Bank updates. |
 
 If the week fails, shrink the minimum week — do not invent a new strategy.
 
 ## Beauty-specific strategy rails
 
-- Skin / light honesty beats before product claims  
-- Macro + application order as series spine  
-- Shade / texture language that survives muted autoplay  
-- Compliance: avoid medical outcome language  
+- Skin / light honesty beats before product claims.
+- Macro + application order as series spine.
+- Shade / texture language that survives muted autoplay.
+- Compliance: avoid medical outcome language.
 
 Travel scenery systems do not transfer — beauty strategy lives in face-adjacent proof and routine cadence.
 

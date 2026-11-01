@@ -27,19 +27,19 @@ When a video surges past 50,000 views, the comment section becomes a goldmine of
 ### Hours 24 to 48: The Sequel / Part 2 Video
 The algorithm gives accounts with recent breakout velocity a temporary reach boost on their next post. If you publish a direct continuation or deeper tactical breakdown of the viral topic within 48 hours. The platform will immediately serve that second video to the users who engaged with the first.
 
-### Hours 48 to 72: The Bridge to Your Owned Infrastructure
+### Hours 48 to 72: The Bridge to Your Owned system
 Attention on social media is rented; your goal is to convert rented attention into owned relationships. Introduce your complete resource guide, template brief, or Creator Vault package as the natural next step for viewers who want the full action system.
 
 ---
 
 ## What to Post vs. What to Avoid in the 72-Hour Window
 
-| Action | Dangerous Mistake (Momentum Killer) | High-Impact Strategic Move (Growth Multiplier) |
+| Action | Dangerous Mistake (Momentum Killer). | High-Impact Strategic Move (Growth Multiplier). |
 | :--- | :--- | :--- |
-| **Next Video Topic** | Completely unrelated personal vlog or niche switch | Direct tactical sequel or "What happened next" breakdown |
-| **Comment Handling** | Ignoring comments or arguing with trolls | Pinning high-value clarifications and thanking thoughtful contributors |
-| **Profile Grid** | Outdated links or mismatched pinned posts | Updating top 3 pinned posts to complement the viral topic |
-| **Commercial Framing** | Aggressive hard-sell discount pop-ups | Organic invitation to explore the structured creative brief library |
+| **Next Video Topic**. | Completely unrelated personal vlog or niche switch. | Direct tactical sequel or "What happened next" breakdown. |
+| **Comment Handling**. | Ignoring comments or arguing with trolls. | Pinning high-value clarifications and thanking thoughtful contributors. |
+| **Profile Grid**. | Outdated links or mismatched pinned posts. | Updating top 3 pinned posts to complement the viral topic. |
+| **Commercial Framing**. | Aggressive hard-sell discount pop-ups. | Organic invitation to explore the structured creative brief library. |
 
 ---
 
@@ -61,7 +61,7 @@ Share the real-time analytics screenshot on your Stories and explain the creativ
 ```text
 [Hook]: "My last video on [viral topic] got over [view count] views. But the most important question in the comments was: '[Exact quote of top comment]'."
 + [Immediate Mechanism]: "Here is the step-by-step answer that I didn't have time to include in the 30-second version."
-+ [Proof / Demonstration]: Show the full spreadsheet. Brief, or workflow.
++ [Proof / proof]: Show the full spreadsheet. Brief, or workflow.
 + [Next Action]: "Check the link in my bio to access the complete shoot-ready template."
 ```
 

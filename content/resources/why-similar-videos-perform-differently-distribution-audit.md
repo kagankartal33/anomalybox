@@ -36,13 +36,13 @@ A difference of just 1.5 seconds of dead air or unnecessary setup in the middle 
 
 ## Comparison Matrix: High-Performing vs. Low-Performing Variant
 
-| Variable | The Stalled Variant (400 Views) | The Breakout Variant (250K Views) |
+| Variable | The Stalled Variant (400 Views). | The Breakout Variant (250K Views). |
 | :--- | :--- | :--- |
-| **Opening 0:00–0:01** | Static posture, slight delay before first word | Mid-action movement, speech starts at 0.0s |
-| **Hook Phrasing** | Broad and generic: *"Tips for better sleep"* | Specific tension: *"The 10-minute habit ruining your REM sleep"* |
-| **Proof Timing** | Proof or demonstration shown at 0:15 | Proof shown as a 1-second preview at 0:02 |
-| **On-Screen Text** | Static multi-line paragraph overlay | 3-word dynamic keyword cues timed to speech |
-| **Call to Action** | Vague: *"Subscribe for daily updates"* | Goal-focused: *"Save this checklist for your next shoot"* |
+| **Opening 0:00–0:01**. | Static posture, slight delay before first word. | Mid-action movement, speech starts at 0.0s. |
+| **Hook Phrasing**. | Broad and generic: *"Tips for better sleep"*. | Specific tension: *"The 10-minute habit ruining your REM sleep"*. |
+| **Proof Timing**. | Proof or proof shown at 0:15. | Proof shown as a 1-second preview at 0:02. |
+| **On-Screen Text**. | Static multi-line paragraph overlay. | 3-word dynamic keyword cues timed to speech. |
+| **Call to Action**. | Vague: *"Subscribe for daily updates"*. | Goal-focused: *"Save this checklist for your next shoot"*. |
 
 ---
 

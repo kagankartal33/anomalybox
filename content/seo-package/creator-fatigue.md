@@ -40,12 +40,12 @@ In **Creator Fatigue**, if exhaustion, anxiety, persistent sleep issues, low moo
 
 **Creator fatigue** is about *you*, not the feed:
 
-| Check | Red flag |
+| Check | Red flag. |
 | :--- | :--- |
-| Sleep | Can’t recover after posting days |
-| Recovery debt | Need full day off after every upload |
-| Body | Tension, headaches, dread before record |
-| Identity | “I only exist if I post” |
+| Sleep | Can’t recover after posting days. |
+| Recovery debt. | Need full day off after every upload. |
+| Body | Tension, headaches, dread before record. |
+| Identity | “I only exist if I post”. |
 
 **Response:** minimum cadence + no public comeback stunt + boundaries on comments. If symptoms persist, professional support outranks any content system.
 

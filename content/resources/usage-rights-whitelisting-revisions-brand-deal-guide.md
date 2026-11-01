@@ -9,7 +9,7 @@ This guide provides a complete legal. And Operational protection playbook for in
 ## Quick answer
 
 To protect your rights and creative boundaries in every brand agreement:
-1. **Differentiate Organic vs. Paid paid ads:** Organic posting allows the brand to repost on their profile. paid ads (running ads through your handle) requires a separate monthly licensing fee (+30% to +50%).
+1. **set apart Organic vs. Paid paid ads:** Organic posting allows the brand to repost on their profile. paid ads (running ads through your handle) requires a separate monthly licensing fee (+30% to +50%).
 2. **Cap Revision Rounds to 2:** 1 script approval round before filming + 1 minor timing/caption tweak post-delivery. Reshoots due to brand strategy changes must incur a 50% re-shoot fee.
 3. **Never Sign "endless / In-Perpetuity" Clauses:** Restrict all commercial usage to fixed terms (30. 60, or 90 days) with explicit renewal pricing.
 
@@ -35,12 +35,12 @@ paid ads grants a brand backend advertising access to run paid Meta/TikTok ads t
 
 ## Contract Term Comparison: Dangerous vs. Protected Clauses
 
-| Contract Term | Dangerous / Exploitative Clause | Protected Professional Clause |
+| Contract Term. | Dangerous / Exploitative Clause. | Protected Professional Clause. |
 | :--- | :--- | :--- |
-| **Usage Duration** | *"Perpetual, worldwide, royalty-free usage in all media."* | *"Limited to 90 days of digital paid social advertising starting from first publish date."* |
-| **Revision Policy** | *"Revisions until Brand is completely satisfied."* | *"Includes 1 round of script review prior to shoot; 1 round of minor edits post-delivery."* |
-| **Whitelisting Scope** | *"Brand may run ads using Creator name and assets."* | *"Whitelisting permitted via Meta Partnership Ads for 60 days at $[X] monthly fee."* |
-| **Payment Terms** | *"Net-60 or Net-90 days after publication."* | *"50% deposit upfront; 50% balance due within 14 days of final asset delivery."* |
+| **Usage Duration**. | *"Perpetual, worldwide, royalty-free usage in all media."*. | *"Limited to 90 days of digital paid social advertising starting from first publish date."*. |
+| **Revision Policy**. | *"Revisions until Brand is completely satisfied."*. | *"Includes 1 round of script review prior to shoot; 1 round of minor edits post-delivery."*. |
+| **Whitelisting Scope**. | *"Brand may run ads using Creator name and assets."*. | *"Whitelisting permitted via Meta Partnership Ads for 60 days at $[X] monthly fee."*. |
+| **Payment Terms**. | *"Net-60 or Net-90 days after publication."*. | *"50% deposit upfront; 50% balance due within 14 days of final asset delivery."*. |
 
 ---
 

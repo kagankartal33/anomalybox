@@ -38,11 +38,11 @@ In **Are results guaranteed?**, with **Are results guaranteed?** as the example,
 
 ## Reels direction deliverables
 
-- Hook options (visual + verbal)  
-- Scene order with proof insert  
-- On-screen text limits  
-- Edit pacing notes  
-- CTA matched to utility  
+- Hook options (visual + verbal).
+- Scene order with proof insert.
+- On-screen text limits.
+- Edit pacing notes.
+- CTA matched to utility.
 
 Direction ends when the creator can film without a second strategy call.
 

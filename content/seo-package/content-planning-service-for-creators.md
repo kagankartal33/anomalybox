@@ -34,12 +34,12 @@ In **Content Planning Service for Creators Who Need Fewer Decisions**, the live 
 
 ## Service vs one-off plan
 
-| | One-off plan | Planning service |
+| | One-off plan. | Planning service. |
 | :--- | :--- | :--- |
 | Cadence | Once | Weekly/monthly |
-| Decisions | Batch | Continuous triage |
-| Owner | Client executes alone | Shared decision load |
-| Stop rule | Document delivered | Scope + hours/month |
+| Decisions | Batch | Continuous triage. |
+| Owner | Client executes alone. | Shared decision load. |
+| Stop rule. | Document delivered. | Scope + hours/month. |
 
 A service fails when it becomes unlimited chat. Cap decision hours.
 

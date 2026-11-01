@@ -36,12 +36,12 @@ A structured, fast-paced format: *"3 reasons I threw away my traditional coffee 
 
 ## UGC Portfolio Architecture: What Brands Actually Review
 
-| Portfolio Section | Bad Approach (Beginner Mistake) | Winning Approach (Conversion Machine) |
+| Portfolio Section. | Bad Approach (Beginner Mistake). | Winning Approach (Conversion Machine). |
 | :--- | :--- | :--- |
-| **Hero Headline** | *"Hi, I'm Sarah! I love creating aesthetic lifestyle content!"* | *"Performance-Driven UGC Creator • Direct-Response Creative for DTC Brands"* |
-| **Video Grid** | 10 random unboxing clips with trending music | 4 categorized case studies displaying Hook Variation + Direct Response CTA |
-| **Analytics Section** | Zero data or fake follower metrics | Real Meta ad metrics, CTR benchmarks, or 3-second hook retention stats |
-| **Rate Card** | Hidden rates or vague *"DM for pricing"* | Transparent packages: $450 Single / $1,200 3-Pack / Retainer options |
+| **Hero Headline**. | *"Hi, I'm Sarah! I love creating aesthetic lifestyle content!"*. | *"Performance-Driven UGC Creator • Direct-Response Creative for DTC Brands"*. |
+| **Video Grid**. | 10 random unboxing clips with trending music. | 4 categorized case studies displaying Hook Variation + Direct Response CTA. |
+| **Analytics Section**. | Zero data or fake follower metrics. | Real Meta ad metrics, CTR benchmarks, or 3-second hook retention stats. |
+| **Rate Card**. | Hidden rates or vague *"DM for pricing"*. | Transparent packages: $450 Single / $1,200 3-Pack / Retainer options. |
 
 ---
 
@@ -80,11 +80,11 @@ Use this brief when delivering assets to your paying brand clients:
 PROJECT: [Product Name] Direct-Response UGC Campaign
 DELIVERABLE: 1 Core Video Body (0:04 - 0:28) + 3 Interchangeable Hooks (0:00 - 0:03)
 
-- Hook A (Pain Point): "If your [problem] is getting worse. Stop using [old method]."
-- Hook B (Contrarian): "The biggest lie in the [industry] industry is that you need [expensive thing]."
-- Hook C (Proof-First): "This 10-second routine completely fixed my [specific issue]."
+- Hook A (Pain Point): "If your [problem] is getting worse. Stop using [old method].".
+- Hook B (Contrarian): "The biggest lie in the [industry] industry is that you need [expensive thing].".
+- Hook C (Proof-First): "This 10-second routine completely fixed my [specific issue].".
 - Core Body: Step 1 (Application) + Step 2 (Result) + Macro Texture Shot.
-- Call to Action: "Click the link below to get [Offer/Discount]."
+- Call to Action: "Click the link below to get [Offer/Discount].".
 ```
 
 ---

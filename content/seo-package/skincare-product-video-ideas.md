@@ -50,14 +50,14 @@ Show a patch-test or cautious introduction process without promising an outcome.
 
 ## Build the shot list around proof
 
-| skincare product video ideas  Beat | Purpose | Example |
+| skincare product video ideas  Beat. | Purpose | Example |
 |---|---|---|
-| Hook | State the decision or concern | “How much of this do you actually need?” |
-| Context | Show the routine or use condition | Morning setup, travel bag or application stage |
-| Action | Demonstrate the product | Dispense, apply, blend, close or store |
-| Proof | Make the claim inspectable | Texture, finish, packaging function or labelled comparison |
-| Boundary | State an important limitation | Personal experience, lighting, skin variation or use case |
-| Next step | Offer relevant information | Full review, product details or save for reference |
+| Hook | State the decision or concern. | “How much of this do you actually need?”. |
+| Context | Show the routine or use condition. | Morning setup, travel bag or application stage. |
+| Action | show the product. | Dispense, apply, blend, close or store. |
+| Proof | Make the claim inspectable. | Texture, finish, packaging function or labelled comparison. |
+| Boundary | State an important limitation. | Personal experience, lighting, skin variation or use case. |
+| Next step. | Offer relevant information. | Full review, product details or save for reference. |
 
 ## Production controls
 

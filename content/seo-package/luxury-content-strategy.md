@@ -12,12 +12,12 @@ For **Luxury Content Strategy: Restraint, Material and World-Building**, use thi
 
 ## Build the series architecture
 
-| Series | Audience job | Evidence | Low-production version |
+| Series | Audience job. | Evidence | Low-production version. |
 |---|---|---|---|
-| Craft detail | Define the question it answers | material quality, craft, service, provenance, controlled composition and considered use | One hook, one proof, one next step |
-| Service moments | Define the question it answers | material quality, craft, service, provenance, controlled composition and considered use | One hook, one proof, one next step |
-| Quiet comparison | Define the question it answers | material quality, craft, service, provenance, controlled composition and considered use | One hook, one proof, one next step |
-| Design context | Define the question it answers | material quality, craft, service, provenance, controlled composition and considered use | One hook, one proof, one next step |
+| Craft detail. | Define the question it answers. | material quality, craft, service, provenance, controlled composition and considered use. | One hook, one proof, one next step. |
+| Service moments. | Define the question it answers. | material quality, craft, service, provenance, controlled composition and considered use. | One hook, one proof, one next step. |
+| Quiet comparison. | Define the question it answers. | material quality, craft, service, provenance, controlled composition and considered use. | One hook, one proof, one next step. |
+| Design context. | Define the question it answers. | material quality, craft, service, provenance, controlled composition and considered use. | One hook, one proof, one next step. |
 
 ## Map the journey
 
@@ -50,11 +50,11 @@ Answer four questions: What did the audience need? What evidence worked? Where d
 
 | Day | Work | Output |
 | :--- | :--- | :--- |
-| Mon | Select 2 bank ideas + write cards | 2 briefs |
-| Tue | Film both in one setup | Raw clips |
-| Wed | Edit + caption | 1–2 posts ready |
-| Thu | Publish + reply window | Engagement |
-| Fri | Light review notes | Bank updates |
+| Mon | Select 2 bank ideas + write cards. | 2 briefs. |
+| Tue | Film both in one setup. | Raw clips. |
+| Wed | Edit + caption. | 1–2 posts ready. |
+| Thu | Publish + reply window. | Engagement |
+| Fri | Light review notes. | Bank updates. |
 
 If the week fails, shrink the minimum week — do not invent a new strategy.
 
@@ -66,20 +66,20 @@ If the week fails, shrink the minimum week — do not invent a new strategy.
 
 | Day | Work | Output |
 | :--- | :--- | :--- |
-| Mon | Select 2 bank ideas + write cards | 2 briefs |
-| Tue | Film both in one setup | Raw clips |
-| Wed | Edit + caption | 1–2 posts ready |
-| Thu | Publish + reply window | Engagement |
-| Fri | Light review notes | Bank updates |
+| Mon | Select 2 bank ideas + write cards. | 2 briefs. |
+| Tue | Film both in one setup. | Raw clips. |
+| Wed | Edit + caption. | 1–2 posts ready. |
+| Thu | Publish + reply window. | Engagement |
+| Fri | Light review notes. | Bank updates. |
 
 If the week fails, shrink the minimum week — do not invent a new strategy.
 
 ## Luxury strategy rails
 
-- Restraint: fewer posts, higher finish bar  
-- Material and craft close-ups over trend audio  
-- Silence and negative space as brand signal  
-- Access / waitlist narrative only when true  
+- Restraint: fewer posts, higher finish bar.
+- Material and craft close-ups over trend audio.
+- Silence and negative space as brand signal.
+- Access / waitlist narrative only when true.
 
 Mass fashion volume tactics dilute luxury positioning — do not import daily-drop cadence.
 

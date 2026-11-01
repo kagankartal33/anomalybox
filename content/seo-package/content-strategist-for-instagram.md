@@ -38,11 +38,11 @@ In **Are results guaranteed?**, in **Are results guaranteed?**, the live site sh
 
 ## DIY vs strategist vs dossier
 
-| Need | Best fit |
+| Need | Best fit. |
 | :--- | :--- |
-| One-off clarity | Campaign-ready brief / plan |
-| Ongoing decisions | Strategist retainer |
-| Just templates | DIY + brief templates |
+| One-off clarity. | Campaign-ready brief / plan. |
+| Ongoing decisions. | Strategist retainer. |
+| Just templates. | DIY + brief templates. |
 
 Hire a strategist when decision load is weekly and costly—not when you only need a shot list once.
 

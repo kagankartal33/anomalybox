@@ -169,7 +169,7 @@ def main():
     res_3 = gate.evaluate(test_3)
     print(f"Test 3 (100% Original): {res_3.status} | Jaccard: {res_3.max_jaccard_score} | Details: {res_3.details}")
     
-    print("\n✅ Originality Gate operates cleanly!")
+    print("\n[OK] Originality Gate operates cleanly!")
 
 if __name__ == "__main__":
     main()

@@ -10,15 +10,15 @@ A **creator decision fatigue report** should measure workload and open decisions
 
 Track decisions by stage:
 
-| Stage | Example decisions | Observable cost |
+| Stage | Example decisions. | Observable cost. |
 |---|---|---|
-| Capture | What is worth saving? | Notes without context |
-| Selection | What should be made now? | Delayed starts |
-| Direction | Hook, proof, scenes, tone | Unfilmable ideas |
-| Production | Location, framing, takes | Long shoot time |
-| Editing | Cut, captions, music, polish | Endless revisions |
-| Distribution | Platform, timing, CTA | Publishing delay |
-| Review | Metrics, replies, next action | Anxiety and strategy churn |
+| Capture | What is worth saving? | Notes without context. |
+| Selection | What should be made now? | Delayed starts. |
+| Direction | Hook, proof, scenes, tone. | Unfilmable ideas. |
+| Production | Location, framing, takes. | Long shoot time. |
+| Editing | Cut, captions, music, polish. | Endless revisions. |
+| Distribution | Platform, timing, CTA. | Publishing delay. |
+| Review | Metrics, replies, next action. | Anxiety and strategy churn. |
 
 ## Suggested study design
 

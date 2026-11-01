@@ -35,12 +35,12 @@ Over 60% of social media users consume video without headphones or with sound re
 
 ## 4 Hook Archetypes That Drive Retention Without Clickbait
 
-| Hook Archetype | Psychological Mechanism | Example Script Opening | Best Creator Lanes |
+| Hook Archetype. | Psychological Mechanism. | Example Script Opening. | Best Creator Lanes. |
 | :--- | :--- | :--- | :--- |
-| **Reverse Expectation** | Anterior Cingulate Cortex conflict | *"Why spending more time on editing is actually ruining your retention."* | Creator Education, B2B, Tech |
-| **Cost of Inaction** | Amygdala Loss Aversion | *"The hidden setting on your phone that is compressing all your 4K footage."* | Photography, Lifestyle, Tech |
-| **Proof-First Reveal** | Reward Prediction Confirmation | *"This single template generated 40 client inquiries without a single paid ad."* | Consulting, Business, UGC |
-| **Quiet Curiosity Gap** | Default Mode Network suppression | *"What happens when you replace daily posting with a weekly batch brief."* | Personal Brand, Wellness |
+| **Reverse Expectation**. | Anterior Cingulate Cortex conflict. | *"Why spending more time on editing is actually ruining your retention."*. | Creator Education, B2B, Tech. |
+| **Cost of Inaction**. | Amygdala Loss Aversion. | *"The hidden setting on your phone that is compressing all your 4K footage."*. | Photography, Lifestyle, Tech. |
+| **Proof-First Reveal**. | Reward Prediction Confirmation. | *"This single template generated 40 client inquiries without a single paid ad."*. | Consulting, Business, UGC. |
+| **Quiet Curiosity Gap**. | Default Mode Network suppression. | *"What happens when you replace daily posting with a weekly batch brief."*. | Personal Brand, Wellness. |
 
 ---
 
@@ -48,7 +48,7 @@ Over 60% of social media users consume video without headphones or with sound re
 
 ### Step 1: Write the Hook in 3 Separate Variations
 Never shoot a video with only one opening idea. In your pre-production brief, draft three distinct hook modes:
-1. *The Direct Solution Hook:* Straightforward utility for high search intent.
+1. *The Direct Solution Hook:* simple utility for high search intent.
 2. *The Contrarian Take Hook:* High cognitive dissonance for non-follower discovery.
 3. *The Proof-First Hook:* Visual artifact demo for commercial conversion.
 

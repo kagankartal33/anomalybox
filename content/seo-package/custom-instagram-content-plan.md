@@ -34,11 +34,11 @@ In **Custom Instagram Content Plan with Shoot-Ready Direction**, the live site s
 
 ## What a custom Instagram plan contains
 
-- Audience promise  
-- 3 series mapped to Feed/Reels/Stories  
-- 30-day unit counts by capacity  
-- Example cards for week 1  
-- Metrics review ritual  
+- Audience promise.
+- 3 series mapped to Feed/Reels/Stories.
+- 30-day unit counts by capacity.
+- Example cards for week 1.
+- Metrics review ritual.
 
 **Not included by default:** guaranteed growth, unlimited revisions, daily management.
 

@@ -14,12 +14,12 @@ Start with the smallest version of **wellness audience qualification** that deli
 
 ## Decision map for Wellness & Fitness Reels for Premium Services
 
-| Decision | Evidence to prepare | Boundary |
+| Decision | Evidence to prepare. | Boundary |
 | :--- | :--- | :--- |
-| **Wellness audience qualification** | Prepare a repeatable progression step | Avoid guaranteed body or income outcomes. |
-| **Responsible outcome framing** | Prepare a slowed technique comparison | Show the common error before the correction. |
-| **client progression evidence** | Prepare a repeatable progression step | Show the common error before the correction. |
-| **Consultation invitation** | Prepare a slowed technique comparison | State when a movement needs individual assessment. |
+| **Wellness audience qualification**. | Prepare a repeatable progression step. | Avoid guaranteed body or income outcomes. |
+| **Responsible outcome framing**. | Prepare a slowed technique comparison. | Show the common error before the correction. |
+| **client progression evidence**. | Prepare a repeatable progression step. | Show the common error before the correction. |
+| **Consultation invitation**. | Prepare a slowed technique comparison. | State when a movement needs individual assessment. |
 
 ## How to put the method into practice
 

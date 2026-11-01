@@ -30,13 +30,13 @@ Without a pre-defined definition of done, editing becomes an endless loop of mic
 
 ## The Decision Elimination Matrix
 
-| Production Phase | Unstructured Approach (High Friction) | Anomaly Box Brief Approach (Zero Fatigue) |
+| Production Phase. | Unstructured Approach (High Friction). | Anomaly Box Brief Approach (Zero Fatigue). |
 | :--- | :--- | :--- |
-| **Ideation** | Staring at phone on filming day asking *"What should I post today?"* | 3 pre-vetted concepts selected from your Creator Vault on Monday |
-| **Hook Selection** | Ad-libbing 10 random openings in front of the camera | Choosing between 2 pre-written hook modes (Contrarian vs Proof-First) |
-| **Framing & Lighting** | Adjusting tripod height and moving furniture for 40 minutes | Standardized eye-level 50mm setup locked to marked floor points |
-| **Filming Protocol** | Filming 15 chaotic takes hoping one works | Max 3 takes per beat following structured timecoded prompts |
-| **Editing Finish Line** | Tweaking timeline for 3 hours with no clear stopping point | Definition of Done: Trim audio breath + duck music -16dB + export |
+| **Ideation** | Staring at phone on filming day asking *"What should I post today?"*. | 3 pre-vetted concepts selected from your Creator Vault on Monday. |
+| **Hook Selection**. | Ad-libbing 10 random openings in front of the camera. | Choosing between 2 pre-written hook modes (Contrarian vs Proof-First). |
+| **Framing & Lighting**. | Adjusting tripod height and moving furniture for 40 minutes. | Standardized eye-level 50mm setup locked to marked floor points. |
+| **Filming Protocol**. | Filming 15 chaotic takes hoping one works. | Max 3 takes per beat following structured timecoded prompts. |
+| **Editing Finish Line**. | Tweaking timeline for 3 hours with no clear stopping point. | Definition of Done: Trim audio breath + duck music -16dB + export. |
 
 ---
 

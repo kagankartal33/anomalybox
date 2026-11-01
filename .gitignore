@@ -24,3 +24,7 @@ editassemblyguide.png
 # Supabase CLI local state
 supabase/.temp/
 .vercel
+.vscode/
+reports/
+__pycache__/
+*.pyc

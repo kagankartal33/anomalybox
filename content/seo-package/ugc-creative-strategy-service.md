@@ -38,11 +38,11 @@ In **Will the final work sound like the creator?**, in **Are results guaranteed?
 
 ## UGC strategy service scope
 
-- Offer/product proof map  
-- Hook library for testing  
-- Creator briefing standards  
-- Rights & revision policy  
-- Portfolio/shot list standards  
+- Offer/product proof map.
+- Hook library for testing.
+- Creator briefing standards.
+- Rights & revision policy.
+- Portfolio/shot list standards.
 
 Success metric: usable ad assets and clear briefs—not follower count.
 

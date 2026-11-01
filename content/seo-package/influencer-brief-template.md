@@ -24,7 +24,7 @@ Timeline and approvals:
 
 1. **Legal and factual:** disclosure, approved claims, prohibited claims and permissions.
 2. **Deliverable:** formats, lengths, dates, raw footage, variants and technical specifications.
-3. **Creative:** audience tension, angle, tone, demonstration and room for creator adaptation.
+3. **Creative:** audience tension, angle, tone, proof and room for creator adaptation.
 
 Do not label every preference “mandatory”. That makes it difficult to identify the requirements that genuinely protect the campaign.
 
@@ -34,7 +34,7 @@ Do not label every preference “mandatory”. That makes it difficult to identi
 Project: influencer brief template
 Audience problem: the current routine feels complicated
 Product role: replace one inconvenient step, not the entire routine
-Angle: demonstrate where the product fits during a real morning
+Angle: show where the product fits during a real morning
 Hooks: “This is the step I kept skipping” / “A shorter routine that still feels complete”
 Required proof: show the product in use and the resulting practical difference
 Approved claims: insert exact approved facts and source
@@ -56,7 +56,7 @@ Record organic and paid usage separately. Include term, territory, platforms, wh
 
 - The creator understands the audience and single message.
 - Mandatory claims are exact and sourced.
-- The product demonstration is possible and honest.
+- The product proof is possible and honest.
 - The creator knows what may be adapted.
 - Rights, payment and revisions are documented elsewhere in the contract.
 - One person consolidates feedback.
@@ -91,12 +91,12 @@ Record organic and paid usage separately. Include term, territory, platforms, wh
 
 Must include:
 
-- Integration style (soft mention / dedicated / review)  
-- Non-negotiable disclosures  
-- Creative freedom zones  
-- Exact deliverables (posts, Stories, lives)  
-- Whitelisting / spark codes  
-- Timeline and kill fee  
+- Integration style (soft mention / dedicated / review).
+- Non-negotiable disclosures.
+- Creative freedom zones.
+- Exact deliverables (posts, Stories, lives).
+- Whitelisting / spark codes.
+- Timeline and kill fee.
 
 **Difference from UGC:** audience trust and creator voice are the product; over-scripting destroys value.
 

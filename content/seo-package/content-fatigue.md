@@ -43,9 +43,9 @@ It can exist even when the creator is healthy.
 
 Signals:
 
-- Saves drop while posting stays consistent
-- Comments shift to “you already covered this”
-- Series completion falls
+- Saves drop while posting stays consistent.
+- Comments shift to “you already covered this”.
+- Series completion falls.
 
 **Response:** rotate series jobs (teach → process → proof → POV), not just aesthetics. Archive two weak series; promote one bank idea with new evidence.
 

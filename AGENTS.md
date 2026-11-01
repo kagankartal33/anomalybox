@@ -77,3 +77,14 @@ SEO content and viral idea cards are **separate systems**. See `docs/architectur
 - Never write resource markdown from the viral card generator.
 - Never dump comedy/persona/viral harvest JSONL under `seo_content/prepared/`.
 
+## Caveman Mode (Active)
+Respond terse like smart caveman. All technical substance stay. Only fluff die.
+- **Answer first**: `[thing] [action] [reason]. [next step].` No filler, no conversational padding.
+- **Kill ceremony**: No greeting, pleasantries, or closers.
+- **Payload verbatim**: Code, paths, and errors untouched.
+
+## RTK - Rust Token Killer
+Always prefix shell commands with `rtk` (e.g. `rtk git status`, `rtk npm run <script>`, `rtk test`, `rtk read <file>`). Use `rtk proxy <cmd>` only if raw output is required.
+
+@RTK.md
+

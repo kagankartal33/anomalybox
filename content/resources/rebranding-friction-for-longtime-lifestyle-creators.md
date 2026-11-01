@@ -14,12 +14,12 @@ Start with the smallest version of **audience expectation management** that deli
 
 ## Decision map for Rebranding Friction for Longtime Lifestyle Creators
 
-| Decision | Evidence to prepare | Boundary |
+| Decision | Evidence to prepare. | Boundary |
 | :--- | :--- | :--- |
-| **Audience expectation management** | Prepare an audience question answered on screen | Choose a format that fits the evidence. |
-| **Visual signature evolution** | Prepare a completed example | Choose a format that fits the evidence. |
-| **Topic pillar transition** | Prepare an audience question answered on screen | Choose a format that fits the evidence. |
-| **Community dialogue** | Prepare a visible process step | Review comparable posts rather than isolated spikes. |
+| **Audience expectation management**. | Prepare an audience question answered on screen. | Choose a format that fits the evidence. |
+| **Visual signature evolution**. | Prepare a completed example. | Choose a format that fits the evidence. |
+| **Topic pillar transition**. | Prepare an audience question answered on screen. | Choose a format that fits the evidence. |
+| **Community dialogue**. | Prepare a visible process step. | Review comparable posts rather than isolated spikes. |
 
 ## How to put the method into practice
 

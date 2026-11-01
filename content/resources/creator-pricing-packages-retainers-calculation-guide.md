@@ -32,12 +32,12 @@ If the brand intends to run your video as a paid Meta/TikTok advertisement (dark
 
 ## Creator Pricing Benchmark Matrix (2026 Standards)
 
-| Package Tier | Deliverables Included | Standard Price Range | Ideal Brand Client |
+| Package Tier. | Deliverables Included. | Standard Price Range. | Ideal Brand Client. |
 | :--- | :--- | :--- | :--- |
-| **Single UGC Asset** | 1 Concept + 2 Hook Variations + 30-Day Paid Ad Rights | $450 – $950 | DTC E-commerce, Skincare, Apps |
-| **Organic Partnership** | 1 Dedicated Reel + Story Sequence + Organic Link | $750 – $2,500+ | Niche SaaS, Consumer Brands |
-| **Monthly Creative Retainer** | 4 Campaign-Ready Briefs / Month (3-Month Minimum) | $2,000 – $5,000 / month | Growth-stage startups, Agency partners |
-| **Full Creative Direction Package** | 8 Briefs + Whitelisting + Raw B-Roll Handoff | $4,500 – $10,000+ | Enterprise brands, Launch campaigns |
+| **Single UGC Asset**. | 1 Concept + 2 Hook Variations + 30-Day Paid Ad Rights. | $450 – $950. | DTC E-commerce, Skincare, Apps. |
+| **Organic Partnership**. | 1 Dedicated Reel + Story Sequence + Organic Link. | $750 – $2,500+. | Niche SaaS, Consumer Brands. |
+| **Monthly Creative Retainer**. | 4 Campaign-Ready Briefs / Month (3-Month Minimum). | $2,000 – $5,000 / month. | Growth-stage startups, Agency partners. |
+| **Full Creative Direction Package**. | 8 Briefs + Whitelisting + Raw B-Roll Handoff. | $4,500 – $10,000+. | Enterprise brands, Launch campaigns. |
 
 ---
 
@@ -51,7 +51,7 @@ Deliver 4 diverse briefs testing 4 distinct hook archetypes (Contrarian. Proof-F
 ### Month 2: Scaling the Winning Hook Angle
 Produce 4 iterations expanding on the winning creative angle from Month 1. Varying proof cutaways and background settings.
 
-### Month 3: Conversion Optimization & Retargeting Variants
+### Month 3: Conversion tuning & Retargeting Variants
 Deliver 4 bottom-of-funnel conversion briefs designed clearly to turn warm viewers into paying customers.
 
 ---

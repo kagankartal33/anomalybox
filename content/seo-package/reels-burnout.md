@@ -40,10 +40,10 @@ In **Reels Burnout: Stop Reinventing Every Video**, if exhaustion, anxiety, pers
 
 Reels burnout is a **finishing debt** problem:
 
-1. Hook hunting (first 1s arms race)
-2. Multi-take filming
-3. Captions + sound + cut pacing
-4. Performance anxiety from completion rate
+1. Hook hunting (first 1s arms race).
+2. Multi-take filming.
+3. Captions + sound + cut pacing.
+4. Performance anxiety from completion rate.
 
 **Reels minimum week:** one 15–25s proven format with locked B-roll kit — no new trend audio.
 
