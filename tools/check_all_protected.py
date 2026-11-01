@@ -34,3 +34,4 @@ for m in matches:
         continue
     if is_protected("resources", title):
         print(f"Legacy protected: {path} -> {title}")
+
