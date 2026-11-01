@@ -22,7 +22,7 @@ Start with the smallest version of **audience expectation management** that deli
 
 ## Decision map for Rebranding Friction for Longtime Lifestyle Creators
 
-| Decision | Evidence to prepare. | Boundary |
+| Decision. | Evidence to prepare. | Boundary. |
 | :--- | :--- | :--- |
 | **Audience expectation management**. | Prepare an audience question answered on screen. | Choose a format that fits the evidence. |
 | **Visual signature evolution**. | Prepare a completed example. | Choose a format that fits the evidence. |
@@ -70,7 +70,7 @@ Compare **Audience expectation management** against **Visual signature evolution
 
 ## A practical first pass
 
-Suppose creators building a repeatable publishing system must complete one documented choice in a short 45-minute window. First, they lock **audience expectation management**. They prepare a completed example. Then they use **topic pillar transition** to keep the promise visible on camera in 4K at 60fps. Choose a format that fits the evidence. During review, they judge **community dialogue** against more finished pieces. A vague request for more polish is rejected.
+Suppose creators must complete a rebranding decision in a short 45-minute window. First, they lock audience expectations. They prepare a completed example. Then they transition topic pillars to keep their promise clear on camera. They choose a format that fits their proof. During review, they judge community feedback by finished posts. Vague requests for extra polish are rejected.
 
 ## Review Community dialogue before the next pass
 
@@ -84,7 +84,7 @@ Suppose creators building a repeatable publishing system must complete one docum
 
 ### What must Audience expectation management decide first?
 
-Set one clear default for **audience expectation management** next to **visual signature evolution**. State the exact condition that justifies a change. An audience question answered on screen is far more useful than a long reference deck because you can test it directly on set.
+Set one clear default for expectation management next to your visual shift. State the exact trigger for change. Answering a viewer question on screen beats a long reference deck because you can test it directly on set.
 
 ### How can Visual signature evolution be tested with simple gear?
 

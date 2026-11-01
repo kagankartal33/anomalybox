@@ -4,7 +4,7 @@ Natural delivery comes from short beats. It does not come from reciting long par
 
 ## Quick answer
 
-Start with **Relatable analogy hook**. Use **Core mechanism simplified** to show the method clearly on camera in 4K at 60fps. Let **Real-world example** deliver the visual proof under locked 5600K light. Treat **Actionable summary** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
+Start with a relatable analogy hook. Explain the core mechanism in simple terms. Show a real-world example as proof. Treat an actionable summary as your review gate. The core rule is simple: lead with real friction, show proof, and explain trade-offs in plain words.
 
 ```mermaid
 flowchart LR
@@ -57,26 +57,26 @@ Verify this step with a decision memo excerpt. Avoid turning one result into a u
 
 ## A script you can adapt
 
-Use this 30-second script structure for **Expert Knowledge Simplification Script for Complex Topics**:
+Use this 30-second script structure for **Expert Knowledge Simplification Script for Complex Topics**.
 
-- **Opening shot (0-3s):** `[Visual friction visible under 5600K light]`
-- **Spoken hook (0-3s):** "If you struggle with `[exact problem]`, watch this step.".
-- **Method beats (3-15s):** `Relatable analogy hook followed by Core mechanism simplified`
-- **Proof beat (15-25s):** `an anonymised workflow screen`
-- **Call to action (25-30s):** "Save this card before your next shoot.".
+- **Opening shot (0-3s).** Show clear visual friction under bright lighting.
+- **Spoken hook (0-3s).** Open with: If you struggle with this exact problem, watch this step.
+- **Method beats (3-15s).** Pair a relatable analogy hook with a simplified core mechanism.
+- **Proof beat (15-25s).** Reveal an anonymised workflow screen as proof.
+- **Call to action (25-30s).** Conclude with: Save this card before your next shoot.
 
 Read the lines for **Relatable analogy hook** in **Expert Knowledge Simplification Script for Complex Topics** aloud. Trim any sentence that takes more than 4 seconds to say on camera.
 
 ## A practical first pass
 
-Suppose founders, consultants and B2B teams must complete one short video script in a short 45-minute window. First, they lock **relatable analogy hook**. They prepare an anonymised workflow screen. Then they use **real-world example** to keep the promise visible on camera in 4K at 60fps. Do not publish confidential customer information. During review, they judge **actionable summary** against sales-relevant questions. A vague request for more polish is rejected.
+Suppose B2B consultants must finish a short video script in forty-five minutes. First, they lock a relatable analogy hook. They prepare an anonymised workflow screen. Then they use a real-world example to keep the promise visible on camera. They never share confidential client details. During review, they judge the summary against sales inquiries. Vague requests for extra polish are rejected.
 
 ## Review Actionable summary before the next pass
 
 - **Direction:** Does relatable analogy hook name one clear choice?
 - **Visibility:** Can the viewer see core mechanism simplified without reading the caption?
 - **Proof:** Does an anonymised workflow screen back up the main claim under 5600K light?
-- **Boundary:** Has the creator respected this guardrail: Avoid turning one result into a universal promise.
+- **Boundary:** Has the creator respected this guardrail: Avoid turning one result into a universal promise?
 - **Learning:** Will the next pass improve based on qualified replies?
 
 ## Frequently asked questions

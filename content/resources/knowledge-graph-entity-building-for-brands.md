@@ -55,33 +55,33 @@ Check a concise direct answer. Refresh dates only when the content actually chan
 
 ## A script you can adapt
 
-Use this answer structure for **Knowledge Graph Entity Building for Personal Creator Brands**:
+Use this answer structure for **Knowledge Graph Entity Building for Personal Creator Brands**.
 
-- **Zero-click capsule (0-50 words):** `[Direct answer defining the entity and primary action]`
-- **Decision table:** `[3-column matrix comparing options on evidence and cost]`
-- **Practical method:** `Connect the author profile followed by Verify official social profiles`
-- **Proof:** `a question-shaped section with a complete response`
-- **Follow-up Q&A:** `[4 specific user questions answered in 2 sentences each]`
+- **Zero-click capsule (0-50 words).** Provide a direct answer defining the entity and primary action.
+- **Decision table.** Include a 3-column matrix comparing options on evidence and cost.
+- **Practical method.** Connect the author profile followed by verified official social profiles.
+- **Proof.** Add a question-shaped section with a complete factual response.
+- **Follow-up Q&A.** Answer four specific user questions in two sentences each.
 
 Check **Connect the author profile** for direct clarity before adding extra background context.
 
 ## A practical first pass
 
-Suppose creator brands publishing reference-quality pages must complete one reference-quality guide in a short 45-minute window. First, they lock **connect the author profile**. They prepare a first-hand process example. Then they use **cross-reference real publications** to keep the promise visible on camera in 4K at 60fps. Do not add FAQ schema for questions that are not visible. During review, they judge **validate niche recognition** against relevant impressions. A vague request for more polish is rejected.
+Suppose a creator brand must publish an entity guide in forty-five minutes. First, they link the author profile. They add a first-hand case example. Next, they cross-reference published work to keep claims verifiable. They never add schema for hidden text. During review, they check search impressions and citations. Vague polish requests are rejected.
 
 ## Review Validate niche recognition before the next pass
 
-- **Direction:** Does connect the author profile name one clear choice?
-- **Visibility:** Can the viewer see verify official social profiles without reading the caption?
-- **Proof:** Does a question-shaped section with a complete response back up the main claim under 5600K light?
-- **Boundary:** Has the creator respected this guardrail: Refresh dates only when the content actually changes.
-- **Learning:** Will the next pass improve based on citations and branded searches?
+- **Direction:** Does the author profile name one clear subject?
+- **Visibility:** Can readers see verified social links right away?
+- **Proof:** Does the cited publication back up the core claim?
+- **Boundary:** Has the page avoided changing dates without real updates?
+- **Learning:** Will the next pass improve branded search citations?
 
 ## Frequently asked questions
 
 ### What must Connect the author profile decide first?
 
-Set one clear default for **connect the author profile** next to **verify official social profiles**. State the exact condition that justifies a change. A clearly attributed source is far more useful than a long reference deck because you can test it directly on set.
+Set one clear default for your author profile next to social links. State the exact trigger for an update. A cited source beats a long deck because search bots index it directly.
 
 ### How can Verify official social profiles be tested with simple gear?
 
