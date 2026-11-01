@@ -7,10 +7,10 @@ import { seoPageByPublicPath } from "@/lib/seo-package";
  * resolve to their cluster winner. Review this list against Search Console every quarter.
  */
 const POPULAR_GUIDE_PATHS = [
-  "/reels/instagram-reels-shot-list",
-  "/resources/content-planning-workflow",
+  "/resources/short-form-video-shot-list",
+  "/resources/content-creation-workflow",
   "/services/custom-instagram-content-plan",
-  "/creator-personas/content-strategy-for-small-creators",
+  "/resources/content-strategy-for-creators",
   "/resources/minimum-viable-content-strategy",
   "/resources/how-to-create-content-consistently",
   "/reels/instagram-reels-ideas",

@@ -12,7 +12,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 REG = ROOT / "lib" / "seo-package-registry.json"
 CONTENT = ROOT / "content" / "seo-package"
+CONSOLIDATION = ROOT / "lib" / "seo-consolidation.json"
 OUT = ROOT / "lib" / "seo-package-links.json"
+
+consolidation_data = json.loads(CONSOLIDATION.read_text(encoding="utf-8")) if CONSOLIDATION.exists() else {}
+merged_sources = set()
+for cluster in consolidation_data.get("clusters", []):
+    for r in cluster.get("redirects", []):
+        merged_sources.add(r)
+for r in consolidation_data.get("retiredHubPages", []):
+    merged_sources.add(r["source"])
 
 STOP = {
     "the", "and", "for", "with", "that", "this", "from", "your", "you", "are", "how",
@@ -75,7 +84,7 @@ def load_all_pages():
 
 
 def is_protected_template(page: dict) -> bool:
-    return page.get("section") == "templates" or bool(re.search(r"\btemplate\b", page.get("title", ""), re.I))
+    return page.get("section") == "templates"
 
 
 def main() -> int:
@@ -96,8 +105,8 @@ def main() -> int:
             blob += " " + heads
         tok[p["slug"]] = tokens(blob)
 
-    # Valid candidates to be linked TO: must never be purchase-gated templates
-    candidates = [p for p in all_pages if not is_protected_template(p)]
+    # Valid candidates to be linked TO: must never be purchase-gated templates or merged/consolidated URLs
+    candidates = [p for p in all_pages if not is_protected_template(p) and p.get("path") not in merged_sources]
 
     graph: dict[str, list[dict]] = {}
     for a in all_pages:

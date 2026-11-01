@@ -2,30 +2,25 @@
  * Ping search engines (Google, Bing, IndexNow) to accelerate indexing.
  * Usage: node tools/ping-search-engines.mjs [optional-base-url]
  */
-import { siteUrl } from "../lib/env.js";
-import { resources, segments } from "../lib/seo-content.js";
+import fs from "node:fs";
+import path from "node:path";
 
 const base = (process.argv[2] || process.env.NEXT_PUBLIC_SITE_URL || "https://anomalybox.com").replace(/\/$/, "");
 const host = new URL(base).hostname;
 const sitemapUrl = `${base}/sitemap.xml`;
 const feedUrl = `${base}/feed.xml`;
 
-const urls = [
-  base,
-  `${base}/store`,
-  `${base}/pricing`,
-  `${base}/reels`,
-  `${base}/content-ideas`,
-  `${base}/resources`,
-  `${base}/methodology`,
-  `${base}/atelier`,
-  `${base}/about`,
-  `${base}/dossiers/classic-red`,
-  `${base}/dossiers/signature-purple`,
-  `${base}/resources/reels-creative-brief-template-for-brands`,
-  ...segments.map((s) => `${base}/content-ideas/${s.slug}`),
-  ...resources.map((r) => `${base}/resources/${r.slug}`),
-];
+let urls = [base];
+try {
+  const sitemapRes = await fetch(sitemapUrl, { signal: AbortSignal.timeout(10000) });
+  if (sitemapRes.ok) {
+    const xml = await sitemapRes.text();
+    const matches = [...xml.matchAll(/<loc>(https:\/\/[^<]+)<\/loc>/g)].map((m) => m[1]);
+    if (matches.length > 0) urls = [...new Set(matches)];
+  }
+} catch {
+  // fallback
+}
 
 console.log(`\n========================================================`);
 console.log(`  ANOMALY BOX - SEARCH ENGINE INDEXING TRIGGER`);

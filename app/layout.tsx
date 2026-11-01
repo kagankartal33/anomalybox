@@ -13,8 +13,9 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const verification: NonNullable<Metadata["verification"]> = {};
-if (process.env.GOOGLE_SITE_VERIFICATION) verification.google = process.env.GOOGLE_SITE_VERIFICATION;
+const verification: NonNullable<Metadata["verification"]> = {
+  google: process.env.GOOGLE_SITE_VERIFICATION || "YoQFSqizL_nH29UVpAfsDKrSMrCmTHTkIBK7Q9j0veg",
+};
 const otherVerification: Record<string, string> = {};
 if (process.env.BING_SITE_VERIFICATION) otherVerification["msvalidate.01"] = process.env.BING_SITE_VERIFICATION;
 if (process.env.YANDEX_SITE_VERIFICATION) otherVerification["yandex-verification"] = process.env.YANDEX_SITE_VERIFICATION;
@@ -22,6 +23,12 @@ if (Object.keys(otherVerification).length) verification.other = otherVerificatio
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
   title: "Anomaly Box | Instagram Creative Direction & Shoot Briefs",
   description: "Private Instagram shoot briefs with openings, scene order, camera notes, scripts, and claim limits for one lane.",
   keywords: [
