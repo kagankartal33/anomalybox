@@ -6,6 +6,14 @@ A repeatable content system is a small set of habits that works even on busy wee
 
 Start with **Compare like with like**. Use **Read saves, replies, and completion together** to show the method clearly on camera in 4K at 60fps. Let **Capture audience language** deliver the visual proof under locked 5600K light. Treat **Change one variable at a time** as your review gate. The core rule is simple: teach one cue at a time, show the relevant angle and keep outcome language responsible.
 
+```mermaid
+flowchart LR
+    A["Compare like with like"] --> B
+    B["Read saves, replies, and completion together"] --> C
+    C["Capture audience language"] --> D
+    D["Change one variable at a time"]
+```
+
 ## Build the minimum workable version
 
 A single flattering angle can hide the movement detail that viewers actually need to understand. Here, the issue starts when **compare like with like** is planned without **read saves, replies, and completion together**. The draft may look good. Yet the creator still does not know what to film or approve.

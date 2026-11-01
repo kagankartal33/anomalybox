@@ -6,6 +6,14 @@ A repeatable content system is a small set of habits that works even on busy wee
 
 Start with **Contrarian industry take**. Use **Evidence & data proof** to show the method clearly on camera in 4K at 60fps. Let **Framework breakdown** deliver the visual proof under locked 5600K light. Treat **Category ownership** as your review gate. The core rule is simple: teach one cue at a time, show the relevant angle and keep outcome language responsible.
 
+```mermaid
+flowchart LR
+    A["Contrarian industry take"] --> B
+    B["Evidence & data proof"] --> C
+    C["Framework breakdown"] --> D
+    D["Category ownership"]
+```
+
 ## Build the minimum workable version
 
 A single flattering angle can hide the movement detail that viewers actually need to understand. Here, the issue starts when **contrarian industry take** is planned without **evidence & data proof**. The draft may look good. Yet the creator still does not know what to film or approve.

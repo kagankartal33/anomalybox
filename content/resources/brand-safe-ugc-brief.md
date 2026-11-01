@@ -6,6 +6,14 @@ Creative freedom works best when facts, deliverables and owners are clear. **How
 
 Start with **Define the product truth**. Use **List permitted proof** to show the method clearly on camera in 4K at 60fps. Let **Separate experience from claims** deliver the visual proof under locked 5600K light. Treat **Plan disclosure and CTA language** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Define the product truth"] --> B
+    B["List permitted proof"] --> C
+    C["Separate experience from claims"] --> D
+    D["Plan disclosure and CTA language"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **define the product truth** is planned without **list permitted proof**. The draft may look good. Yet the creator still does not know what to film or approve.

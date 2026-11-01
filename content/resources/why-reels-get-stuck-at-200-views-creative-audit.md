@@ -11,6 +11,14 @@ Your Reel is stuck at 200 views because the initial test cohort experienced a su
 2. **Execute a physical action at 0.5s:** Move an object. Adjust the camera proximity, or show the end outcome before speaking.
 3. **Fulfill the hook's promise in beat one:** Show immediate visual proof or tension within 0:01–0:03 rather than delaying the reveal to the end of the video.
 
+```mermaid
+flowchart LR
+    A["First Frame Action"] --> B
+    B["Spoken Line Velocity"] --> C
+    C["Proof Placement"] --> D
+    D["On-Screen Text System"]
+```
+
 ## The 3 Failure Points That Trigger the 200-View Distribution Stall
 
 ```text

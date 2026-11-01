@@ -6,6 +6,14 @@ A practical workflow cuts context switching before it tries to add more volume. 
 
 Start with **Capsule outfit building**. Use **Fabric durability proof** to show the method clearly on camera in 4K at 60fps. Let **Thrift flip sequencing** deliver the visual proof under locked 5600K light. Treat **Styling versatility** as your review gate. The core rule is simple: make the styling decision visible before adding transitions or decorative detail.
 
+```mermaid
+flowchart LR
+    A["Capsule outfit building"] --> B
+    B["Fabric durability proof"] --> C
+    C["Thrift flip sequencing"] --> D
+    D["Styling versatility"]
+```
+
 ## Build the minimum workable version
 
 Outfit videos blur together when they show clothes without explaining fit, movement or styling logic. Here, the issue starts when **capsule outfit building** is planned without **fabric durability proof**. The draft may look good. Yet the creator still does not know what to film or approve.

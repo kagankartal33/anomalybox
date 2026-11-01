@@ -6,6 +6,14 @@ The real question is not which option sounds best. It is which trade-off fits yo
 
 Start with **Pre-production alignment**. Use **Creative control clauses** to show the method clearly on camera in 4K at 60fps. Let **Resolution protocol** deliver the visual proof under locked 5600K light. Treat **Rebooking strategies** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Pre-production alignment"] --> B
+    B["Creative control clauses"] --> C
+    C["Resolution protocol"] --> D
+    D["Rebooking strategies"]
+```
+
 ## Choose the decision behind the comparison
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **pre-production alignment** is planned without **creative control clauses**. The draft may look good. Yet the creator still does not know what to film or approve.

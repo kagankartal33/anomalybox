@@ -6,6 +6,14 @@ Creative freedom works best when facts, deliverables and owners are clear. **Ree
 
 Start with **Skincare product truth**. Use **Texture and wear proof** to show the method clearly on camera in 4K at 60fps. Let **Creator-safe claims script** deliver the visual proof under locked 5600K light. Treat **Beauty edit references** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Skincare product truth"] --> B
+    B["Texture and wear proof"] --> C
+    C["Creator-safe claims script"] --> D
+    D["Beauty edit references"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **skincare product truth** is planned without **texture and wear proof**. The draft may look good. Yet the creator still does not know what to film or approve.

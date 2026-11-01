@@ -15,6 +15,14 @@ To create premium faceless content that converts:
 2. **Use warm human voice audio:** Avoid robotic text-to-speech voices. Record your own voice with warm tone, or rely on crisp, tactile physical sound design.
 3. **Anchor in physical demos:** Show real tools, real notebooks, real code editors, or real product textures in active use.
 
+```mermaid
+flowchart LR
+    A["Lock Exposure & Focus"] --> B
+    B["Hands-in-Frame Utility Shots"] --> C
+    C["Ambient Room Audio Texture"] --> D
+    D["Physical Impact Cut Beats"]
+```
+
 ## The 4 High-Authority Faceless Directing Modes
 
 ```text

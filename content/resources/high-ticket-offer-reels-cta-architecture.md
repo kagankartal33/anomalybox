@@ -6,6 +6,14 @@ The opening line only works when the first frame shows the same promise. **High-
 
 Start with **Value-first delivery**. Use **DM keyword trigger** to show the method clearly on camera in 4K at 60fps. Let **Automated chat response** deliver the visual proof under locked 5600K light. Treat **Discovery call booking** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
 
+```mermaid
+flowchart LR
+    A["Value-first delivery"] --> B
+    B["DM keyword trigger"] --> C
+    C["Automated chat response"] --> D
+    D["Discovery call booking"]
+```
+
 ## Why Value-first delivery and DM keyword trigger must agree
 
 Thought leadership sounds interchangeable when it opens with a job title instead of a real decision and its consequences. Here, the issue starts when **value-first delivery** is planned without **DM keyword trigger**. The draft may look good. Yet the creator still does not know what to film or approve.

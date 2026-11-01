@@ -6,6 +6,14 @@ Natural delivery comes from short beats. It does not come from reciting long par
 
 Start with **Pain-point extraction**. Use **Visual hook selection** to show the method clearly on camera in 4K at 60fps. Let **Script outline drafting** deliver the visual proof under locked 5600K light. Treat **Final shot list check** as your review gate. The core rule is simple: reduce commitments first, then rebuild around a minimum cadence the creator can actually sustain.
 
+```mermaid
+flowchart LR
+    A["Pain-point extraction"] --> B
+    B["Visual hook selection"] --> C
+    C["Script outline drafting"] --> D
+    D["Final shot list check"]
+```
+
 ## Why Pain-point extraction and Visual hook selection must agree
 
 Adding more tools or batching targets can increase pressure when the real problem is volume, boundaries or recovery debt. Here, the issue starts when **pain-point extraction** is planned without **visual hook selection**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ The most expensive shot is the retake caused by vague direction. **POV Workspace
 
 Start with **First-person POV framing**. Use **Monochrome desk aesthetic** to show the method clearly on camera in 4K at 60fps. Let **Task batching breakdown** deliver the visual proof under locked 5600K light. Treat **Focus tool recommendation** as your review gate. The core rule is simple: choose a visual narrator and repeat a small set of identity cues without exposing private context.
 
+```mermaid
+flowchart LR
+    A["First-person POV framing"] --> B
+    B["Monochrome desk aesthetic"] --> C
+    C["Task batching breakdown"] --> D
+    D["Focus tool recommendation"]
+```
+
 ## Set the production constraint
 
 Hands-only footage feels generic when objects, sound and movement have no recurring point of view. Here, the issue starts when **first-person POV framing** is planned without **monochrome desk aesthetic**. The draft may look good. Yet the creator still does not know what to film or approve.

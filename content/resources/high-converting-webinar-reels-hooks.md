@@ -6,6 +6,14 @@ A good script starts with what viewers see. It does not start with a long speech
 
 Start with **Specific opening hook**. Use **Core problem preview** to show the method clearly on camera in 4K at 60fps. Let **Event value promise** deliver the visual proof under locked 5600K light. Treat **Registration CTA** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
 
+```mermaid
+flowchart LR
+    A["Specific opening hook"] --> B
+    B["Core problem preview"] --> C
+    C["Event value promise"] --> D
+    D["Registration CTA"]
+```
+
 ## Why Specific opening hook and Core problem preview must agree
 
 Thought leadership sounds interchangeable when it opens with a job title instead of a real decision and its consequences. Here, the issue starts when **specific opening hook** is planned without **core problem preview**. The draft may look good. Yet the creator still does not know what to film or approve.

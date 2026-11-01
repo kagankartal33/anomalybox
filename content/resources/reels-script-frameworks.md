@@ -1,10 +1,17 @@
 # Reels Script Structures and Hook Planning
 
-Natural delivery comes from short beats. It does not come from reciting long paragraphs. **Reels Script Structures and Hook Planning** has one clear job. The practical goal is to structure short-form scripts from the opening image through the payoff and one relevant next action. This guide is built for creators building a repeatable publishing system. Set **visual hook in the first 0.5 seconds** alongside **useful context in the middle third** before adding extra steps or decorative edits.
+Natural delivery comes from short beats, not memorizing long paragraphs. **Reels Script Structures and Hook Planning** has one job: structure short-form scripts from opening image through payoff and next action. Built for creators seeking a repeatable system. Set **visual hook in the first 0.5 seconds** alongside **useful context in the middle third** before decorative edits.
 
 ## Quick answer
 
 Start with **Visual hook in the first 0.5 seconds**. Use **Useful context in the middle third** to show the method clearly on camera in 4K at 60fps. Let **Payoff sequence before CTA** deliver the visual proof under locked 5600K light. Treat **Relevant next-action framing** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
+
+```mermaid
+flowchart LR
+    A["0.5s Hook"] --> B["Context"]
+    B --> C["Payoff"]
+    C --> D["Action"]
+```
 
 ## Why Visual hook in the first 0.5 seconds and Useful context in the middle third must agree
 

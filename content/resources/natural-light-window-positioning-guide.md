@@ -6,6 +6,14 @@ A practical workflow cuts context switching before it tries to add more volume. 
 
 Start with **North-facing window advantage**. Use **45-degree angle offset** to show the method clearly on camera in 4K at 60fps. Let **Sheer curtain diffusion** deliver the visual proof under locked 5600K light. Treat **Golden hour timing** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["North-facing window advantage"] --> B
+    B["45-degree angle offset"] --> C
+    C["Sheer curtain diffusion"] --> D
+    D["Golden hour timing"]
+```
+
 ## Build the minimum workable version
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **north-facing window advantage** is planned without **45-degree angle offset**. The draft may look good. Yet the creator still does not know what to film or approve.

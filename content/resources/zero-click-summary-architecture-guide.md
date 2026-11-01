@@ -6,6 +6,14 @@ Search structure must make facts easy to find. It must not sound written for a r
 
 Start with **Direct answer framing**. Use **Concise answer length** to show the method clearly on camera in 4K at 60fps. Let **Natural entity context** deliver the visual proof under locked 5600K light. Treat **Structured data alignment** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Direct answer framing"] --> B
+    B["Concise answer length"] --> C
+    C["Natural entity context"] --> D
+    D["Structured data alignment"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **direct answer framing** is separated from **concise answer length**. Check your page against a first-hand process example. Refresh dates only when the content actually changes. If proof is missing, narrow the promise instead of adding vague claims.

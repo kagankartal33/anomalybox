@@ -6,6 +6,14 @@ Most revision disputes start from an unwritten approval rule. **Handling Major U
 
 Start with **Scope creep boundaries**. Use **Revision round limits** to show the method clearly on camera in 4K at 60fps. Let **Script amendment protocol** deliver the visual proof under locked 5600K light. Treat **Client approval alignment** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Scope creep boundaries"] --> B
+    B["Revision round limits"] --> C
+    C["Script amendment protocol"] --> D
+    D["Client approval alignment"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **scope creep boundaries** is planned without **revision round limits**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ A planning tool earns its place when it cuts decisions on shoot day. **AnomalyBo
 
 Start with **Agency brief structure**. Use **Custom campaign directions** to show the method clearly on camera in 4K at 60fps. Let **Team workflow integration** deliver the visual proof under locked 5600K light. Treat **Deliverable QA checklists** as your review gate. The core rule is simple: show the artifact, the handoff and the production decision it replaces.
 
+```mermaid
+flowchart LR
+    A["Agency brief structure"] --> B
+    B["Custom campaign directions"] --> C
+    C["Team workflow integration"] --> D
+    D["Deliverable QA checklists"]
+```
+
 ## Judge the product through the production handoff
 
 A planning product creates more work when buyers cannot see what decisions it resolves before shoot day. Here, the issue starts when **agency brief structure** is planned without **custom campaign directions**. The draft may look good. Yet the creator still does not know what to film or approve.

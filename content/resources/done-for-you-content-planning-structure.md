@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Pillar allocation**. Use **Batch filming system** to show the method clearly on camera in 4K at 60fps. Let **Asset repurposing** deliver the visual proof under locked 5600K light. Treat **Performance tracking** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Pillar allocation"] --> B
+    B["Batch filming system"] --> C
+    C["Asset repurposing"] --> D
+    D["Performance tracking"]
+```
+
 ## Build the minimum workable version
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **pillar allocation** is planned without **batch filming system**. The draft may look good. Yet the creator still does not know what to film or approve.

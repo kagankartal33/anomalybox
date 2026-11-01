@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **3-second hold rate**. Use **Hook variation testing** to show the method clearly on camera in 4K at 60fps. Let **Visual proof clarity** deliver the visual proof under locked 5600K light. Treat **Direct response CTA** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["3-second hold rate"] --> B
+    B["Hook variation testing"] --> C
+    C["Visual proof clarity"] --> D
+    D["Direct response CTA"]
+```
+
 ## Build the minimum workable version
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **3-second hold rate** is planned without **hook variation testing**. The draft may look good. Yet the creator still does not know what to film or approve.

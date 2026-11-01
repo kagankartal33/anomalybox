@@ -6,6 +6,14 @@ Filming gets faster when camera and light choices are settled before take one. *
 
 Start with **Monochrome color scheme**. Use **Soft ambient lighting** to show the method clearly on camera in 4K at 60fps. Let **Mic placement** deliver the visual proof under locked 5600K light. Treat **Clean backdrop rules** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Monochrome color scheme"] --> B
+    B["Soft ambient lighting"] --> C
+    C["Mic placement"] --> D
+    D["Clean backdrop rules"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **monochrome color scheme** is planned without **soft ambient lighting**. The draft may look good. Yet the creator still does not know what to film or approve.

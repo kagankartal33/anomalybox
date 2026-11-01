@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **Define your primary visual anchor**. Use **Choose a consistent camera height** to show the method clearly on camera in 4K at 60fps. Let **Develop a signature lighting setup** deliver the visual proof under locked 5600K light. Treat **Maintain visual continuity across feeds** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Define your primary visual anchor"] --> B
+    B["Choose a consistent camera height"] --> C
+    C["Develop a signature lighting setup"] --> D
+    D["Maintain visual continuity across feeds"]
+```
+
 ## Build the minimum workable version
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **define your primary visual anchor** is planned without **choose a consistent camera height**. The draft may look good. Yet the creator still does not know what to film or approve.

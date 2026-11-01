@@ -6,6 +6,14 @@ A fair comparison judges both choices against the same goal and evidence. **UGC 
 
 Start with **Pricing tier breakdown**. Use **Portfolio shot lists** to show the method clearly on camera in 4K at 60fps. Let **Monthly retainer models** deliver the visual proof under locked 5600K light. Treat **Client communication** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Pricing tier breakdown"] --> B
+    B["Portfolio shot lists"] --> C
+    C["Monthly retainer models"] --> D
+    D["Client communication"]
+```
+
 ## Choose the decision behind the comparison
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **pricing tier breakdown** is planned without **portfolio shot lists**. The draft may look good. Yet the creator still does not know what to film or approve.

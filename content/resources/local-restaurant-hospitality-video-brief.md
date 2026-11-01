@@ -6,6 +6,14 @@ Most revision disputes start from an unwritten approval rule. **Local Restaurant
 
 Start with **Kitchen sizzle hook**. Use **Chef plating sequence** to show the method clearly on camera in 4K at 60fps. Let **Ambiance pan & tilt** deliver the visual proof under locked 5600K light. Treat **Location & reservation CTA** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Kitchen sizzle hook"] --> B
+    B["Chef plating sequence"] --> C
+    C["Ambiance pan & tilt"] --> D
+    D["Location & reservation CTA"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **kitchen sizzle hook** is planned without **chef plating sequence**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **Script pre-production**. Use **Single lighting setup** to show the method clearly on camera in 4K at 60fps. Let **Batch filming sequence** deliver the visual proof under locked 5600K light. Treat **Fast edit template** as your review gate. The core rule is simple: reduce commitments first, then rebuild around a minimum cadence the creator can actually sustain.
 
+```mermaid
+flowchart LR
+    A["Script pre-production"] --> B
+    B["Single lighting setup"] --> C
+    C["Batch filming sequence"] --> D
+    D["Fast edit template"]
+```
+
 ## Build the minimum workable version
 
 Adding more tools or batching targets can increase pressure when the real problem is volume, boundaries or recovery debt. Here, the issue starts when **script pre-production** is planned without **single lighting setup**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ The most expensive shot is the retake caused by vague direction. **Reels Ideas f
 
 Start with **Over-the-shoulder POV**. Use **Text-led storytelling** to show the method clearly on camera in 4K at 60fps. Let **Behind-the-scenes B-roll** deliver the visual proof under locked 5600K light. Treat **Quiet routine edits** as your review gate. The core rule is simple: teach one cue at a time, show the relevant angle and keep outcome language responsible.
 
+```mermaid
+flowchart LR
+    A["Over-the-shoulder POV"] --> B
+    B["Text-led storytelling"] --> C
+    C["Behind-the-scenes B-roll"] --> D
+    D["Quiet routine edits"]
+```
+
 ## Set the production constraint
 
 A single flattering angle can hide the movement detail that viewers actually need to understand. Here, the issue starts when **over-the-shoulder POV** is planned without **text-led storytelling**. The draft may look good. Yet the creator still does not know what to film or approve.

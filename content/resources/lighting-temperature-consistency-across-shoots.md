@@ -6,6 +6,14 @@ Clean footage comes from repeatable setup markers, not from buying more gear. **
 
 Start with **Kelvin color scale**. Use **Daylight 5600K matching** to show the method clearly on camera in 4K at 60fps. Let **Mixed light correction** deliver the visual proof under locked 5600K light. Treat **White balance locking** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Kelvin color scale"] --> B
+    B["Daylight 5600K matching"] --> C
+    C["Mixed light correction"] --> D
+    D["White balance locking"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **kelvin color scale** is planned without **daylight 5600K matching**. The draft may look good. Yet the creator still does not know what to film or approve.

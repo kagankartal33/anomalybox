@@ -6,6 +6,14 @@ A clear script gives every line a visual job. It gives every shot a reason to st
 
 Start with **Problem-solution hook**. Use **Product macro shots** to show the method clearly on camera in 4K at 60fps. Let **Demonstration sequencing** deliver the visual proof under locked 5600K light. Treat **Call-to-action variants** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Problem-solution hook"] --> B
+    B["Product macro shots"] --> C
+    C["Demonstration sequencing"] --> D
+    D["Call-to-action variants"]
+```
+
 ## Why Problem-solution hook and Product macro shots must agree
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **problem-solution hook** is planned without **product macro shots**. The draft may look good. Yet the creator still does not know what to film or approve.

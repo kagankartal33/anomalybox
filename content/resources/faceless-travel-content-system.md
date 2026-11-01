@@ -6,6 +6,14 @@ The opening line only works when the first frame shows the same promise. **Facel
 
 Start with **Point-of-view route opener**. Use **Hands and objects as narrator** to show the method clearly on camera in 4K at 60fps. Let **Privacy-safe place context** deliver the visual proof under locked 5600K light. Treat **Ambient sound continuity** as your review gate. The core rule is simple: anchor every sequence in a real location detail and a useful route decision.
 
+```mermaid
+flowchart LR
+    A["Point-of-view route opener"] --> B
+    B["Hands and objects as narrator"] --> C
+    C["Privacy-safe place context"] --> D
+    D["Ambient sound continuity"]
+```
+
 ## Why Point-of-view route opener and Hands and objects as narrator must agree
 
 Generic montages create atmosphere but give viewers no route, timing or place-specific reason to save the post. Here, the issue starts when **point-of-view route opener** is planned without **hands and objects as narrator**. The draft may look good. Yet the creator still does not know what to film or approve.

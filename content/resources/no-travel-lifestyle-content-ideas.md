@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Home environment reset**. Use **Local neighborhood route** to show the method clearly on camera in 4K at 60fps. Let **Stationery & desk review** deliver the visual proof under locked 5600K light. Treat **Personal rule story** as your review gate. The core rule is simple: anchor every sequence in a real location detail and a useful route decision.
 
+```mermaid
+flowchart LR
+    A["Home environment reset"] --> B
+    B["Local neighborhood route"] --> C
+    C["Stationery & desk review"] --> D
+    D["Personal rule story"]
+```
+
 ## Build the minimum workable version
 
 Generic montages create atmosphere but give viewers no route, timing or place-specific reason to save the post. Here, the issue starts when **home environment reset** is planned without **local neighborhood route**. The draft may look good. Yet the creator still does not know what to film or approve.

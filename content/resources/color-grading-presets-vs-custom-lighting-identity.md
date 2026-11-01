@@ -6,6 +6,14 @@ A page earns citations when it names the topic, answers the question, and shows 
 
 Start with **The preset limitation**. Use **Controlled light vs color filter** to show the method clearly on camera in 4K at 60fps. Let **Key & rim light identity** deliver the visual proof under locked 5600K light. Treat **Consistent skin tones** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["The preset limitation"] --> B
+    B["Controlled light vs color filter"] --> C
+    C["Key & rim light identity"] --> D
+    D["Consistent skin tones"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **the preset limitation** is separated from **controlled light vs color filter**. Check your page against a concise direct answer. Do not add FAQ schema for questions that are not visible. If proof is missing, narrow the promise instead of adding vague claims.

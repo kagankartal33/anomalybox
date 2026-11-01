@@ -6,6 +6,14 @@ The real question is not which option sounds best. It is which trade-off fits yo
 
 Start with **Production friction audit**. Use **Batch filming rhythm** to show the method clearly on camera in 4K at 60fps. Let **Format simplification** deliver the visual proof under locked 5600K light. Treat **Mindset reset** as your review gate. The core rule is simple: reduce commitments first, then rebuild around a minimum cadence the creator can actually sustain.
 
+```mermaid
+flowchart LR
+    A["Production friction audit"] --> B
+    B["Batch filming rhythm"] --> C
+    C["Format simplification"] --> D
+    D["Mindset reset"]
+```
+
 ## Choose the decision behind the comparison
 
 Adding more tools or batching targets can increase pressure when the real problem is volume, boundaries or recovery debt. Here, the issue starts when **production friction audit** is planned without **batch filming rhythm**. The draft may look good. Yet the creator still does not know what to film or approve.

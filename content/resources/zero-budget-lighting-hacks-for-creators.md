@@ -6,6 +6,14 @@ The most expensive shot is the retake caused by vague direction. **No-Cost Light
 
 Start with **Window key light**. Use **DIY white-board bounce** to show the method clearly on camera in 4K at 60fps. Let **Practical lamp fill** deliver the visual proof under locked 5600K light. Treat **Color temperature matching** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Window key light"] --> B
+    B["DIY white-board bounce"] --> C
+    C["Practical lamp fill"] --> D
+    D["Color temperature matching"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **window key light** is planned without **DIY white-board bounce**. The draft may look good. Yet the creator still does not know what to film or approve.

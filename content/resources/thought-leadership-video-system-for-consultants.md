@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Problem-first principle**. Use **Method breakdown** to show the method clearly on camera in 4K at 60fps. Let **Client case evidence** deliver the visual proof under locked 5600K light. Treat **Consultation invitation** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
 
+```mermaid
+flowchart LR
+    A["Problem-first principle"] --> B
+    B["Method breakdown"] --> C
+    C["Client case evidence"] --> D
+    D["Consultation invitation"]
+```
+
 ## Build the minimum workable version
 
 Thought leadership sounds interchangeable when it opens with a job title instead of a real decision and its consequences. Here, the issue starts when **problem-first principle** is planned without **method breakdown**. The draft may look good. Yet the creator still does not know what to film or approve.

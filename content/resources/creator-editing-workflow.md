@@ -6,6 +6,14 @@ A practical workflow cuts context switching before it tries to add more volume. 
 
 Start with **Assemble for meaning first**. Use **Cut on action** to show the method clearly on camera in 4K at 60fps. Let **Use text as navigation** deliver the visual proof under locked 5600K light. Treat **Complete a final safety pass** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Assemble for meaning first"] --> B
+    B["Cut on action"] --> C
+    C["Use text as navigation"] --> D
+    D["Complete a final safety pass"]
+```
+
 ## Build the minimum workable version
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **assemble for meaning first** is planned without **cut on action**. The draft may look good. Yet the creator still does not know what to film or approve.

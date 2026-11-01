@@ -1,33 +1,33 @@
 # Creator Decision Fatigue Report
 
-Creator decision fatigue builds when small choices remain open across planning, filming, editing and publishing. This page offers a research framework and a reporting template. It does not claim how common the problem is without data.
+Creator decision fatigue builds when small choices stay open during planning, filming, editing, and publishing. This page offers a research framework and a report template. It avoids guessing how common the issue is without verified data.
 
 ## Quick answer
 
-A **creator decision fatigue report** should measure workload and open decisions before blaming motivation. Cut formats that add little value. Define a minimum publishing rhythm. Separate admin from creative time. If health is affected, seek qualified support; a content calendar is not medical care.
+A **creator decision fatigue report** must track workload and open choices before blaming motivation. Drop formats that yield low value. Set a minimum post cadence. Separate daily admin from creative work. If health drops, get doctor care; a content calendar is not health care.
 
 ## What to measure
 
 Track decisions by stage:
 
-| Stage | Example decisions. | Observable cost. |
+| Stage. | Example choices. | Observable cost. |
 |---|---|---|
-| Capture | What is worth saving? | Notes without context. |
-| Selection | What should be made now? | Delayed starts. |
-| Direction | Hook, proof, scenes, tone. | Unfilmable ideas. |
-| Production | Location, framing, takes. | Long shoot time. |
-| Editing | Cut, captions, music, polish. | Endless revisions. |
-| Distribution | Platform, timing, CTA. | Publishing delay. |
-| Review | Metrics, replies, next action. | Anxiety and strategy churn. |
+| Capture. | What is worth saving? | Notes without context. |
+| Selection. | What should be made now? | Delayed shoot starts. |
+| Direction. | Hook, proof, scenes, tone. | Unfilmable draft ideas. |
+| Production. | Location, framing, takes. | Long shoot time. |
+| Editing. | Cut, captions, music, polish. | Endless revision rounds. |
+| Distribution. | Platform, timing, CTA. | Delayed post launches. |
+| Review. | Metrics, replies, next step. | High anxiety and churn. |
 
 ## Suggested study design
 
-1. Define the creator segments and recruitment method.
-2. Record time, decision count and abandoned concepts for a fixed period.
-3. Combine diaries with interviews; do not infer emotion from analytics alone.
-4. Separate solo creators, paid UGC creators, founders and teams.
-5. Publish the questionnaire, limitations and sample size.
-6. Avoid claiming representation beyond the sample.
+1. Define creator groups and how you recruit them.
+2. Track work time, choice counts, and dropped ideas over a fixed period.
+3. Combine logs with interviews; do not infer feelings from metrics alone.
+4. Separate solo creators, paid UGC creators, founders, and teams.
+5. Publish questions, study limits, and total sample size.
+6. Avoid claims that reach beyond the group tested.
 
 ## Diary template
 
@@ -52,45 +52,45 @@ What default or brief could have prevented it?
 
 ## Reporting rules
 
-Quote participants only with permission and remove identifying details. Distinguish direct statements from researcher interpretation. Report counts and percentages only with the denominator and method. Include limitations, conflicts of interest and the connection between the research and AnomalyBox products.
+Quote creators only with clear consent. Strip out names and private details. Keep direct quotes separate from researcher thoughts. Report raw counts and shares alongside the sample total and method. State study limits, potential bias, and any link to AnomalyBox tools.
 
 ## How to turn findings into useful content
 
-Create one article for a materially distinct problem, not every phrase used by participants. Use findings to improve examples, templates, product decisions and language. Do not use a few social posts as proof that all creators share the same experience.
+Build one article for each distinct problem, not for every casual phrase in interviews. Use findings to improve real examples, templates, tool design, and tone. Never treat a few social posts as proof that all creators share the exact same pain.
 
 ## Initial hypotheses to test
 
-- Unresolved direction decisions create more delay than a simple shortage of topics.
-- Creators with repeatable formats make fewer low-value production decisions.
-- Brand projects generate extra decision load when approval ownership is unclear.
-- A lower-production backup route may reduce abandoned concepts.
+- Open direction choices create more delay than a shortage of topic ideas.
+- Creators with repeatable series make fewer low-value shoot choices.
+- Brand deals add heavy decision load when approval owners are not clear.
+- A simple backup format cuts the rate of abandoned concepts.
 
-These are hypotheses, not findings. They require transparent data before publication as conclusions.
+These are test theories, not final facts. They need clear data before being published as firm findings.
 
 ## Frequently asked questions
 
 ### Can Reddit and X posts be used as research?
 
-They can identify language and hypotheses, but they are not a representative survey. Verify themes through a documented method before making prevalence claims.
+They help spot common phrasing and new hypotheses. But they do not form a true survey. Verify themes through a documented method before claiming broad trends.
 
 ### Should the report promote AnomalyBox?
 
-Disclose the commercial relationship and keep methods and limitations visible. The report should remain useful even to someone who does not buy the product.
+State the brand relationship clearly. Keep methods and study limits in plain view. The report must stay useful on its own, even if a reader never buys a product.
 
 ### How often should it be updated?
 
-An annual benchmark with smaller methodological updates is more credible than frequent reports based on thin samples.
+A yearly benchmark with small method updates carries more trust than quick reports built on thin samples.
 
 ## A practical review before publishing
 
-Test **Creator Decision Fatigue Report** against one real situation rather than an imagined perfect week. Start with **Quick answer**, write down the constraint that is most likely to change the plan, and identify what the audience can genuinely see or verify. Then use **What to measure** to remove any claim, scene or instruction that depends on missing access.
+Test **Creator Decision Fatigue Report** against one real case instead of an ideal week. Start with **Quick answer**. Note the main limit that could alter the plan. Pinpoint what viewers can truly see or verify on screen. Then use **What to measure** to cut any claim, scene, or step that lacks clear evidence.
 
-In **Creator Decision Fatigue Report**, the review is complete when the next action is obvious, the evidence matches the promise and a second person could understand the sequence without another strategy meeting. If the plan still feels broad, reduce the scope before adding more examples. Specific choices improve usefulness; extra volume does not.
+In **Creator Decision Fatigue Report**, your review is complete when the next step is clear. The proof must match your core promise. A teammate should grasp the full flow without another meeting. If the plan still feels wide, shrink the scope. Specific choices create value; raw volume does not.
 
 ## Next step
 
-Use this framework to collect primary data before publishing numerical claims. The current AnomalyBox content package should treat creator voice as qualitative input, not population statistics.
+Use this framework to gather field data before publishing hard numbers. The AnomalyBox content package treats creator quotes as qualitative notes, not broad population metrics.
 
 ## Research integrity checklist
 
-Before publishing the report, replace generic examples with verified creator or campaign details. Keep every claim inside the available evidence. Disclose commercial relationships. Remove advice that does not fit the production conditions represented in the study.
+Before publishing the report, replace vague notes with verified creator or project data. Keep every claim well inside your true evidence. State commercial ties openly. Cut any advice that does not fit the exact work conditions tested in the study.

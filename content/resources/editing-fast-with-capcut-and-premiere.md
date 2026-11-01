@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **Auto-caption generation**. Use **Jump cut pacing** to show the method clearly on camera in 4K at 60fps. Let **Sound effect triggers** deliver the visual proof under locked 5600K light. Treat **Preset export settings** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Auto-caption generation"] --> B
+    B["Jump cut pacing"] --> C
+    C["Sound effect triggers"] --> D
+    D["Preset export settings"]
+```
+
 ## Build the minimum workable version
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **auto-caption generation** is planned without **jump cut pacing**. The draft may look good. Yet the creator still does not know what to film or approve.

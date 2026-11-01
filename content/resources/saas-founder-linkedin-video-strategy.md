@@ -6,6 +6,14 @@ The opening line only works when the first frame shows the same promise. **SaaS 
 
 Start with **Problem first principle**. Use **Product workflow demo** to show the method clearly on camera in 4K at 60fps. Let **Metrics & trade-offs** deliver the visual proof under locked 5600K light. Treat **Founder perspective** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
 
+```mermaid
+flowchart LR
+    A["Problem first principle"] --> B
+    B["Product workflow demo"] --> C
+    C["Metrics & trade-offs"] --> D
+    D["Founder perspective"]
+```
+
 ## Why Problem first principle and Product workflow demo must agree
 
 Thought leadership sounds interchangeable when it opens with a job title instead of a real decision and its consequences. Here, the issue starts when **problem first principle** is planned without **product workflow demo**. The draft may look good. Yet the creator still does not know what to film or approve.

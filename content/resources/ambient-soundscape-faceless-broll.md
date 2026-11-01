@@ -6,6 +6,14 @@ A simple shot list shows what must be on camera even when time runs short. **Amb
 
 Start with **Environmental framing**. Use **Rain/wind audio capture** to show the method clearly on camera in 4K at 60fps. Let **Subtle text overlay** deliver the visual proof under locked 5600K light. Treat **Mood-focused color grading** as your review gate. The core rule is simple: choose a visual narrator and repeat a small set of identity cues without exposing private context.
 
+```mermaid
+flowchart LR
+    A["Environmental framing"] --> B
+    B["Rain/wind audio capture"] --> C
+    C["Subtle text overlay"] --> D
+    D["Mood-focused color grading"]
+```
+
 ## Set the production constraint
 
 Hands-only footage feels generic when objects, sound and movement have no recurring point of view. Here, the issue starts when **environmental framing** is planned without **rain/wind audio capture**. The draft may look good. Yet the creator still does not know what to film or approve.

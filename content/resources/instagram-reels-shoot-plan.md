@@ -6,6 +6,14 @@ A repeatable content system is a small set of habits that works even on busy wee
 
 Start with **Start with the viewer outcome**. Use **Write actions before dialogue** to show the method clearly on camera in 4K at 60fps. Let **Use a short shot vocabulary** deliver the visual proof under locked 5600K light. Treat **Keep text and edit notes production-ready** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Start with the viewer outcome"] --> B
+    B["Write actions before dialogue"] --> C
+    C["Use a short shot vocabulary"] --> D
+    D["Keep text and edit notes production-ready"]
+```
+
 ## Build the minimum workable version
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **start with the viewer outcome** is planned without **write actions before dialogue**. The draft may look good. Yet the creator still does not know what to film or approve.

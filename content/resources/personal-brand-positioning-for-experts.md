@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Proprietary method**. Use **Differentiating trade-off** to show the method clearly on camera in 4K at 60fps. Let **Client outcome proof** deliver the visual proof under locked 5600K light. Treat **Authority content pillars** as your review gate. The core rule is simple: teach one cue at a time, show the relevant angle and keep outcome language responsible.
 
+```mermaid
+flowchart LR
+    A["Proprietary method"] --> B
+    B["Differentiating trade-off"] --> C
+    C["Client outcome proof"] --> D
+    D["Authority content pillars"]
+```
+
 ## Build the minimum workable version
 
 A single flattering angle can hide the movement detail that viewers actually need to understand. Here, the issue starts when **proprietary method** is planned without **differentiating trade-off**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **Audience intent mapping**. Use **3-pillar framework** to show the method clearly on camera in 4K at 60fps. Let **Shoot-ready shot lists** deliver the visual proof under locked 5600K light. Treat **Analytics review** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Audience intent mapping"] --> B
+    B["3-pillar framework"] --> C
+    C["Shoot-ready shot lists"] --> D
+    D["Analytics review"]
+```
+
 ## Build the minimum workable version
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **audience intent mapping** is planned without **3-pillar framework**. The draft may look good. Yet the creator still does not know what to film or approve.

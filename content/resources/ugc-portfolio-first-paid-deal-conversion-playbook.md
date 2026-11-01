@@ -15,6 +15,14 @@ To land your first paid UGC brand deals consistently:
 2. **Pitch outcomes, not creator passion:** Never send *"I love your brand and would love to collaborate!"* Send a 45-second pitch detailing 2 specific creative angles that solve their current ad fatigue.
 3. **Offer 3 Hook Variations per brief:** Brands test multiple hooks against 1 core body. Offering 3 hooks with 1 video deliverable makes your proposal an irresistible no-brainer for ad buyers.
 
+```mermaid
+flowchart LR
+    A["Select 3 Converting Archetypes"] --> B
+    B["Record Texture & Macro Proof"] --> C
+    C["Assemble Direct-Response Portfolio"] --> D
+    D["Execute High-Intent Outreach"]
+```
+
 ## The 3 High-Converting UGC Video Archetypes
 
 ```text

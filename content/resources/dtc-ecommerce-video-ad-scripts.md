@@ -6,6 +6,14 @@ The opening line only works when the first frame shows the same promise. **DTC E
 
 Start with **Problem-solution hook**. Use **Product mechanism demo** to show the method clearly on camera in 4K at 60fps. Let **Social proof montage** deliver the visual proof under locked 5600K light. Treat **Direct response offer** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Problem-solution hook"] --> B
+    B["Product mechanism demo"] --> C
+    C["Social proof montage"] --> D
+    D["Direct response offer"]
+```
+
 ## Why Problem-solution hook and Product mechanism demo must agree
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **problem-solution hook** is planned without **product mechanism demo**. The draft may look good. Yet the creator still does not know what to film or approve.

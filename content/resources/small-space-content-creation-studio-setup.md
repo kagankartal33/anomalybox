@@ -6,6 +6,14 @@ Clean footage comes from repeatable setup markers, not from buying more gear. **
 
 Start with **Desk backdrop setup**. Use **Foldable lighting gear** to show the method clearly on camera in 4K at 60fps. Let **Acoustic treatment** deliver the visual proof under locked 5600K light. Treat **Cable management** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Desk backdrop setup"] --> B
+    B["Foldable lighting gear"] --> C
+    C["Acoustic treatment"] --> D
+    D["Cable management"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **desk backdrop setup** is planned without **foldable lighting gear**. The draft may look good. Yet the creator still does not know what to film or approve.

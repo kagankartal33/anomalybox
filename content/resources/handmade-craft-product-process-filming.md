@@ -6,6 +6,14 @@ The most expensive shot is the retake caused by vague direction. **Handmade Craf
 
 Start with **Raw material opening**. Use **Craftsmanship close-ups** to show the method clearly on camera in 4K at 60fps. Let **Product packaging reveal** deliver the visual proof under locked 5600K light. Treat **Artisan story voiceover** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Raw material opening"] --> B
+    B["Craftsmanship close-ups"] --> C
+    C["Product packaging reveal"] --> D
+    D["Artisan story voiceover"]
+```
+
 ## Set the production constraint
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **raw material opening** is planned without **craftsmanship close-ups**. The draft may look good. Yet the creator still does not know what to film or approve.

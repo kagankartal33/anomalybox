@@ -13,6 +13,14 @@ Industry conversion benchmarks from short-form video views to new followers:
 - **Healthy Baseline:** 0.1% – 0.3% (1M views = 1,000 to 3,000 followers) — Strong niche utility with a clear profile bio promise.
 - **Top-Tier / High-Intent:** 0.5% – 1.0%+ (1M views = 5,000 to 10,000+ followers) — Recurring series format. Distinct visual identity, and pinned orientation assets.
 
+```mermaid
+flowchart LR
+    A["Breakout Reach Distribution"] --> B
+    B["Profile Click Catalyst"] --> C
+    C["3-Second Bio & Grid Audit"] --> D
+    D["High-Intent Follow Conversion"]
+```
+
 ## The 4-Stage View-to-Follow Funnel
 
 ```text

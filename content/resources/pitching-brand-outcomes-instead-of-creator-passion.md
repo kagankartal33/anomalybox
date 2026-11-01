@@ -6,6 +6,14 @@ A repeatable content system is a small set of habits that works even on busy wee
 
 Start with **Outcome-first pitch decks**. Use **Credible performance evidence** to show the method clearly on camera in 4K at 60fps. Let **Angle differentiation** deliver the visual proof under locked 5600K light. Treat **Brand outcome language** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Outcome-first pitch decks"] --> B
+    B["Credible performance evidence"] --> C
+    C["Angle differentiation"] --> D
+    D["Brand outcome language"]
+```
+
 ## Build the minimum workable version
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **outcome-first pitch decks** is planned without **credible performance evidence**. The draft may look good. Yet the creator still does not know what to film or approve.

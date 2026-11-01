@@ -6,6 +6,14 @@ The most expensive shot is the retake caused by vague direction. **Studio Lighti
 
 Start with **45-degree key lighting**. Use **Rim light separation** to show the method clearly on camera in 4K at 60fps. Let **Diffused window fill** deliver the visual proof under locked 5600K light. Treat **Color temperature matching** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["45-degree key lighting"] --> B
+    B["Rim light separation"] --> C
+    C["Diffused window fill"] --> D
+    D["Color temperature matching"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **45-degree key lighting** is planned without **rim light separation**. The draft may look good. Yet the creator still does not know what to film or approve.

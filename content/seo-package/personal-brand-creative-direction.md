@@ -1,6 +1,6 @@
 # Personal Brand Creative Direction for Founders and Experts
 
-This service is for creators and teams that can produce content but lose time or quality while choosing the angle, evidence and execution. The focus is **turning expertise, decisions and lived professional context into a coherent public point of view**.
+This service helps founders and experts who produce video content. But they lose time or clarity while choosing angles and proof. The focus is **turning real expertise into a sharp public point of view**.
 
 ## Quick answer
 
@@ -8,13 +8,13 @@ This service is for creators and teams that can produce content but lose time or
 
 ## Deliverables
 
-- **Creator and lane diagnosis:** who the content is for, constraints, and the decision currently blocking production.
-- **Concept rationale:** why this angle fits the audience promise and what it will not try to do.
-- **Hook and opening frame:** first visible moment + spoken or on-screen open, matched to the payoff.
-- **Scene and proof plan:** ordered beats with the evidence that must appear on camera.
-- **Caption direction and backup route:** primary CTA plus one lower-pressure alternative if the first underperforms.
+- **Creator and lane diagnosis:** Define who the content serves, team limits, and current production blockers.
+- **Concept rationale:** Clarify why this angle fits your audience promise and what topics it avoids.
+- **Hook and opening frame:** First visual moment and spoken open, matched directly to the payoff.
+- **Scene and proof plan:** Ordered beats with clear evidence that must appear on camera.
+- **Caption direction and backup route:** Primary call-to-action plus one low-pressure backup if reach lags.
 
-Confirm current scope, turnaround, and pricing on the live store or service page before purchase.
+Check current scope, turnaround, and pricing on the live store page before you buy.
 
 ## Working process
 
@@ -26,18 +26,18 @@ Confirm current scope, turnaround, and pricing on the live store or service page
 
 ## Quality and originality standard
 
-In **Are results guaranteed?**, concepts should be developed from the client’s brief and evidence. They must not imitate a named creator, copy a competitor article or reproduce a campaign without permission. References may establish visual or strategic context, but the final angle and example must be original.
+All brand direction concepts grow from your distinct brief and evidence. We never imitate outside creators, copy rival articles, or reuse client campaigns without permission. Outside samples provide visual context. Yet your final angles and examples remain completely original.
 
 ## Proof before purchase
 
-In **Personal Brand Creative Direction for Founders and Experts**, the live site should show a representative sample, photographed dossier pages, a clear explanation of customisation and transparent terms. Use pilot evidence only with permission and state exactly what was measured. Do not substitute invented testimonials.
+The store displays photographed dossier layouts, custom voice guides, and complete service terms. We cite client results only with direct permission and report verified metrics. We never use fake endorsements or hollow guarantees.
 
 ## Personal brand direction layers
 
-1. **Positioning promise** (who + outcome).
-2. **Visual signature** (height, grade, props).
-3. **Proof language** (case, process, POV).
-4. **Offer bridge** (who it’s not for).
+1. **Positioning promise:** Clarify your target audience and core outcome.
+2. **Visual signature:** Lock camera height, color tone, and key props.
+3. **Proof language:** Anchor each video in client cases, process clips, or clear POV.
+4. **Offer bridge:** State clearly who your service is not for.
 
 Direction that only changes LUTs is decoration. Direction that changes proof and promise is strategy.
 
@@ -47,26 +47,26 @@ Voice, visual motifs, story lanes. Not a 30-day content calendar alone.
 
 ## Personal brand direction canvas
 
-- Voice adjectives (3 max) with “never say” list.
-- Visual motif kit (colour, crop, type treatment).
-- Story lanes: origin, craft, client result, opinion.
-- Boundary: what the person will not perform on camera.
+- Set three voice traits alongside a strict 'never say' list.
+- Build a visual motif kit covering color, framing, and typography.
+- Define four core story lanes: origin, craft, client results, and strong opinion.
+- Set firm personal boundaries on what you will not do on camera.
 
-A planning service builds calendars; creative direction locks **identity constraints** so calendars stay on-brand when volume rises.
+A planning service builds calendars. Creative direction locks **identity constraints** so your content stays on-brand as output grows.
 
 ## Frequently asked questions
 
 ### How is this different from a template?
 
-A template provides fields. The service makes the connected decisions inside those fields for a particular audience, lane and constraint.
+A blank template provides empty fields. Creative direction makes the hard decisions inside those fields for your specific niche, audience, and filming limits.
 
 ### Will the final work sound like the creator?
 
-It should. Direction protects the message and evidence while leaving room for natural vocabulary and performance.
+Yes. Direction protects your core message and proof while leaving full room for your natural vocabulary and on-camera delivery.
 
 ### Are results guaranteed?
 
-No. Creative direction can improve clarity and readiness, but distribution, audience response and commercial outcomes depend on many factors.
+No. Creative direction improves clarity and shoot readiness. But algorithmic reach, viewer trends, and sales depend on factors beyond the brief.
 
 ## Review current options
 
@@ -74,7 +74,7 @@ Visit the [AnomalyBox store](/store) for current scope, availability, examples a
 
 ### How is this different from a free template?
 
-A template provides empty fields. Direction fills the connected decisions for your audience, proof and constraints.
+Generic templates leave you with blank pages. Tailored direction resolves connected choices for your audience, proof assets, and production limits.
 
 ### Are results guaranteed?
 
@@ -82,8 +82,8 @@ No. Direction improves clarity and shoot readiness. Reach, sales and partnership
 
 ### What do I need to provide?
 
-Lane, audience, offer or product facts, access limits, privacy rules and weekly capacity.
+Share your niche lane, audience profile, core offer details, filming limits, privacy rules, and weekly production capacity.
 
 ## Next step
 
-Before the next shoot, use **personal brand creative direction** to resolve one concrete decision: identity, visual signature, and high-ticket positioning. Test the direction on a single card. If the concept is still difficult to execute, [review AnomalyBox private direction](/store) for tailored, shoot-ready guidance.
+Before your next shoot, use **personal brand creative direction** to resolve identity, visual signature, and positioning. Test this path on a single card. If the concept remains hard to film, [review AnomalyBox private direction](/store) for tailored, shoot-ready guidance.

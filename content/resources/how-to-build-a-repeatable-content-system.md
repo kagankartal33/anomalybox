@@ -6,6 +6,14 @@ A repeatable content system is a small set of habits that works even on busy wee
 
 Start with **Define one audience promise**. Use **Choose three repeatable formats** to show the method clearly on camera in 4K at 60fps. Let **Separate ideation from production** deliver the visual proof under locked 5600K light. Treat **Review signals without chasing noise** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Define one audience promise"] --> B
+    B["Choose three repeatable formats"] --> C
+    C["Separate ideation from production"] --> D
+    D["Review signals without chasing noise"]
+```
+
 ## Build the minimum workable version
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **define one audience promise** is planned without **choose three repeatable formats**. The draft may look good. Yet the creator still does not know what to film or approve.

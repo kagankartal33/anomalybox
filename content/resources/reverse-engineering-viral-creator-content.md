@@ -6,6 +6,14 @@ Creative freedom works best when facts, deliverables and owners are clear. **Stu
 
 Start with **Hook analysis**. Use **Pacing & edit cuts** to show the method clearly on camera in 4K at 60fps. Let **Audio context** deliver the visual proof under locked 5600K light. Treat **Original brand angle** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Hook analysis"] --> B
+    B["Pacing & edit cuts"] --> C
+    C["Audio context"] --> D
+    D["Original brand angle"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **hook analysis** is planned without **pacing & edit cuts**. The draft may look good. Yet the creator still does not know what to film or approve.

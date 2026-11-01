@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Natural window light**. Use **Morning routine sequence** to show the method clearly on camera in 4K at 60fps. Let **Quiet ambient audio** deliver the visual proof under locked 5600K light. Treat **Reflection note overlay** as your review gate. The core rule is simple: choose a visual narrator and repeat a small set of identity cues without exposing private context.
 
+```mermaid
+flowchart LR
+    A["Natural window light"] --> B
+    B["Morning routine sequence"] --> C
+    C["Quiet ambient audio"] --> D
+    D["Reflection note overlay"]
+```
+
 ## Build the minimum workable version
 
 Hands-only footage feels generic when objects, sound and movement have no recurring point of view. Here, the issue starts when **natural window light** is planned without **morning routine sequence**. The draft may look good. Yet the creator still does not know what to film or approve.

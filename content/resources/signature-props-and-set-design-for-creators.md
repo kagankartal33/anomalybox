@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Visual anchor selection**. Use **Background prop placement** to show the method clearly on camera in 4K at 60fps. Let **Color palette harmony** deliver the visual proof under locked 5600K light. Treat **Set design consistency** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Visual anchor selection"] --> B
+    B["Background prop placement"] --> C
+    C["Color palette harmony"] --> D
+    D["Set design consistency"]
+```
+
 ## Build the minimum workable version
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **visual anchor selection** is planned without **background prop placement**. The draft may look good. Yet the creator still does not know what to film or approve.

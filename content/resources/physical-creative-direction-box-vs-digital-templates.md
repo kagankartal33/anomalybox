@@ -6,6 +6,14 @@ A clear walkthrough follows the plan all the way from setup to final cut. **Camp
 
 Start with **Generic template limits**. Use **Shoot-ready decisions** to show the method clearly on camera in 4K at 60fps. Let **Batch filming workflow** deliver the visual proof under locked 5600K light. Treat **Team handoff friction** as your review gate. The core rule is simple: show the artifact, the handoff and the production decision it replaces.
 
+```mermaid
+flowchart LR
+    A["Generic template limits"] --> B
+    B["Shoot-ready decisions"] --> C
+    C["Batch filming workflow"] --> D
+    D["Team handoff friction"]
+```
+
 ## Judge the product through the production handoff
 
 A planning product creates more work when buyers cannot see what decisions it resolves before shoot day. Here, the issue starts when **generic template limits** is planned without **shoot-ready decisions**. The draft may look good. Yet the creator still does not know what to film or approve.

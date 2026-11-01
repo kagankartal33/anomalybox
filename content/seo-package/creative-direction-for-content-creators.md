@@ -1,6 +1,6 @@
 # Creative Direction for Content Creators
 
-This service is for creators and teams that can produce content but lose time or quality while choosing the angle, evidence and execution. The focus is **tailored creative direction that resolves connected choices before the shoot**.
+This service helps creators and teams that produce video. But they lose time or quality choosing angles, proof, and execution. The focus is **tailored creative direction that resolves connected choices before the shoot**.
 
 ## Quick answer
 
@@ -8,17 +8,17 @@ This service is for creators and teams that can produce content but lose time or
 
 ## Deliverables
 
-- **Creator and lane diagnosis:** who the content is for, constraints, and the decision currently blocking production.
-- **Concept rationale:** why this angle fits the audience promise and what it will not try to do.
-- **Hook and opening frame:** first visible moment + spoken or on-screen open, matched to the payoff.
-- **Scene and proof plan:** ordered beats with the evidence that must appear on camera.
-- **Caption direction and backup route:** primary CTA plus one lower-pressure alternative if the first underperforms.
+- **Creator and lane diagnosis:** Define who the content serves, team limits, and current production blockers.
+- **Concept rationale:** Clarify why this angle fits your audience promise and what topics it avoids.
+- **Hook and opening frame:** First visual moment and spoken open, matched directly to the payoff.
+- **Scene and proof plan:** Ordered beats with clear evidence that must appear on camera.
+- **Caption direction and backup route:** Primary call-to-action plus one low-pressure backup if reach lags.
 
 Confirm current scope, turnaround, and pricing on the live store or service page before purchase.
 
 ## Best-fit client
 
-A strong fit is a creator who needs useful ideas without adding unnecessary production work with a real business, reputation, campaign or publishing system at stake. The client can provide honest product or expertise details and is willing to make final factual and brand decisions.
+A strong fit is a creator who wants useful ideas without bloated production work. You have a real business, reputation, or campaign at stake. You can provide honest product facts and are ready to make final editorial decisions.
 
 ## Not the right fit
 
@@ -38,7 +38,7 @@ In **Creative Direction for Content Creators**, concepts should be developed fro
 
 ## Proof before purchase
 
-In **Creative Direction for Content Creators**, in **Are results guaranteed?**, the live site should show a representative sample, photographed dossier pages, a clear explanation of customisation and transparent terms. Use pilot evidence only with permission and state exactly what was measured. Do not substitute invented testimonials.
+The live store displays sample briefs, clear customization steps, and open terms. We share case proof only with client permission and report exact metrics. We never use fake reviews or exaggerated claims.
 
 ## What you decide before the first take
 
@@ -50,7 +50,7 @@ In **Creative Direction for Content Creators**, in **Are results guaranteed?**, 
 
 ## How direction reduces revision loops
 
-Most revision cost comes from unmade decisions, not from bad lighting alone. When the brief names the proof and the forbidden claims, feedback becomes “this proof is missing” instead of “make it more premium.” That is the operational value of **creative direction for content creators**.
+Most revision cost comes from unmade decisions, not poor lighting. When your brief names required proof and banned claims, feedback becomes clear. Clients say 'this proof clip is missing' rather than 'make it more premium.' That is the true value of **creative direction for content creators**.
 
 ## Example engagement model
 
@@ -79,4 +79,4 @@ Visit the [AnomalyBox store](/store) for current scope, availability, examples a
 
 ## Next step
 
-For **Are results guaranteed?**, turn the decisions on this page into one shoot card before opening the camera app: promise, three beats, proof insert, claim boundary, CTA. If those choices still stall every week, [review AnomalyBox private direction](/store) for tailored, shoot-ready dossiers — not another idea dump.
+Before your next shoot, turn these choices into one shoot card before opening your camera: locked promise, three beats, proof clip, claim limits, and CTA. If your shoots still stall each week, [review AnomalyBox private direction](/store) for tailored, shoot-ready dossiers instead of raw idea dumps.

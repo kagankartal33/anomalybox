@@ -6,6 +6,14 @@ Filming gets faster when camera and light choices are settled before take one. *
 
 Start with **3-look transition flow**. Use **Silhouette movement** to show the method clearly on camera in 4K at 60fps. Let **Fabric detail close-up** deliver the visual proof under locked 5600K light. Treat **Style note overlay** as your review gate. The core rule is simple: make the styling decision visible before adding transitions or decorative detail.
 
+```mermaid
+flowchart LR
+    A["3-look transition flow"] --> B
+    B["Silhouette movement"] --> C
+    C["Fabric detail close-up"] --> D
+    D["Style note overlay"]
+```
+
 ## Set the production constraint
 
 Outfit videos blur together when they show clothes without explaining fit, movement or styling logic. Here, the issue starts when **3-look transition flow** is planned without **silhouette movement**. The draft may look good. Yet the creator still does not know what to film or approve.

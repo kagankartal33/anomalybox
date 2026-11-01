@@ -6,6 +6,14 @@ Search structure must make facts easy to find. It must not sound written for a r
 
 Start with **Evidence a reader can verify**. Use **Original research notes** to show the method clearly on camera in 4K at 60fps. Let **Clear source attribution** deliver the visual proof under locked 5600K light. Treat **Claim and context review** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Evidence a reader can verify"] --> B
+    B["Original research notes"] --> C
+    C["Clear source attribution"] --> D
+    D["Claim and context review"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **evidence a reader can verify** is separated from **original research notes**. Check your page against a question-shaped section with a complete response. Write for the reader before optimising extraction. If proof is missing, narrow the promise instead of adding vague claims.

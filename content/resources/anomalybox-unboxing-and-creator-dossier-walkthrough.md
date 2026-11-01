@@ -6,6 +6,14 @@ A planning tool earns its place when it cuts decisions on shoot day. **AnomalyBo
 
 Start with **Creator Vault delivery**. Use **Brief organization system** to show the method clearly on camera in 4K at 60fps. Let **Pre-shoot setup routine** deliver the visual proof under locked 5600K light. Treat **On-set brief workflow** as your review gate. The core rule is simple: show the artifact, the handoff and the production decision it replaces.
 
+```mermaid
+flowchart LR
+    A["Creator Vault delivery"] --> B
+    B["Brief organization system"] --> C
+    C["Pre-shoot setup routine"] --> D
+    D["On-set brief workflow"]
+```
+
 ## Judge the product through the production handoff
 
 A planning product creates more work when buyers cannot see what decisions it resolves before shoot day. Here, the issue starts when **Creator Vault delivery** is planned without **brief organization system**. The draft may look good. Yet the creator still does not know what to film or approve.

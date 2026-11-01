@@ -6,6 +6,14 @@ A good script starts with what viewers see. It does not start with a long speech
 
 Start with **Luxury arrival pacing**. Use **Suite and service details** to show the method clearly on camera in 4K at 60fps. Let **Slow movement sequence** deliver the visual proof under locked 5600K light. Treat **Quiet atmosphere sound** as your review gate. The core rule is simple: anchor every sequence in a real location detail and a useful route decision.
 
+```mermaid
+flowchart LR
+    A["Luxury arrival pacing"] --> B
+    B["Suite and service details"] --> C
+    C["Slow movement sequence"] --> D
+    D["Quiet atmosphere sound"]
+```
+
 ## Why Luxury arrival pacing and Suite and service details must agree
 
 Generic montages create atmosphere but give viewers no route, timing or place-specific reason to save the post. Here, the issue starts when **luxury arrival pacing** is planned without **suite and service details**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ Clean footage comes from repeatable setup markers, not from buying more gear. **
 
 Start with **Overhead 90-degree mount**. Use **Sizzle ASMR mic setup** to show the method clearly on camera in 4K at 60fps. Let **Ingredient prep sequence** deliver the visual proof under locked 5600K light. Treat **Final plating reveal** as your review gate. The core rule is simple: build the sequence around a sensory payoff and give the viewer enough context to act on it.
 
+```mermaid
+flowchart LR
+    A["Overhead 90-degree mount"] --> B
+    B["Sizzle ASMR mic setup"] --> C
+    C["Ingredient prep sequence"] --> D
+    D["Final plating reveal"]
+```
+
 ## Set the production constraint
 
 A recipe or venue story loses appetite appeal when process, texture and practical details arrive out of order. Here, the issue starts when **overhead 90-degree mount** is planned without **sizzle ASMR mic setup**. The draft may look good. Yet the creator still does not know what to film or approve.

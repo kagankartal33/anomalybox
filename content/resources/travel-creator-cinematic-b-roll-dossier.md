@@ -6,6 +6,14 @@ A practical tool comparison shows which choices are settled and which stay with 
 
 Start with **Arrival-to-checkin flow**. Use **Neighborhood route map** to show the method clearly on camera in 4K at 60fps. Let **Hidden detail close-up** deliver the visual proof under locked 5600K light. Treat **Atmosphere audio** as your review gate. The core rule is simple: show the artifact, the handoff and the production decision it replaces.
 
+```mermaid
+flowchart LR
+    A["Arrival-to-checkin flow"] --> B
+    B["Neighborhood route map"] --> C
+    C["Hidden detail close-up"] --> D
+    D["Atmosphere audio"]
+```
+
 ## Judge the product through the production handoff
 
 A planning product creates more work when buyers cannot see what decisions it resolves before shoot day. Here, the issue starts when **arrival-to-checkin flow** is planned without **neighborhood route map**. The draft may look good. Yet the creator still does not know what to film or approve.

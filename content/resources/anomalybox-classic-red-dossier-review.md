@@ -6,6 +6,14 @@ A practical tool comparison shows which choices are settled and which stay with 
 
 Start with **Creator Vault brief overview**. Use **Core scene flow** to show the method clearly on camera in 4K at 60fps. Let **Lighting & angle direction** deliver the visual proof under locked 5600K light. Treat **Batch filming workflow** as your review gate. The core rule is simple: show the artifact, the handoff and the production decision it replaces.
 
+```mermaid
+flowchart LR
+    A["Creator Vault brief overview"] --> B
+    B["Core scene flow"] --> C
+    C["Lighting & angle direction"] --> D
+    D["Batch filming workflow"]
+```
+
 ## Judge the product through the production handoff
 
 A planning product creates more work when buyers cannot see what decisions it resolves before shoot day. Here, the issue starts when **Creator Vault brief overview** is planned without **core scene flow**. The draft may look good. Yet the creator still does not know what to film or approve.

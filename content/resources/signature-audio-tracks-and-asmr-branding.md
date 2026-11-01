@@ -6,6 +6,14 @@ Clean footage comes from repeatable setup markers, not from buying more gear. **
 
 Start with **ASMR sound capture**. Use **Signature audio opening** to show the method clearly on camera in 4K at 60fps. Let **Voiceover EQ tuning** deliver the visual proof under locked 5600K light. Treat **Background music pairing** as your review gate. The core rule is simple: choose a visual narrator and repeat a small set of identity cues without exposing private context.
 
+```mermaid
+flowchart LR
+    A["ASMR sound capture"] --> B
+    B["Signature audio opening"] --> C
+    C["Voiceover EQ tuning"] --> D
+    D["Background music pairing"]
+```
+
 ## Set the production constraint
 
 Hands-only footage feels generic when objects, sound and movement have no recurring point of view. Here, the issue starts when **ASMR sound capture** is planned without **signature audio opening**. The draft may look good. Yet the creator still does not know what to film or approve.

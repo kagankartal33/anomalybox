@@ -6,6 +6,14 @@ The obvious symptom is rarely the whole issue. The production choice underneath 
 
 Start with **Burnout root causes**. Use **Production friction audit** to show the method clearly on camera in 4K at 60fps. Let **Batch filming rhythm** deliver the visual proof under locked 5600K light. Treat **Mindset & recovery** as your review gate. The core rule is simple: reduce commitments first, then rebuild around a minimum cadence the creator can actually sustain.
 
+```mermaid
+flowchart LR
+    A["Burnout root causes"] --> B
+    B["Production friction audit"] --> C
+    C["Batch filming rhythm"] --> D
+    D["Mindset & recovery"]
+```
+
 ## Choose the decision behind the comparison
 
 Adding more tools or batching targets can increase pressure when the real problem is volume, boundaries or recovery debt. Here, the issue starts when **burnout root causes** is planned without **production friction audit**. The draft may look good. Yet the creator still does not know what to film or approve.

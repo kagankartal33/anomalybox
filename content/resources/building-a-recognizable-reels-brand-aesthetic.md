@@ -6,6 +6,14 @@ A repeatable content system is a small set of habits that works even on busy wee
 
 Start with **Aesthetic pillar mapping**. Use **Lighting setup rules** to show the method clearly on camera in 4K at 60fps. Let **Font & text overlay consistency** deliver the visual proof under locked 5600K light. Treat **Pacing & edit style** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Aesthetic pillar mapping"] --> B
+    B["Lighting setup rules"] --> C
+    C["Font & text overlay consistency"] --> D
+    D["Pacing & edit style"]
+```
+
 ## Build the minimum workable version
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **aesthetic pillar mapping** is planned without **lighting setup rules**. The draft may look good. Yet the creator still does not know what to film or approve.

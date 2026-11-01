@@ -6,6 +6,14 @@ Clean footage comes from repeatable setup markers, not from buying more gear. **
 
 Start with **Echo reflection points**. Use **DIY blanket acoustic wall** to show the method clearly on camera in 4K at 60fps. Let **Lavalier vs shotgun mic** deliver the visual proof under locked 5600K light. Treat **Noise gate post-processing** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Echo reflection points"] --> B
+    B["DIY blanket acoustic wall"] --> C
+    C["Lavalier vs shotgun mic"] --> D
+    D["Noise gate post-processing"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **echo reflection points** is planned without **DIY blanket acoustic wall**. The draft may look good. Yet the creator still does not know what to film or approve.

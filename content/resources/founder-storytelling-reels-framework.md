@@ -6,6 +6,14 @@ Natural delivery comes from short beats. It does not come from reciting long par
 
 Start with **Lesson-first opening**. Use **Trade-off decision story** to show the method clearly on camera in 4K at 60fps. Let **Build-in-public proof** deliver the visual proof under locked 5600K light. Treat **Community question** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
 
+```mermaid
+flowchart LR
+    A["Lesson-first opening"] --> B
+    B["Trade-off decision story"] --> C
+    C["Build-in-public proof"] --> D
+    D["Community question"]
+```
+
 ## Why Lesson-first opening and Trade-off decision story must agree
 
 Thought leadership sounds interchangeable when it opens with a job title instead of a real decision and its consequences. Here, the issue starts when **lesson-first opening** is planned without **trade-off decision story**. The draft may look good. Yet the creator still does not know what to film or approve.

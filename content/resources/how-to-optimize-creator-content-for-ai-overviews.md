@@ -6,6 +6,14 @@ A page earns citations when it names the topic, answers the question, and shows 
 
 Start with **Map questions to useful answers**. Use **Add first-hand evidence and sources** to show the method clearly on camera in 4K at 60fps. Let **Strengthen relevant internal links** deliver the visual proof under locked 5600K light. Treat **Refresh pages from query data** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Map questions to useful answers"] --> B
+    B["Add first-hand evidence and sources"] --> C
+    C["Strengthen relevant internal links"] --> D
+    D["Refresh pages from query data"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **map questions to useful answers** is separated from **add first-hand evidence and sources**. Check your page against a concise direct answer. Write for the reader before optimising extraction. If proof is missing, narrow the promise instead of adding vague claims.

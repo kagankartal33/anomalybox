@@ -6,6 +6,14 @@ The most expensive shot is the retake caused by vague direction. **Short-Form Vi
 
 Start with **Establishing shot**. Use **Action medium** to show the method clearly on camera in 4K at 60fps. Let **Proof close-up** deliver the visual proof under locked 5600K light. Treat **Transition and payoff** as your review gate. The core rule is simple: teach one cue at a time, show the relevant angle and keep outcome language responsible.
 
+```mermaid
+flowchart LR
+    A["Establishing shot"] --> B
+    B["Action medium"] --> C
+    C["Proof close-up"] --> D
+    D["Transition and payoff"]
+```
+
 ## Set the production constraint
 
 A single flattering angle can hide the movement detail that viewers actually need to understand. Here, the issue starts when **establishing shot** is planned without **action medium**. The draft may look good. Yet the creator still does not know what to film or approve.

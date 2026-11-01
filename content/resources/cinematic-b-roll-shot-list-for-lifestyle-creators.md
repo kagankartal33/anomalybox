@@ -6,6 +6,14 @@ The most expensive shot is the retake caused by vague direction. **Cinematic B-R
 
 Start with **Macro detail shot**. Use **Slow pan & tilt** to show the method clearly on camera in 4K at 60fps. Let **Tracking reveal** deliver the visual proof under locked 5600K light. Treat **Atmospheric environmental** as your review gate. The core rule is simple: anchor every sequence in a real location detail and a useful route decision.
 
+```mermaid
+flowchart LR
+    A["Macro detail shot"] --> B
+    B["Slow pan & tilt"] --> C
+    C["Tracking reveal"] --> D
+    D["Atmospheric environmental"]
+```
+
 ## Set the production constraint
 
 Generic montages create atmosphere but give viewers no route, timing or place-specific reason to save the post. Here, the issue starts when **macro detail shot** is planned without **slow pan & tilt**. The draft may look good. Yet the creator still does not know what to film or approve.

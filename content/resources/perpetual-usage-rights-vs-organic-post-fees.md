@@ -6,6 +6,14 @@ Most revision disputes start from an unwritten approval rule. **Perpetual Usage 
 
 Start with **Organic vs paid usage**. Use **Perpetual buyout risks** to show the method clearly on camera in 4K at 60fps. Let **Term-based licensing** deliver the visual proof under locked 5600K light. Treat **Ad usage pricing** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Organic vs paid usage"] --> B
+    B["Perpetual buyout risks"] --> C
+    C["Term-based licensing"] --> D
+    D["Ad usage pricing"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **organic vs paid usage** is planned without **perpetual buyout risks**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ The opening line only works when the first frame shows the same promise. **UGC H
 
 Start with **Pattern interrupt visual**. Use **Specific opening statement** to show the method clearly on camera in 4K at 60fps. Let **Demonstration hook** deliver the visual proof under locked 5600K light. Treat **Text and visual alignment** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Pattern interrupt visual"] --> B
+    B["Specific opening statement"] --> C
+    C["Demonstration hook"] --> D
+    D["Text and visual alignment"]
+```
+
 ## Why Pattern interrupt visual and Specific opening statement must agree
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **pattern interrupt visual** is planned without **specific opening statement**. The draft may look good. Yet the creator still does not know what to film or approve.

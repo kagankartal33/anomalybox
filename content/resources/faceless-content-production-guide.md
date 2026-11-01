@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **Choose a visual narrator**. Use **Build continuity through motion** to show the method clearly on camera in 4K at 60fps. Let **Use voiceover only when it adds meaning** deliver the visual proof under locked 5600K light. Treat **Protect privacy without losing personality** as your review gate. The core rule is simple: choose a visual narrator and repeat a small set of identity cues without exposing private context.
 
+```mermaid
+flowchart LR
+    A["Choose a visual narrator"] --> B
+    B["Build continuity through motion"] --> C
+    C["Use voiceover only when it adds meaning"] --> D
+    D["Protect privacy without losing personality"]
+```
+
 ## Build the minimum workable version
 
 Hands-only footage feels generic when objects, sound and movement have no recurring point of view. Here, the issue starts when **choose a visual narrator** is planned without **build continuity through motion**. The draft may look good. Yet the creator still does not know what to film or approve.

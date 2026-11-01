@@ -6,6 +6,14 @@ Filming gets faster when camera and light choices are settled before take one. *
 
 Start with **45-degree side key light**. Use **Macro sizzle close-up** to show the method clearly on camera in 4K at 60fps. Let **Process sequence** deliver the visual proof under locked 5600K light. Treat **Plating reveal** as your review gate. The core rule is simple: build the sequence around a sensory payoff and give the viewer enough context to act on it.
 
+```mermaid
+flowchart LR
+    A["45-degree side key light"] --> B
+    B["Macro sizzle close-up"] --> C
+    C["Process sequence"] --> D
+    D["Plating reveal"]
+```
+
 ## Set the production constraint
 
 A recipe or venue story loses appetite appeal when process, texture and practical details arrive out of order. Here, the issue starts when **45-degree side key light** is planned without **macro sizzle close-up**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Chatbot query research**. Use **Exact H2 question matching** to show the method clearly on camera in 4K at 60fps. Let **Conversational answer flow** deliver the visual proof under locked 5600K light. Treat **Searcher intent match** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Chatbot query research"] --> B
+    B["Exact H2 question matching"] --> C
+    C["Conversational answer flow"] --> D
+    D["Searcher intent match"]
+```
+
 ## Build the minimum workable version
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. Here, the issue starts when **chatbot query research** is planned without **exact H2 question matching**. The draft may look good. Yet the creator still does not know what to film or approve.

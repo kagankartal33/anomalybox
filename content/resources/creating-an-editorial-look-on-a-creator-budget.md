@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Soft diffused light**. Use **Minimalist set framing** to show the method clearly on camera in 4K at 60fps. Let **Restrained text overlays** deliver the visual proof under locked 5600K light. Treat **Color grade tuning** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Soft diffused light"] --> B
+    B["Minimalist set framing"] --> C
+    C["Restrained text overlays"] --> D
+    D["Color grade tuning"]
+```
+
 ## Build the minimum workable version
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **soft diffused light** is planned without **minimalist set framing**. The draft may look good. Yet the creator still does not know what to film or approve.

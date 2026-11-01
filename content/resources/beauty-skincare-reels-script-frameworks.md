@@ -6,6 +6,14 @@ A clear script gives every line a visual job. It gives every shot a reason to st
 
 Start with **Texture reveal hook**. Use **Routine logic breakdown** to show the method clearly on camera in 4K at 60fps. Let **Close-up evidence** deliver the visual proof under locked 5600K light. Treat **Call-to-action** as your review gate. The core rule is simple: show the product under repeatable conditions and describe only what the footage can support.
 
+```mermaid
+flowchart LR
+    A["Texture reveal hook"] --> B
+    B["Routine logic breakdown"] --> C
+    C["Close-up evidence"] --> D
+    D["Call-to-action"]
+```
+
 ## Why Texture reveal hook and Routine logic breakdown must agree
 
 Texture, finish and wear become unreliable when light or camera distance changes between shots. Here, the issue starts when **texture reveal hook** is planned without **routine logic breakdown**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -87,25 +87,25 @@ def main():
     avg_anti_ai = round(sum(r["anti_ai_score"] for r in results) / len(results), 1)
 
     print("=" * 70)
-    print(" 📊 ANOMALYBOX QUALITY GATE COMPREHENSIVE AUDIT REPORT")
+    print(" [REPORT] ANOMALYBOX QUALITY GATE COMPREHENSIVE AUDIT REPORT")
     print("=" * 70)
-    print(f"📁 Total Audited Articles: {len(results)}")
-    print(f"⭐ Average Overall Quality Score: {avg_overall} / 100")
-    print(f"📝 Average Word Count per Article: {avg_words} words")
-    print(f"🎯 Information Gain Score: {avg_info_gain} / 100")
-    print(f"🤖 AEO Structure Score: {avg_aeo} / 100")
-    print(f"🛡️ Anti-AI Humanization Score: {avg_anti_ai} / 100")
+    print(f"Total Audited Articles: {len(results)}")
+    print(f"Average Overall Quality Score: {avg_overall} / 100")
+    print(f"Average Word Count per Article: {avg_words} words")
+    print(f"Information Gain Score: {avg_info_gain} / 100")
+    print(f"AEO Structure Score: {avg_aeo} / 100")
+    print(f"Anti-AI Humanization Score: {avg_anti_ai} / 100")
     print("-" * 70)
 
     # Top 5 and Bottom 5 Sample
     results_sorted = sorted(results, key=lambda x: x["overall_score"], reverse=True)
-    print("🏆 Top 3 Highest Scoring Articles:")
+    print("Top 3 Highest Scoring Articles:")
     for r in results_sorted[:3]:
-        print(f"   • {r['slug']} -> {r['overall_score']}/100 ({r['word_count']} words)")
+        print(f"   * {r['slug']} -> {r['overall_score']}/100 ({r['word_count']} words)")
 
-    print("\n🔍 Bottom 3 Lowest Scoring Articles:")
+    print("\nBottom 3 Lowest Scoring Articles:")
     for r in results_sorted[-3:]:
-        print(f"   • {r['slug']} -> {r['overall_score']}/100 ({r['word_count']} words)")
+        print(f"   * {r['slug']} -> {r['overall_score']}/100 ({r['word_count']} words)")
     print("=" * 70)
 
 if __name__ == "__main__":

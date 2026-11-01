@@ -6,6 +6,14 @@ The opening line only works when the first frame shows the same promise. **Facel
 
 Start with **Data chart hook**. Use **Financial metric breakdown** to show the method clearly on camera in 4K at 60fps. Let **Screen recording demo** deliver the visual proof under locked 5600K light. Treat **Risk disclosure CTA** as your review gate. The core rule is simple: choose a visual narrator and repeat a small set of identity cues without exposing private context.
 
+```mermaid
+flowchart LR
+    A["Data chart hook"] --> B
+    B["Financial metric breakdown"] --> C
+    C["Screen recording demo"] --> D
+    D["Risk disclosure CTA"]
+```
+
 ## Why Data chart hook and Financial metric breakdown must agree
 
 Hands-only footage feels generic when objects, sound and movement have no recurring point of view. Here, the issue starts when **data chart hook** is planned without **financial metric breakdown**. The draft may look good. Yet the creator still does not know what to film or approve.

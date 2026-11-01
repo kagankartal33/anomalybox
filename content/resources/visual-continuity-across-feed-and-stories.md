@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **Color palette alignment**. Use **Typography consistency** to show the method clearly on camera in 4K at 60fps. Let **Cross-surface branding** deliver the visual proof under locked 5600K light. Treat **Feed aesthetic balance** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Color palette alignment"] --> B
+    B["Typography consistency"] --> C
+    C["Cross-surface branding"] --> D
+    D["Feed aesthetic balance"]
+```
+
 ## Build the minimum workable version
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **color palette alignment** is planned without **typography consistency**. The draft may look good. Yet the creator still does not know what to film or approve.

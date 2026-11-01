@@ -13,6 +13,14 @@ To choose the optimal format for any creative idea:
 2. **Choose Multi-Slide Carousels** when the concept is a framework, a comparison table, or a step-by-step checklist meant for saves.
 3. **Choose Searchable Website Text** when the reader needs fast search, code to copy, or deep trade-offs.
 
+```mermaid
+flowchart LR
+    A["Core Topic & Goal Audit"] --> B
+    B["Media Matching Evaluation"] --> C
+    C["Format-Specific Capture"] --> D
+    D["Cross-Format Repurposing"]
+```
+
 ## The Information Job & Media Matching Engine
 
 ```text

@@ -6,6 +6,14 @@ A simple shot list shows what must be on camera even when time runs short. **How
 
 Start with **Camera settings optimization**. Use **Exposure lock trick** to show the method clearly on camera in 4K at 60fps. Let **Natural light positioning** deliver the visual proof under locked 5600K light. Treat **Audio clarity setup** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Camera settings optimization"] --> B
+    B["Exposure lock trick"] --> C
+    C["Natural light positioning"] --> D
+    D["Audio clarity setup"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **camera settings optimization** is planned without **exposure lock trick**. The draft may look good. Yet the creator still does not know what to film or approve.

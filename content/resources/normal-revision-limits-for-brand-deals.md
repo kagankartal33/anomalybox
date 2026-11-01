@@ -6,6 +6,14 @@ A good brief removes guesswork while keeping the creator's natural voice. **Norm
 
 Start with **Standard 1-round limit**. Use **Fee structures for major edits** to show the method clearly on camera in 4K at 60fps. Let **Reshoot terms** deliver the visual proof under locked 5600K light. Treat **Contract clause templates** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Standard 1-round limit"] --> B
+    B["Fee structures for major edits"] --> C
+    C["Reshoot terms"] --> D
+    D["Contract clause templates"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **standard 1-round limit** is planned without **fee structures for major edits**. The draft may look good. Yet the creator still does not know what to film or approve.

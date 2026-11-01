@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **Client challenge framing**. Use **Strategic decision map** to show the method clearly on camera in 4K at 60fps. Let **Implementation metrics** deliver the visual proof under locked 5600K light. Treat **Strategy session CTA** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
 
+```mermaid
+flowchart LR
+    A["Client challenge framing"] --> B
+    B["Strategic decision map"] --> C
+    C["Implementation metrics"] --> D
+    D["Strategy session CTA"]
+```
+
 ## Build the minimum workable version
 
 Thought leadership sounds interchangeable when it opens with a job title instead of a real decision and its consequences. Here, the issue starts when **client challenge framing** is planned without **strategic decision map**. The draft may look good. Yet the creator still does not know what to film or approve.

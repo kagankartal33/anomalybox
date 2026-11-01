@@ -6,6 +6,14 @@ A fair comparison judges both choices against the same goal and evidence. **Cont
 
 Start with **Agency vs brief cost**. Use **Strategic second brain** to show the method clearly on camera in 4K at 60fps. Let **Production friction audit** deliver the visual proof under locked 5600K light. Treat **Execution checklist** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Agency vs brief cost"] --> B
+    B["Strategic second brain"] --> C
+    C["Production friction audit"] --> D
+    D["Execution checklist"]
+```
+
 ## Choose the decision behind the comparison
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **agency vs brief cost** is planned without **strategic second brain**. The draft may look good. Yet the creator still does not know what to film or approve.

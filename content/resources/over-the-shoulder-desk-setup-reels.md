@@ -6,6 +6,14 @@ A practical workflow cuts context switching before it tries to add more volume. 
 
 Start with **POV camera angle**. Use **Desk lighting setup** to show the method clearly on camera in 4K at 60fps. Let **Keyboard ASMR audio** deliver the visual proof under locked 5600K light. Treat **Productivity tip card** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["POV camera angle"] --> B
+    B["Desk lighting setup"] --> C
+    C["Keyboard ASMR audio"] --> D
+    D["Productivity tip card"]
+```
+
 ## Build the minimum workable version
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **POV camera angle** is planned without **desk lighting setup**. The draft may look good. Yet the creator still does not know what to film or approve.

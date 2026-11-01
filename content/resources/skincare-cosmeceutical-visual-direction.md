@@ -6,6 +6,14 @@ Filming gets faster when camera and light choices are settled before take one. *
 
 Start with **Texture close-up lighting**. Use **Clinical proof framing** to show the method clearly on camera in 4K at 60fps. Let **Ingredient callout graphics** deliver the visual proof under locked 5600K light. Treat **Routine order logic** as your review gate. The core rule is simple: show the product under repeatable conditions and describe only what the footage can support.
 
+```mermaid
+flowchart LR
+    A["Texture close-up lighting"] --> B
+    B["Clinical proof framing"] --> C
+    C["Ingredient callout graphics"] --> D
+    D["Routine order logic"]
+```
+
 ## Set the production constraint
 
 Texture, finish and wear become unreliable when light or camera distance changes between shots. Here, the issue starts when **texture close-up lighting** is planned without **clinical proof framing**. The draft may look good. Yet the creator still does not know what to film or approve.

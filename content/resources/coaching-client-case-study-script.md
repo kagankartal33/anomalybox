@@ -6,6 +6,14 @@ A clear script gives every line a visual job. It gives every shot a reason to st
 
 Start with **Before-state problem**. Use **Intervention framework** to show the method clearly on camera in 4K at 60fps. Let **Measurable result proof** deliver the visual proof under locked 5600K light. Treat **Application CTA** as your review gate. The core rule is simple: teach one cue at a time, show the relevant angle and keep outcome language responsible.
 
+```mermaid
+flowchart LR
+    A["Before-state problem"] --> B
+    B["Intervention framework"] --> C
+    C["Measurable result proof"] --> D
+    D["Application CTA"]
+```
+
 ## Why Before-state problem and Intervention framework must agree
 
 A single flattering angle can hide the movement detail that viewers actually need to understand. Here, the issue starts when **before-state problem** is planned without **intervention framework**. The draft may look good. Yet the creator still does not know what to film or approve.

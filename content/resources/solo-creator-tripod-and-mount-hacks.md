@@ -6,6 +6,14 @@ Filming gets faster when camera and light choices are settled before take one. *
 
 Start with **Overhead desk arm mount**. Use **Ground-level low angle** to show the method clearly on camera in 4K at 60fps. Let **Flexible tripod** deliver the visual proof under locked 5600K light. Treat **Magnetic phone mount** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Overhead desk arm mount"] --> B
+    B["Ground-level low angle"] --> C
+    C["Flexible tripod"] --> D
+    D["Magnetic phone mount"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **overhead desk arm mount** is planned without **ground-level low angle**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ The obvious symptom is rarely the whole issue. The production choice underneath 
 
 Start with **Beauty market saturation**. Use **Authentic review formats** to show the method clearly on camera in 4K at 60fps. Let **De-influencing trend logic** deliver the visual proof under locked 5600K light. Treat **Sustainable posting rhythm** as your review gate. The core rule is simple: show the product under repeatable conditions and describe only what the footage can support.
 
+```mermaid
+flowchart LR
+    A["Beauty market saturation"] --> B
+    B["Authentic review formats"] --> C
+    C["De-influencing trend logic"] --> D
+    D["Sustainable posting rhythm"]
+```
+
 ## Choose the decision behind the comparison
 
 Texture, finish and wear become unreliable when light or camera distance changes between shots. Here, the issue starts when **beauty market saturation** is planned without **authentic review formats**. The draft may look good. Yet the creator still does not know what to film or approve.

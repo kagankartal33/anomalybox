@@ -6,6 +6,14 @@ Clean footage comes from repeatable setup markers, not from buying more gear. **
 
 Start with **Bluetooth shutter remote**. Use **Mirror framing check** to show the method clearly on camera in 4K at 60fps. Let **Autofocus lock** deliver the visual proof under locked 5600K light. Treat **Dynamic walking shot** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Bluetooth shutter remote"] --> B
+    B["Mirror framing check"] --> C
+    C["Autofocus lock"] --> D
+    D["Dynamic walking shot"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **bluetooth shutter remote** is planned without **mirror framing check**. The draft may look good. Yet the creator still does not know what to film or approve.

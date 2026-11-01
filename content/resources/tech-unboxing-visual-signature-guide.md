@@ -6,6 +6,14 @@ A planning tool earns its place when it cuts decisions on shoot day. **Tech Unbo
 
 Start with **Slate & metallic palette**. Use **Macro lens perspective** to show the method clearly on camera in 4K at 60fps. Let **ASMR audio setup** deliver the visual proof under locked 5600K light. Treat **Clean desk setup** as your review gate. The core rule is simple: show the artifact, the handoff and the production decision it replaces.
 
+```mermaid
+flowchart LR
+    A["Slate & metallic palette"] --> B
+    B["Macro lens perspective"] --> C
+    C["ASMR audio setup"] --> D
+    D["Clean desk setup"]
+```
+
 ## Judge the product through the production handoff
 
 A planning product creates more work when buyers cannot see what decisions it resolves before shoot day. Here, the issue starts when **slate & metallic palette** is planned without **macro lens perspective**. The draft may look good. Yet the creator still does not know what to film or approve.

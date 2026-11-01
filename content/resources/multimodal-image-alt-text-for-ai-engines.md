@@ -6,6 +6,14 @@ Search structure must make facts easy to find. It must not sound written for a r
 
 Start with **Contextual alt text rules**. Use **Google Vision alignment** to show the method clearly on camera in 4K at 60fps. Let **Decorative vs meaningful images** deliver the visual proof under locked 5600K light. Treat **Figure caption pairing** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Contextual alt text rules"] --> B
+    B["Google Vision alignment"] --> C
+    C["Decorative vs meaningful images"] --> D
+    D["Figure caption pairing"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **contextual alt text rules** is separated from **google Vision alignment**. Check your page against a clearly attributed source. Do not add FAQ schema for questions that are not visible. If proof is missing, narrow the promise instead of adding vague claims.

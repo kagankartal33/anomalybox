@@ -6,6 +6,14 @@ The value of a creative brief shows in how fast the team completes the handoff. 
 
 Start with **Niche & persona selection**. Use **Constraint configuration** to show the method clearly on camera in 4K at 60fps. Let **Brief package selection** deliver the visual proof under locked 5600K light. Treat **Digital delivery** as your review gate. The core rule is simple: show the artifact, the handoff and the production decision it replaces.
 
+```mermaid
+flowchart LR
+    A["Niche & persona selection"] --> B
+    B["Constraint configuration"] --> C
+    C["Brief package selection"] --> D
+    D["Digital delivery"]
+```
+
 ## Judge the product through the production handoff
 
 A planning product creates more work when buyers cannot see what decisions it resolves before shoot day. Here, the issue starts when **niche & persona selection** is planned without **constraint configuration**. The draft may look good. Yet the creator still does not know what to film or approve.

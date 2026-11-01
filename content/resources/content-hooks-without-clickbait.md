@@ -6,6 +6,14 @@ A good script starts with what viewers see. It does not start with a long speech
 
 Start with **Open on the useful tension**. Use **Show proof early** to show the method clearly on camera in 4K at 60fps. Let **Match the hook to the payoff** deliver the visual proof under locked 5600K light. Treat **Remove unsupported superlatives** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Open on the useful tension"] --> B
+    B["Show proof early"] --> C
+    C["Match the hook to the payoff"] --> D
+    D["Remove unsupported superlatives"]
+```
+
 ## Why Open on the useful tension and Show proof early must agree
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **open on the useful tension** is planned without **show proof early**. The draft may look good. Yet the creator still does not know what to film or approve.

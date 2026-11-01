@@ -13,6 +13,14 @@ To build a trusted B2B video engine:
 2. **Use eye-level directing:** Frame chest-up with a 50mm lens. Keep the backdrop clean. Keep your voice calm.
 3. **Drive to a high-ticket call:** Skip generic like-and-comment pleas. Invite qualified peers to request your full brief.
 
+```mermaid
+flowchart LR
+    A["Industry Bottleneck Hook"] --> B
+    B["Common Mistake vs Reality"] --> C
+    C["2-Step Fix with Proof"] --> D
+    D["High-Status Next Step"]
+```
+
 ## The B2B Video System: The 45-Second Case Study
 
 ```text

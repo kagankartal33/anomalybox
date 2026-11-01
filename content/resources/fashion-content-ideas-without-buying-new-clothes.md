@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Capsule styling logic**. Use **Fit & silhouette motion** to show the method clearly on camera in 4K at 60fps. Let **Texture close-ups** deliver the visual proof under locked 5600K light. Treat **Aesthetic grading** as your review gate. The core rule is simple: make the styling decision visible before adding transitions or decorative detail.
 
+```mermaid
+flowchart LR
+    A["Capsule styling logic"] --> B
+    B["Fit & silhouette motion"] --> C
+    C["Texture close-ups"] --> D
+    D["Aesthetic grading"]
+```
+
 ## Build the minimum workable version
 
 Outfit videos blur together when they show clothes without explaining fit, movement or styling logic. Here, the issue starts when **capsule styling logic** is planned without **fit & silhouette motion**. The draft may look good. Yet the creator still does not know what to film or approve.

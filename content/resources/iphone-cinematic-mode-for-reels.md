@@ -6,6 +6,14 @@ Clean footage comes from repeatable setup markers, not from buying more gear. **
 
 Start with **Cinematic mode depth control**. Use **Manual focus racking** to show the method clearly on camera in 4K at 60fps. Let **4K 24fps HDR setup** deliver the visual proof under locked 5600K light. Treat **Post-edit depth adjustment** as your review gate. The core rule is simple: stabilise the setup with measurable defaults before adding equipment.
 
+```mermaid
+flowchart LR
+    A["Cinematic mode depth control"] --> B
+    B["Manual focus racking"] --> C
+    C["4K 24fps HDR setup"] --> D
+    D["Post-edit depth adjustment"]
+```
+
 ## Set the production constraint
 
 Buying more gear does not fix footage when exposure, white balance, distance and room sound change every session. Here, the issue starts when **cinematic mode depth control** is planned without **manual focus racking**. The draft may look good. Yet the creator still does not know what to film or approve.

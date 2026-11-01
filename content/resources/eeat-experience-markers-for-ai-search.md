@@ -6,6 +6,14 @@ Search visibility starts with a direct answer that readers can use right away. *
 
 Start with **First-hand lab testing proof**. Use **Personal client case markers** to show the method clearly on camera in 4K at 60fps. Let **Unscripted evidence language** deliver the visual proof under locked 5600K light. Treat **Anti-spinning verification** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["First-hand lab testing proof"] --> B
+    B["Personal client case markers"] --> C
+    C["Unscripted evidence language"] --> D
+    D["Anti-spinning verification"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **first-hand lab testing proof** is separated from **personal client case markers**. Check your page against a question-shaped section with a complete response. Do not add FAQ schema for questions that are not visible. If proof is missing, narrow the promise instead of adding vague claims.

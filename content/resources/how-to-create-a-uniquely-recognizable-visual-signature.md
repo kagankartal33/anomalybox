@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Audit the last twelve posts**. Use **Choose one repeatable opening frame** to show the method clearly on camera in 4K at 60fps. Let **Set a constrained prop kit** deliver the visual proof under locked 5600K light. Treat **Test recognition across formats** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Audit the last twelve posts"] --> B
+    B["Choose one repeatable opening frame"] --> C
+    C["Set a constrained prop kit"] --> D
+    D["Test recognition across formats"]
+```
+
 ## Build the minimum workable version
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **audit the last twelve posts** is planned without **choose one repeatable opening frame**. The draft may look good. Yet the creator still does not know what to film or approve.

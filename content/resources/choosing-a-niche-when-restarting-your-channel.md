@@ -6,6 +6,14 @@ Consistency is easier to protect when each post has one goal and one clear proof
 
 Start with **Niche overlap analysis**. Use **Audience transition bridge** to show the method clearly on camera in 4K at 60fps. Let **Signature format reset** deliver the visual proof under locked 5600K light. Treat **Testing new pillars** as your review gate. The core rule is simple: reduce commitments first, then rebuild around a minimum cadence the creator can actually sustain.
 
+```mermaid
+flowchart LR
+    A["Niche overlap analysis"] --> B
+    B["Audience transition bridge"] --> C
+    C["Signature format reset"] --> D
+    D["Testing new pillars"]
+```
+
 ## Build the minimum workable version
 
 Adding more tools or batching targets can increase pressure when the real problem is volume, boundaries or recovery debt. Here, the issue starts when **niche overlap analysis** is planned without **audience transition bridge**. The draft may look good. Yet the creator still does not know what to film or approve.

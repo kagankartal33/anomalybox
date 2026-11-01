@@ -6,6 +6,14 @@ The value of a creative brief shows in how fast the team completes the handoff. 
 
 Start with **Limits of generic prompts**. Use **Shoot-ready specificity** to show the method clearly on camera in 4K at 60fps. Let **Visual direction clarity** deliver the visual proof under locked 5600K light. Treat **Production workflow comparison** as your review gate. The core rule is simple: show the artifact, the handoff and the production decision it replaces.
 
+```mermaid
+flowchart LR
+    A["Limits of generic prompts"] --> B
+    B["Shoot-ready specificity"] --> C
+    C["Visual direction clarity"] --> D
+    D["Production workflow comparison"]
+```
+
 ## Judge the product through the production handoff
 
 A planning product creates more work when buyers cannot see what decisions it resolves before shoot day. Here, the issue starts when **limits of generic prompts** is planned without **shoot-ready specificity**. The draft may look good. Yet the creator still does not know what to film or approve.

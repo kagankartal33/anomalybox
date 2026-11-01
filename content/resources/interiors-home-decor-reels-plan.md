@@ -6,6 +6,14 @@ A practical workflow cuts context switching before it tries to add more volume. 
 
 Start with **Wide spatial reveals**. Use **Natural light timing** to show the method clearly on camera in 4K at 60fps. Let **Texture & fabric close-ups** deliver the visual proof under locked 5600K light. Treat **Room reset sequencing** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Wide spatial reveals"] --> B
+    B["Natural light timing"] --> C
+    C["Texture & fabric close-ups"] --> D
+    D["Room reset sequencing"]
+```
+
 ## Build the minimum workable version
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **wide spatial reveals** is planned without **natural light timing**. The draft may look good. Yet the creator still does not know what to film or approve.

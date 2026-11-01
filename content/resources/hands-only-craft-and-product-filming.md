@@ -6,6 +6,14 @@ Filming gets faster when camera and light choices are settled before take one. *
 
 Start with **Macro tactile detail**. Use **Crafting process flow** to show the method clearly on camera in 4K at 60fps. Let **Tool usage close-up** deliver the visual proof under locked 5600K light. Treat **Finished result reveal** as your review gate. The core rule is simple: choose a visual narrator and repeat a small set of identity cues without exposing private context.
 
+```mermaid
+flowchart LR
+    A["Macro tactile detail"] --> B
+    B["Crafting process flow"] --> C
+    C["Tool usage close-up"] --> D
+    D["Finished result reveal"]
+```
+
 ## Set the production constraint
 
 Hands-only footage feels generic when objects, sound and movement have no recurring point of view. Here, the issue starts when **macro tactile detail** is planned without **crafting process flow**. The draft may look good. Yet the creator still does not know what to film or approve.

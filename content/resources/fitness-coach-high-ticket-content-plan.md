@@ -6,6 +6,14 @@ A practical workflow cuts context switching before it tries to add more volume. 
 
 Start with **Form correction hook**. Use **Client case breakdown** to show the method clearly on camera in 4K at 60fps. Let **Value promise** deliver the visual proof under locked 5600K light. Treat **Consultation invitation** as your review gate. The core rule is simple: teach one cue at a time, show the relevant angle and keep outcome language responsible.
 
+```mermaid
+flowchart LR
+    A["Form correction hook"] --> B
+    B["Client case breakdown"] --> C
+    C["Value promise"] --> D
+    D["Consultation invitation"]
+```
+
 ## Build the minimum workable version
 
 A single flattering angle can hide the movement detail that viewers actually need to understand. Here, the issue starts when **form correction hook** is planned without **client case breakdown**. The draft may look good. Yet the creator still does not know what to film or approve.

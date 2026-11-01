@@ -6,6 +6,14 @@ The real question is not which option sounds best. It is which trade-off fits yo
 
 Start with **Audience expectation management**. Use **Visual signature evolution** to show the method clearly on camera in 4K at 60fps. Let **Topic pillar transition** deliver the visual proof under locked 5600K light. Treat **Community dialogue** as your review gate. The core rule is simple: give each piece one job and resolve the opening, evidence and next action before filming.
 
+```mermaid
+flowchart LR
+    A["Audience expectation management"] --> B
+    B["Visual signature evolution"] --> C
+    C["Topic pillar transition"] --> D
+    D["Community dialogue"]
+```
+
 ## Choose the decision behind the comparison
 
 Ideas stay unfinished when audience promise, proof and production limits are decided after recording begins. Here, the issue starts when **audience expectation management** is planned without **visual signature evolution**. The draft may look good. Yet the creator still does not know what to film or approve.

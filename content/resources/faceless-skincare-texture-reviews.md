@@ -6,6 +6,14 @@ Clean footage comes from repeatable setup markers, not from buying more gear. **
 
 Start with **Macro swatch lighting**. Use **Skin absorption proof** to show the method clearly on camera in 4K at 60fps. Let **Clinical ingredient breakdown** deliver the visual proof under locked 5600K light. Treat **Product link CTA** as your review gate. The core rule is simple: show the product under repeatable conditions and describe only what the footage can support.
 
+```mermaid
+flowchart LR
+    A["Macro swatch lighting"] --> B
+    B["Skin absorption proof"] --> C
+    C["Clinical ingredient breakdown"] --> D
+    D["Product link CTA"]
+```
+
 ## Set the production constraint
 
 Texture, finish and wear become unreliable when light or camera distance changes between shots. Here, the issue starts when **macro swatch lighting** is planned without **skin absorption proof**. The draft may look good. Yet the creator still does not know what to film or approve.

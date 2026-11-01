@@ -6,6 +6,14 @@ Search structure must make facts easy to find. It must not sound written for a r
 
 Start with **Choose the page's main schema type**. Use **Match markup to visible content** to show the method clearly on camera in 4K at 60fps. Let **Validate complete and accurate properties** deliver the visual proof under locked 5600K light. Treat **Test after deployment** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Choose the page's main schema type"] --> B
+    B["Match markup to visible content"] --> C
+    C["Validate complete and accurate properties"] --> D
+    D["Test after deployment"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **choose the page's main schema type** is separated from **match markup to visible content**. Check your page against a first-hand process example. Refresh dates only when the content actually changes. If proof is missing, narrow the promise instead of adding vague claims.

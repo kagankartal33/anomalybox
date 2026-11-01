@@ -6,6 +6,14 @@ Most revision disputes start from an unwritten approval rule. **UGC Non-Payment 
 
 Start with **50% deposit rule**. Use **Watermarked review edits** to show the method clearly on camera in 4K at 60fps. Let **Usage rights holdback** deliver the visual proof under locked 5600K light. Treat **Payment terms enforcement** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["50% deposit rule"] --> B
+    B["Watermarked review edits"] --> C
+    C["Usage rights holdback"] --> D
+    D["Payment terms enforcement"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **50% deposit rule** is planned without **watermarked review edits**. The draft may look good. Yet the creator still does not know what to film or approve.

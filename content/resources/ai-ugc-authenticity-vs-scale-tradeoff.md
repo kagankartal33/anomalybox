@@ -6,6 +6,14 @@ The obvious symptom is rarely the whole issue. The production choice underneath 
 
 Start with **Synthetic avatar limits**. Use **Human emotional connection** to show the method clearly on camera in 4K at 60fps. Let **Scale vs trust tradeoff** deliver the visual proof under locked 5600K light. Treat **Hybrid production workflow** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Synthetic avatar limits"] --> B
+    B["Human emotional connection"] --> C
+    C["Scale vs trust tradeoff"] --> D
+    D["Hybrid production workflow"]
+```
+
 ## Choose the decision behind the comparison
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **synthetic avatar limits** is planned without **human emotional connection**. The draft may look good. Yet the creator still does not know what to film or approve.

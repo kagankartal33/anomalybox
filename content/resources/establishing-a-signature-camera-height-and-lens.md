@@ -6,6 +6,14 @@ Filming gets faster when camera and light choices are settled before take one. *
 
 Start with **Camera height rules**. Use **Focal length selection** to show the method clearly on camera in 4K at 60fps. Let **Perspective continuity** deliver the visual proof under locked 5600K light. Treat **Framing muscle memory** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Camera height rules"] --> B
+    B["Focal length selection"] --> C
+    C["Perspective continuity"] --> D
+    D["Framing muscle memory"]
+```
+
 ## Set the production constraint
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **camera height rules** is planned without **focal length selection**. The draft may look good. Yet the creator still does not know what to film or approve.

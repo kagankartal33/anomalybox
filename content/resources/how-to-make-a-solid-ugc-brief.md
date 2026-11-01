@@ -6,6 +6,14 @@ A good brief removes guesswork while keeping the creator's natural voice. **How 
 
 Start with **Product truth & claims**. Use **Visual proof requirements** to show the method clearly on camera in 4K at 60fps. Let **Script & scene breakdown** deliver the visual proof under locked 5600K light. Treat **Edit direction** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Product truth & claims"] --> B
+    B["Visual proof requirements"] --> C
+    C["Script & scene breakdown"] --> D
+    D["Edit direction"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **product truth & claims** is planned without **visual proof requirements**. The draft may look good. Yet the creator still does not know what to film or approve.

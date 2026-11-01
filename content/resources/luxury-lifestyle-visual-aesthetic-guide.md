@@ -6,6 +6,14 @@ A practical workflow cuts context switching before it tries to add more volume. 
 
 Start with **Warm beige palette**. Use **Slow camera motion** to show the method clearly on camera in 4K at 60fps. Let **Restrained typography** deliver the visual proof under locked 5600K light. Treat **Quiet luxury framing** as your review gate. The core rule is simple: set a small number of visual defaults, test them across formats and change one variable at a time.
 
+```mermaid
+flowchart LR
+    A["Warm beige palette"] --> B
+    B["Slow camera motion"] --> C
+    C["Restrained typography"] --> D
+    D["Quiet luxury framing"]
+```
+
 ## Build the minimum workable version
 
 A feed feels inconsistent when camera height, light, crop and props change before any pattern has time to register. Here, the issue starts when **warm beige palette** is planned without **slow camera motion**. The draft may look good. Yet the creator still does not know what to film or approve.

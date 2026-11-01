@@ -6,6 +6,14 @@ Search visibility starts with a direct answer that readers can use right away. *
 
 Start with **Map the main entities**. Use **Add useful topic context** to show the method clearly on camera in 4K at 60fps. Let **Link related topic clusters** deliver the visual proof under locked 5600K light. Treat **Validate authority signals** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Map the main entities"] --> B
+    B["Add useful topic context"] --> C
+    C["Link related topic clusters"] --> D
+    D["Validate authority signals"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **map the main entities** is separated from **add useful topic context**. Check your page against a concise direct answer. Write for the reader before optimising extraction. If proof is missing, narrow the promise instead of adding vague claims.

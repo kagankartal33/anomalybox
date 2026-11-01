@@ -6,6 +6,14 @@ A plan becomes useful when you can film without rethinking the strategy each tim
 
 Start with **Visual narrator selection**. Use **Hands-on proof** to show the method clearly on camera in 4K at 60fps. Let **B-roll sequencing** deliver the visual proof under locked 5600K light. Treat **Voiceover integration** as your review gate. The core rule is simple: choose a visual narrator and repeat a small set of identity cues without exposing private context.
 
+```mermaid
+flowchart LR
+    A["Visual narrator selection"] --> B
+    B["Hands-on demonstration"] --> C
+    C["B-roll sequencing"] --> D
+    D["Voiceover integration"]
+```
+
 ## Build the minimum workable version
 
 Hands-only footage feels generic when objects, sound and movement have no recurring point of view. Here, the issue starts when **visual narrator selection** is planned without **hands-on proof**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ The obvious symptom is rarely the whole issue. The production choice underneath 
 
 Start with **The perfectionism trap**. Use **Minimum viable polish** to show the method clearly on camera in 4K at 60fps. Let **Publishing cadence rules** deliver the visual proof under locked 5600K light. Treat **Feedback loop priority** as your review gate. The core rule is simple: reduce commitments first, then rebuild around a minimum cadence the creator can actually sustain.
 
+```mermaid
+flowchart LR
+    A["The perfectionism trap"] --> B
+    B["Minimum viable polish"] --> C
+    C["Publishing cadence rules"] --> D
+    D["Feedback loop priority"]
+```
+
 ## Choose the decision behind the comparison
 
 Adding more tools or batching targets can increase pressure when the real problem is volume, boundaries or recovery debt. Here, the issue starts when **the perfectionism trap** is planned without **minimum viable polish**. The draft may look good. Yet the creator still does not know what to film or approve.

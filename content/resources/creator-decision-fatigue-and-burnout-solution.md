@@ -13,6 +13,14 @@ To eliminate creator decision fatigue and build a sustainable production cadence
 2. **Use pre-decided creative briefs:** Lock your spoken dialogue beats. Camera heights, and proof cutaways before stepping in front of the lens.
 3. **Establish a clear "Definition of Done":** Set a strict 3-take limit per scene and a pre-defined edit checklist to prevent endless perfectionist over-editing.
 
+```mermaid
+flowchart LR
+    A["Pre-Decided Shoot Brief"] --> B
+    B["45-Min Focused Shoot"] --> C
+    C["Audio & Visual Assembly"] --> D
+    D["Publish & Preserved Energy"]
+```
+
 ## The Cognitive Architecture of Creator Burnout
 
 ```text

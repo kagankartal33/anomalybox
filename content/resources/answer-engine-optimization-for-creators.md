@@ -6,6 +6,14 @@ Search structure must make facts easy to find. It must not sound written for a r
 
 Start with **Make important content crawlable**. Use **Answer questions in clear text** to show the method clearly on camera in 4K at 60fps. Let **Support claims with first-hand evidence** deliver the visual proof under locked 5600K light. Treat **Match structured data to visible content** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Make important content crawlable"] --> B
+    B["Answer questions in clear text"] --> C
+    C["Support claims with first-hand evidence"] --> D
+    D["Match structured data to visible content"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **make important content crawlable** is separated from **answer questions in clear text**. Check your page against a concise direct answer. Refresh dates only when the content actually changes. If proof is missing, narrow the promise instead of adding vague claims.

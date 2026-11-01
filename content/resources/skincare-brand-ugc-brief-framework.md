@@ -6,6 +6,14 @@ A good brief removes guesswork while keeping the creator's natural voice. **Skin
 
 Start with **Texture close-up proof**. Use **Lighting consistency** to show the method clearly on camera in 4K at 60fps. Let **Claims safety boundaries** deliver the visual proof under locked 5600K light. Treat **Hook variations** as your review gate. The core rule is simple: agree on the claim, evidence and approval route before the first take.
 
+```mermaid
+flowchart LR
+    A["Texture close-up proof"] --> B
+    B["Lighting consistency"] --> C
+    C["Claims safety boundaries"] --> D
+    D["Hook variations"]
+```
+
 ## What the handoff must settle
 
 Revision rounds multiply when the brief leaves product truth, usage and proof open to interpretation. Here, the issue starts when **texture close-up proof** is planned without **lighting consistency**. The draft may look good. Yet the creator still does not know what to film or approve.

@@ -6,6 +6,14 @@ Search visibility starts with a direct answer that readers can use right away. *
 
 Start with **Visual anchor check**. Use **Lighting consistency check** to show the method clearly on camera in 4K at 60fps. Let **Text & font audit** deliver the visual proof under locked 5600K light. Treat **Audio signature test** as your review gate. The core rule is simple: answer the question early, define entities clearly and support claims with first-hand or authoritative evidence.
 
+```mermaid
+flowchart LR
+    A["Visual anchor check"] --> B
+    B["Lighting consistency check"] --> C
+    C["Text & font audit"] --> D
+    D["Audio signature test"]
+```
+
 ## Answer the reader task before optimizing
 
 A page may target the right phrase yet remain hard to cite when the answer is buried, vague or unsupported. The breakdown happens when **visual anchor check** is separated from **lighting consistency check**. Check your page against a first-hand process example. Avoid claims that the cited source does not support. If proof is missing, narrow the promise instead of adding vague claims.

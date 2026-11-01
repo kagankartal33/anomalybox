@@ -6,6 +6,14 @@ A repeatable content system is a small set of habits that works even on busy wee
 
 Start with **Executive buyer friction**. Use **Workflow screen proof** to show the method clearly on camera in 4K at 60fps. Let **Metric context and trade-offs** deliver the visual proof under locked 5600K light. Treat **LinkedIn discussion prompt** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
 
+```mermaid
+flowchart LR
+    A["Executive buyer friction"] --> B
+    B["Workflow screen proof"] --> C
+    C["Metric context and trade-offs"] --> D
+    D["LinkedIn discussion prompt"]
+```
+
 ## Build the minimum workable version
 
 Thought leadership sounds interchangeable when it opens with a job title instead of a real decision and its consequences. Here, the issue starts when **executive buyer friction** is planned without **workflow screen proof**. The draft may look good. Yet the creator still does not know what to film or approve.

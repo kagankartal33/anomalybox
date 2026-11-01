@@ -6,6 +6,14 @@ Natural delivery comes from short beats. It does not come from reciting long par
 
 Start with **Relatable analogy hook**. Use **Core mechanism simplified** to show the method clearly on camera in 4K at 60fps. Let **Real-world example** deliver the visual proof under locked 5600K light. Treat **Actionable summary** as your review gate. The core rule is simple: lead with operational friction, show a receipt and explain the trade-off in plain language.
 
+```mermaid
+flowchart LR
+    A["Relatable analogy hook"] --> B
+    B["Core mechanism simplified"] --> C
+    C["Real-world example"] --> D
+    D["Actionable summary"]
+```
+
 ## Why Relatable analogy hook and Core mechanism simplified must agree
 
 Thought leadership sounds interchangeable when it opens with a job title instead of a real decision and its consequences. Here, the issue starts when **relatable analogy hook** is planned without **core mechanism simplified**. The draft may look good. Yet the creator still does not know what to film or approve.

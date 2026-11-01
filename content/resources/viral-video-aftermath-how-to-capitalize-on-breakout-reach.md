@@ -13,6 +13,14 @@ During the 72 hours after a video breaks out:
 2. **Engage in the comments with authority:** Pin 1 high-value clarifying comment that answers the top objection and guides viewers to your profile resources.
 3. **Deploy the "Bridge Concept":** Connect the viral topic to your core commercial offer or long-form framework without sounding like a desperate pitch.
 
+```mermaid
+flowchart LR
+    A["0-24h Active Comment Curation"] --> B
+    B["24-48h Part 2 Sequel Video"] --> C
+    C["48-72h Bridge to Core Product"] --> D
+    D["Long-Term Retargeting Retention"]
+```
+
 ## The 72-Hour Viral Capitalization Timeline
 
 ```text
