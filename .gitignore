@@ -15,6 +15,7 @@ site-html-export/
 anomaly-box-premium-assets-20260724/
 anomaly-box-premium-assets-20260724.zip
 tmp-*
+tmp/
 
 # Local-only reference renders
 sceneflowboard.png

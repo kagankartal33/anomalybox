@@ -159,6 +159,11 @@ export function SiteFooter() {
                   Creator Resources
                 </Link>
               </li>
+              <li>
+                <Link href="/resources#all-guides-heading" className="text-ink/75 transition hover:text-ink">
+                  Production Guides Directory (94)
+                </Link>
+              </li>
             </ul>
           </div>
 

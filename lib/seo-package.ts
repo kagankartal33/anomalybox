@@ -115,6 +115,7 @@ function loadRegistry(): SeoPackagePage[] {
 
 function loadLegacyResourcePages(): SeoPackagePage[] {
   const published = "2026-08-09T00:00:00Z";
+  const modified = "2026-11-21T15:00:00Z";
   return resources.map((resource, index) => ({
     id: `LEGACY-${String(index + 1).padStart(3, "0")}`,
     folder: `legacy-resources/${resource.slug}`,
@@ -135,7 +136,7 @@ function loadLegacyResourcePages(): SeoPackagePage[] {
     image: `/assets/legacy-resources/${resource.slug}.svg`,
     imageAlt: `${resource.title} — creator planning visual.`,
     datePublished: published,
-    dateModified: published,
+    dateModified: modified,
     status: "published",
     schemaType: "Article",
   }));

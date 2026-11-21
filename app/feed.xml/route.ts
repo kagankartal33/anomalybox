@@ -12,7 +12,7 @@ function escapeXml(value: string) {
 
 export function GET() {
   const base = siteUrl();
-  const buildDate = new Date("2026-11-01T11:15:00.000Z").toUTCString();
+  const buildDate = new Date("2026-11-21T15:00:00.000Z").toUTCString();
   const items = llmsPublicPages
     .map(
       (item) =>

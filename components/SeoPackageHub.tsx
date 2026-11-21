@@ -4,6 +4,7 @@ import { PublicShell } from "@/components/PublicShell";
 import { JsonLd } from "@/components/JsonLd";
 import { TemplatePurchaseGate } from "@/components/TemplatePurchaseGate";
 import { HubPagination } from "@/components/HubPagination";
+import { LegacyGuidesDirectory } from "@/components/LegacyGuidesDirectory";
 import {
   SEO_PACKAGE_SECTIONS,
   pageTypeLabel,
@@ -190,6 +191,7 @@ export async function SeoPackageHub({ featured, section, title, description, pag
             pageSize={HUB_PAGE_SIZE}
           />
         ) : null}
+        {(!section || section === "resources") && currentPage === 1 ? <LegacyGuidesDirectory /> : null}
       </section>
     </PublicShell>
   );
